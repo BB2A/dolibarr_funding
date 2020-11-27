@@ -1,0 +1,48 @@
+# Copyright (C) 2020 BERTON Anthony <a.berton@gest-mag.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#
+# Générique
+#
+
+# Module label 'ModuleFundingName'
+ModuleFundingName = Funding
+# Module description 'ModuleFundingDesc'
+ModuleFundingDesc = Description de Funding
+
+#
+# Page d'administration
+#
+FundingSetup = Configuration du module Funding
+Settings = Réglages
+FundingSetupPage = Page de configuration du module Funding
+
+#
+# Page À propos
+#
+About = À propos
+FundingAbout = À propos de Funding
+FundingAboutPage = Page à propos de Funding
+
+#
+# Page d'exemple
+#
+MyPageName = Nom de ma page
+
+#
+# Box d'exemple
+#
+MyWidget = Mon widget
+MyWidgetDescription = Description de mon widget
