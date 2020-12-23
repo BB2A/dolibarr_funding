@@ -47,3 +47,14 @@ MyWidget = Mon widget
 MyWidgetDescription = Description de mon widget
 
 Funding = Financement
+Fundings = financements
+rent = Loyer
+duration = Durée
+StudyNumber = Numéro d'étude
+Organization = Organisme
+DateEnd = Date de fin
+Redemption = Rachat
+Funding duration = Durée de financement
+DateDelivery = Date de livraison
+ListFunding = Liste de financement
+NewFunding = Nouveau financement
