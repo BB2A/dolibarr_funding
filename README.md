@@ -58,15 +58,6 @@ Note: If this screen tell you there is no custom directory, check your setup is 
         $dolibarr_main_url_root_alt = '/custom';
         $dolibarr_main_document_root_alt = 'C:/My Web Sites/Dolibarr/htdocs/custom';
         ```
-        
-### From a GIT repository
-
-- Clone the repository in ```$dolibarr_main_document_root_alt/funding```
-
-```sh
-cd ....../custom
-git clone git@github.com:gitlogin/funding.git funding
-```
 
 ### <a name="final_steps"></a>Final steps
 

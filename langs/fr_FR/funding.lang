@@ -18,23 +18,22 @@
 #
 
 # Module label 'ModuleFundingName'
-ModuleFundingName = Funding
+ModuleFundingName = Financement
 # Module description 'ModuleFundingDesc'
-ModuleFundingDesc = Description de Funding
-
+ModuleFundingDesc = Description de Financement
 #
 # Page d'administration
 #
-FundingSetup = Configuration du module Funding
+FundingSetup = Configuration du module Financement
 Settings = Réglages
-FundingSetupPage = Page de configuration du module Funding
+FundingSetupPage = Page de configuration du module Financement
 
 #
 # Page À propos
 #
 About = À propos
-FundingAbout = À propos de Funding
-FundingAboutPage = Page à propos de Funding
+FundingAbout = À propos de Financement
+FundingAboutPage = Page à propos de Financement
 
 #
 # Page d'exemple
@@ -46,3 +45,5 @@ MyPageName = Nom de ma page
 #
 MyWidget = Mon widget
 MyWidgetDescription = Description de mon widget
+
+Funding = Financement
