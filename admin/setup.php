@@ -56,8 +56,10 @@ $backtopage = GETPOST('backtopage', 'alpha');
 $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
-	'FUNDING_MYPARAM1'=>array('css'=>'minwidth200', 'enabled'=>1),
-	'FUNDING_MYPARAM2'=>array('css'=>'minwidth500', 'enabled'=>1)
+	'FUNDING_NUM_FUND'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_NUM_COEF'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;

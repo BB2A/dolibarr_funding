@@ -2,7 +2,7 @@
 /* Copyright (C) 2004-2018  Laurent Destailleur     <eldy@users.sourceforge.net>
  * Copyright (C) 2018-2019  Nicolas ZABOURI         <info@inovea-conseil.com>
  * Copyright (C) 2019-2020  Frédéric France         <frederic.france@netlogic.fr>
- * Copyright (C) 2020 BERTON Anthony <a.berton@gest-mag.com>
+ * Copyright (C) 2020 		BERTON Anthony 			<bertonanthony@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,7 +136,10 @@ class modFunding extends DolibarrModules
 		// Example: $this->const=array(1 => array('FUNDING_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
 		//                             2 => array('FUNDING_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
-		$this->const = array();
+		$this->const = array(
+			1 => array('FUNDING_NUM_COEF', 'chaine', '0', '', 0, 1, 0),
+			2 => array('FUNDING_NUM_FUND', 'chaine', '0', '', 0, 1, 0),
+		);
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(
@@ -151,9 +154,9 @@ class modFunding extends DolibarrModules
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
-		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->listes->read:/funding/funding_list.php?socid=__ID__');
-		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->listes->read:/funding/funding_list.php?propid=__ID__');
-		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->listes->read:/funding/funding_list.php?ordid=__ID__');
+		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?socid=__ID__');
+		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?propid=__ID__');
+		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?ordid=__ID__');
        
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@funding:$user->rights->funding->read:/funding/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
@@ -187,7 +190,7 @@ class modFunding extends DolibarrModules
 			// List of tables we want to see into dictonnary editor
 			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration"),
 			// Label of tables
-			'tablib'=>array("Funding duration"),
+			'tablib'=>array("Funding_duration"),
 			// Request to select fields
 			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f'),
 			// Sort order
@@ -240,7 +243,7 @@ class modFunding extends DolibarrModules
 
 		// Permissions provided by this module
 		$this->rights = array();
-		$r = 0;
+		$r = 183004;
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
@@ -258,13 +261,27 @@ class modFunding extends DolibarrModules
 		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Read objects of Funding'; // Permission label
+		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Create/Update objects of Funding'; // Permission label
+		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Delete objects of Funding'; // Permission label
+		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
 		/* END MODULEBUILDER PERMISSIONS */
 
 		// Main menu entries to add
 		$this->menu = array();
 		$r = 0;
 		// Add here entries to declare new menus
-		/* BEGIN MODULEBUILDER TOPMENU */
 		$this->menu[$r++] = array(
 			'fk_menu'=>'fk_mainmenu=billing', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Top menu entry
@@ -275,56 +292,10 @@ class modFunding extends DolibarrModules
 			'langs'=>'funding@funding', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000 + $r,
 			'enabled'=>'$conf->funding->enabled', // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->funding->funding->read' if you want your menu with a permission rules
+			'perms'=>$user->rights->funding->funding->read, // Use 'perms'=>'$user->rights->funding->funding->read' if you want your menu with a permission rules
 			'target'=>'',
-			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
+			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
-		/* END MODULEBUILDER TOPMENU */
-		/* BEGIN MODULEBUILDER LEFTMENU FUNDING
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=funding',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Funding',
-			'mainmenu'=>'funding',
-			'leftmenu'=>'funding',
-			'url'=>'/funding/fundingindex.php',
-			'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->funding->funding->read',			                // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>'List Funding',
-			'mainmenu'=>'funding',
-			'leftmenu'=>'funding_funding_list',
-			'url'=>'/funding/funding_list.php',
-			'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->funding->funding->read',			                // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>'New Funding',
-			'mainmenu'=>'funding',
-			'leftmenu'=>'funding_funding_new',
-			'url'=>'/funding/funding_card.php?action=create',
-			'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->funding->funding->write',			                // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		*/
-
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=funding',
@@ -340,12 +311,12 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
+            'perms'=>$user->rights->funding->funding->read,
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2,
+            'user'=>0,
         );
-        $this->menu[$r++]=array(
+        /*$this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=funding',
             // This is a Left menu entry
@@ -360,13 +331,51 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
+            'perms'=>$user->rights->funding->funding->write,
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
+            'user'=>0
+        );*/
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=funding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'CoefListe',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/coefficient_list.php',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>$user->rights->funding->coefficient->read,
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0
         );
-
-		/* END MODULEBUILDER LEFTMENU FUNDING */
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=funding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'NewCoef',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/coefficient_card.php?action=create',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>$user->rights->funding->coefficient->write,
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0
+        );
 
 		// Exports profiles provided by this module
 		$r = 1;
