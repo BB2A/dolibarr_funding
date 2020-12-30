@@ -65,18 +65,22 @@ dol_include_once('/funding/class/funding.class.php');
 dol_include_once('/funding/lib/funding_funding.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("funding@funding", "other"));
+$langs->loadLangs(array("funding@funding", "Propal", "Orders", "other"));
 
 // Get parameters
-$id = GETPOST('id', 'int');
-$ref        = GETPOST('ref', 'alpha');
-$action = GETPOST('action', 'aZ09');
-$confirm    = GETPOST('confirm', 'alpha');
-$cancel     = GETPOST('cancel', 'aZ09');
-$contextpage = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
-$backtopage = GETPOST('backtopage', 'alpha');
-$backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
+$id 					= GETPOST('id', 'int');
+$ref        			= GETPOST('ref', 'alpha');
+$action 				= GETPOST('action', 'aZ09');
+$confirm    			= GETPOST('confirm', 'alpha');
+$cancel     			= GETPOST('cancel', 'aZ09');
+$contextpage 			= GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
+$backtopage 			= GETPOST('backtopage', 'alpha');
+$backtopageforcancel 	= GETPOST('backtopageforcancel', 'alpha');
 //$lineid   = GETPOST('lineid', 'int');
+
+$typedoc				= GETPOST('typedoc', 'alpha');
+$iddoc					= GETPOST('iddoc', 'int');
+	//public $fk_user_comm
 
 // Initialize technical objects
 $object = new Funding($db);
@@ -117,7 +121,6 @@ $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->
 //$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
 
 //if (!$permissiontoread) accessforbidden();
-
 
 /*
  * Actions
@@ -164,7 +167,7 @@ if (empty($reshook))
 	{
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
-
+//BB2A marque send mail
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
@@ -210,7 +213,7 @@ if ($action == 'create')
 {
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
 
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
 	if ($backtopage) print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
@@ -333,7 +336,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	//BB2A
+	//$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -465,7 +469,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		if (empty($reshook))
 		{
-			// Send organization
+			// BB2A Send organization
 			if (empty($user->socid)) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=send_organization">'.$langs->trans('SendOrg').'</a>'."\n";
 			}

@@ -59,7 +59,7 @@ class Funding extends CommonObject
 	 */
 	public $picto = 'funding@funding';
 
-
+		
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_CANCELED = 9;
@@ -97,27 +97,27 @@ class Funding extends CommonObject
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(STUD)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1',),
-		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1',),
-		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
-		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help text for quantity",),
-		'rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>30, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>1,),
-		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>1,),
-		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>45, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'arrayofkeyval'=>array('0'=>'', '1'=>'Non', '2'=>'Oui'),),
-		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__) AND fk_typent=', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToThirparty",),
-		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>55, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
-		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-1, 'noteditable'=>'1', 'index'=>1,),
-		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>70, 'notnull'=>-1, 'visible'=>-1, 'noteditable'=>'1', 'index'=>1,),
+		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_study_number", 'showoncombobox'=>'1',),
+		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folder_number", 'showoncombobox'=>'1',),
+		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
+		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_maint",),
+		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_total",),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'default'=>'4', 'foreignkey'=>'c_funding_duration.code', 'help'=>"Help_duration", 'arrayofkeyval'=>array('12'=>'12 Mois', '24'=>'24 Mois', '36'=>'36 Mois', '48'=>'48 Mois', '60'=>'60 Mois'),),
+		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
+		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>30, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
+		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_delivery", 'showoncombobox'=>'1',),
+		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
+		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>45, 'notnull'=>1, 'visible'=>-1, 'default'=>'1', 'index'=>1, 'arrayofkeyval'=>array('1'=>'Non', '2'=>'Oui'),),
+		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
+		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>55, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
+		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1,),
+		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>70, 'notnull'=>-1, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1,),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>75, 'notnull'=>0, 'visible'=>3,),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>80, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>90, 'notnull'=>0, 'visible'=>0,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
-		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserComm', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
+		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserComm', 'enabled'=>'1', 'position'=>510, 'notnull'=>0, 'visible'=>-1, 'foreignkey'=>'user.rowid',),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
@@ -134,7 +134,7 @@ class Funding extends CommonObject
 	public $amount_total;
 	public $fk_duration;
 	public $coef;
-	public $rent;
+	public $amount_rent;
 	public $date_delivery;
 	public $date_end;
 	public $redemption;
@@ -206,7 +206,10 @@ class Funding extends CommonObject
 
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
-		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['rowid'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type'].$conf->global->FUNDING_FILTRE_ORGANIZATION;
+		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+		if (!empty($conf->global->FUNDING_DEFAULT_DURATION) && isset($this->fields['fk_duration'])) $this->fields['fk_duration']['default'] = $conf->global->FUNDING_DEFAULT_DURATION;
+		if (!empty($conf->global->FUNDING_DEFAULT_REDEMPTION) && isset($this->fields['redemption'])) $this->fields['redemption']['default'] = $conf->global->FUNDING_DEFAULT_REDEMPTION;
+
 		//array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__) AND fk_typent='
 		// Example to show how to set values of fields definition dynamically
 		/*if ($user->rights->funding->funding->read) {
@@ -237,14 +240,7 @@ class Funding extends CommonObject
 				}
 			}
 		}
-		//Initialise la societe par celui ou nous etions sur la fiche
-		if (!empty(GETPOST('socid', 'int'))) $this->fields['fk_soc']['default']=GETPOST('socid', 'int');
-		//Initialise la propo par celui ou nous etions sur la fiche
-		if (!empty(GETPOST('propid', 'int'))) $this->fields['fk_propal']['default']=GETPOST('propid', 'int');
-		//Initialise la order par celui ou nous etions sur la fiche
-		if (!empty(GETPOST('ordid', 'int'))) $this->fields['fk_order']['default']=GETPOST('ordid', 'int');
-		
-		
+
 		//Chagement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
         $sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
@@ -262,7 +258,7 @@ class Funding extends CommonObject
                 while ($i < $num)
                 {
                     $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->rowid] = $obj->label;
+                    $arrayofkeyval[$obj->code] = $obj->label;
                     $i = $i +1;
                 }
                 $this->fields['fk_duration']['arrayofkeyval'] = $arrayofkeyval;
@@ -273,36 +269,6 @@ class Funding extends CommonObject
         {
             dol_print_error($db);
         }
-		
-		if (!empty($propid)){
-			//Chagement de proposition
-			$sql = 'SELECT t.rowid';
-			$sql.= ' FROM '.MAIN_DB_PREFIX.'propal as t';
-			$sql.= ' WHERE t.rowid ='.$propid;
-
-			$resql = $db->query($sql);
-			if ($resql)
-			{
-				$num = $db->num_rows($resql);
-				if ($num > 0)
-				{
-					$arrayofkeyval = array();
-					$i = 0;
-					while ($i < $num)
-					{
-						$obj = $db->fetch_object($resql);
-						$arrayofkeyval[$obj->rowid] = $obj->total_ht;
-						$i = $i +1;
-					}
-					$this->fields['fk_amount']['arrayofkeyval'] = $arrayofkeyval;
-				}
-				$db->free($resql);
-			}
-			else
-			{
-				dol_print_error($db);
-			}
-		}
 	}
 
 	/**
@@ -314,7 +280,8 @@ class Funding extends CommonObject
 	 */
 	public function createRef()
 	{
-		global $conf;
+		global $conf, $db;
+
 		$dispo = -1;
 		$num = $conf->global->FUNDING_NUM_FUND;
 		if ($num >= 0)
@@ -328,7 +295,7 @@ class Funding extends CommonObject
 				
 				$ref = "FUND-" . $num;
 				
-				$dispo = $this->verif_dispo($ref,0);
+				$dispo = $this->verif_dispo($ref);
 			}
 			if($dispo == 0)
 			{
@@ -344,10 +311,11 @@ class Funding extends CommonObject
 	 * @param  
 	 * @return 0 = ok or -1 = nok
 	 */
-	public function verif_dispo($ref, $soc)
+	public function verif_dispo($ref)
 	{
-        // phpcs:enable
-		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."funding_finding";
+		global $conf, $db;
+		
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."funding_funding";
 		$sql .= " WHERE ref = '".$ref."'";
 		$resql = $this->db->query($sql);
 		if ($resql)
@@ -360,7 +328,78 @@ class Funding extends CommonObject
 			{
 				return -1;
 			}
+			$db->free($resql);
 		}
+		else
+		{
+			dol_print_error($db);
+		}
+	}
+
+	/**
+	 * Récupére les commerciaux du tier
+	 *
+	 * @param  id thirdparty
+	 * @param  
+	 * @return $idcomm = ok or -1 = nok
+	 */
+	public function comm_tiers($socid)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX."societe_commerciaux";
+		$sql.= " WHERE fk_soc = ".$socid;
+		$sql.= " ORDER BY rowid";
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			$row = $db->fetch_row($resql);
+			$idcommercial = $row[2];
+			return $idcommercial;
+		}
+		else
+		{
+			dol_print_error($db);
+			return -1;
+		}
+	}
+	
+	/**
+	 * Récupére les info document
+	 *
+	 * @param  id document
+	 * @param  type document PROPAL ORDER
+	 * @return $document = ok or -1 = nok
+	 */
+	public function info_doc($iddoc, $typedoc)
+	{
+		global $conf, $db;
+
+		if ($typedoc == 'propal')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."propal";
+		if ($typedoc == 'order')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."commande";
+		$sql.= " WHERE rowid = ".$iddoc;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			$document = $db->fetch_object($resql);
+			return $document;
+		}
+		else
+		{
+			dol_print_error($db);
+			return -1;
+		}
+	}
+
+	/**
+	 * Récupére le coef corespondant
+	 *
+	 * @param  
+	 * @param  
+	 * @return $coef = ok or -1 = nok
+	 */
+	public function coef()
+	{
 	}
 
 	/**
@@ -368,16 +407,49 @@ class Funding extends CommonObject
 	 *
 	 * @param  User $user      User that creates
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @param  int id du document
+	 * @param  alpha type de document
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
 	public function create(User $user, $notrigger = false)
 	{
-		$ref = $this->createRef();
-
-		if($ref)
+		$typedoc = GETPOST('typedoc', 'alpha');
+		$iddoc = GETPOST('iddoc', 'int');
+		//Initialise les information obligatoire non editable
+		//Document
+		if ($iddoc && $typedoc){
+			$document			= $this->info_doc($iddoc,$typedoc);
+			$this->fk_soc		= $document->fk_soc;
+			$this->amount		= $document->total_ht;
+			$this->amount_total	= $document->total_ht + $this->amount_maint;
+			$this->date_delivery= $document->date_livraison;
+			$this->date_end		= date('Y-m-d', strtotime('+'.$this->fk_duration.' month',strtotime($document->date_livraison)));
+			if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
+			if ($typedoc == 'order') $this->fk_order	= $iddoc;
+			//Commercial
+			$idcomm				= $this->comm_tiers($document->fk_soc);
+			if($idcomm <> -1){
+				$this->fk_user_comm = $idcomm;
+				//Génére la référence
+				$ref = $this->createRef();
+				if($ref)
+				{
+					$this->ref = $ref;
+					return $this->createCommon($user, $notrigger);
+				}
+				else
+				{
+					setEventMessages('Création ref impossible', null, 'errors');
+				}
+			}
+			else
+			{
+				setEventMessages('Commercial introuvable', null, 'errors');
+			}
+		}
+		else
 		{
-			$this->ref = $ref;
-			return $this->createCommon($user, $notrigger);
+			setEventMessages('Parametres manquants', null, 'errors');
 		}
 	}
 

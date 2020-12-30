@@ -64,7 +64,7 @@ Amount a = Montant a
 CoefListe = Liste coef
 NewCoef = Nouveau coef
 StatusFolder = Statut dossier
-AmountMaint = Montant maintenence
+AmountMaint = Montant maintenance
 AmountTotal = Montant total
 
 UserComm = Commercial
@@ -73,5 +73,20 @@ FUNDING_NUM_FUND = Numérotation des financements
 FUNDING_NUM_COEF = Numérotation des coef
 FUNDING_MAIL_VALIDATION = Adresse mail notification validation fiancement
 FUNDING_FILTRE_ORGANIZATION = Filtre organisme financement
+FUNDING_DEFAULT_DURATION = Valeur par default pour la durée de financement
+FUNDING_DEFAULT_REDEMPTION = Valeur par default pour le rachat
 
 SendOrg = Envoyer a l'organisme
+#Aides
+Help_study_number = Numéro d'etude délivré par l'organisme de financement
+Help_folder_number = Numéro de dossier délivré par l'organisme de financement
+Help_amount = Montant à financer
+Help_amount_maint = Montant de la maintenance
+Help_amount_total = Montant total du financement
+Help_duration = Durée du financement
+Help_coef = Coéficiant de calcul
+Help_amount_rent = Montant des loyer
+Help_date_delivery = Date de livraison du matériel
+Help_date_end = Date de fin du financement
+LinkToOrganization = Organisme de financement
+LinkToThirparty = Tiers concerné par le financement
