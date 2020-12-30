@@ -422,8 +422,11 @@ class Funding extends CommonObject
 			$this->fk_soc		= $document->fk_soc;
 			$this->amount		= $document->total_ht;
 			$this->amount_total	= $document->total_ht + $this->amount_maint;
-			$this->date_delivery= $document->date_livraison;
-			$this->date_end		= date('Y-m-d', strtotime('+'.$this->fk_duration.' month',strtotime($document->date_livraison)));
+			if ($document->date_livraison){
+				$this->date_delivery= $document->date_livraison;
+				//Ajoute la durée à la date de livraison pour avoir la date de fin
+				$this->date_end		= date('Y-m-d', strtotime('+'.$this->fk_duration.' month',strtotime($document->date_livraison)));
+			}
 			if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
 			if ($typedoc == 'order') $this->fk_order	= $iddoc;
 			//Commercial
