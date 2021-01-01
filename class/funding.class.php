@@ -109,7 +109,7 @@ class Funding extends CommonObject
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>45, 'notnull'=>1, 'visible'=>-1, 'default'=>'1', 'index'=>1, 'arrayofkeyval'=>array('1'=>'Non', '2'=>'Oui'),),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
-		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>55, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
+		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>55, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
 		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1,),
 		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>70, 'notnull'=>-1, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1,),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>75, 'notnull'=>0, 'visible'=>3,),
@@ -413,8 +413,8 @@ class Funding extends CommonObject
 	 */
 	public function create(User $user, $notrigger = false)
 	{
-		$typedoc = GETPOST('typedoc', 'alpha');
-		$iddoc = GETPOST('iddoc', 'int');
+		$typedoc 	= GETPOST('typedoc', 'alpha');
+		$iddoc 		= GETPOST('iddoc', 'int');
 		//Initialise les information obligatoire non editable
 		//Document
 		if ($iddoc && $typedoc){
@@ -665,6 +665,21 @@ class Funding extends CommonObject
 	public function update(User $user, $notrigger = false)
 	{
 		return $this->updateCommon($user, $notrigger);
+	}
+
+	/**
+	 * Update object into database
+	 *
+	 * @param  User $user      User that modifies
+	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @return int             <0 if KO, >0 if OK
+	 */
+	public function setstudy_number(User $user, $notrigger = false)
+	{
+		$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET study_number ="" WHERE rowid =17";
+		$resqlupdate = $this->db->query($sql);
+		if (!$resqlupdate)dol_print_error($db);;
+		// return $this->updateCommon($user, $notrigger);
 	}
 
 	/**

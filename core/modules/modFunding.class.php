@@ -155,7 +155,7 @@ class modFunding extends DolibarrModules
 		// Array to add new pages in new tabs
 		$this->tabs = array();
 		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?socid=__ID__');
-		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?typedoc=propal&iddoc=__ID__');
+		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
 		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?typedoc=order&iddoc=__ID__');
        
 		// Example:

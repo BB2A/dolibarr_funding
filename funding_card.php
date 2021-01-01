@@ -64,6 +64,13 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 dol_include_once('/funding/class/funding.class.php');
 dol_include_once('/funding/lib/funding_funding.lib.php');
 
+// for other modules
+require_once DOL_DOCUMENT_ROOT.'/core/lib/propal.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
+require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+
 // Load translation files required by the page
 $langs->loadLangs(array("funding@funding", "Propal", "Orders", "other"));
 
@@ -80,7 +87,6 @@ $backtopageforcancel 	= GETPOST('backtopageforcancel', 'alpha');
 
 $typedoc				= GETPOST('typedoc', 'alpha');
 $iddoc					= GETPOST('iddoc', 'int');
-	//public $fk_user_comm
 
 // Initialize technical objects
 $object = new Funding($db);
@@ -101,11 +107,40 @@ foreach ($object->fields as $key => $val)
 	if (GETPOST('search_'.$key, 'alpha')) $search[$key] = GETPOST('search_'.$key, 'alpha');
 }
 
-if (empty($action) && empty($id) && empty($ref)) $action = 'view';
+ //BB2A Affichage de la fiche dans la proposition ou la commande
+ if ($typedoc){
+	$sql = 'SELECT t.rowid, t.fk_propal, t.fk_order';
+	$sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
+	if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
+	else $sql .= " WHERE 1 = 1";
+	//BB2A_Filtre si dans une proposition
+	if ($typedoc == 'propal') $sql.= " AND t.fk_propal = ".$iddoc;
+	//BB2A_Filtre si dans une commande
+	if ($typedoc == 'order') $sql.= " AND t.fk_order = ".$iddoc;
+	$resql = $db->query($sql);
+	if ($resql)
+	{
+		$num = $db->num_rows($resql);
+		if ($num > 0)
+		{
+			$obj = $db->fetch_object($resql);
+			$id = $obj->rowid;
+		}
+		else
+		{
+			$action = 'create';
+		}
+	}
+	else
+	{
+		dol_print_error($db);
+	}
+ }
 
+
+if (empty($action) && empty($id) && empty($ref)) $action = 'view';
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
-
 
 $permissiontoread = $user->rights->funding->funding->read;
 $permissiontoadd = $user->rights->funding->funding->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
@@ -139,6 +174,7 @@ if (empty($reshook))
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) $backtopage = $backurlforlist;
+			if ($typedoc && $iddoc)$backtopage = dol_buildpath('/funding/funding_card.php', 1).'?typedoc='.$typedoc.'&iddoc='.$iddoc;
 			else $backtopage = dol_buildpath('/funding/funding_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 		}
 	}
@@ -175,15 +211,11 @@ if (empty($reshook))
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
 
-
-
-
 /*
  * View
  *
  * Put here all code to build page
  */
-
 $form = new Form($db);
 $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
@@ -191,8 +223,8 @@ $formproject = new FormProjets($db);
 $title = $langs->trans("Funding");
 $help_url = '';
 llxHeader('', $title, $help_url);
-
-// Example : Adding jquery code
+ 
+ // Example : Adding jquery code
 print '<script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
 	function init_myfunc()
@@ -207,13 +239,12 @@ jQuery(document).ready(function() {
 });
 </script>';
 
-
 // Part to create
 if ($action == 'create')
 {
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
 
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
 	if ($backtopage) print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
@@ -283,11 +314,39 @@ if (($id || $ref) && $action == 'edit')
 // Part to show record
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create')))
 {
-	$res = $object->fetch_optionals();
+	
+	if ($typedoc = 'propal')
+	{
+		//BB2A_Récupération table propal
+		$prop = new Propal($db);
+		if ($iddoc > 0 || ! empty($ref))
+		{
+			$result = $prop->fetch($iddoc);
+		}
 
-	$head = fundingPrepareHead($object);
-	dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);
-
+		//BB2A_Affichage encadrer propal
+		$prop->fetch_thirdparty();
+		
+		$head = propal_prepare_head($prop);
+		dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
+	}
+	elseif ($typedoc = 'order')
+	{
+		//BB2A_Récupération table order
+		$ord = new Commande($db);
+		if ($iddoc > 0 || ! empty($ref))
+		{
+			$result = $ord->fetch($iddoc);
+		}
+		$head = commande_prepare_head($ord);
+		dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
+	}
+	else
+	{
+		$res = $object->fetch_optionals();
+		$head = fundingPrepareHead($object);
+		dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);
+	}
 	$formconfirm = '';
 
 	// Confirmation to delete
@@ -340,46 +399,19 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
-	/*
-	 // Ref customer
-	 $morehtmlref.=$form->editfieldkey("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', 0, 1);
-	 $morehtmlref.=$form->editfieldval("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', null, null, '', 1);
-	 // Thirdparty
-	 $morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	 // Project
-	 if (! empty($conf->projet->enabled))
-	 {
-	 $langs->load("projects");
-	 $morehtmlref.='<br>'.$langs->trans('Project') . ' ';
-	 if ($permissiontoadd)
-	 {
-	 //if ($action != 'classify') $morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> ';
-	 $morehtmlref.=' : ';
-	 if ($action == 'classify') {
-	 //$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'projectid', 0, 0, 1, 1);
-	 $morehtmlref.='<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
-	 $morehtmlref.='<input type="hidden" name="action" value="classin">';
-	 $morehtmlref.='<input type="hidden" name="token" value="'.newToken().'">';
-	 $morehtmlref.=$formproject->select_projects($object->socid, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-	 $morehtmlref.='<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-	 $morehtmlref.='</form>';
-	 } else {
-	 $morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
-	 }
-	 } else {
-	 if (! empty($object->fk_project)) {
-	 $proj = new Project($db);
-	 $proj->fetch($object->fk_project);
-	 $morehtmlref .= ': '.$proj->getNomUrl();
-	 } else {
-	 $morehtmlref .= '';
-	 }
-	 }
-	 }*/
+	// Numbers
+	$morehtmlref .= $form->editfieldkey("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
+	$morehtmlref .= '<br/>'.$form->editfieldkey("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
+	// Thirdparty
+	$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
+	$morehtmlref.=(($object->fk_propal) ? '<br>'.$langs->trans('Propal') . ' : ' . $prop->getNomUrl(1) : '');
+	$morehtmlref.=(($object->fk_order) ? '<br>'.$langs->trans('order') . ' : ' . $ord->getNomUrl(1) : '');
 	$morehtmlref .= '</div>';
 
 
-	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
+	dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref);
 
 
 	print '<div class="fichecenter">';

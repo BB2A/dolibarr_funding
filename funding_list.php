@@ -420,7 +420,6 @@ if($typedoc == 'propal')
 	$morehtmlref .= $form->editfieldkey("RefCustomer", 'ref_client', $prop->ref_client, $prop, 0, 'string', '', 0, 1);
 	$morehtmlref .= $form->editfieldval("RefCustomer", 'ref_client', $prop->ref_client, $prop, 0, 'string', '', null, null, '', 1);
 	// Thirdparty
-	//BB2A Bug affichage nom tiers
 	$morehtmlref .= '<br>'.$langs->trans('ThirdParty').' : '.$prop->thirdparty->getNomUrl(1);
 	// Project
 	if (!empty($conf->projet->enabled))
