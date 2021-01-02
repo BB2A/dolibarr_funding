@@ -179,7 +179,26 @@ if (empty($reshook))
 		}
 	}
 	$triggermodname = 'FUNDING_FUNDING_MODIFY'; // Name of trigger action code to execute when we modify record
-
+// Positionne study number
+	if ($action == 'setstudy_number' && $permissiontoadd)
+	{
+		$result = $object->set_study_number($user, GETPOST('study_number'));
+		if ($result < 0)
+		{
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	// Positionne folder number
+	if ($action == 'setfolder_number' && $permissiontoadd)
+	{
+		$result = $object->set_folder_number($user, GETPOST('folder_number'));
+		if ($result < 0)
+		{
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	
+	
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
 
@@ -203,6 +222,8 @@ if (empty($reshook))
 	{
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
+	
+	
 //BB2A marque send mail
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
@@ -410,8 +431,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref.=(($object->fk_order) ? '<br>'.$langs->trans('order') . ' : ' . $ord->getNomUrl(1) : '');
 	$morehtmlref .= '</div>';
 
-
-	dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref);
+	$morehtml = "statut dossier";
+	
+	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref);
 
 
 	print '<div class="fichecenter">';

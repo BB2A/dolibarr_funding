@@ -17,7 +17,7 @@
 -- BEGIN MODULEBUILDER INDEXES
 ALTER TABLE llx_funding_coefficient ADD INDEX idx_funding_coefficient_rowid (rowid);
 ALTER TABLE llx_funding_coefficient ADD INDEX idx_funding_coefficient_ref (ref);
-ALTER TABLE llx_funding_coefficient ADD CONSTRAINT llx_funding_coefficient_fk_duration FOREIGN KEY (fk_duration) REFERENCES llx_c_funding_duration(rowid);
+ALTER TABLE llx_funding_coefficient ADD CONSTRAINT llx_funding_coefficient_fk_duration FOREIGN KEY (fk_duration) REFERENCES llx_c_funding_duration(code);
 ALTER TABLE llx_funding_coefficient ADD INDEX idx_funding_coefficient_fk_org (fk_org);
 ALTER TABLE llx_funding_coefficient ADD CONSTRAINT llx_funding_coefficient_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
 ALTER TABLE llx_funding_coefficient ADD INDEX idx_funding_coefficient_status (status);

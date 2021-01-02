@@ -18,8 +18,8 @@ CREATE TABLE llx_funding_coefficient(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(COEF)' NOT NULL, 
-	amount_de double NOT NULL, 
-	amount_a double NOT NULL, 
+	amount_of double NOT NULL, 
+	amount_to double NOT NULL, 
 	fk_duration integer NOT NULL, 
 	coef real NOT NULL, 
 	fk_org integer NOT NULL, 
@@ -28,7 +28,6 @@ CREATE TABLE llx_funding_coefficient(
 	fk_user_creat integer NOT NULL, 
 	fk_user_modif integer, 
 	import_key varchar(14), 
-	model_pdf varchar(255), 
 	status smallint DEFAULT 1 NOT NULL
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;

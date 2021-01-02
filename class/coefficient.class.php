@@ -97,9 +97,9 @@ class Coefficient extends CommonObject
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(COEF)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'amount_de' => array('type'=>'price', 'label'=>'Amount de', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'amount_a' => array('type'=>'price', 'label'=>'Amount a', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
+		'amount_of' => array('type'=>'price', 'label'=>'Amount de', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'help'=>"Help text for amount",),
+		'amount_to' => array('type'=>'price', 'label'=>'Amount a', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'help'=>"Help text for amount",),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.code', 'arrayofkeyval'=>array('12'=>'12 Mois', '24'=>'24 Mois', '36'=>'36 Mois', '48'=>'48 Mois', '60'=>'60 Mois'),),
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help text for quantity",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__) AND fk_typent=239', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToThirparty",),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -107,13 +107,12 @@ class Coefficient extends CommonObject
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
-		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'default'=>'1', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
 	);
 	public $rowid;
 	public $ref;
-	public $amount_de;
-	public $amount_a;
+	public $amount_of;
+	public $amount_to;
 	public $fk_duration;
 	public $coef;
 	public $fk_org;
@@ -122,7 +121,6 @@ class Coefficient extends CommonObject
 	public $fk_user_creat;
 	public $fk_user_modif;
 	public $import_key;
-	public $model_pdf;
 	public $status;
 	// END MODULEBUILDER PROPERTIES
 
@@ -223,7 +221,7 @@ class Coefficient extends CommonObject
                 while ($i < $num)
                 {
                     $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->rowid] = $obj->label;
+                    $arrayofkeyval[$obj->code] = $obj->label;
                     $i = $i +1;
                 }
                 $this->fields['fk_duration']['arrayofkeyval'] = $arrayofkeyval;

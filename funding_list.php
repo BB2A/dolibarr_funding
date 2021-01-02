@@ -585,7 +585,7 @@ print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
 //BB2A
 //$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?fk_soc='.$prop->socid.'&fk_propal='.$propid.'&amount='.$prop->total_ht.'&date_delivery='.$prop->date_livraison.'&fk_duration=4&duration=0&fk_org=2&fk_user_comm=3&redemption=0&status=1&action=create&backtopage='.urlencode($_SERVER['REQUEST_URI']), '', $permissiontoadd);
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=create&backtopage='.urlencode($_SERVER['REQUEST_URI']), '', $permissiontoadd);
+if ($iddoc)$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=create&backtopage='.urlencode($_SERVER['REQUEST_URI']), '', $permissiontoadd);
 
 //BB2a Origin button new
 //$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
