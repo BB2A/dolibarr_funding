@@ -56,6 +56,7 @@ Organization = Organisme
 DateEnd = Date de fin
 Redemption = Rachat
 Funding_duration = Financement - Durée
+Funding_scale = Financement - Baréme
 DateDelivery = Date de livraison
 ListFunding = Liste de financement
 NewFunding = Nouveau financement
@@ -66,9 +67,14 @@ NewCoef = Nouveau coef
 StatusFolder = Statut dossier
 AmountMaint = Montant maintenance
 AmountTotal = Montant total
+OpenFunding = Ouvrir financement
+Scale = Barème
+FundingCard = Fiche financement
 
-UserComm = Commercial
 
+SendOrg = Envoyer a l'organisme
+
+#PARAMETTRES
 FUNDING_NUM_FUND = Numérotation des financements
 FUNDING_NUM_COEF = Numérotation des coef
 FUNDING_MAIL_VALIDATION = Adresse mail notification validation fiancement
@@ -76,8 +82,7 @@ FUNDING_FILTRE_ORGANIZATION = Filtre organisme financement
 FUNDING_DEFAULT_DURATION = Valeur par default pour la durée de financement
 FUNDING_DEFAULT_REDEMPTION = Valeur par default pour le rachat
 
-SendOrg = Envoyer a l'organisme
-#Aides
+#AIDES
 Help_study_number = Numéro d'etude délivré par l'organisme de financement
 Help_folder_number = Numéro de dossier délivré par l'organisme de financement
 Help_amount = Montant à financer
@@ -88,5 +93,15 @@ Help_coef = Coéficiant de calcul
 Help_amount_rent = Montant des loyer
 Help_date_delivery = Date de livraison du matériel
 Help_date_end = Date de fin du financement
+Help_Scale = Barème de financement
 LinkToOrganization = Organisme de financement
 LinkToThirparty = Tiers concerné par le financement
+
+#DROITS
+ReadFunding = Lire
+CreateUpdateFunding = Créer modifier
+DeleteFunding = Supprimer
+ManageFunding = Manage funding
+ReadCoefficient = Lire les coef
+CreateUpdateCoefficient = Creer modifier les coef
+DeleteCoefficient = Supprimer les coef

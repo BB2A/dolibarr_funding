@@ -62,6 +62,7 @@ $arrayofparameters = array(
 	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;

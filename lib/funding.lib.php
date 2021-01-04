@@ -20,7 +20,7 @@
  * \ingroup funding
  * \brief   Library files with common functions for Funding
  */
-
+ 
 /**
  * Prepare admin pages header
  *

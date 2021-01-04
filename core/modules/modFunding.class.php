@@ -73,7 +73,7 @@ class modFunding extends DolibarrModules
 		// Name of image file used for this module.
 		// If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
-		$this->picto = 'funding@funding';
+		$this->picto = 'fundingicon@funding';
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
@@ -102,11 +102,10 @@ class modFunding extends DolibarrModules
 			),
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			'hooks' => array(
-				//   'data' => array(
-				//       'hookcontext1',
-				//       'hookcontext2',
-				//   ),
-				//   'entity' => '0',
+				  'data' => array(
+				      'hookcontext1',
+				  ),
+				 // 'entity' => '0',
 			),
 			// Set this to 1 if features of module are opened to external users
 			'moduleforexternal' => 0,
@@ -156,7 +155,7 @@ class modFunding extends DolibarrModules
 		$this->tabs = array();
 		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?socid=__ID__');
 		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
-		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?typedoc=order&iddoc=__ID__');
+		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
        
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@funding:$user->rights->funding->read:/funding/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
@@ -188,23 +187,23 @@ class modFunding extends DolibarrModules
 		$this->dictionaries=array(
 			'langs'=>'funding@funding',
 			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration"),
+			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale"),
 			// Label of tables
-			'tablib'=>array("Funding_duration"),
+			'tablib'=>array("Funding_duration","Funding_scale"),
 			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f'),
+			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f'),
 			// Sort order
-			'tabsqlsort'=>array("label ASC"),
+			'tabsqlsort'=>array("label ASC","label ASC"),
 			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("code,label"),
+			'tabfield'=>array("code,label","code,label"),
 			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("code,label"),
+			'tabfieldvalue'=>array("code,label","code,label"),
 			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("code,label"),
+			'tabfieldinsert'=>array("code,label","code,label"),
 			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid"),
+			'tabrowid'=>array("rowid","rowid"),
 			// Condition to show each dictionary
-			'tabcond'=>array($conf->funding->enabled)
+			'tabcond'=>array($conf->funding->enabled,$conf->funding->enabled)
 		);
 
 		// Boxes/Widgets
@@ -247,32 +246,37 @@ class modFunding extends DolibarrModules
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of Funding'; // Permission label
+		$this->rights[$r][1] = 'ReadFunding'; // Permission label
 		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update objects of Funding'; // Permission label
+		$this->rights[$r][1] = 'CreateUpdateFunding'; // Permission label
 		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects of Funding'; // Permission label
+		$this->rights[$r][1] = 'DeleteFunding'; // Permission label
 		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of Funding'; // Permission label
+		$this->rights[$r][1] = 'ManageFunding'; // Permission label
+		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update objects of Funding'; // Permission label
+		$this->rights[$r][1] = 'CreateUpdateCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects of Funding'; // Permission label
+		$this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;

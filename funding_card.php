@@ -87,6 +87,7 @@ $backtopageforcancel 	= GETPOST('backtopageforcancel', 'alpha');
 
 $typedoc				= GETPOST('typedoc', 'alpha');
 $iddoc					= GETPOST('iddoc', 'int');
+$crea					= GETPOST('crea', 'int');
 
 // Initialize technical objects
 $object = new Funding($db);
@@ -108,7 +109,7 @@ foreach ($object->fields as $key => $val)
 }
 
  //BB2A Affichage de la fiche dans la proposition ou la commande
- if ($typedoc){
+ if ($typedoc && empty($crea)){
 	$sql = 'SELECT t.rowid, t.fk_propal, t.fk_order';
 	$sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 	if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
@@ -137,7 +138,6 @@ foreach ($object->fields as $key => $val)
 	}
  }
 
-
 if (empty($action) && empty($id) && empty($ref)) $action = 'view';
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
@@ -147,6 +147,7 @@ $permissiontoadd = $user->rights->funding->funding->write; // Used by the includ
 $permissiontodelete = $user->rights->funding->funding->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
 $permissionnote = $user->rights->funding->funding->write; // Used by the include of actions_setnotes.inc.php
 $permissiondellink = $user->rights->funding->funding->write; // Used by the include of actions_dellink.inc.php
+$permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 // Security check - Protection if external user
@@ -170,16 +171,24 @@ if (empty($reshook))
 	$error = 0;
 
 	$backurlforlist = dol_buildpath('/funding/funding_list.php', 1);
-
+	if(!empty($typedoc) && !empty($iddoc))
+	{
+		$typedoc == 'propo' ? $backurl = '/comm/propal/card.php?id='.$iddoc : '';
+		$typedoc == 'order' ? $backurl = '/comm/propal/card.php?id='.$iddoc : '';
+	}
+	else
+	{
+		$backurl = $backurlforlist;
+	}
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
-			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) $backtopage = $backurlforlist;
-			if ($typedoc && $iddoc)$backtopage = dol_buildpath('/funding/funding_card.php', 1).'?typedoc='.$typedoc.'&iddoc='.$iddoc;
-			else $backtopage = dol_buildpath('/funding/funding_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) $backtopage = $backurl;
+			else $backtopage = dol_buildpath('/funding/funding_card.php', 1).'?id='.($id > 0 ? $id : '__ID__').'&typedoc='.$typedoc.'&iddoc='.$iddoc;
 		}
 	}
 	$triggermodname = 'FUNDING_FUNDING_MODIFY'; // Name of trigger action code to execute when we modify record
-// Positionne study number
+
+	// Positionne study number
 	if ($action == 'setstudy_number' && $permissiontoadd)
 	{
 		$result = $object->set_study_number($user, GETPOST('study_number'));
@@ -197,8 +206,7 @@ if (empty($reshook))
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-	
-	
+
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
 
@@ -224,7 +232,7 @@ if (empty($reshook))
 	}
 	
 	
-//BB2A marque send mail
+	// BB2A marque send mail
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
@@ -265,7 +273,7 @@ if ($action == 'create')
 {
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
 
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
 	if ($backtopage) print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
@@ -304,7 +312,7 @@ if (($id || $ref) && $action == 'edit')
 {
 	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
 
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="update">';
 	print '<input type="hidden" name="id" value="'.$object->id.'">';
@@ -335,35 +343,44 @@ if (($id || $ref) && $action == 'edit')
 // Part to show record
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create')))
 {
-	
-	if ($typedoc = 'propal')
+	//Regarde si on est dans un document ou fiche funding
+	 if (!empty($object->fk_propal) || $typedoc == 'propal')
 	{
 		//BB2A_Récupération table propal
 		$prop = new Propal($db);
-		if ($iddoc > 0 || ! empty($ref))
+		if ($object->fk_propal > 0 || ! empty($ref))
 		{
-			$result = $prop->fetch($iddoc);
+			$result = $prop->fetch($object->fk_propal);
 		}
-
+	}
+	elseif (!empty($object->fk_order) || $typedoc == 'order') 
+	{
+		//BB2A_Récupération table order
+		$ord = new Commande($db);
+		if ($object->fk_order > 0 || ! empty($ref))
+		{
+			$result = $ord->fetch($object->fk_order);
+		}
+	}
+	
+// Vérification si on est dans un document pour afficher la bonne entête
+	if ($typedoc == 'propal')
+	{
 		//BB2A_Affichage encadrer propal
 		$prop->fetch_thirdparty();
 		
 		$head = propal_prepare_head($prop);
 		dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
 	}
-	elseif ($typedoc = 'order')
+	elseif ($typedoc == 'order')
 	{
-		//BB2A_Récupération table order
-		$ord = new Commande($db);
-		if ($iddoc > 0 || ! empty($ref))
-		{
-			$result = $ord->fetch($iddoc);
-		}
+		//BB2A_Affichage encadrer order
 		$head = commande_prepare_head($ord);
 		dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
 	}
 	else
 	{
+		//BB2A_Affichage encadrer funding
 		$res = $object->fetch_optionals();
 		$head = fundingPrepareHead($object);
 		dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);
@@ -381,11 +398,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
 	}
 	// Clone confirmation
-	if ($action == 'clone') {
+	/*if ($action == 'clone') {
 		// Create an array for form
 		$formquestion = array();
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('ToClone'), $langs->trans('ConfirmCloneAsk', $object->ref), 'confirm_clone', $formquestion, 'yes', 1);
-	}
+	}*/
 
 	// Confirmation of action xxxx
 	if ($action == 'xxx')
@@ -428,10 +445,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Thirdparty
 	$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
 	$morehtmlref.=(($object->fk_propal) ? '<br>'.$langs->trans('Propal') . ' : ' . $prop->getNomUrl(1) : '');
-	$morehtmlref.=(($object->fk_order) ? '<br>'.$langs->trans('order') . ' : ' . $ord->getNomUrl(1) : '');
+	$morehtmlref.=(($object->fk_order) ? '<br>'.$langs->trans('Order') . ' : ' . $ord->getNomUrl(1) : '');
 	$morehtmlref .= '</div>';
 
-	$morehtml = "statut dossier";
+	$morehtml = $typedoc ? '<a href="'.dol_buildpath("/funding/funding_card.php?id=".$object->id.'"',1).'">'.$langs->trans('OpenFunding').'</a>' : '';
+	//$morehtml .= '<br/>'."statut dossier";
 	
 	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref);
 
@@ -455,6 +473,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</div>';
 
 	print '<div class="clearboth"></div>';
+	print '<div>test</div>';
 
 	dol_fiche_end();
 
@@ -525,9 +544,19 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			// BB2A Send organization
 			if (empty($user->socid)) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=send_organization">'.$langs->trans('SendOrg').'</a>'."\n";
+				if ($permissionmanage)
+				{
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=send_org">'.$langs->trans('SendOrg').'</a>'."\n";
+				}
 			}
-
+			
+			// BB2A Send organization
+			if (empty($user->socid)) {
+				if ($permissionmanage)
+				{
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=Set_AcceptedRefused">'.$langs->trans('SetAcceptedRefused').'</a>'."\n";
+				}
+			}
 			// Send
 			if (empty($user->socid)) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
@@ -570,10 +599,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Clone
-			if ($permissiontoadd)
+			/*if ($permissiontoadd)
 			{
 				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&socid='.$object->socid.'&action=clone&object=funding">'.$langs->trans("ToClone").'</a>'."\n";
-			}
+			}*/
 
 			/*
 			if ($permissiontoadd)
@@ -618,7 +647,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if (GETPOST('modelselected')) {
 		$action = 'presend';
 	}
-
+	
+// BB2A désactive l'affichage des evenements, Document, Objets liés
+/*
 	if ($action != 'presend')
 	{
 		print '<div class="fichecenter"><div class="fichehalfleft">';
@@ -654,10 +685,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
 		$formactions = new FormActions($db);
 		$somethingshown = $formactions->showactions($object, $object->element, (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
-
+		
 		print '</div></div></div>';
 	}
-
+*/
 	//Select mail models is same action as presend
 	if (GETPOST('modelselected')) $action = 'presend';
 

@@ -20,6 +20,7 @@ ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_ref (ref);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_study_number (study_number);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_folder_number (folder_number);
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_duration FOREIGN KEY (fk_duration) REFERENCES llx_c_funding_duration(code);
+ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_scale FOREIGN KEY (fk_scale) REFERENCES llx_c_scale(code);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_redemption (redemption);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_org (fk_org);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_soc (fk_soc);

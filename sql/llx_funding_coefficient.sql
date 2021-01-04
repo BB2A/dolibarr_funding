@@ -22,6 +22,7 @@ CREATE TABLE llx_funding_coefficient(
 	amount_to double NOT NULL, 
 	fk_duration integer NOT NULL, 
 	coef real NOT NULL, 
+	fk_scale integer DEFAULT 4 NOT NULL, 
 	fk_org integer NOT NULL, 
 	date_creation datetime NOT NULL, 
 	tms timestamp, 

@@ -37,10 +37,11 @@ function fundingPrepareHead($object)
 	$head = array();
 
 	$head[$h][0] = dol_buildpath("/funding/funding_card.php", 1).'?id='.$object->id;
-	$head[$h][1] = $langs->trans("Card");
+	$head[$h][1] = $langs->trans("FundingCard");
 	$head[$h][2] = 'card';
 	$h++;
-
+// BB2A désactivation affichage Note, Documents, Agenda
+/*
 	if (isset($object->fields['note_public']) || isset($object->fields['note_private']))
 	{
 		$nbNote = 0;
@@ -68,7 +69,7 @@ function fundingPrepareHead($object)
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
 	$h++;
-
+*/
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	//$this->tabs = array(
