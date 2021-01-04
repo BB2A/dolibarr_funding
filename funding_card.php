@@ -647,7 +647,31 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if (GETPOST('modelselected')) {
 		$action = 'presend';
 	}
+
+	//BB2A Fichier joint
+
+
+
+	// Build file list
+	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
+	$totalsize = 0;
+	foreach ($filearray as $key => $file)
+	{
+		$totalsize += $file['size'];
+	}
+
+	$modulepart = 'funding';
+	//$permission = $user->rights->funding->funding->write;
+	$permission = 1;
+	//$permtoedit = $user->rights->funding->funding->write;
+	$permtoedit = 1;
+	$param = '&id='.$object->id;
+
+	//$relativepathwithnofile='funding/' . dol_sanitizeFileName($object->id).'/';
+	$relativepathwithnofile = 'funding/'.dol_sanitizeFileName($object->ref).'/';
 	
+	include_once DOL_DOCUMENT_ROOT.'/custom/funding/core/tpl/document_actions_post_headers.tpl.php';
+
 // BB2A désactive l'affichage des evenements, Document, Objets liés
 /*
 	if ($action != 'presend')
