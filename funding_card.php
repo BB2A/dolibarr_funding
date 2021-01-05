@@ -648,10 +648,17 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$action = 'presend';
 	}
 
-	//BB2A Fichier joint
+	//BB2A Fichiers joints
 
+	/*
+	 * Actions
+	 */
 
+	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
+	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/funding/".dol_sanitizeFileName($object->ref);
+	var_dump($upload_dir);
 
+	print "<h3>".$langs->trans("Documents for funding")."</h3>";
 	// Build file list
 	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
 	$totalsize = 0;
@@ -659,7 +666,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	{
 		$totalsize += $file['size'];
 	}
-
+	
 	$modulepart = 'funding';
 	//$permission = $user->rights->funding->funding->write;
 	$permission = 1;
