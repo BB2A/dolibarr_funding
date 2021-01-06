@@ -187,23 +187,23 @@ class modFunding extends DolibarrModules
 		$this->dictionaries=array(
 			'langs'=>'funding@funding',
 			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale"),
+			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale",MAIN_DB_PREFIX."c_type_funding"),
 			// Label of tables
-			'tablib'=>array("Funding_duration","Funding_scale"),
+			'tablib'=>array("Funding_duration","Funding_scale","Funding_type"),
 			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f'),
+			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_type_funding as f'),
 			// Sort order
-			'tabsqlsort'=>array("label ASC","label ASC"),
+			'tabsqlsort'=>array("label ASC","label ASC","label ASC"),
 			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("code,label","code,label"),
+			'tabfield'=>array("code,label","code,label","code,label"),
 			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("code,label","code,label"),
+			'tabfieldvalue'=>array("code,label","code,label","code,label"),
 			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("code,label","code,label"),
+			'tabfieldinsert'=>array("code,label","code,label","code,label"),
 			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid","rowid"),
+			'tabrowid'=>array("rowid","rowid","rowid"),
 			// Condition to show each dictionary
-			'tabcond'=>array($conf->funding->enabled,$conf->funding->enabled)
+			'tabcond'=>array($conf->funding->enabled,$conf->funding->enabled,$conf->funding->enabled)
 		);
 
 		// Boxes/Widgets

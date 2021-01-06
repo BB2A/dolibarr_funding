@@ -102,13 +102,15 @@ class Funding extends CommonObject
 		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
 		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_maint",),
 		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_total",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.code', 'help'=>"Help_duration", 'arrayofkeyval'=>array('12'=>'12 Mois', '24'=>'24 Mois', '36'=>'36 Mois', '48'=>'48 Mois', '60'=>'60 Mois'),),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array('12'=>'12 Mois', '24'=>'24 Mois', '36'=>'36 Mois', '48'=>'48 Mois', '60'=>'60 Mois'),),
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
-		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_scale.code', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('2'=>'Création', '1'=>'Standard'),),
+		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
+		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_delivery", 'showoncombobox'=>'1',),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>45, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
-		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'default'=>'1', 'index'=>1, 'arrayofkeyval'=>array('1'=>'Non', '2'=>'Oui'),),
+		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'index'=>1, 'arrayofkeyval'=>array('1'=>'Non', '2'=>'Oui'),),
+		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'index'=>1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('CREDIT_BAIL'=>'Crédit bail', 'LOC'=>'Location'),),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>55, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
 		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1,),
@@ -137,9 +139,11 @@ class Funding extends CommonObject
 	public $coef;
 	public $fk_scale;
 	public $amount_rent;
+	public $amount_rent_edit;
 	public $date_delivery;
 	public $date_end;
 	public $redemption;
+	public $fk_funding_type;
 	public $fk_org;
 	public $fk_soc;
 	public $fk_propal;
@@ -208,10 +212,15 @@ class Funding extends CommonObject
 
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
-		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+		
 		if (!empty($conf->global->FUNDING_DEFAULT_DURATION) && isset($this->fields['fk_duration'])) $this->fields['fk_duration']['default'] = $conf->global->FUNDING_DEFAULT_DURATION;
-		if (!empty($conf->global->FUNDING_DEFAULT_REDEMPTION) && isset($this->fields['redemption'])) $this->fields['redemption']['default'] = $conf->global->FUNDING_DEFAULT_REDEMPTION;
 		if (!empty($conf->global->FUNDING_DEFAULT_SCALE) && isset($this->fields['fk_scale'])) $this->fields['fk_scale']['default'] = $conf->global->FUNDING_DEFAULT_SCALE;
+		if (!empty($conf->global->FUNDING_DEFAULT_REDEMPTION) && isset($this->fields['redemption'])) $this->fields['redemption']['default'] = $conf->global->FUNDING_DEFAULT_REDEMPTION;
+		if (!empty($conf->global->FUNDING_DEFAULT_TYPE) && isset($this->fields['fk_funding_type'])) $this->fields['fk_funding_type']['default'] = $conf->global->FUNDING_DEFAULT_TYPE;
+		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+		if (!empty($conf->global->FUNDING_DEFAULT_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['default'] = $this->fields['fk_org']['default'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
+		
+		if (GETPOST('action', 'alpha') == 'edit') $this->fields['amount_rent_edit']['visible'] = 1 & $this->fields['amount_rent']['visible'] = 1;
 
 		//array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__) AND fk_typent='
 		// Example to show how to set values of fields definition dynamically
@@ -261,7 +270,7 @@ class Funding extends CommonObject
                 while ($i < $num)
                 {
                     $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->code] = $obj->label;
+                    $arrayofkeyval[$obj->rowid] = $obj->label;
                     $i = $i +1;
                 }
                 $this->fields['fk_duration']['arrayofkeyval'] = $arrayofkeyval;
@@ -274,7 +283,7 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
         }
-		
+
 		//Chagement du dictionnaire scale
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
         $sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
@@ -292,10 +301,41 @@ class Funding extends CommonObject
                 while ($i < $num)
                 {
                     $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->code] = $obj->label;
+                    $arrayofkeyval[$obj->rowid] = $obj->label;
                     $i = $i +1;
                 }
                 $this->fields['fk_scale']['arrayofkeyval'] = $arrayofkeyval;
+            }
+            $db->free($resql);
+        }
+        else
+        {
+            $this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+        }
+
+		//Chagement du dictionnaire type
+		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
+        $sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_type as c';
+        $sql.= ' WHERE c.active = 1';
+        $sql.= ' ORDER BY c.label ASC';
+
+        $resql = $db->query($sql);
+        if ($resql)
+        {
+            $num = $db->num_rows($resql);
+            if ($num > 0)
+            {
+                $arrayofkeyval = array();
+                $i = 0;
+                while ($i < $num)
+                {
+                    $obj = $db->fetch_object($resql);
+                    $arrayofkeyval[$obj->rowid] = $obj->label;
+                    $i = $i +1;
+                }
+                $this->fields['fk_funding_type']['arrayofkeyval'] = $arrayofkeyval;
             }
             $db->free($resql);
         }
@@ -443,6 +483,10 @@ class Funding extends CommonObject
 	{
 		global $conf, $db;
 
+		//Récupére la durée
+		$duration = $this->fetch_duration($duration);
+		//Récupére scale
+		$scale = $this->fetch_scale($scale);
 		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_coefficient as c';
         $sql.= ' WHERE c.status = 1';
 		$sql.= ' AND c.fk_org = '.$org;
@@ -475,21 +519,29 @@ class Funding extends CommonObject
 	 */
 	public function create(User $user, $notrigger = false)
 	{
+		global $langs;
+		
 		$typedoc 	= GETPOST('typedoc', 'alpha');
 		$iddoc 		= GETPOST('iddoc', 'int');
 		//Initialise les information obligatoire non editable
 		//Document
-		if ($iddoc && $typedoc){
+		if ($iddoc && $typedoc)
+		{
 			$document			= $this->info_doc($iddoc,$typedoc);
-			if ($document->fk_statut == 1){
+			if ($document->fk_statut == 1)
+			{
 				$this->fk_soc		= $document->fk_soc;
 				$this->amount		= $document->total_ht;
 				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
-				if ($coef > 0){
+				if ($coef > 0)
+				{
 					$this->coef			= $coef;
 					$this->amount_rent	= $this->amount_total * $coef / 100;
-					if ($document->date_livraison){
+					$this->amount_rent = round($this->amount_rent,2);
+					$this->amount_rent_edit = $this->amount_rent;
+					if ($document->date_livraison)
+					{
 						$this->date_delivery= $document->date_livraison;
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
 						$this->date_end		= date('Y-m-d', strtotime('+'.$this->fk_duration.' month',strtotime($document->date_livraison)));
@@ -498,7 +550,8 @@ class Funding extends CommonObject
 					if ($typedoc == 'order') $this->fk_order	= $iddoc;
 					//Commercial
 					$idcomm				= $this->comm_tiers($document->fk_soc);
-					if($idcomm > 0){
+					if($idcomm > 0)
+					{
 						$this->fk_user_comm = $idcomm;
 						//Génére la référence
 						$ref = $this->createRef();
@@ -509,27 +562,29 @@ class Funding extends CommonObject
 						}
 						else
 						{
-							setEventMessages('Création ref impossible', null, 'errors');
-						}
+							setEventMessages($langs->trans("creatrefnok"), null, 'errors');
+						}						
 					}
 					else
 					{
-						setEventMessages('Commercial introuvable', null, 'errors');
+						setEventMessages($langs->trans("commnok"), null, 'errors');
 					}
 				}
-				else{
-					setEventMessages('Coef introuvable', null, 'errors');
+				else
+				{
+					setEventMessages($langs->trans("coefnok"), null, 'errors');
 				}
 			}
-			else{
-					setEventMessages('Document non validé', null, 'errors');
+			else
+			{
+				setEventMessages($langs->trans("docnotvalidate"), null, 'errors');
 			}
 		}
 		else
 		{
-			setEventMessages('Parametres manquants', null, 'errors');
+			setEventMessages($langs->trans("paramnok"), null, 'errors');
 		}
-	}
+}
 
 	/**
 	 * Clone an object into another one
@@ -729,6 +784,62 @@ class Funding extends CommonObject
 			return -1;
 		}
 	}
+	
+	/**
+	 * Récupére la durée
+	 *
+	 * @param  id durée
+	 * @param  
+	 * @return $duration = ok or -1 = nok
+	 */
+	public function fetch_duration($duration)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_funding_duration";
+		$sql.= " WHERE rowid = ".$duration;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			$row = $db->fetch_object($resql);
+			$duration = $row->code;
+			return $duration;
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}
+	}
+
+	/**
+	 * Récupére scale
+	 *
+	 * @param  id scale
+	 * @param  
+	 * @return $scale = ok or -1 = nok
+	 */
+	public function fetch_scale($scale)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_funding_scale";
+		$sql.= " WHERE rowid = ".$scale;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			$row = $db->fetch_object($resql);
+			$scale = $row->code;
+			return $scale;
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}
+	}
 
 	/**
 	 * Update object into database
@@ -739,7 +850,45 @@ class Funding extends CommonObject
 	 */
 	public function update(User $user, $notrigger = false)
 	{
-		return $this->updateCommon($user, $notrigger);
+		global $langs;
+
+		$typedoc 	= GETPOST('typedoc', 'alpha');
+		$iddoc 		= GETPOST('iddoc', 'int');
+		//Document
+		if ($iddoc && $typedoc)
+		{
+			$document			= $this->info_doc($iddoc,$typedoc);
+			if ($document->fk_statut == 1)
+			{
+				$this->amount		= $document->total_ht;
+				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
+				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
+				if ($coef > 0)
+				{
+					$this->coef			= $coef;
+					$this->amount_rent	= $this->amount_total * $coef / 100;
+					$this->amount_rent = round($this->amount_rent,2);
+					if($this->amount_rent_edit < $this->amount_rent)
+					{
+						$this->amount_rent_edit = $this->amount_rent;
+						setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
+					}
+					return $this->updateCommon($user, $notrigger);
+				}
+				else
+				{
+					setEventMessages($langs->trans("coefnok"), null, 'errors');
+				}
+			}
+			else
+			{
+				setEventMessages($langs->trans("docnotvalidate"), null, 'errors');
+			}
+		}
+		else
+		{
+			setEventMessages($langs->trans("paramnok"), null, 'errors');
+		}
 	}
 
 	/**

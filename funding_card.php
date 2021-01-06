@@ -305,7 +305,7 @@ if ($action == 'create')
 	print '<div class="center">';
 	print '<input type="submit" class="button" name="add" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
 	print '&nbsp; ';
-	print '<input type="'.($backtopage ? "submit" : "button").'" class="button" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
+	if(empty($iddoc))print '<input type="'.($backtopage ? "submit" : "button").'" class="button" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
 	print '</div>';
 
 	print '</form>';
@@ -317,7 +317,6 @@ if ($action == 'create')
 if (($id || $ref) && $action == 'edit')
 {
 	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
-
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="update">';
@@ -394,9 +393,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$formconfirm = '';
 
 	// Confirmation to delete
-	if ($action == 'delete')
+	if ($action == 'delete_object')
 	{
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteFunding'), $langs->trans('ConfirmDeleteObject'), 'confirm_delete', '', 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteFunding'), $langs->trans('ConfirmDeleteFunding'), 'confirm_delete', '', 0, 1);
 	}
 	// Confirmation to delete line
 	if ($action == 'deleteline')
@@ -579,7 +578,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// Modify
 			if ($permissiontoadd)
 			{
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit">'.$langs->trans("Modify").'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Modify").'</a>'."\n";
 			}
 			else
 			{
@@ -637,7 +636,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
 			{
-				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete">'.$langs->trans('Delete').'</a>'."\n";
+				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object">'.$langs->trans('Delete').'</a>'."\n";
 			}
 			else
 			{
@@ -653,11 +652,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$action = 'presend';
 	}
 
-	// BB2A Fichiers joints //Code isssue de funding_docuement.php
-	
-	var_dump ($backtopage);
-	if ($action == 'confirm_deletefile') $backtopage = '';
-	var_dump ($backtopage);
+	// BB2A Fichiers joints
+	//Code isssue de funding_docuement.php
 	
 	/*
 	* Actions
@@ -688,14 +684,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 
 // BB2A désactive l'affichage des evenements, Document, Objets liés
-/*
+
 	if ($action != 'presend')
 	{
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
 		$includedocgeneration = 1;
-
+/*
 		// Documents
 		if ($includedocgeneration) {
 			$objref = dol_sanitizeFileName($object->ref);
@@ -706,7 +702,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$delallowed = $user->rights->funding->funding->write;	// If you can create/edit, you can remove a file on card
 			print $formfile->showdocuments('funding:Funding', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
-
+*/
 		// Show links to link elements
 		$linktoelem = $form->showLinkToObjectBlock($object, null, array('funding'));
 		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
@@ -727,7 +723,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		
 		print '</div></div></div>';
 	}
-*/
+
 	//Select mail models is same action as presend
 	if (GETPOST('modelselected')) $action = 'presend';
 
