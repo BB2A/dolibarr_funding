@@ -121,14 +121,7 @@ $formfile->form_attach_new_file(
     $object,
 	'',
 	1,
-	$savingdocmask,
-	0,
-	'',
-	'',
-	'',
-	'',
-	'',
-	1
+	$savingdocmask
 );
 
 // List of document

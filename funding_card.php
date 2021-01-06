@@ -61,6 +61,12 @@ if (!$res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+
+// BB2A Fichiers joints //Code isssue de funding_docuement.php
+require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 dol_include_once('/funding/class/funding.class.php');
 dol_include_once('/funding/lib/funding_funding.lib.php');
 
@@ -363,7 +369,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 	}
 	
-// Vérification si on est dans un document pour afficher la bonne entête
+	// BB2A Vérification si on est dans un document pour afficher la bonne entête
 	if ($typedoc == 'propal')
 	{
 		//BB2A_Affichage encadrer propal
@@ -473,7 +479,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</div>';
 
 	print '<div class="clearboth"></div>';
-	print '<div>test</div>';
 
 	dol_fiche_end();
 
@@ -648,17 +653,20 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$action = 'presend';
 	}
 
-	//BB2A Fichiers joints
-
+	// BB2A Fichiers joints //Code isssue de funding_docuement.php
+	
+	var_dump ($backtopage);
+	if ($action == 'confirm_deletefile') $backtopage = '';
+	var_dump ($backtopage);
+	
 	/*
-	 * Actions
-	 */
-
-	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
+	* Actions
+	*/
 	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/funding/".dol_sanitizeFileName($object->ref);
-	var_dump($upload_dir);
+	
+	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 
-	print "<h3>".$langs->trans("Documents for funding")."</h3>";
+	print "<h3>".$langs->trans("DocumentsForFunding")."</h3>";
 	// Build file list
 	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
 	$totalsize = 0;
@@ -677,7 +685,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//$relativepathwithnofile='funding/' . dol_sanitizeFileName($object->id).'/';
 	$relativepathwithnofile = 'funding/'.dol_sanitizeFileName($object->ref).'/';
 	
-	include_once DOL_DOCUMENT_ROOT.'/custom/funding/core/tpl/document_actions_post_headers.tpl.php';
+	include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 
 // BB2A désactive l'affichage des evenements, Document, Objets liés
 /*
