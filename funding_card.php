@@ -212,8 +212,8 @@ if (empty($reshook))
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-
-	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
+	
+		// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
 
 	// Actions when linking object each other
@@ -224,6 +224,12 @@ if (empty($reshook))
 
 	// Action to move up and down lines of object
 	//include DOL_DOCUMENT_ROOT.'/core/actions_lineupdown.inc.php';
+	
+	if ($action == 'confirm_refresh' && $confirm == 'yes' && $permissiontoadd)
+	{
+		$res = $object->update($user);
+		//if ($res > 0) $object->status = self::STATUS_STUDY_REQUEST;
+	}
 
 	// Action to build doc
 	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
@@ -237,6 +243,36 @@ if (empty($reshook))
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
 	
+	if ($action == 'setAcceptedRefused' && $permissionmanage && !GETPOST('cancel', 'alpha')) {
+		if (!(GETPOST('statut', 'int') > 0))
+		{
+			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("CloseAs")), null, 'errors');
+			$action = 'statut';
+		}
+		else
+		{
+			// prevent browser refresh from closing proposal several times
+			if ($object->status >= $object::STATUS_VALIDATED)
+			{
+				$db->begin();
+
+				$result = $object->Set_AcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('note', 'none'));
+				if ($result <= 0)
+				{
+					setEventMessages($object->error, $object->errors, 'errors');
+					$error++;
+				}
+				if (!$error)
+				{
+					$db->commit();
+				}
+				else
+				{
+					$db->rollback();
+				}
+			}
+		}
+	}
 	
 	// BB2A marque send mail
 	// Actions to send emails
@@ -311,6 +347,9 @@ if ($action == 'create')
 	print '</form>';
 
 	//dol_set_focus('input[name="ref"]');
+	
+	// if ($typedoc == 'propal') $backtopage = DOL_URL_ROOT.'/comm/propal/card.php?id='.$iddoc;
+	// if ($typedoc == 'order') $backtopage = DOL_URL_ROOT.'/commande/card.php?id='.$iddoc;
 }
 
 // Part to edit record
@@ -367,7 +406,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$result = $ord->fetch($object->fk_order);
 		}
 	}
-	
+		
 	// BB2A Vérification si on est dans un document pour afficher la bonne entête
 	if ($typedoc == 'propal')
 	{
@@ -392,11 +431,40 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	$formconfirm = '';
 
+	// Confirmation of action xxxx
+	if ($action == 'refresh')
+	{
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
+	}
+	
+	if ($action == 'AcceptedRefused')
+	{
+		//Form to close proposal (signed or not)
+		$formquestion = array(
+			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array(2=>$object->LibStatut($object::STATUS_ACCEPT), 3=>$object->LibStatut($object::STATUS_DENIED))),
+			// BB2A Saisie d'un text
+			// array('type' => 'text', 'name' => 'note', 'label' => $langs->trans("Note"), 'value' => '')
+		);
+		
+		// BB2A Notification voir pour aline changement de statut
+		/*if (!empty($conf->notification->enabled))
+		{
+			require_once DOL_DOCUMENT_ROOT.'/core/class/notify.class.php';
+			$notify = new Notify($db);
+			$formquestion = array_merge($formquestion, array(
+				array('type' => 'onecolumn', 'value' => $notify->confirmMessage('FUNDING_ACCEPT_DENIED', $object->socid, $object)),
+			));
+		}*/
+
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SetAcceptedRefused'), $text, 'setAcceptedRefused', $formquestion, '', 1, 200);
+	}
+
 	// Confirmation to delete
 	if ($action == 'delete_object')
 	{
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteFunding'), $langs->trans('ConfirmDeleteFunding'), 'confirm_delete', '', 0, 1);
 	}
+	
 	// Confirmation to delete line
 	if ($action == 'deleteline')
 	{
@@ -553,19 +621,31 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=send_org">'.$langs->trans('SendOrg').'</a>'."\n";
 				}
 			}
-			
-			// BB2A Send organization
+
+			// Set status accepted/refused
 			if (empty($user->socid)) {
-				if ($permissionmanage)
+				if ($object->status >= $object::STATUS_VALIDATED && $permissionmanage) 
 				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=Set_AcceptedRefused">'.$langs->trans('SetAcceptedRefused').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'">'.$langs->trans('SetAcceptedRefused').'</a>';
 				}
 			}
+
+			// BB2A Envoie par mail	
 			// Send
+			/*
 			if (empty($user->socid)) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
+			*/
 
+			// BB2A Refresh
+			if (empty($user->socid)) {
+				if ($permissiontoadd)
+				{
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=refresh">'.$langs->trans('Refresh').'</a>'."\n";
+				}
+			}
+			
 			// Back to draft
 			if ($object->status == $object::STATUS_VALIDATED)
 			{

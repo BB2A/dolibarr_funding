@@ -72,6 +72,9 @@ TypeFunding = Type de financement
 FundingCard = Fiche financement
 DocumentsForFunding = Documents pour le financement
 ConfirmDeleteFunding = Êtes-vous sûr de vouloir supprimer ce financement ?
+RefreshFunding = Actiualiser le financement
+ConfirmRefreshFunding = Confirmer l'actualisation des informations?
+
 SendOrg = Envoyer a l'organisme
 
 #DICTIONNAIRES
@@ -125,3 +128,25 @@ paramnok = Parametres manquants
 checknok = Tous les paramétres ne sont pas réunis
 creatrefnok = Création ref impossible
 amount_rent_edit<amount_rent = Loyer personnalisé modifié, car inférieur ou égale au montant calculé
+
+#STATUS
+FundingStatusDraft = Brouillon
+FundingStatusValidated = Validé
+FundingStatusAccept = Accepté
+FundingStatusDenied = Refusé
+FundingStatusRequest = Demande d'étude
+FundingStatusLack = Document manquant
+FundingStatusSendOrg = Envoyer à l'organisme
+FundingStatusRunning = Financement actif
+FundingStatusEnd = Financement terminé
+FundingStatusDisabled = Financement annulé
+FundingStatusDraftShort = Brouillon
+FundingStatusEnabledShort = Validé
+FundingStatusAcceptShort = Accepté
+FundingStatusDeniedShort = Refusé
+FundingStatusRequestShort = Demande d'étude
+FundingStatusLackShort = Doc manquant
+FundingStatusSendOrgShort = Envoyer à l'organisme
+FundingStatusRunningShort = Financement actif
+FundingStatusEndShort = Financement terminé
+FundingStatusDisabledShort = Financement annulé
