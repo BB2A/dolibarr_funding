@@ -131,8 +131,8 @@ class Funding extends CommonObject
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>0, 'index'=>1, 'arrayofkeyval'=>array('0'=>'Non traitée', '1'=>'Nouvelle demande', '2'=>'En cours', '3'=>'Pièces manquantes', '4'=>'Valid&eacute', '5'=>'Refusé'),),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '2'=>'Valid&eacute;', '3'=>'Valid&eacute;', '4'=>'Valid&eacute;', '5'=>'Valid&eacute;', '6'=>'Valid&eacute;', '7'=>'Valid&eacute;', '8'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1, 'arrayofkeyval'=>array(),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'0', 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '2'=>'Valid&eacute;', '3'=>'Valid&eacute;', '4'=>'Valid&eacute;', '5'=>'Valid&eacute;', '6'=>'Valid&eacute;', '7'=>'Valid&eacute;', '8'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
 	);
 	public $rowid;
 	public $ref;
@@ -1277,7 +1277,6 @@ class Funding extends CommonObject
 	 */
 	public function Set_AcceptedRefused($user, $status, $note = '', $notrigger = 0)
 	{
-		global $langs;
 		// Protection
 		if ($this->status == self::STATUS_CANCELED)
 		{
@@ -1662,6 +1661,23 @@ class Funding extends CommonObject
 		$this->db->commit();
 
 		return $error;
+	}
+	
+	/**
+	 * Action send folder to organization
+	 * @return send 1 OK -1 NOK
+	 */
+	public function send_org($user)
+	{
+		global $langs;
+		// Protection
+		if ($this->status == self::STATUS_CANCELED)
+		{
+			return 0;
+		}
+		
+		setEventMessages($langs->trans("SendOrgOk"), null);
+		return $this->setStatusCommon($user, self::STATUS_SEND_ORG, $notrigger, 'FUNDING_SEND_ORG');
 	}
 }
 

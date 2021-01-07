@@ -46,7 +46,7 @@ CREATE TABLE llx_funding_funding(
 	fk_user_modif integer, 
 	import_key varchar(14), 
 	model_pdf varchar(255), 
-	status_folder smallint NOT NULL, 
+	status_folder smallint, 
 	status smallint NOT NULL
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;

@@ -115,7 +115,7 @@ foreach ($object->fields as $key => $val)
 }
 
  //BB2A Affichage de la fiche dans la proposition ou la commande
- if ($typedoc && empty($crea)){
+ if ($typedoc && $iddoc && empty($crea)){
 	$sql = 'SELECT t.rowid, t.fk_propal, t.fk_order';
 	$sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 	if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
@@ -224,16 +224,22 @@ if (empty($reshook))
 
 	// Action to move up and down lines of object
 	//include DOL_DOCUMENT_ROOT.'/core/actions_lineupdown.inc.php';
-	
+
+	// Action to build doc
+	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
+
 	if ($action == 'confirm_refresh' && $confirm == 'yes' && $permissiontoadd)
 	{
 		$res = $object->update($user);
 		//if ($res > 0) $object->status = self::STATUS_STUDY_REQUEST;
 	}
-
-	// Action to build doc
-	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
-
+	
+	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
+	{
+		$res = $object->send_org($user);
+		//if ($res > 0) $object->status = self::STATUS_STUDY_REQUEST;
+	}
+	
 	if ($action == 'set_thirdparty' && $permissiontoadd)
 	{
 		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'FUNDING_MODIFY');
@@ -431,12 +437,20 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	$formconfirm = '';
 
-	// Confirmation of action xxxx
+	// Confirmation of action refresh
 	if ($action == 'refresh')
 	{
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
 	}
 	
+	
+	// Confirm send organization
+	if ($action == 'SendOrg')
+	{
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SendOrg'), $langs->trans('ConfirmSendOrg'), 'send_org', '', 0, 1);
+	}
+	
+	// Selec a accepted/refused
 	if ($action == 'AcceptedRefused')
 	{
 		//Form to close proposal (signed or not)
@@ -462,7 +476,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Confirmation to delete
 	if ($action == 'delete_object')
 	{
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteFunding'), $langs->trans('ConfirmDeleteFunding'), 'confirm_delete', '', 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('DeleteFunding'), $langs->trans('ConfirmDeleteFunding'), 'confirm_delete', '', 0, 1);
 	}
 	
 	// Confirmation to delete line
@@ -520,9 +534,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref.=(($object->fk_propal) ? '<br>'.$langs->trans('Propal') . ' : ' . $prop->getNomUrl(1) : '');
 	$morehtmlref.=(($object->fk_order) ? '<br>'.$langs->trans('Order') . ' : ' . $ord->getNomUrl(1) : '');
 	$morehtmlref .= '</div>';
-
-	$morehtml = $typedoc ? '<a href="'.dol_buildpath("/funding/funding_card.php?id=".$object->id.'"',1).'">'.$langs->trans('OpenFunding').'</a>' : '';
-	//$morehtml .= '<br/>'."statut dossier";
 	
 	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref);
 
@@ -618,7 +629,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($user->socid)) {
 				if ($permissionmanage)
 				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=send_org">'.$langs->trans('SendOrg').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
 				}
 			}
 
@@ -626,7 +637,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($user->socid)) {
 				if ($object->status >= $object::STATUS_VALIDATED && $permissionmanage) 
 				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'">'.$langs->trans('SetAcceptedRefused').'</a>';
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
 				}
 			}
 
@@ -642,7 +653,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($user->socid)) {
 				if ($permissiontoadd)
 				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=refresh">'.$langs->trans('Refresh').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=refresh&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Refresh').'</a>'."\n";
 				}
 			}
 			
@@ -716,7 +727,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
 			{
-				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object">'.$langs->trans('Delete').'</a>'."\n";
+				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Delete').'</a>'."\n";
 			}
 			else
 			{
