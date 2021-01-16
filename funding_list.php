@@ -249,23 +249,21 @@ if (is_array($extrafields->attributes[$object->table_element]['label']) && count
 if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 else $sql .= " WHERE 1 = 1";
 //BB2A_Filtre si dans une societe
-if ($socid > 0) $sql.= " AND t.fk_soc = ".$socid." OR t.fk_org = ".$socid;
-//BB2A_Filtre si dans une proposition
-if ($typedoc == 'propal') $sql.= " AND t.fk_propal = ".$iddoc;
-//BB2A_Filtre si dans une commande
-if ($typedoc == 'order') $sql.= " AND t.fk_order = ".$iddoc;
+if ($socid > 0) $sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
 
 
 foreach ($search as $key => $val)
 {
 	if ($key == 'status' && $search[$key] == -1) continue;
 	$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
-	if (strpos($object->fields[$key]['type'], 'integer:') === 0) {
+	//BB2A Probléme de recherche ancinne ligne "if (strpos($object->fields[$key]['type'], 'integer:') === 0) {"
+	if (strpos($object->fields[$key]['type'], 'integer:') == 0) {
 		if ($search[$key] == '-1') $search[$key] = '';
 		$mode_search = 2;
 	}
 	if ($search[$key] != '') $sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
 }
+
 if ($search_all) $sql .= natural_search(array_keys($fieldstosearchall), $search_all);
 //$sql.= dolSqlDateFilter("t.field", $search_xxxday, $search_xxxmonth, $search_xxxyear);
 // Add where from extra fields
@@ -275,6 +273,7 @@ $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldListWhere', $parameters, $object); // Note that $action and $object may have been modified by hook
 $sql .= $hookmanager->resPrint;
 
+var_dump ($socid);
 /* If a group by is required
 $sql.= " GROUP BY ";
 foreach($object->fields as $key => $val)
@@ -393,146 +392,6 @@ if(!empty($socid))
 }
  //BB2A_Fin affichage encadrer tiers
  
- //BB2A_Création des onglets propal
-if($typedoc == 'propal')
-{
-    //BB2A_Récupération table propal
-    $prop = new Propal($db);
-    if ($iddoc > 0 || ! empty($ref))
-    {
-		$result = $prop->fetch($iddoc);
-    }
-
-    //BB2A_Affichage encadrer propal
-    $prop->fetch_thirdparty();
-	
-	$head = propal_prepare_head($prop);
-	dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
-
-
-	// Proposal card
-
-	$linkback = '<a href="'.DOL_URL_ROOT.'/comm/propal/list.php?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
-
-
-	$morehtmlref = '<div class="refidno">';
-	// Ref customer
-	$morehtmlref .= $form->editfieldkey("RefCustomer", 'ref_client', $prop->ref_client, $prop, 0, 'string', '', 0, 1);
-	$morehtmlref .= $form->editfieldval("RefCustomer", 'ref_client', $prop->ref_client, $prop, 0, 'string', '', null, null, '', 1);
-	// Thirdparty
-	$morehtmlref .= '<br>'.$langs->trans('ThirdParty').' : '.$prop->thirdparty->getNomUrl(1);
-	// Project
-	if (!empty($conf->projet->enabled))
-	{
-	    $langs->load("projects");
-	    $morehtmlref .= '<br>'.$langs->trans('Project').' ';
-	    if ($user->rights->propal->creer)
-	    {
-            if ($action != 'classify') {
-                //$morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $prop->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a>';
-                $morehtmlref .= ' : ';
-            }
-            if ($action == 'classify') {
-                //$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $prop->id, $prop->socid, $prop->fk_project, 'projectid', 0, 0, 1, 1);
-                $morehtmlref .= '<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$prop->id.'">';
-                $morehtmlref .= '<input type="hidden" name="action" value="classin">';
-                $morehtmlref .= '<input type="hidden" name="token" value="'.newToken().'">';
-                $morehtmlref .= $formproject->select_projects($prop->socid, $prop->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-                $morehtmlref .= '<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-                $morehtmlref .= '</form>';
-            } else {
-                $morehtmlref .= $form->form_project($_SERVER['PHP_SELF'].'?id='.$prop->id, $prop->socid, $prop->fk_project, 'none', 0, 0, 0, 1);
-            }
-	    } else {
-	        if (!empty($prop->fk_project)) {
-	            $proj = new Project($db);
-	            $proj->fetch($prop->fk_project);
-	            $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$prop->fk_project.'" title="'.$langs->trans('ShowProject').'">';
-	            $morehtmlref .= $proj->ref;
-	            $morehtmlref .= '</a>';
-	        } else {
-	            $morehtmlref .= '';
-	        }
-	    }
-	}
-	$morehtmlref .= '</div>';
-
-	dol_banner_tab($prop, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', 0, '', '', 1);
-
-	dol_fiche_end();
-}
- //BB2A_Fin affichage encadrer propal
-
- //BB2A_Création des onglets order
-if($typedoc == 'order')
-{
-    //BB2A_Récupération table order
-    $ord = new Commande($db);
-    if ($iddoc > 0 || ! empty($ref))
-    {
-		$result = $ord->fetch($iddoc);
-    }
-
-    //BB2A_Affichage encadrer order
-    	$ord->fetch_thirdparty();
-
-		$head = commande_prepare_head($ord);
-		dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
-
-
-		// Order card
-
-		$linkback = '<a href="'.DOL_URL_ROOT.'/commande/list.php?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
-
-
-		$morehtmlref = '<div class="refidno">';
-		// Ref customer
-		$morehtmlref .= $form->editfieldkey("RefCustomer", 'ref_client', $ord->ref_client, $ord, 0, 'string', '', 0, 1);
-		$morehtmlref .= $form->editfieldval("RefCustomer", 'ref_client', $ord->ref_client, $ord, 0, 'string', '', null, null, '', 1);
-		// Thirdparty
-		$morehtmlref .= '<br>'.$langs->trans('ThirdParty').' : '.$ord->thirdparty->getNomUrl(1);
-	    // Project
-	    if (!empty($conf->projet->enabled))
-	    {
-	        $langs->load("projects");
-	        $morehtmlref .= '<br>'.$langs->trans('Project').' ';
-	        if ($user->rights->commande->creer)
-	        {
-	            if ($action != 'classify') {
-	            	//$morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $ord->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> : ';
-					$morehtmlref .= ' : ';
-                }
-	            if ($action == 'classify') {
-	                //$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $ord->id, $ord->socid, $ord->fk_project, 'projectid', 0, 0, 1, 1);
-	                $morehtmlref .= '<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$ord->id.'">';
-	                $morehtmlref .= '<input type="hidden" name="action" value="classin">';
-	                $morehtmlref .= '<input type="hidden" name="token" value="'.newToken().'">';
-	                $morehtmlref .= $formproject->select_projects($ord->thirdparty->id, $ord->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-	                $morehtmlref .= '<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-	                $morehtmlref .= '</form>';
-	            } else {
-	                $morehtmlref .= $form->form_project($_SERVER['PHP_SELF'].'?id='.$ord->id, $ord->thirdparty->id, $ord->fk_project, 'none', 0, 0, 0, 1);
-	            }
-	        } else {
-	            if (!empty($ord->fk_project)) {
-	                $proj = new Project($db);
-	                $proj->fetch($ord->fk_project);
-	                $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$ord->fk_project.'" title="'.$langs->trans('ShowProject').'">';
-	                $morehtmlref .= $proj->ref;
-	                $morehtmlref .= '</a>';
-	            } else {
-	                $morehtmlref .= '';
-	            }
-	        }
-	    }
-		$morehtmlref .= '</div>';
-
-		dol_banner_tab($ord, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', 0, '', '', 1);
-
-		dol_fiche_end();
-}
- //BB2A_Fin affichage encadrer order
- 
 // Example : Adding jquery code
 print '<script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
@@ -584,11 +443,7 @@ print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
 //BB2A
-//$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?fk_soc='.$prop->socid.'&fk_propal='.$propid.'&amount='.$prop->total_ht.'&date_delivery='.$prop->date_livraison.'&fk_duration=4&duration=0&fk_org=2&fk_user_comm=3&redemption=0&status=1&action=create&backtopage='.urlencode($_SERVER['REQUEST_URI']), '', $permissiontoadd);
 if ($iddoc)$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=create&backtopage='.urlencode($_SERVER['REQUEST_URI']), '', $permissiontoadd);
-
-//BB2a Origin button new
-//$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 

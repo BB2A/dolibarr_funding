@@ -34,6 +34,7 @@ CREATE TABLE llx_funding_funding(
 	fk_funding_type smallint NOT NULL, 
 	fk_org integer NOT NULL, 
 	fk_soc integer, 
+	fk_soc_invoice integer, 
 	fk_propal integer, 
 	fk_order integer, 
 	fk_user_comm integer, 

@@ -119,6 +119,7 @@ class Funding extends CommonObject
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'index'=>1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>55, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
+		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirpartyInvoice",),
 		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1,),
 		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>70, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1,),
 		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>75, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
@@ -131,8 +132,8 @@ class Funding extends CommonObject
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1, 'arrayofkeyval'=>array(),),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'0', 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '2'=>'Valid&eacute;', '3'=>'Valid&eacute;', '4'=>'Valid&eacute;', '5'=>'Valid&eacute;', '6'=>'Valid&eacute;', '7'=>'Valid&eacute;', '8'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1,),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '2'=>'Valid&eacute;', '3'=>'Valid&eacute;', '4'=>'Valid&eacute;', '5'=>'Valid&eacute;', '6'=>'Valid&eacute;', '7'=>'Valid&eacute;', '8'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
 	);
 	public $rowid;
 	public $ref;
@@ -152,6 +153,7 @@ class Funding extends CommonObject
 	public $fk_funding_type;
 	public $fk_org;
 	public $fk_soc;
+	public $fk_soc_invoice;
 	public $fk_propal;
 	public $fk_order;
 	public $fk_user_comm;
@@ -460,13 +462,15 @@ class Funding extends CommonObject
 	{
 		global $conf, $db;
 
-		if ($typedoc == 'propal')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."propal";
-		if ($typedoc == 'order')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."commande";
-		$sql.= " WHERE rowid = ".$iddoc;
-		$resql = $db->query($sql);
-		if ($resql)
+		$document = '';
+
+		if ($typedoc == 'propal')$document = new propal($db);
+		if ($typedoc == 'order')$document = new order($db);
+
+		$document->fetch($iddoc);
+
+		if ($document)
 		{
-			$document = $db->fetch_object($resql);
 			return $document;
 		}
 		else
@@ -475,6 +479,23 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
 		}
+		/*Old version
+		if ($typedoc == 'propal')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."propal";
+		if ($typedoc == 'order')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."commande";
+		$sql.= " WHERE rowid = ".$iddoc;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			$document = $db->fetch_object($resql);
+			$document->id = $document->rowid;
+			return $document;
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}*/
 	}
 
 	/**
@@ -526,64 +547,105 @@ class Funding extends CommonObject
 	public function create(User $user, $notrigger = false)
 	{
 		global $langs;
-		
 		$typedoc 	= GETPOST('typedoc', 'alpha');
 		$iddoc 		= GETPOST('iddoc', 'int');
+
+		$coef = -1;
+		$document = -1;
+		$idcomm = -1;
+		$duration = -1;
+		
 		//Initialise les information obligatoire non editable
 		//Document
 		if ($iddoc && $typedoc)
 		{
 			$document			= $this->info_doc($iddoc,$typedoc);
-			if ($document->fk_statut > 1)
+			if ($document > 0)
 			{
-				$this->fk_soc		= $document->fk_soc;
-				$this->amount		= $document->total_ht;
-				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
-				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
-				if ($coef > 0)
+				if ($document->statut >= 1)
 				{
-					$this->coef			= $coef;
-					$this->amount_rent	= $this->amount_total * $coef / 100;
-					$this->amount_rent = round($this->amount_rent,2);
-					$this->amount_rent_edit = $this->amount_rent;
-					if ($document->date_livraison)
+					//Récupére si une adresse facturation différente
+					$socpeopleinvoice	= $document->getIdContact('external', 'BILLING');
+					if ($socpeopleinvoice)
 					{
-						$this->date_delivery= $document->date_livraison;
-						//Ajoute la durée à la date de livraison pour avoir la date de fin
-						$this->date_end		= date('Y-m-d', strtotime('+'.$this->fk_duration.' month',strtotime($document->date_livraison)));
-					}
-					if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
-					if ($typedoc == 'order') $this->fk_order	= $iddoc;
-					//Commercial
-					$idcomm				= $this->comm_tiers($document->fk_soc);
-					if($idcomm > 0)
-					{
-						$this->fk_user_comm = $idcomm;
-						//Génére la référence
-						$ref = $this->createRef();
-						if($ref)
+						$socinvoice			= $this->fetch_socinvoice($socpeopleinvoice[0]);
+						if ($socinvoice > -1)
 						{
-							$this->ref = $ref;
-							return $this->createCommon($user, $notrigger);
+							$this->fk_soc_invoice = $socinvoice;
+						}
+						else{
+							setEventMessages($langs->trans("socinvoicenok".'-'.$socpeopleinvoice[0]), null, 'errors');
+						}
+					}
+
+					$this->fk_soc		= $document->socid;
+					$this->amount		= $document->total_ht;
+					$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
+					$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
+					if ($coef > 0)
+					{
+						$this->coef			= $coef;
+						$this->amount_rent	= $this->amount_total * $coef / 100;
+						$this->amount_rent_edit = $this->amount_rent;
+						if ($document->date_livraison)
+						{
+							$this->date_delivery= $document->date_livraison;
+							//Ajoute la durée à la date de livraison pour avoir la date de fin
+							$duration = $this->fetch_duration($this->fk_duration);
+							if ($duration > 0)
+							{
+								$this->date_end		= date('Y-m-d', strtotime('+'.$duration.' month',strtotime(date('Y-m-d',$document->date_livraison))));
+							}
+						}
+						if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
+						if ($typedoc == 'order') $this->fk_order	= $iddoc;
+						//Commercial
+						$idcomm				= $this->comm_tiers($document->socid);
+						if($idcomm > 0)
+						{
+							$this->fk_user_comm = $idcomm;
+							//Génére la référence
+							$ref = $this->createRef();
+							if($ref)
+							{
+								$this->ref = $ref;
+								$create = $this->createCommon($user, $notrigger);
+
+								 // Add object linked
+								if ($create > 0)
+								{
+									$ret = $this->add_object_linked($typedoc, $iddoc);
+									if (!$ret)
+									{
+										$this->error = $this->db->lasterror();
+										$error++;
+									}
+								}
+								return $create;
+							}
+							else
+							{
+								setEventMessages($langs->trans("creatrefnok"), null, 'errors');
+							}						
 						}
 						else
 						{
-							setEventMessages($langs->trans("creatrefnok"), null, 'errors');
-						}						
+							setEventMessages($langs->trans("commnok"), null, 'errors');
+						}
 					}
 					else
 					{
-						setEventMessages($langs->trans("commnok"), null, 'errors');
+						setEventMessages($langs->trans("coefnok"), null, 'errors');
 					}
 				}
 				else
 				{
-					setEventMessages($langs->trans("coefnok"), null, 'errors');
+					setEventMessages($langs->trans("docnotvalidate"), null, 'errors');
 				}
 			}
 			else
 			{
-				setEventMessages($langs->trans("docnotvalidate"), null, 'errors');
+				setEventMessages($langs->trans("nodoc"), null, 'errors');
 			}
 		}
 		else
@@ -846,6 +908,34 @@ class Funding extends CommonObject
 			return -1;
 		}
 	}
+	
+	/**
+	 * Récupére soc invoice
+	 *
+	 * @param  id contact invoice
+	 * @param  
+	 * @return $idsocinvoic = ok or -1 = nok
+	 */
+	public function fetch_socinvoice($socpeopleinvoice)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT fk_soc FROM ".MAIN_DB_PREFIX."socpeople";
+		$sql.= " WHERE rowid = ".$socpeopleinvoice;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			$row = $db->fetch_object($resql);
+			$socinvoice = $row->fk_soc;
+			return $socinvoice;
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}
+	}
 
 	/**
 	 * Update object into database
@@ -857,6 +947,11 @@ class Funding extends CommonObject
 	public function update(User $user, $notrigger = false)
 	{
 		global $langs;
+		
+		$coef = -1;
+		$document = -1;
+		$idcomm = -1;
+		$duration = -1;
 		
 		if ($this->fk_propal)
 		{
@@ -872,8 +967,22 @@ class Funding extends CommonObject
 		if ($iddoc && $typedoc)
 		{
 			$document = $this->info_doc($iddoc,$typedoc);
-			if ($document->fk_statut > 1)
+			if ($document->statut >= 1)
 			{
+				//Récupére si une adresse facturation différente
+					$socpeopleinvoice	= $document->getIdContact('external', 'BILLING');
+					if ($socpeopleinvoice)
+					{
+						$socinvoice			= $this->fetch_socinvoice($socpeopleinvoice[0]);
+						if ($socinvoice > -1)
+						{
+							$this->fk_soc_invoice = $socinvoice;
+						}
+						else{
+							setEventMessages($langs->trans("socinvoicenok".'-'.$socpeopleinvoice[0]), null, 'errors');
+						}
+					}
+
 				$this->amount		= $document->total_ht;
 				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
@@ -881,7 +990,6 @@ class Funding extends CommonObject
 				{
 					$this->coef			= $coef;
 					$this->amount_rent	= $this->amount_total * $coef / 100;
-					$this->amount_rent = round($this->amount_rent,2);
 					if($this->amount_rent_edit < $this->amount_rent)
 					{
 						$this->amount_rent_edit = $this->amount_rent;
@@ -891,7 +999,11 @@ class Funding extends CommonObject
 					{
 						$this->date_delivery= $document->date_livraison;
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
-						$this->date_end		= date('Y-m-d', strtotime('+'.$this->fk_duration.' month',strtotime($document->date_livraison)));
+						$duration = $this->fetch_duration($this->fk_duration);
+						if ($duration > 0)
+						{
+							$this->date_end		= date('Y-m-d', strtotime('+'.$duration.' month',strtotime(date('Y-m-d',$document->date_livraison))));
+						}
 					}
 					$this->status = 5;
 					return $this->updateCommon($user, $notrigger);

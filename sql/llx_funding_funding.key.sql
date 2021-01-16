@@ -26,6 +26,7 @@ ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_funding_type (f
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_funding_type FOREIGN KEY (fk_funding_type) REFERENCES llx_c_funding_type(rowid);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_org (fk_org);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_soc (fk_soc);
+ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_soc_invoice (fk_soc_invoice);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_propal (fk_propal);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_order (fk_order);
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_user_comm FOREIGN KEY (fk_user_comm) REFERENCES llx_user(rowid);

@@ -58,6 +58,8 @@ DateEnd = Date de fin
 Redemption = Rachat
 DateDelivery = Date de livraison
 ListFunding = Liste de financement
+ListFundingDraft = Brouillon
+ListFundingValidated = Validé
 NewFunding = Nouveau financement
 Amount de = Montant de
 Amount a = Montant a
@@ -75,6 +77,7 @@ RefreshFunding = Actiualiser le financement
 ConfirmRefreshFunding = Confirmer l'actualisation des informations?
 SendOrg = Envoyer à l'organisme
 ConfirmSendOrg = Confirmer l'envoie à l'organisme
+ThirdPartyInvoice = Tiers pour facturation
 
 #DICTIONNAIRES
 Funding_duration = Financement - Durée
@@ -128,6 +131,8 @@ checknok = Tous les paramétres ne sont pas réunis
 creatrefnok = Création ref impossible
 amount_rent_edit<amount_rent = Loyer personnalisé modifié, car inférieur ou égale au montant calculé
 SendOrgOk = Dossier envoyer à l'organisme
+nodoc = Document non trouvé
+socinvoicenok = Societe de facturation non trouvé
 
 #STATUS
 FundingStatusDraft = Brouillon
