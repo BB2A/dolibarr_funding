@@ -273,7 +273,6 @@ $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldListWhere', $parameters, $object); // Note that $action and $object may have been modified by hook
 $sql .= $hookmanager->resPrint;
 
-var_dump ($socid);
 /* If a group by is required
 $sql.= " GROUP BY ";
 foreach($object->fields as $key => $val)
