@@ -54,6 +54,7 @@ duration = Durée
 StudyNumber = Numéro d'étude
 FolderNumber = Numéro de dossier
 Organization = Organisme
+ThirdPartyInvoice = Tiers facturation
 DateEnd = Date de fin
 Redemption = Rachat
 DateDelivery = Date de livraison
@@ -77,7 +78,6 @@ RefreshFunding = Actiualiser le financement
 ConfirmRefreshFunding = Confirmer l'actualisation des informations?
 SendOrg = Envoyer à l'organisme
 ConfirmSendOrg = Confirmer l'envoie à l'organisme
-ThirdPartyInvoice = Tiers pour facturation
 
 #DICTIONNAIRES
 Funding_duration = Financement - Durée
@@ -155,3 +155,9 @@ FundingStatusSendOrgShort = Envoyer à l'organisme
 FundingStatusRunningShort = Financement actif
 FundingStatusEndShort = Financement terminé
 FundingStatusDisabledShort = Financement annulé
+
+#Documents
+Document1 = Rib
+Document2 = Kbis
+Document3 = Bilan
+Document4 = Piéce d'identité

@@ -249,7 +249,8 @@ if (empty($reshook))
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
 	
-	if ($action == 'setAcceptedRefused' && $permissionmanage && !GETPOST('cancel', 'alpha')) {
+	if ($action == 'setAcceptedRefused' && $permissionmanage && !GETPOST('cancel', 'alpha'))
+	{
 		if (!(GETPOST('statut', 'int') > 0))
 		{
 			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("CloseAs")), null, 'errors');
@@ -278,6 +279,10 @@ if (empty($reshook))
 				}
 			}
 		}
+	}
+	if ($action == 'savedoc' && $permissiontoadd)
+	{
+		setEventMessages('ok','');
 	}
 	
 	// BB2A marque send mail
@@ -549,8 +554,95 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
-
+	
 	print '</table>';
+	// Documents
+	print '<h3>'.$langs->trans("DocumentsForFunding").'</h3>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+            print '<input type="hidden" name="action" value="savedoc">';
+            print '<input type="hidden" name="token" value="'.newToken().'">';
+            print '<input type="hidden" name="id" value="'.$object->id.'">';
+            print '<input type="hidden" name="entity" value="'.$object->entity.'">';
+			print '<table>';
+				//Document 1
+				print '<tr class="hideonsmartphone">';
+				print '<td>'.$langs->trans("Document1").'</td>';
+				//print '<td>'.$form->editfieldkey('Logo', 'photoinput', '', $object, 0).'</td>';
+				print '<td colspan="3">';
+				if ($object->logo) print $form->showphoto('societe', $object);
+				$caneditfield = 1;
+				if ($caneditfield)
+				{
+					if ($object->logo) print "<br>\n";
+					print '<table class="nobordernopadding">';
+					if ($object->logo) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
+					//print '<td>'.$langs->trans("PhotoFile").'</td>';
+					print '<td><input type="file" class="flat" name="photo" id="photoinput"></td>';
+					print '</table>';
+				}
+				print '</td>';
+				print '</tr>';
+				//Document 2
+				print '<tr class="hideonsmartphone">';
+				print '<td>'.$langs->trans("Document2").'</td>';
+				//print '<td>'.$form->editfieldkey('Logo', 'photoinput', '', $object, 0).'</td>';
+				print '<td colspan="3">';
+				if ($object->logo) print $form->showphoto('societe', $object);
+				$caneditfield = 1;
+				if ($caneditfield)
+				{
+					if ($object->logo) print "<br>\n";
+					print '<table class="nobordernopadding">';
+					if ($object->logo) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
+					//print '<td>'.$langs->trans("PhotoFile").'</td>';
+					print '<td><input type="file" class="flat" name="photo" id="photoinput"></td>';
+					print '</table>';
+				}
+				print '</td>';
+				print '</tr>';
+				//Document 3
+				print '<tr class="hideonsmartphone">';
+				print '<td>'.$langs->trans("Document3").'</td>';
+				//print '<td>'.$form->editfieldkey('Logo', 'photoinput', '', $object, 0).'</td>';
+				print '<td colspan="3">';
+				if ($object->logo) print $form->showphoto('societe', $object);
+				$caneditfield = 1;
+				if ($caneditfield)
+				{
+					if ($object->logo) print "<br>\n";
+					print '<table class="nobordernopadding">';
+					if ($object->logo) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
+					//print '<td>'.$langs->trans("PhotoFile").'</td>';
+					print '<td><input type="file" class="flat" name="photo" id="photoinput"></td>';
+					print '</table>';
+				}
+				print '</td>';
+				print '</tr>';
+				//Document 4
+				print '<tr class="hideonsmartphone">';
+				print '<td>'.$langs->trans("Document4").'</td>';
+				//print '<td>'.$form->editfieldkey('Logo', 'photoinput', '', $object, 0).'</td>';
+				print '<td colspan="3">';
+				if ($object->logo) print $form->showphoto('societe', $object);
+				$caneditfield = 1;
+				if ($caneditfield)
+				{
+					if ($object->logo) print "<br>\n";
+					print '<table class="nobordernopadding">';
+					if ($object->logo) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
+					//print '<td>'.$langs->trans("PhotoFile").'</td>';
+					print '<td><input type="file" class="flat" name="photo" id="photoinput"></td>';
+					print '</table>';
+				}
+				print '</td>';
+				print '</tr>';
+			print '</table>';
+			print '<div class="center">';
+            print '<input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
+            print ' &nbsp; &nbsp; ';
+            print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
+            print '</div>';
+		print '</form>';
 	print '</div>';
 	print '</div>';
 

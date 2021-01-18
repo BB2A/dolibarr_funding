@@ -119,7 +119,7 @@ class Funding extends CommonObject
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'index'=>1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>55, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
-		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirpartyInvoice",),
+		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirpartyInvoice",),
 		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1,),
 		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>70, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1,),
 		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>75, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
@@ -981,6 +981,10 @@ class Funding extends CommonObject
 						else{
 							setEventMessages($langs->trans("socinvoicenok".'-'.$socpeopleinvoice[0]), null, 'errors');
 						}
+					}
+					else
+					{
+						$this->fk_soc_invoice = '';
 					}
 
 				$this->amount		= $document->total_ht;
