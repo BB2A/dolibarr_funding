@@ -73,6 +73,7 @@ Scale = Barème
 TypeFunding = Type de financement
 FundingCard = Fiche financement
 DocumentsForFunding = Documents pour le financement
+FundingFolder = Dossier de financement
 ConfirmDeleteFunding = Êtes-vous sûr de vouloir supprimer ce financement ?
 RefreshFunding = Actiualiser le financement
 ConfirmRefreshFunding = Confirmer l'actualisation des informations?
@@ -157,7 +158,10 @@ FundingStatusEndShort = Financement terminé
 FundingStatusDisabledShort = Financement annulé
 
 #Documents
-Document1 = Rib
-Document2 = Kbis
-Document3 = Bilan
-Document4 = Piéce d'identité
+fundoc1 = Document 1
+fundoc2 = Document 2
+fundoc3 = Document 3
+fundoc4 = Document 4
+funfoldoc1 = Acceptation
+funfoldoc2 = Dossier
+funfoldoc3 = Dossier complété
