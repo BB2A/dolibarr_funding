@@ -61,7 +61,7 @@ class modFunding extends DolibarrModules
 		$this->description = "Gestion des financements";
 		// Used only if file README.md and README-LL.md not found.
 		$this->descriptionlong = "Création d'un financement pour les commandes. Intégration des financement dans les propositions. Rappel fin de financement.";
-		$this->editor_name = 'Anthony Berton';
+		$this->editor_name = 'BB2A - Anthony Berton';
 		$this->editor_url = 'https://www.bb2a.fr';
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 		$this->version = '1.0';
@@ -77,7 +77,7 @@ class modFunding extends DolibarrModules
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
-			'triggers' => 0,
+			'triggers' => 1,
 			// Set this to 1 if module has its own login method file (core/login)
 			'login' => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)

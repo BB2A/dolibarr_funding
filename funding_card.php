@@ -283,19 +283,38 @@ if (empty($reshook))
 	if ($action == 'savedoc' && $permissiontoadd)
 	{
 		 // Ducument save
-		$dir     = $conf->funding->multidir_output[$conf->entity]."/".$object->ref;
-		$file_OK = is_uploaded_file($_FILES['doc1']['tmp_name']);
-		if ($file_OK)
+		$dir = $conf->funding->multidir_output[$conf->entity]."/".$object->ref;
+		$i = 1;
+		while ($i <= 7)
 		{
-			if (image_format_supported($_FILES['doc1']['name']))
+			if ($i <= 2)
+			{
+				$file_OK = is_uploaded_file($_FILES['doc'.$i]['tmp_name']);
+			}
+			if ($i >= 5)
+			{
+				$file_OK = is_uploaded_file($_FILES['funfoldoc'.$i]['tmp_name']);
+			}
+			if ($file_OK)
 			{
 				dol_mkdir($dir);
 
 				if (@is_dir($dir))
 				{
-					$newfile = $dir.'/'.dol_sanitizeFileName($_FILES['doc1']['name']);
-					//$newfile = $dir.'/test.txt';
-					$result = dol_move_uploaded_file($_FILES['doc1']['tmp_name'], $newfile, 1);
+					
+					if ($i <= 2)
+					{
+						$newfile = $dir.'/'.dol_sanitizeFileName($_FILES['doc'.$i]['name']);
+						$newfile = $dir.'/'.$langs->trans("fundoc".$i).'.txt';
+						$result = dol_move_uploaded_file($_FILES['doc'.$i]['tmp_name'], $newfile, 1);
+					}
+					if ($i >= 5)
+					{
+						$newfile = $dir.'/'.dol_sanitizeFileName($_FILES['funfoldoc'.$i]['name']);
+						$newfile = $dir.'/'.$langs->trans("funfoldoc".$i).'.txt';
+						$result = dol_move_uploaded_file($_FILES['funfoldoc'.$i]['tmp_name'], $newfile, 1);
+					}
+					
 
 					if (!$result > 0)
 					{
@@ -308,19 +327,20 @@ if (empty($reshook))
 					}
 				}
 			}
-		}
-		else
-		{
-			switch ($_FILES['doc1']['error'])
+			else
 			{
-				case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
-				case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
-					$errors[] = "ErrorFileSizeTooLarge";
-					break;
-				case 3: //uploaded file was only partially uploaded
-					$errors[] = "ErrorFilePartiallyUploaded";
-					break;
+				switch ($_FILES['doc'.$i]['error'])
+				{
+					case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
+					case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
+						$errors[] = "ErrorFileSizeTooLarge";
+						break;
+					case 3: //uploaded file was only partially uploaded
+						$errors[] = "ErrorFilePartiallyUploaded";
+						break;
+				}
 			}
+			$i++;
 		}
 		// Gestion des documents
 	}
@@ -361,6 +381,49 @@ jQuery(document).ready(function() {
 });
 </script>';
 
+//Regarde si on est dans un document ou fiche funding
+if (!empty($object->fk_propal) || $typedoc == 'propal')
+{
+	//BB2A_Récupération table propal
+	$prop = new Propal($db);
+	if ($object->fk_propal > 0 || ! empty($ref))
+	{
+		$result = $prop->fetch($object->fk_propal);
+	}
+}
+elseif (!empty($object->fk_order) || $typedoc == 'order') 
+{
+	//BB2A_Récupération table order
+	$ord = new Commande($db);
+	if ($object->fk_order > 0 || ! empty($ref))
+	{
+		$result = $ord->fetch($object->fk_order);
+	}
+}
+	
+// BB2A Vérification si on est dans un document pour afficher la bonne entête
+if ($typedoc == 'propal')
+{
+	//BB2A_Affichage encadrer propal
+	$prop->fetch_thirdparty();
+	
+	$head = propal_prepare_head($prop);
+	dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
+}
+elseif ($typedoc == 'order')
+{
+	//BB2A_Affichage encadrer order
+	$head = commande_prepare_head($ord);
+	dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
+}
+else
+{
+	//BB2A_Affichage encadrer funding
+	$res = $object->fetch_optionals();
+	$head = fundingPrepareHead($object);
+	dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);
+}
+	
 // Part to create
 if ($action == 'create')
 {
@@ -438,48 +501,6 @@ if (($id || $ref) && $action == 'edit')
 // Part to show record
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create')))
 {
-	//Regarde si on est dans un document ou fiche funding
-	 if (!empty($object->fk_propal) || $typedoc == 'propal')
-	{
-		//BB2A_Récupération table propal
-		$prop = new Propal($db);
-		if ($object->fk_propal > 0 || ! empty($ref))
-		{
-			$result = $prop->fetch($object->fk_propal);
-		}
-	}
-	elseif (!empty($object->fk_order) || $typedoc == 'order') 
-	{
-		//BB2A_Récupération table order
-		$ord = new Commande($db);
-		if ($object->fk_order > 0 || ! empty($ref))
-		{
-			$result = $ord->fetch($object->fk_order);
-		}
-	}
-		
-	// BB2A Vérification si on est dans un document pour afficher la bonne entête
-	if ($typedoc == 'propal')
-	{
-		//BB2A_Affichage encadrer propal
-		$prop->fetch_thirdparty();
-		
-		$head = propal_prepare_head($prop);
-		dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
-	}
-	elseif ($typedoc == 'order')
-	{
-		//BB2A_Affichage encadrer order
-		$head = commande_prepare_head($ord);
-		dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
-	}
-	else
-	{
-		//BB2A_Affichage encadrer funding
-		$res = $object->fetch_optionals();
-		$head = fundingPrepareHead($object);
-		dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);
-	}
 	$formconfirm = '';
 
 	// Confirmation of action refresh
@@ -594,9 +615,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
-	
+
 	print '</table>';
+
 	// Documents
+
 	print '<h3>'.$langs->trans("DocumentsForFunding").'</h3>';
 	print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 	print '<input type="hidden" name="action" value="savedoc">';
@@ -669,19 +692,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</td>';
 		print '</tr>';
 	print '</table>';
-	print '<div class="center">';
-	print '<input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
-	print ' &nbsp; &nbsp; ';
-	print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
-	print '</div>';
-	print '</form>';
-	
+
 	print '<h3>'.$langs->trans("FundingFolder").'</h3>';
-	print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-	print '<input type="hidden" name="action" value="savedocfund">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="id" value="'.$object->id.'">';
-	print '<input type="hidden" name="entity" value="'.$object->entity.'">';
 	print '<table>';
 		//FundingFolderDoc 1
 		print '<tr class="hideonsmartphone">';
@@ -694,7 +706,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if ($object->funfoldoc1) print "<br>\n";
 			print '<table class="nobordernopadding">';
 			if ($object->funfoldoc1) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat"  name="funfoldoc1" id="funfoldoc1input"></td>';
+			if ($permissionmanage) print '<td><input type="file" class="flat"  name="funfoldoc1" id="funfoldoc1input"></td>';
 			print '</table>';
 		}
 		print '</td>';
@@ -710,7 +722,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if ($object->funfoldoc2) print "<br>\n";
 			print '<table class="nobordernopadding">';
 			if ($object->funfoldoc2) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat" name="funfoldoc2" id="funfoldoc2input"></td>';
+			if ($permissionmanage) print '<td><input type="file" class="flat" name="funfoldoc2" id="funfoldoc2input"></td>';
 			print '</table>';
 		}
 		print '</td>';
@@ -734,17 +746,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</table>';
 	print '<div class="center">';
 	print '<input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
-	print ' &nbsp; &nbsp; ';
-	print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
+	/*print ' &nbsp; &nbsp; ';
+	print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';*/
 	print '</div>';
 	print '</form>';
 	print '</div>';
 	print '</div>';
+	
+	// show_documents
 
 	print '<div class="clearboth"></div>';
 
 	dol_fiche_end();
-
 
 	/*
 	 * Lines
@@ -931,9 +944,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// BB2A Fichiers joints
 	//Code isssue de funding_docuement.php
 	
-	/*
-	* Actions
-	*/
 	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 	
 	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
@@ -952,12 +962,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$permtoedit = $permissiontoadd;
 	$param = '&id='.$object->id;
 
-	//$relativepathwithnofile='funding/' . dol_sanitizeFileName($object->id).'/';
 	$relativepathwithnofile = dol_sanitizeFileName($object->ref).'/';
 	
 	include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 
-// BB2A désactive l'affichage des evenements, Document, Objets liés
+// BB2A Affichage des evenements, Document, Objets liés
 
 	if ($action != 'presend')
 	{
