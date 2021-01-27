@@ -283,38 +283,21 @@ if (empty($reshook))
 	if ($action == 'savedoc' && $permissiontoadd)
 	{
 		 // Ducument save
-		$dir = $conf->funding->multidir_output[$conf->entity]."/".$object->ref;
-		$i = 1;
-		while ($i <= 7)
-		{
-			if ($i <= 2)
-			{
-				$file_OK = is_uploaded_file($_FILES['doc'.$i]['tmp_name']);
-			}
-			if ($i >= 5)
-			{
-				$file_OK = is_uploaded_file($_FILES['funfoldoc'.$i]['tmp_name']);
-			}
+			$dir = $conf->funding->multidir_output[$conf->entity]."/".$object->ref;
+			$doc = GETPOST('doc');
+			
+			$file_OK = is_uploaded_file($_FILES[$doc]['tmp_name']);
+
 			if ($file_OK)
 			{
 				dol_mkdir($dir);
 
 				if (@is_dir($dir))
 				{
-					
-					if ($i <= 2)
-					{
-						$newfile = $dir.'/'.dol_sanitizeFileName($_FILES['doc'.$i]['name']);
-						$newfile = $dir.'/'.$langs->trans("fundoc".$i).'.txt';
-						$result = dol_move_uploaded_file($_FILES['doc'.$i]['tmp_name'], $newfile, 1);
-					}
-					if ($i >= 5)
-					{
-						$newfile = $dir.'/'.dol_sanitizeFileName($_FILES['funfoldoc'.$i]['name']);
-						$newfile = $dir.'/'.$langs->trans("funfoldoc".$i).'.txt';
-						$result = dol_move_uploaded_file($_FILES['funfoldoc'.$i]['tmp_name'], $newfile, 1);
-					}
-					
+					$infodoc = new SplFileInfo($_FILES[$doc]['name']);
+					$newfile = $dir.'/'.$object->ref.'_'.$langs->trans($doc).'.'.$infodoc->getExtension();
+					//$newfile = $dir.'/'.dol_sanitizeFileName($newfile);
+					$result = dol_move_uploaded_file($_FILES[$doc]['tmp_name'], $newfile, 1);
 
 					if (!$result > 0)
 					{
@@ -340,8 +323,6 @@ if (empty($reshook))
 						break;
 				}
 			}
-			$i++;
-		}
 		// Gestion des documents
 	}
 	
@@ -621,78 +602,91 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Documents
 
 	print '<h3>'.$langs->trans("DocumentsForFunding").'</h3>';
-	print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-	print '<input type="hidden" name="action" value="savedoc">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="id" value="'.$object->id.'">';
-	print '<input type="hidden" name="entity" value="'.$object->entity.'">';
 	print '<table>';
 		//Document 1
 		print '<tr class="hideonsmartphone">';
-		print '<td>'.$form->editfieldkey('fundoc1', 'doc1input', '', $object, 0).'</td>';
+		print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->fundoc1) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		$doc = DOL_DATA_ROOT."/funding/".$object->ref.'/'.$object->ref.'_'.$langs->trans("fundoc1").'.pdf';
+		print '<a href="'.$doc.'">'.$object->ref.'-'.$langs->trans("fundoc1").'.pdf</a>';
+		//$form->getDocumentsLink('funding', '', $dir, '');
+		if ($permissiontoadd)
 		{
-			if ($object->fundoc1) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->fundoc1) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat"  name="doc1" id="doc1input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="fundoc1">';
+			print '<td><input type="file" class="flat"  name="fundoc1" id="fundoc1input"></td>';
+			if ($object->fundoc1) print '<td><input type="checkbox" class="flat fundoc1delete" name="deletefundoc1" id="fundoc1delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
 		print '</tr>';
 		//Document 2
 		print '<tr class="hideonsmartphone">';
-		print '<td>'.$form->editfieldkey('fundoc2', 'photo2input', '', $object, 0).'</td>';
+		print '<td>'.$form->editfieldkey('fundoc2', 'fundoc2input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->fundoc2) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		if ($permissiontoadd)
 		{
-			if ($object->fundoc2) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->fundoc2) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat" name="doc2" id="doc2input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="fundoc2">';
+			print '<td><input type="file" class="flat"  name="fundoc2" id="fundoc2input"></td>';
+			if ($object->fundoc2) print '<td><input type="checkbox" class="flat fundoc2delete" name="deletefundoc2" id="fundoc2delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
 		print '</tr>';
 		//Document 3
 		print '<tr class="hideonsmartphone">';
-		print '<td>'.$form->editfieldkey('fundoc3', 'doc3input', '', $object, 0).'</td>';
+		print '<td>'.$form->editfieldkey('fundoc3', 'fundoc3input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->fundoc3) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		if ($permissiontoadd)
 		{
-			if ($object->fundoc3) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->fundoc3) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat" name="doc3[]" multiple id="doc3input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="fundoc3">';
+			print '<td><input type="file" class="flat"  name="fundoc3[]" multiple id="fundoc3input"></td>';
+			if ($object->fundoc3) print '<td><input type="checkbox" class="flat fundoc1delete" name="deletefundoc3" id="fundoc3delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
 		print '</tr>';
 		//Document 4
 		print '<tr class="hideonsmartphone">';
-		print '<td>'.$form->editfieldkey('fundoc4', 'doc4input', '', $object, 0).'</td>';
+		print '<td>'.$form->editfieldkey('fundoc4', 'fundoc4input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->fundoc4) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		if ($permissiontoadd)
 		{
-			if ($object->fundoc4) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->fundoc4) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat" name="doc4[]" multiple id="doc4input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="fundoc4">';
+			print '<td><input type="file" class="flat"  name="fundoc4[]" multiple id="fundoc4input"></td>';
+			if ($object->fundoc4) print '<td><input type="checkbox" class="flat fundoc4delete" name="deletefundoc4" id="fundoc4delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
 		print '</tr>';
 	print '</table>';
-
 	print '<h3>'.$langs->trans("FundingFolder").'</h3>';
 	print '<table>';
 		//FundingFolderDoc 1
@@ -700,13 +694,17 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->funfoldoc1) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		if ($permissiontoadd)
 		{
-			if ($object->funfoldoc1) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->funfoldoc1) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			if ($permissionmanage) print '<td><input type="file" class="flat"  name="funfoldoc1" id="funfoldoc1input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="funfoldoc1">';
+			print '<td><input type="file" class="flat"  name="funfoldoc1" id="funfoldoc1input"></td>';
+			if ($object->funfoldoc1) print '<td><input type="checkbox" class="flat funfoldoc1delete" name="deletefunfoldoc1" id="funfoldoc1delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
@@ -716,13 +714,17 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->funfoldoc2) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		if ($permissiontoadd)
 		{
-			if ($object->funfoldoc2) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->funfoldoc2) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			if ($permissionmanage) print '<td><input type="file" class="flat" name="funfoldoc2" id="funfoldoc2input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="funfoldoc2">';
+			print '<td><input type="file" class="flat"  name="funfoldoc2" id="funfoldoc2input"></td>';
+			if ($object->funfoldoc2) print '<td><input type="checkbox" class="flat funfoldoc2delete" name="deletefunfoldoc2" id="funfoldoc2delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
@@ -732,20 +734,24 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<td>'.$form->editfieldkey('funfoldoc3', 'funfoldoc3input', '', $object, 0).'</td>';
 		print '<td colspan="3">';
 		if ($object->funfoldoc3) print $form->showphoto('societe', $object);
-		$caneditfield = 1;
-		if ($caneditfield)
+		if ($permissiontoadd)
 		{
-			if ($object->funfoldoc3) print "<br>\n";
 			print '<table class="nobordernopadding">';
-			if ($object->funfoldoc3) print '<tr><td><input type="checkbox" class="flat photodelete" name="deletephoto" id="photodelete"> '.$langs->trans("Delete").'<br><br></td></tr>';
-			print '<td><input type="file" class="flat" name="funfoldoc3" id="funfoldoc3input"></td>';
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="doc" value="funfoldoc3">';
+			print '<td><input type="file" class="flat"  name="funfoldoc3" id="funfoldoc3input"></td>';
+			if ($object->funfoldoc3) print '<td><input type="checkbox" class="flat funfoldoc3delete" name="deletefunfoldoc3" id="funfoldoc3delete">'.$langs->trans("Delete").'</td>';
+			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
 			print '</table>';
 		}
 		print '</td>';
 		print '</tr>';
 	print '</table>';
 	print '<div class="center">';
-	print '<input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
+	//print '<input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
 	/*print ' &nbsp; &nbsp; ';
 	print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';*/
 	print '</div>';
