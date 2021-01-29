@@ -280,12 +280,12 @@ if (empty($reshook))
 			}
 		}
 	}
-	if ($action == 'savedoc' && $permissiontoadd)
+	/*if ($action == 'savedoc' && $permissiontoadd)
 	{
 		 // Ducument save
 			$dir = $conf->funding->multidir_output[$conf->entity]."/".$object->ref;
 			$doc = GETPOST('doc');
-			
+
 			$file_OK = is_uploaded_file($_FILES[$doc]['tmp_name']);
 
 			if ($file_OK)
@@ -324,7 +324,7 @@ if (empty($reshook))
 				}
 			}
 		// Gestion des documents
-	}
+	}*/
 	
 	// BB2A marque send mail
 	// Actions to send emails
@@ -363,22 +363,19 @@ jQuery(document).ready(function() {
 </script>';
 
 //Regarde si on est dans un document ou fiche funding
-if (!empty($object->fk_propal) || $typedoc == 'propal')
+if (!empty($typedoc) || $object->fk_order || $object->fk_propal && !empty($iddoc) || $object->fk_order || $object->fk_propal)
 {
 	//BB2A_Récupération table propal
-	$prop = new Propal($db);
-	if ($object->fk_propal > 0 || ! empty($ref))
+	if ($typedoc == 'propal' || $object->fk_propal)
 	{
-		$result = $prop->fetch($object->fk_propal);
+		$prop = new Propal($db);
+		$result = $prop->fetch(empty($iddoc)?$object->fk_propal:$iddoc);
 	}
-}
-elseif (!empty($object->fk_order) || $typedoc == 'order') 
-{
 	//BB2A_Récupération table order
-	$ord = new Commande($db);
-	if ($object->fk_order > 0 || ! empty($ref))
+	if ($typedoc == 'order' || $object->fk_order)
 	{
-		$result = $ord->fetch($object->fk_order);
+		$ord = new Commande($db);
+		$result = $ord->fetch(empty($iddoc)?$object->fk_order:$iddoc);
 	}
 }
 	
@@ -577,11 +574,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= '<br/>'.$form->editfieldkey("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', 0, 1);
 	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
 	// Thirdparty
-	$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	$morehtmlref.=(($object->fk_propal) ? '<br>'.$langs->trans('Propal') . ' : ' . $prop->getNomUrl(1) : '');
-	$morehtmlref.=(($object->fk_order) ? '<br>'.$langs->trans('Order') . ' : ' . $ord->getNomUrl(1) : '');
+	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
+	if (!empty($object->fk_propal) && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
+	if (!empty($object->fk_order) && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
-	
 	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref);
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
@@ -615,12 +611,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="fundoc1">';
-			print '<td><input type="file" class="flat"  name="fundoc1" id="fundoc1input"></td>';
+			$savingdocmask = $langs->trans('fundoc1').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile" id="fundoc1input"></td>';
 			if ($object->fundoc1) print '<td><input type="checkbox" class="flat fundoc1delete" name="deletefundoc1" id="fundoc1delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}
@@ -635,12 +631,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="fundoc2">';
-			print '<td><input type="file" class="flat"  name="fundoc2" id="fundoc2input"></td>';
+			$savingdocmask = $langs->trans('fundoc2').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile" id="fundoc2input"></td>';
 			if ($object->fundoc2) print '<td><input type="checkbox" class="flat fundoc2delete" name="deletefundoc2" id="fundoc2delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}
@@ -655,12 +651,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="fundoc3">';
-			print '<td><input type="file" class="flat"  name="fundoc3[]" multiple id="fundoc3input"></td>';
+			$savingdocmask = $langs->trans('fundoc3').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
 			if ($object->fundoc3) print '<td><input type="checkbox" class="flat fundoc1delete" name="deletefundoc3" id="fundoc3delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}
@@ -675,12 +671,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="fundoc4">';
-			print '<td><input type="file" class="flat"  name="fundoc4[]" multiple id="fundoc4input"></td>';
+			$savingdocmask = $langs->trans('fundoc4').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
 			if ($object->fundoc4) print '<td><input type="checkbox" class="flat fundoc4delete" name="deletefundoc4" id="fundoc4delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}
@@ -698,12 +694,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="funfoldoc1">';
-			print '<td><input type="file" class="flat"  name="funfoldoc1" id="funfoldoc1input"></td>';
+			$savingdocmask = $langs->trans('funfoldoc1').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile" id="funfoldoc1input"></td>';
 			if ($object->funfoldoc1) print '<td><input type="checkbox" class="flat funfoldoc1delete" name="deletefunfoldoc1" id="funfoldoc1delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}
@@ -718,12 +714,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="funfoldoc2">';
-			print '<td><input type="file" class="flat"  name="funfoldoc2" id="funfoldoc2input"></td>';
+			$savingdocmask = $langs->trans('funfoldoc2').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile" id="funfoldoc2input"></td>';
 			if ($object->funfoldoc2) print '<td><input type="checkbox" class="flat funfoldoc2delete" name="deletefunfoldoc2" id="funfoldoc2delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}
@@ -738,12 +734,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="doc" value="funfoldoc3">';
-			print '<td><input type="file" class="flat"  name="funfoldoc3" id="funfoldoc3input"></td>';
+			$savingdocmask = $langs->trans('funfoldoc3').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
+			print '<td><input type="file" class="flat"  name="userfile" id="funfoldoc3input"></td>';
 			if ($object->funfoldoc3) print '<td><input type="checkbox" class="flat funfoldoc3delete" name="deletefunfoldoc3" id="funfoldoc3delete">'.$langs->trans("Delete").'</td>';
-			print '<td><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 			print '</table>';
 		}

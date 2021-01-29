@@ -467,7 +467,7 @@ class Funding extends CommonObject
 		$document = '';
 
 		if ($typedoc == 'propal')$document = new propal($db);
-		if ($typedoc == 'order')$document = new order($db);
+		if ($typedoc == 'order')$document = new commande($db);
 
 		$document->fetch($iddoc);
 
