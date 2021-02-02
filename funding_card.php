@@ -66,7 +66,6 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 dol_include_once('/funding/class/funding.class.php');
 dol_include_once('/funding/lib/funding_funding.lib.php');
 
@@ -280,51 +279,14 @@ if (empty($reshook))
 			}
 		}
 	}
-	/*if ($action == 'savedoc' && $permissiontoadd)
+	if ($action == 'savedoc' && $permissiontoadd)
 	{
-		 // Ducument save
-			$dir = $conf->funding->multidir_output[$conf->entity]."/".$object->ref;
-			$doc = GETPOST('doc');
+		$doc = GETPOST('doc');
+		$savingdocmask = GETPOST('savingdocmask');
 
-			$file_OK = is_uploaded_file($_FILES[$doc]['tmp_name']);
-
-			if ($file_OK)
-			{
-				dol_mkdir($dir);
-
-				if (@is_dir($dir))
-				{
-					$infodoc = new SplFileInfo($_FILES[$doc]['name']);
-					$newfile = $dir.'/'.$object->ref.'_'.$langs->trans($doc).'.'.$infodoc->getExtension();
-					//$newfile = $dir.'/'.dol_sanitizeFileName($newfile);
-					$result = dol_move_uploaded_file($_FILES[$doc]['tmp_name'], $newfile, 1);
-
-					if (!$result > 0)
-					{
-						$errors[] = "ErrorFailedToSaveFile";
-					}
-					else
-					{
-						// Create thumbs
-						$object->addThumbs($newfile);
-					}
-				}
-			}
-			else
-			{
-				switch ($_FILES['doc'.$i]['error'])
-				{
-					case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
-					case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
-						$errors[] = "ErrorFileSizeTooLarge";
-						break;
-					case 3: //uploaded file was only partially uploaded
-						$errors[] = "ErrorFilePartiallyUploaded";
-						break;
-				}
-			}
-		// Gestion des documents
-	}*/
+		$object->fundoc1 = $savingdocmask;
+		$object->update($user);
+	}
 	
 	// BB2A marque send mail
 	// Actions to send emails
@@ -596,31 +558,37 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</table>';
 
 	// Documents
+	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
+	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
+	
 
-	print '<h3>'.$langs->trans("DocumentsForFunding").'</h3>';
-	print '<table>';
+	print '<table class="noborder tableforfield centpercent margintable">';
+	print '<tr class="liste_titre">';
+		print '<td>'.$langs->trans("DocumentsForFunding").'</td>';
+		print '<td></td>';
+		print '</tr>';
 		//Document 1
 		print '<tr class="hideonsmartphone">';
-		print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1input', '', $object, 0).'</td>';
-		print '<td colspan="3">';
-		if ($object->fundoc1) print $form->showphoto('societe', $object);
-		$doc = DOL_DATA_ROOT."/funding/".$object->ref.'/'.$object->ref.'_'.$langs->trans("fundoc1").'.pdf';
-		print '<a href="'.$doc.'">'.$object->ref.'-'.$langs->trans("fundoc1").'.pdf</a>';
-		//$form->getDocumentsLink('funding', '', $dir, '');
+		print '<td colspan="6">'.$form->editfieldkey('fundoc1', 'fundoc1input', '', $object, 0).'</td>';
+		//print '<td colspan="3">';
 		if ($permissiontoadd)
 		{
-			print '<table class="nobordernopadding">';
+			//print '<table class="nobordernopadding">';
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
-			$savingdocmask = $langs->trans('fundoc1').'_'.dol_sanitizeFileName($object->ref).'___file__';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="doc" value="fundoc1">';
+			$savingdocmask = $langs->trans('fundoc1').'_'.dol_sanitizeFileName($object->ref.'___file__');
 			print '<input type="hidden" name="savingdocmask" value="'.$savingdocmask.'">';
-			print '<td><input type="file" class="flat"  name="userfile" id="fundoc1input"></td>';
+			if (empty($object->fundoc1)) print '<td><input type="file" class="flat"  name="userfile" id="fundoc1input"></td>';
+			if ($object->fundoc1) print '<td>'.$object->fundoc1.'</td>';
 			if ($object->fundoc1) print '<td><input type="checkbox" class="flat fundoc1delete" name="deletefundoc1" id="fundoc1delete">'.$langs->trans("Delete").'</td>';
 			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
-			print '</table>';
+			//print '</table>';
 		}
-		print '</td>';
+		//print '</td>';
 		print '</tr>';
 		//Document 2
 		print '<tr class="hideonsmartphone">';
@@ -682,9 +650,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		print '</td>';
 		print '</tr>';
-	print '</table>';
-	print '<h3>'.$langs->trans("FundingFolder").'</h3>';
-	print '<table>';
+		print '<tr class="liste_titre">';
+		print '<td>'.$langs->trans("FundingFolder").'</td>';
+		print '<td></td>';
+		print '</tr>';
 		//FundingFolderDoc 1
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1input', '', $object, 0).'</td>';
@@ -946,11 +915,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// BB2A Fichiers joints
 	//Code isssue de funding_docuement.php
 	
-	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
-	
 	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 
-	print "<h3>".$langs->trans("DocumentsForFunding")."</h3>";
 	// Build file list
 	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
 	$totalsize = 0;
@@ -961,10 +927,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	
 	$modulepart = 'funding';
 	$permission = $permissiontoadd;
-	$permtoedit = $permissiontoadd;
+	$permtoedit = 0;
 	$param = '&id='.$object->id;
-
 	$relativepathwithnofile = dol_sanitizeFileName($object->ref).'/';
+	$savingdocmask ='';
 	
 	include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 

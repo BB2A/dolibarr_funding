@@ -39,7 +39,7 @@ CREATE TABLE llx_funding_funding(
 	fk_order integer, 
 	fk_user_comm integer, 
 	description text, 
-	doc1 varchar(255), 
+	fundoc1 varchar(255), 
 	note_public text, 
 	note_private text, 
 	date_creation datetime NOT NULL, 
