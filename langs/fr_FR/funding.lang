@@ -158,7 +158,7 @@ FundingStatusEndShort = Financement terminé
 FundingStatusDisabledShort = Financement annulé
 
 #Documents
-fundoc1 = Rib
+fundoc1 = RIB
 fundoc2 = Kbis
 fundoc3 = Bilan
 fundoc4 = Piéce d'identitée
