@@ -36,7 +36,7 @@ class mod_funding_standard extends ModeleNumRefFunding
 	 */
 	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
-	public $prefix = 'FUNDING';
+	public $prefix = 'FUD';
 
 	/**
 	 * @var string Error code (or message)

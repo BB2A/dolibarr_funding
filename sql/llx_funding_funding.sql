@@ -17,7 +17,7 @@
 CREATE TABLE llx_funding_funding(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
-	ref varchar(128) DEFAULT '(STUD)' NOT NULL, 
+	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
 	study_number varchar(128), 
 	folder_number varchar(128), 
 	amount double DEFAULT NULL, 

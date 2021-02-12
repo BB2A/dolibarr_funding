@@ -563,32 +563,48 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$fileupload = $_FILES['userfile']['name'];
 		$filedelet = GETPOST('filedelet');
 
-		if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 		if ($action == 'savedoc' && !empty($upload_dir))
 		{
 			if ($doc == 'fundoc3' || $doc == 'fundoc4')
 			{
-				foreach ($_FILES['userfile']['name'] as $file)
+				require_once TCPDF_PATH.'tcpdf.php';
+				$merge = new tcpdf();
+				
+				$fileArray= array("Demande-segurel-148652.pdf","Modele LOCATION TPE signature gauche.pdf");
+
+				foreach ($fileArray as $file)
+				{
+					if (file_exists($file) && is_readable($file))
+					{
+						
+						$merge->add($file);
+
+					}
+				}
+				$merge->output($upload_dir."test.pdf", 'F');
+					
+				/*foreach ($_FILES['userfile']['name'] as $file)
 				{
 					$key = array_search($file, $_FILES['userfile']['name']);
 					$file = $upload_dir.'/'.$file;
-					$fileuploadnewname = $object->ref.'_'.$langs->trans($doc).'_'.$key.'.pdf';
-					$fileuploadnewname = urlencode($fileuploadnewname);
+					$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($langs->trans($doc)).'_'.$key.'.pdf';
 					if (file_exists($file))rename ($file, $upload_dir.'/'.$fileuploadnewname);
 					$files .= $fileuploadnewname.',';
 				}
-				/*$Cmdstring = "gs -dBatch -dNOPAUSE -q -sDEVICE = pdfwrite -sOutputFile =".$upload_dir."/result.pdf";
-				foreach ($_FILES['userfile']['name'] as $file)
+				$cmdstring = "gs -dBatch -dNOPAUSE -q -sDEVICE = pdfwrite -sOutputFile =".$upload_dir."/result.pdf ";
+				$fileArray= array("Demande-segurel-148652.pdf","Modele LOCATION TPE signature gauche.pdf");
+				foreach ($fileArray as $file)
 				{
 					$cmdstring .= $upload_dir.'/'.$file." ";
 				}
-				exec ($cmdstring);*/
+				var_dump ($cmdstring);
+				
+				var_dump(shell_exec($cmdstring));*/
 			}
 			else
 			{
 				$file = $upload_dir.'/'.$fileupload;
-				$fileuploadnewname = $object->ref.'_'.$langs->trans($doc).'.pdf';
-				$fileuploadnewname = urlencode($fileuploadnewname);
+				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($langs->trans($doc)).'.pdf';
 				if (file_exists($file))rename ($file, $upload_dir.'/'.$fileuploadnewname);
 			}
 			if ($doc == 'fundoc1')$object->fundoc1 = $fileuploadnewname;
@@ -880,15 +896,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				}
 			}
 			
-			// Back to draft
-			if ($object->status == $object::STATUS_VALIDATED)
-			{
-				if ($permissiontoadd)
-				{
-					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes">'.$langs->trans("SetToDraft").'</a>';
-				}
-			}
-
 			// Modify
 			if ($permissiontoadd)
 			{
@@ -897,6 +904,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			else
 			{
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
+			}
+			
+			/*
+			// Back to draft
+			if ($object->status == $object::STATUS_VALIDATED)
+			{
+				if ($permissiontoadd)
+				{
+					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes">'.$langs->trans("SetToDraft").'</a>';
+				}
 			}
 
 			// Validate
@@ -917,7 +934,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Clone
-			/*if ($permissiontoadd)
+			if ($permissiontoadd)
 			{
 				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&socid='.$object->socid.'&action=clone&object=funding">'.$langs->trans("ToClone").'</a>'."\n";
 			}*/

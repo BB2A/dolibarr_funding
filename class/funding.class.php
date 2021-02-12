@@ -62,11 +62,11 @@ class Funding extends CommonObject
 		
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
-	const STATUS_ACCEPT = 2;
-	const STATUS_DENIED = 3;
-	const STATUS_STUDY_REQUEST = 4;
-	const STATUS_LACK = 5;
-	const STATUS_SEND_ORG = 6;
+	const STATUS_STUDY_REQUEST = 2;
+	const STATUS_SEND_ORG = 3;
+	const STATUS_LACK = 4;
+	const STATUS_ACCEPT = 5;
+	const STATUS_DENIED = 6;
 	const STATUS_RUNNING = 7;
 	const STATUS_END = 8;
 	const STATUS_CANCELED = 9;
@@ -102,7 +102,7 @@ class Funding extends CommonObject
 	 */
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
-		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(STUD)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_study_number", 'showoncombobox'=>'1',),
 		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folder_number", 'showoncombobox'=>'1',),
 		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
@@ -140,7 +140,7 @@ class Funding extends CommonObject
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '2'=>'Valid&eacute;', '3'=>'Valid&eacute;', '4'=>'Valid&eacute;', '5'=>'Valid&eacute;', '6'=>'Valid&eacute;', '7'=>'Valid&eacute;', '8'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'FundingStatusDraft', '1'=>'FundingStatusValidated', '2'=>'FundingStatusRequest', '3'=>'FundingStatusSendOrg', '4'=>'FundingStatusLack', '5'=>'FundingStatusAccept', '6'=>'FundingStatusDenied', '7'=>'FundingStatusRunning', '8'=>'FundingStatusEnd', '9'=>'FundingStatusDisabled'),),
 	);
 	public $rowid;
 	public $ref;
@@ -370,73 +370,6 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Create ref object
-	 *
-	 * @param  
-	 * @param  
-	 * @return ref
-	 */
-	public function createRef()
-	{
-		global $conf, $db;
-
-		$dispo = -1;
-		$num = $conf->global->FUNDING_NUM_FUND;
-		if ($num >= 0)
-		{
-			while ($dispo != 0)
-			{
-				$num = $num + 1;
-				$num = str_pad($num, 5, "0", STR_PAD_LEFT);
-				$sql = "UPDATE ".MAIN_DB_PREFIX."const SET value =".$num." WHERE name = \"FUNDING_NUM_FUND\"";
-				$resqlupdate = $this->db->query($sql);
-				
-				$ref = "FUND-" . $num;
-				
-				$dispo = $this->verif_dispo($ref);
-			}
-			if($dispo == 0)
-			{
-				return $ref;
-			}
-		}
-	}
-
-	/**
-	 * Vérifie la dispo ref object
-	 *
-	 * @param  
-	 * @param  
-	 * @return 0 = ok or -1 = nok
-	 */
-	public function verif_dispo($ref)
-	{
-		global $conf, $db;
-		
-		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."funding_funding";
-		$sql .= " WHERE ref = '".$ref."'";
-		$resql = $this->db->query($sql);
-		if ($resql)
-		{
-			if ($this->db->num_rows($resql) == 0)
-			{
-				return 0;
-			}
-			else
-			{
-				return -1;
-			}
-			$db->free($resql);
-		}
-		else
-		{
-			$this->errors[] = 'Error '.$this->db->lasterror();
-			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
-			return -1;
-		}
-	}
-
-	/**
 	 * Récupére les commerciaux du tier
 	 *
 	 * @param  id thirdparty
@@ -618,29 +551,24 @@ class Funding extends CommonObject
 						if($idcomm > 0)
 						{
 							$this->fk_user_comm = $idcomm;
-							//Génére la référence
-							$ref = $this->createRef();
-							if($ref)
+							$create = $this->createCommon($user, $notrigger);
+							if ($create > 0)
 							{
-								$this->ref = $ref;
-								$create = $this->createCommon($user, $notrigger);
-
-								 // Add object linked
-								if ($create > 0)
+								// Add object linked
+								$ret = $this->add_object_linked($typedoc, $iddoc);
+								if (!$ret)
 								{
-									$ret = $this->add_object_linked($typedoc, $iddoc);
-									if (!$ret)
-									{
-										$this->error = $this->db->lasterror();
-										$error++;
-									}
+									$this->error = $this->db->lasterror();
+									$error++;
 								}
-								return $create;
+								// Créate ref
+								$this->ref = "(PROV".$this->id.")";
+								$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
+								$resql = $this->db->query($sql);
+								$this->validate($user);
+								if (!$resql) $error++;
 							}
-							else
-							{
-								setEventMessages($langs->trans("creatrefnok"), null, 'errors');
-							}						
+							return $create;				
 						}
 						else
 						{
@@ -1008,7 +936,7 @@ class Funding extends CommonObject
 				{
 					$this->coef			= $coef;
 					$this->amount_rent	= $this->amount_total * $coef / 100;
-					if($this->amount_rent_edit < $this->amount_rent)
+					if(!empty($this->amount_rent_edit) && $this->amount_rent_edit < $this->amount_rent)
 					{
 						$this->amount_rent_edit = $this->amount_rent;
 						setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
@@ -1023,7 +951,6 @@ class Funding extends CommonObject
 							$this->date_end		= date('Y-m-d', strtotime('+'.$duration.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 						}
 					}
-					$this->status = 5;
 					return $this->updateCommon($user, $notrigger);
 				}
 				else
@@ -1165,7 +1092,70 @@ class Funding extends CommonObject
 	 */
 	public function delete(User $user, $notrigger = false)
 	{
-		return $this->deleteCommon($user, $notrigger);
+		// Removed extrafields of object
+		if (!$error) {
+			$result = $this->deleteExtraFields();
+			if ($result < 0) {
+				$error++;
+				dol_syslog(get_class($this)."::delete error ".$this->error, LOG_ERR);
+			}
+		}
+		
+		if (!$error) {
+			// Delete linked object
+			$res = $this->deleteObjectLinked();
+			if ($res < 0) $error++;
+		}
+		
+		if (!$error) {
+			// Delete main
+			$res = $this->deleteCommon($user, $notrigger);
+			if ($res < 0) $error++;
+		}
+
+		// Delete record into ECM index and physically
+		/*if (!$error) {
+			$res = $this->deleteEcmFiles(0); // Deleting files physically is done later with the dol_delete_dir_recursive
+			if (!$res) {
+				$error++;
+			}*/
+var_dump($this->ref);
+		if (!$error) {
+			// We remove directory
+			$ref = dol_sanitizeFileName($this->ref);
+			if ($conf->propal->multidir_output[$this->entity] && !empty($this->ref)) {
+				$dir = $conf->propal->multidir_output[$this->entity]."/".$ref;
+				$file = $dir."/".$ref.".pdf";
+				if (file_exists($file)) {
+					dol_delete_preview($this);
+
+					if (!dol_delete_file($file, 0, 0, 0, $this)) {
+						$this->error = 'ErrorFailToDeleteFile';
+						$this->errors[] = $this->error;
+						$this->db->rollback();
+						return 0;
+					}
+				}
+				if (file_exists($dir)) {
+					$res = @dol_delete_dir_recursive($dir);
+					if (!$res) {
+						$this->error = 'ErrorFailToDeleteDir';
+						$this->errors[] = $this->error;
+						$this->db->rollback();
+						return 0;
+					}
+				}
+			}
+		}
+		
+		if (!$error) {
+			dol_syslog(get_class($this)."::delete ".$this->id." by ".$user->id, LOG_DEBUG);
+			$this->db->commit();
+			return 1;
+		} else {
+			$this->db->rollback();
+			return -1;
+		}
 		//return $this->deleteCommon($user, $notrigger, 1);
 	}
 
@@ -1277,8 +1267,8 @@ class Funding extends CommonObject
 				// We rename directory ($this->ref = old ref, $num = new ref) in order not to lose the attachments
 				$oldref = dol_sanitizeFileName($this->ref);
 				$newref = dol_sanitizeFileName($num);
-				$dirsource = $conf->funding->dir_output.'/funding/'.$oldref;
-				$dirdest = $conf->funding->dir_output.'/funding/'.$newref;
+				$dirsource = $conf->funding->dir_output.'/'.$oldref;
+				$dirdest = $conf->funding->dir_output.'/'.$newref;
 				if (!$error && file_exists($dirsource))
 				{
 					dol_syslog(get_class($this)."::validate() rename dir ".$dirsource." into ".$dirdest);
@@ -1287,7 +1277,7 @@ class Funding extends CommonObject
 					{
 						dol_syslog("Rename ok");
 						// Rename docs starting with $oldref with $newref
-						$listoffiles = dol_dir_list($conf->funding->dir_output.'/funding/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
+						$listoffiles = dol_dir_list($conf->funding->dir_output.'/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
 						foreach ($listoffiles as $fileentry)
 						{
 							$dirsource = $fileentry['name'];
@@ -1544,21 +1534,21 @@ class Funding extends CommonObject
 			//$langs->load("funding");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
+			$this->labelStatus[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequest');
+			$this->labelStatus[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrg');
+			$this->labelStatus[self::STATUS_LACK] = $langs->trans('FundingStatusLack');
 			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
 			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
-			$this->labelStatus[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequest');
-			$this->labelStatus[self::STATUS_LACK] = $langs->trans('FundingStatusLack');
-			$this->labelStatus[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrg');
 			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
 			$this->labelStatus[self::STATUS_END] = $langs->trans('FundingStatusEnd');
 			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
+			$this->labelStatusShort[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequestShort');
+			$this->labelStatusShort[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrgShort');
+			$this->labelStatusShort[self::STATUS_LACK] = $langs->trans('FundingStatusLackShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
-			$this->labelStatusShort[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequestShort');
-			$this->labelStatusShort[self::STATUS_LACK] = $langs->trans('FundingStatusLackShort');
-			$this->labelStatusShort[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrgShort');
 			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
 			$this->labelStatusShort[self::STATUS_END] = $langs->trans('FundingStatusEndShort');
 			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabledShort');

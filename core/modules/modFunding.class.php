@@ -136,8 +136,8 @@ class modFunding extends DolibarrModules
 		//                             2 => array('FUNDING_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array(
-			1 => array('FUNDING_NUM_COEF', 'chaine', '0', '', 0, 1, 0),
-			2 => array('FUNDING_NUM_FUND', 'chaine', '0', '', 0, 1, 0),
+			1 => array('FUNDING_FUND_PREFIX', 'chaine', 'FUND', '', 0, 1, 0),
+			2 => array('FUNDING_COEF_PREFIX', 'chaine', 'COEF', '', 0, 1, 0),
 		);
 
 		// Some keys to add into the overwriting translation tables
@@ -338,10 +338,10 @@ class modFunding extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'ListFundingDraft',
+            'titre'=>'ListFundingValidated',
             'mainmenu'=>'billing',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=0',
+            'url'=>'/funding/funding_list.php?search_status=1',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -358,10 +358,150 @@ class modFunding extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'ListFundingValidated',
+            'titre'=>'ListFundingStudy',
             'mainmenu'=>'billing',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=1',
+            'url'=>'/funding/funding_list.php?search_status=2',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingLack',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=4',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingAccept',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=5',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingDenied',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=6',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingRunning',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=7',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingEnd',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=8',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=ListFunding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingCanceled',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=9',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1100+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=billing,fk_leftmenu=funding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingPropal',
+            'mainmenu'=>'billing',
+            'leftmenu'=>'ListFunding',
+            'url'=>'/funding/funding_list.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,

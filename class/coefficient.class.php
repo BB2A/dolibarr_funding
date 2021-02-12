@@ -96,11 +96,11 @@ class Coefficient extends CommonObject
 	 */
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
-		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(COEF)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'amount_of' => array('type'=>'price', 'label'=>'Amount de', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'amount_to' => array('type'=>'price', 'label'=>'Amount a', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'help'=>"Help text for amount",),
+		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'amount_of' => array('type'=>'price', 'label'=>'Amount de', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for amount",),
+		'amount_to' => array('type'=>'price', 'label'=>'Amount a', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for amount",),
 		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'arrayofkeyval'=>array('12'=>'12 Mois', '24'=>'24 Mois', '36'=>'36 Mois', '48'=>'48 Mois', '60'=>'60 Mois'),),
-		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>1, 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help text for quantity",),
+		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>1, 'css'=>'maxwidth75imp', 'help'=>"Help text for quantity",),
 		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>35, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'foreignkey'=>'societe.rowid', 'help'=>"LinkToThirparty",),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -176,6 +176,8 @@ class Coefficient extends CommonObject
 
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
+		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+		if (!empty($conf->global->FUNDING_DEFAULT_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['default'] = $this->fields['fk_org']['default'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
 
 		// Example to show how to set values of fields definition dynamically
 		/*if ($user->rights->funding->coefficient->read) {
@@ -269,64 +271,6 @@ class Coefficient extends CommonObject
 	}
 
 	/**
-	 * Create ref object
-	 *
-	 * @param  
-	 * @param  
-	 * @return ref
-	 */
-	public function createRef()
-	{
-		global $conf;
-		$dispo = -1;
-		$num = $conf->global->FUNDING_NUM_COEF;
-		if ($num >= 0)
-		{
-			while ($dispo != 0)
-			{
-				$num = $num + 1;
-				$num = str_pad($num, 5, "0", STR_PAD_LEFT);
-				$sql = "UPDATE llx_const SET value =".$num." WHERE name = \"FUNDING_NUM_COEF\"";
-				$resqlupdate = $this->db->query($sql);
-				
-				$ref = "COEF-" . $num;
-				
-				$dispo = $this->verif_dispo($ref,0);
-			}
-			if($dispo == 0)
-			{
-				return $ref;
-			}
-		}
-	}
-
-	/**
-	 * Vérifie la dispo ref object
-	 *
-	 * @param  
-	 * @param  
-	 * @return 0 = ok or -1 = nok
-	 */
-	public function verif_dispo($ref, $soc)
-	{
-        // phpcs:enable
-		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."funding_coefficient";
-		$sql .= " WHERE ref = '".$ref."'";
-		$resql = $this->db->query($sql);
-		if ($resql)
-		{
-			if ($this->db->num_rows($resql) == 0)
-			{
-				return 0;
-			}
-			else
-			{
-				return -1;
-			}
-		}
-	}
-
-	/**
 	 * Create object into database
 	 *
 	 * @param  User $user      User that creates
@@ -335,12 +279,15 @@ class Coefficient extends CommonObject
 	 */
 	public function create(User $user, $notrigger = false)
 	{
-		$ref = $this->createRef();
-
-		if($ref)
+		$create = $this->createCommon($user, $notrigger);
+		if ($create > 0)
 		{
-			$this->ref = $ref;
-			return $this->createCommon($user, $notrigger);
+			// Créate ref
+			$this->ref = "(PROV".$this->id.")";
+			$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
+			$resql = $this->db->query($sql);
+			$this->validate($user);
+			if (!$resql) $error++;
 		}
 	}
 

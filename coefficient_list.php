@@ -243,7 +243,8 @@ foreach ($search as $key => $val)
 {
 	if ($key == 'status' && $search[$key] == -1) continue;
 	$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
-	if (strpos($object->fields[$key]['type'], 'integer:') === 0) {
+	////BB2A Probléme de recherche ancinne ligne "if (strpos($object->fields[$key]['type'], 'integer:') === 0) {"
+	if (strpos($object->fields[$key]['type'], 'integer:') == 0) {
 		if ($search[$key] == '-1') $search[$key] = '';
 		$mode_search = 2;
 	}

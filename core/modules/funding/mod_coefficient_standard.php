@@ -36,7 +36,7 @@ class mod_coefficient_standard extends ModeleNumRefCoefficient
 	 */
 	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
-	public $prefix = 'COEFFICIENT';
+	public $prefix = 'COEF';
 
 	/**
 	 * @var string Error code (or message)
