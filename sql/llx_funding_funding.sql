@@ -52,6 +52,8 @@ CREATE TABLE llx_funding_funding(
 	tms timestamp, 
 	fk_user_creat integer NOT NULL, 
 	fk_user_modif integer, 
+	origin varchar(128) NOT NULL, 
+	origin_id integer NOT NULL, 
 	import_key varchar(14), 
 	model_pdf varchar(255), 
 	status_folder smallint, 

@@ -31,6 +31,8 @@ ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_propal (fk_prop
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_order (fk_order);
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_user_comm FOREIGN KEY (fk_user_comm) REFERENCES llx_user(rowid);
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
+ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_origin (origin);
+ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_origin_id (origin_id);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_status_folder (status_folder);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_status (status);
 -- END MODULEBUILDER INDEXES

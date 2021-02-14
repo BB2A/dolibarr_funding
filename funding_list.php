@@ -255,7 +255,8 @@ foreach ($search as $key => $val)
 	if ($key == 'status' && $search[$key] == -1) continue;
 	$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
 	//BB2A Probléme de recherche ancinne ligne "if (strpos($object->fields[$key]['type'], 'integer:') === 0) {"
-	if (strpos($object->fields[$key]['type'], 'integer:') == 0) {
+	if ($search[$key] == '-1') $search[$key] = '';
+	if (strpos($object->fields[$key]['type'], 'integer:') === 0) {
 		if ($search[$key] == '-1') $search[$key] = '';
 		$mode_search = 2;
 	}
@@ -289,7 +290,7 @@ $sql=preg_replace('/,\s*$/','', $sql);
 */
 
 $sql .= $db->order($sortfield, $sortorder);
-
+print $sql;
 // Count total nb of records
 $nbtotalofrecords = '';
 if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))

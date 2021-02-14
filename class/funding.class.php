@@ -63,8 +63,8 @@ class Funding extends CommonObject
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_STUDY_REQUEST = 2;
-	const STATUS_SEND_ORG = 3;
-	const STATUS_LACK = 4;
+	const STATUS_UPDATE = 3;
+	const STATUS_SEND_ORG = 4;
 	const STATUS_ACCEPT = 5;
 	const STATUS_DENIED = 6;
 	const STATUS_RUNNING = 7;
@@ -113,7 +113,7 @@ class Funding extends CommonObject
 		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
-		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_delivery", 'showoncombobox'=>'1',),
+		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1, 'help'=>"Help_date_delivery",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>45, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'index'=>1, 'arrayofkeyval'=>array('1'=>'Non', '2'=>'Oui'),),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'index'=>1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
@@ -137,10 +137,12 @@ class Funding extends CommonObject
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
+		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'FundingStatusDraft', '1'=>'FundingStatusValidated', '2'=>'FundingStatusRequest', '3'=>'FundingStatusSendOrg', '4'=>'FundingStatusLack', '5'=>'FundingStatusAccept', '6'=>'FundingStatusDenied', '7'=>'FundingStatusRunning', '8'=>'FundingStatusEnd', '9'=>'FundingStatusDisabled'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '2'=>'Demande d\'&eacute;tude', '3'=>'Envoyer &agrave; l\'organisme', '4'=>'Document manquant', '5'=>'Accept&eacute;', '6'=>'Refus&eacute;', '7'=>'Actif', '8'=>'Termin&eacute;', '9'=>'Annul&eacute;'),),
 	);
 	public $rowid;
 	public $ref;
@@ -178,6 +180,8 @@ class Funding extends CommonObject
 	public $tms;
 	public $fk_user_creat;
 	public $fk_user_modif;
+	public $origin;
+	public $origin_id;
 	public $import_key;
 	public $model_pdf;
 	public $status_folder;
@@ -494,6 +498,7 @@ class Funding extends CommonObject
 	public function create(User $user, $notrigger = false)
 	{
 		global $langs;
+		$now 		= dol_now();
 		$typedoc 	= GETPOST('typedoc', 'alpha');
 		$iddoc 		= GETPOST('iddoc', 'int');
 
@@ -506,6 +511,8 @@ class Funding extends CommonObject
 		//Document
 		if ($iddoc && $typedoc)
 		{
+			$this->origin = $typedoc;
+			$this->origin_id = $iddoc;
 			$document			= $this->info_doc($iddoc,$typedoc);
 			if ($document > 0)
 			{
@@ -544,6 +551,7 @@ class Funding extends CommonObject
 								$this->date_end		= date('Y-m-d', strtotime('+'.$duration.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 							}
 						}
+						//Voir si delete
 						if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
 						if ($typedoc == 'order') $this->fk_order	= $iddoc;
 						//Commercial
@@ -565,8 +573,9 @@ class Funding extends CommonObject
 								$this->ref = "(PROV".$this->id.")";
 								$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
 								$resql = $this->db->query($sql);
-								$this->validate($user);
 								if (!$resql) $error++;
+								$this->date_creation = $now;
+								$this->validate($user);
 							}
 							return $create;				
 						}
@@ -894,7 +903,11 @@ class Funding extends CommonObject
 		$document = -1;
 		$idcomm = -1;
 		$duration = -1;
+		$typedoc = $this->origin;
+		$iddoc = $this->origin_id;
 		
+		//Old delete
+		/*
 		if ($this->fk_propal)
 		{
 			$typedoc = 'propal' ;
@@ -904,7 +917,7 @@ class Funding extends CommonObject
 			$typedoc = 'order' ;
 			$iddoc = $this->fk_order;
 		}
-
+*/
 		//Document
 		if ($iddoc && $typedoc)
 		{
@@ -1535,8 +1548,8 @@ var_dump($this->ref);
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
 			$this->labelStatus[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequest');
+			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
 			$this->labelStatus[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrg');
-			$this->labelStatus[self::STATUS_LACK] = $langs->trans('FundingStatusLack');
 			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
 			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
 			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
@@ -1545,8 +1558,8 @@ var_dump($this->ref);
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
 			$this->labelStatusShort[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequestShort');
+			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
 			$this->labelStatusShort[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrgShort');
-			$this->labelStatusShort[self::STATUS_LACK] = $langs->trans('FundingStatusLackShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
 			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');

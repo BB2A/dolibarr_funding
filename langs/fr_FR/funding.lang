@@ -43,7 +43,7 @@ MyPageName = Nom de ma page
 #
 # Box d'exemple
 #
-MyWidget = Mon widget
+FundindValidate = Financement validé
 MyWidgetDescription = Description de mon widget
 
 Funding = Financement
@@ -59,7 +59,6 @@ DateEnd = Date de fin
 Redemption = Rachat
 DateDelivery = Date de livraison
 ListFunding = Liste de financement
-ListFundingPropal = Liste proposition de financement
 ListFundingDraft = Brouillon
 ListFundingValidated = Validé
 ListFundingStudy = En étude
@@ -69,6 +68,10 @@ ListFundingDenied = Refusé
 ListFundingRunning = Actif
 ListFundingEnd = Terminé
 ListFundingCanceled = Annulé
+ListFundingPropal = Liste proposition de financement
+ListFundingPropalStudy = Demande d'étude
+ListFundingPropalAccept = Accepté
+ListFundingPropalDenied = Refusé
 NewFunding = Nouveau financement
 Amount de = Montant de
 Amount a = Montant a
@@ -131,7 +134,6 @@ CreateUpdateCoefficient = Creer modifier les coef
 DeleteCoefficient = Supprimer les coef
 
 #EVENTS MESSAGES
-
 commnok = Commercial introuvable
 coefnok = Coef introuvable
 docnotvalidate = Document non validé
@@ -148,8 +150,8 @@ FundingStatusDraft = Brouillon
 FundingStatusValidated = Validé
 FundingStatusAccept = Accepté
 FundingStatusDenied = Refusé
+FundingStatusUpdate = Mise à jour
 FundingStatusRequest = Demande d'étude
-FundingStatusLack = Document manquant
 FundingStatusSendOrg = Envoyer à l'organisme
 FundingStatusRunning = Actif
 FundingStatusEnd = Terminé
@@ -158,8 +160,8 @@ FundingStatusDraftShort = Brouillon
 FundingStatusEnabledShort = Validé
 FundingStatusAcceptShort = Accepté
 FundingStatusDeniedShort = Refusé
+FundingStatusUpdateShort = Mise à jour
 FundingStatusRequestShort = Demande d'étude
-FundingStatusLackShort = Doc manquant
 FundingStatusSendOrgShort = Envoyer à l'organisme
 FundingStatusRunningShort = Actif
 FundingStatusEndShort = Terminé

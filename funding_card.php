@@ -229,14 +229,13 @@ if (empty($reshook))
 
 	if ($action == 'confirm_refresh' && $confirm == 'yes' && $permissiontoadd)
 	{
+		$object->status = $object::STATUS_UPDATE;
 		$res = $object->update($user);
-		//if ($res > 0) $object->status = self::STATUS_STUDY_REQUEST;
 	}
 	
 	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
 	{
 		$res = $object->send_org($user);
-		//if ($res > 0) $object->status = self::STATUS_STUDY_REQUEST;
 	}
 	
 	if ($action == 'set_thirdparty' && $permissiontoadd)
@@ -453,7 +452,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	{
 		//Form to close proposal (signed or not)
 		$formquestion = array(
-			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array(2=>$object->LibStatut($object::STATUS_ACCEPT), 3=>$object->LibStatut($object::STATUS_DENIED))),
+			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED))),
 			// BB2A Saisie d'un text
 			// array('type' => 'text', 'name' => 'note', 'label' => $langs->trans("Note"), 'value' => '')
 		);
