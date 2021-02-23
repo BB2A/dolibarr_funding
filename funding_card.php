@@ -566,75 +566,92 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			if ($doc == 'fundoc3' || $doc == 'fundoc4')
 			{
-				require_once TCPDF_PATH.'tcpdf.php';
-				$merge = new tcpdf();
-				
-				$fileArray= array("Demande-segurel-148652.pdf","Modele LOCATION TPE signature gauche.pdf");
+				//Fusion des PDF
+				// Libraries
+				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
 
-				foreach ($fileArray as $file)
+				$pdf = pdf_getInstance();
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+
+				foreach ($fileupload as $file)
 				{
+					$file = $upload_dir.'/'.$file;
 					if (file_exists($file) && is_readable($file))
 					{
-						
-						$merge->add($file);
+						$pageCount = $pdf->setSourceFile($file);
+						// get the page count
+						$pageCount = $pdf->setSourceFile($file);
+						// iterate through all pages
+						for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+							// import a page
+							$templateId = $pdf->importPage($pageNo);
+							// get the size of the imported page
+							$size = $pdf->getTemplateSize($templateId);
 
+							// create a page (landscape or portrait depending on the imported page size)
+							if ($size['w'] > $size['h']) {
+								$pdf->AddPage('L', 'A4');
+								// $pdf->AddPage('L', array($size['w'], $size['h']));
+							} else {
+								$pdf->AddPage('P', 'A4');
+								// $pdf->AddPage('P', array($size['w'], $size['h']));
+							}
+
+							// use the imported page
+							$pdf->useTemplate($templateId,null,null,0,0,true);
+						}
+					}
+					else{
+						setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
 					}
 				}
-				$merge->output($upload_dir."test.pdf", 'F');
-					
-				/*foreach ($_FILES['userfile']['name'] as $file)
+				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
+				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
+				// Output the new PDF
+				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
+				//Vérifie si le fichier à bien ete créer pour inscription en db
+				if (file_exists($upload_dir.'/'.$fileuploadnewname)){
+					$rename = 1;
+					var_dump($rename);
+				}
+				//Delete old files
+				foreach ($fileupload as $file)
 				{
-					$key = array_search($file, $_FILES['userfile']['name']);
 					$file = $upload_dir.'/'.$file;
-					$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($langs->trans($doc)).'_'.$key.'.pdf';
-					if (file_exists($file))rename ($file, $upload_dir.'/'.$fileuploadnewname);
-					$files .= $fileuploadnewname.',';
+					if (file_exists($file)) unlink($file);
 				}
-				$cmdstring = "gs -dBatch -dNOPAUSE -q -sDEVICE = pdfwrite -sOutputFile =".$upload_dir."/result.pdf ";
-				$fileArray= array("Demande-segurel-148652.pdf","Modele LOCATION TPE signature gauche.pdf");
-				foreach ($fileArray as $file)
-				{
-					$cmdstring .= $upload_dir.'/'.$file." ";
-				}
-				var_dump ($cmdstring);
-				
-				var_dump(shell_exec($cmdstring));*/
 			}
-			else
-			{
+			else{
 				$file = $upload_dir.'/'.$fileupload;
-				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($langs->trans($doc)).'.pdf';
-				if (file_exists($file))rename ($file, $upload_dir.'/'.$fileuploadnewname);
+				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
+				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
+				$fileuploadnewname = str_replace(' ','_',$fileuploadnewname);
+				if (file_exists($file)) $rename = rename ($file, $upload_dir.'/'.$fileuploadnewname);
 			}
-			if ($doc == 'fundoc1')$object->fundoc1 = $fileuploadnewname;
-			if ($doc == 'fundoc2')$object->fundoc2 = $fileuploadnewname;
+			if ($rename){
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
+
+				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+			}
+			
+				
+			/*
 			if ($doc == 'fundoc3')$object->fundoc3 = $files;
-			if ($doc == 'fundoc4')$object->fundoc4 = $files;
-			if ($doc == 'funfoldoc1')$object->funfoldoc1 = $fileuploadnewname;
-			if ($doc == 'funfoldoc2')$object->funfoldoc2 = $fileuploadnewname;
-			if ($doc == 'funfoldoc3')$object->funfoldoc3 = $fileuploadnewname;
+			if ($doc == 'fundoc4')$object->fundoc4 = $files;*/
 		}
-		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet)
-		{
+		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet){
 			$file = $upload_dir.'/'.$filedelet;
 			if (file_exists($file))$delet = unlink($file);
-			if ($delet)
-			{
-				if ($doc == 'fundoc1')$object->fundoc1 = '';
-				if ($doc == 'fundoc2')$object->fundoc2 = '';
-				if ($doc == 'fundoc2')$object->fundoc3 = '';
-				if ($doc == 'fundoc2')$object->fundoc4 = '';
-				if ($doc == 'funfoldoc1')$object->funfoldoc1 = '';
-				if ($doc == 'funfoldoc2')$object->funfoldoc2 = '';
-				if ($doc == 'funfoldoc3')$object->funfoldoc3 = '';
+			if ($delet){
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
+				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
 				setEventMessages($langs->trans('FilesDeleted'),'');
 			}
-			else
-			{
+			else{
 				setEventMessages($langs->trans('ErrorFileNotFound'),'','errors');
 			}
 		}
-		$object->update($user);
 	}
 	
 	print '<table class="noborder tableforfield centpercent margintable">';
