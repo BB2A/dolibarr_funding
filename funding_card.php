@@ -211,8 +211,117 @@ if (empty($reshook))
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
+
+	//Documents
+	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
+	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 	
-		// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
+	$documenturl = DOL_URL_ROOT.'/document.php';
+	if (isset($conf->global->DOL_URL_ROOT_DOCUMENT_PHP)) $documenturl = $conf->global->DOL_URL_ROOT_DOCUMENT_PHP;
+	$modulepart = 'funding';
+	
+	if ($action == 'savedoc' && $permissiontoadd || $action == 'deletdoc' && $permissiontoadd)
+	{
+		$doc = GETPOST('doc');
+		$fileupload = $_FILES['userfile']['name'];
+		$filedelet = GETPOST('filedelet');
+
+		if ($action == 'savedoc' && !empty($upload_dir))
+		{
+			if ($doc == 'fundoc3' || $doc == 'fundoc4')
+			{
+				//Fusion des PDF
+				// Libraries
+				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
+
+				$pdf = pdf_getInstance();
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+
+				foreach ($fileupload as $file)
+				{
+					$file = $upload_dir.'/'.$file;
+					if (file_exists($file) && is_readable($file))
+					{
+						$pageCount = $pdf->setSourceFile($file);
+						// get the page count
+						$pageCount = $pdf->setSourceFile($file);
+						// iterate through all pages
+						for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+							// import a page
+							$templateId = $pdf->importPage($pageNo);
+							// get the size of the imported page
+							$size = $pdf->getTemplateSize($templateId);
+
+							// create a page (landscape or portrait depending on the imported page size)
+							if ($size['w'] > $size['h']) {
+								$pdf->AddPage('L', 'A4');
+								// $pdf->AddPage('L', array($size['w'], $size['h']));
+							} else {
+								$pdf->AddPage('P', 'A4');
+								// $pdf->AddPage('P', array($size['w'], $size['h']));
+							}
+
+							// use the imported page
+							$pdf->useTemplate($templateId,null,null,0,0,true);
+						}
+					}
+					else{
+						setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
+					}
+				}
+				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
+				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
+				// Output the new PDF
+				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
+				//Vérifie si le fichier à bien ete créer pour inscription en db
+				if (file_exists($upload_dir.'/'.$fileuploadnewname)){
+					$rename = 1;
+					var_dump($rename);
+				}
+				//Delete old files
+				foreach ($fileupload as $file)
+				{
+					$file = $upload_dir.'/'.$file;
+					if (file_exists($file)) unlink($file);
+				}
+			}
+			else{
+				$file = $upload_dir.'/'.$fileupload;
+				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
+				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
+				$fileuploadnewname = str_replace(' ','_',$fileuploadnewname);
+				if (file_exists($file)) $rename = rename ($file, $upload_dir.'/'.$fileuploadnewname);
+			}
+			if ($rename){
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
+				$resql = $db->query($sql);
+				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+			}
+			
+				
+			/*
+			if ($doc == 'fundoc3')$object->fundoc3 = $files;
+			if ($doc == 'fundoc4')$object->fundoc4 = $files;*/
+		}
+		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet){
+			$file = $upload_dir.'/'.$filedelet;
+			if (file_exists($file))$delet = unlink($file);
+			if ($delet){
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
+				$resql = $db->query($sql);
+				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+				setEventMessages($langs->trans('FilesDeleted'),'');
+			}
+			else{
+				setEventMessages($langs->trans('ErrorFileNotFound'),'','errors');
+			}
+		}
+	}
+	// Load object
+	include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
+
+	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
 
 	// Actions when linking object each other
@@ -278,11 +387,11 @@ if (empty($reshook))
 			}
 		}
 	}
-	
+
 	// BB2A marque send mail
 	// Actions to send emails
-	$triggersendname = 'FUNDING_SENTBYMAIL';
-	$autocopy = 'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
+	$triggersendname = 'test@test.fr';//'FUNDING_SENTBYMAIL';
+	$autocopy = 'a.berton@gest-mag.com';//'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
 	$trackid = 'funding'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
@@ -358,6 +467,8 @@ else
 // Part to create
 if ($action == 'create')
 {
+	
+	if (!empty($conf->global->FUNDING_DEFAULT_TYPE)) $fk_funding_type =  $conf->global->FUNDING_DEFAULT_TYPE;
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
@@ -548,112 +659,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '</table>';
 
-	// Documents
-	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
-	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
-	
-	$documenturl = DOL_URL_ROOT.'/document.php';
-	if (isset($conf->global->DOL_URL_ROOT_DOCUMENT_PHP)) $documenturl = $conf->global->DOL_URL_ROOT_DOCUMENT_PHP;
-	$modulepart = 'funding';
-	
-	if ($action == 'savedoc' && $permissiontoadd || $action == 'deletdoc' && $permissiontoadd)
-	{
-		$doc = GETPOST('doc');
-		$fileupload = $_FILES['userfile']['name'];
-		$filedelet = GETPOST('filedelet');
-
-		if ($action == 'savedoc' && !empty($upload_dir))
-		{
-			if ($doc == 'fundoc3' || $doc == 'fundoc4')
-			{
-				//Fusion des PDF
-				// Libraries
-				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
-
-				$pdf = pdf_getInstance();
-				$pdf->setPrintHeader(false);
-				$pdf->setPrintFooter(false);
-
-				foreach ($fileupload as $file)
-				{
-					$file = $upload_dir.'/'.$file;
-					if (file_exists($file) && is_readable($file))
-					{
-						$pageCount = $pdf->setSourceFile($file);
-						// get the page count
-						$pageCount = $pdf->setSourceFile($file);
-						// iterate through all pages
-						for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-							// import a page
-							$templateId = $pdf->importPage($pageNo);
-							// get the size of the imported page
-							$size = $pdf->getTemplateSize($templateId);
-
-							// create a page (landscape or portrait depending on the imported page size)
-							if ($size['w'] > $size['h']) {
-								$pdf->AddPage('L', 'A4');
-								// $pdf->AddPage('L', array($size['w'], $size['h']));
-							} else {
-								$pdf->AddPage('P', 'A4');
-								// $pdf->AddPage('P', array($size['w'], $size['h']));
-							}
-
-							// use the imported page
-							$pdf->useTemplate($templateId,null,null,0,0,true);
-						}
-					}
-					else{
-						setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
-					}
-				}
-				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
-				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
-				// Output the new PDF
-				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
-				//Vérifie si le fichier à bien ete créer pour inscription en db
-				if (file_exists($upload_dir.'/'.$fileuploadnewname)){
-					$rename = 1;
-					var_dump($rename);
-				}
-				//Delete old files
-				foreach ($fileupload as $file)
-				{
-					$file = $upload_dir.'/'.$file;
-					if (file_exists($file)) unlink($file);
-				}
-			}
-			else{
-				$file = $upload_dir.'/'.$fileupload;
-				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
-				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
-				$fileuploadnewname = str_replace(' ','_',$fileuploadnewname);
-				if (file_exists($file)) $rename = rename ($file, $upload_dir.'/'.$fileuploadnewname);
-			}
-			if ($rename){
-				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
-
-				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
-			}
-			
-				
-			/*
-			if ($doc == 'fundoc3')$object->fundoc3 = $files;
-			if ($doc == 'fundoc4')$object->fundoc4 = $files;*/
-		}
-		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet){
-			$file = $upload_dir.'/'.$filedelet;
-			if (file_exists($file))$delet = unlink($file);
-			if ($delet){
-				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
-				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
-				setEventMessages($langs->trans('FilesDeleted'),'');
-			}
-			else{
-				setEventMessages($langs->trans('ErrorFileNotFound'),'','errors');
-			}
-		}
-	}
-	
+//Documents
 	print '<table class="noborder tableforfield centpercent margintable">';
 	print '<tr class="liste_titre">';
 		print '<td colspan="3">'.$langs->trans("DocumentsForFunding").'</td>';
@@ -714,8 +720,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		else
 		{
-			print '<td>'.$object->fundoc3.'</td>';//<td>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param).'</td>';
-			($object->fundoc3)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc2&filedelet='.$object->fundoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
+			$relativepath = $object->ref.'/'.$object->fundoc3;
+			($object->fundoc3)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->fundoc3.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+			($object->fundoc3)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc3&filedelet='.$object->fundoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
 		print '</tr>';
 		//Document 4
@@ -898,11 +905,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			// BB2A Envoie par mail	
 			// Send
-			/*
 			if (empty($user->socid)) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init#formmailbeforetitle&addfile=	FUD2102-0001_RIB.pdf">'.$langs->trans('SendMail').'</a>'."\n";
 			}
-			*/
 
 			// BB2A Refresh
 			if (empty($user->socid)) {
@@ -1069,7 +1074,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Presend form
 	$modelmail = 'funding';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->funding->dir_output;
+	$diroutput = $conf->dir_output;
 	$trackid = 'funding'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';

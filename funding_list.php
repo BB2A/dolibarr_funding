@@ -290,7 +290,7 @@ $sql=preg_replace('/,\s*$/','', $sql);
 */
 
 $sql .= $db->order($sortfield, $sortorder);
-print $sql;
+
 // Count total nb of records
 $nbtotalofrecords = '';
 if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))

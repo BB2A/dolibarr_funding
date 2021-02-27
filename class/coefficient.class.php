@@ -97,11 +97,11 @@ class Coefficient extends CommonObject
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'amount_of' => array('type'=>'price', 'label'=>'Amount de', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for amount",),
-		'amount_to' => array('type'=>'price', 'label'=>'Amount a', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for amount",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'arrayofkeyval'=>array('12'=>'12 Mois', '24'=>'24 Mois', '36'=>'36 Mois', '48'=>'48 Mois', '60'=>'60 Mois'),),
+		'amount_of' => array('type'=>'price', 'label'=>'Amount_of', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for amount",),
+		'amount_to' => array('type'=>'price', 'label'=>'Amount_to', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for amount",),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'arrayofkeyval'=>array(),),
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>1, 'css'=>'maxwidth75imp', 'help'=>"Help text for quantity",),
-		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>35, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
+		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>35, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array(),),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'foreignkey'=>'societe.rowid', 'help'=>"LinkToThirparty",),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
@@ -208,7 +208,7 @@ class Coefficient extends CommonObject
 				}
 			}
 		}
-		//Chagement du dictionnaire duration
+		//Chargement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
         $sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
         $sql.= ' WHERE c.active = 1';
@@ -225,7 +225,7 @@ class Coefficient extends CommonObject
                 while ($i < $num)
                 {
                     $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->code] = $obj->label;
+                    $arrayofkeyval[$obj->rowid] = $obj->label;
                     $i = $i +1;
                 }
                 $this->fields['fk_duration']['arrayofkeyval'] = $arrayofkeyval;
