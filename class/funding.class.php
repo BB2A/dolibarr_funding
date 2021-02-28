@@ -238,7 +238,7 @@ class Funding extends CommonObject
 
 		$this->db = $db;
 
-		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
+		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 1;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
 		
 		if (!empty($conf->global->FUNDING_DEFAULT_DURATION) && isset($this->fields['fk_duration'])) $this->fields['fk_duration']['default'] = $conf->global->FUNDING_DEFAULT_DURATION;
@@ -607,6 +607,47 @@ class Funding extends CommonObject
 		{
 			setEventMessages($langs->trans("paramnok"), null, 'errors');
 		}
+	}
+	
+	/**
+	 * Clone an object into another one
+	 *
+	 * @param  	User 	$user      	User that creates
+	 * @param  	int 	$srcid     	Funding origin
+	 * @param  	int 	$origin     New origin document
+	 * @param  	int 	$origin_id  New origin id document
+	 * @return 	mixed 				New object created, <0 if KO
+	 */
+	public function createSignPropal($user, $srcid, $origin, $origin_id)
+	{
+		
+		global $conf, $db;
+		$this->origin = $origin;
+		$this->origin_id = $origin_id;
+		//Voir si delete
+		$this->fk_order = $origin_id;
+		return 'ok le boss';
+		
+		/*//Création du nouveau funding
+		$create = $this->createCommon($user, $notrigger);
+		if ($create > 0)
+		{
+			// Add object linked
+			$ret = $this->add_object_linked($typedoc, $iddoc);
+			if (!$ret)
+			{
+				$this->error = $this->db->lasterror();
+				$error++;
+			}
+			// Créate ref
+			$this->ref = "(PROV".$this->id.")";
+			$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
+			$resql = $this->db->query($sql);
+			if (!$resql) $error++;
+			$this->date_creation = $now;
+			$this->validate($user);
+		}*/
+		//Copie des fichiers
 	}
 
 	/**
@@ -1816,6 +1857,11 @@ var_dump($this->ref);
 		setEventMessages($langs->trans("SendOrgOk"), null);
 		return $this->setStatusCommon($user, self::STATUS_SEND_ORG, $notrigger, 'FUNDING_SEND_ORG');
 	}
+	public function test()
+	{
+		setEventMessages("test Ok", null);
+		//setEventMessages($langs->trans("nodoc"), null, 'errors');
+	}
 }
 
 /**
@@ -1826,3 +1872,4 @@ class FundingLine
 	// To complete with content of an object FundingLine
 	// We should have a field rowid, fk_funding and position
 }
+

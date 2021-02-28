@@ -55,10 +55,10 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 		$this->db = $db;
 
 		$this->name = preg_replace('/^Interface/i', '', get_class($this));
-		$this->family = "demo";
+		$this->family = "BB2A";
 		$this->description = "Funding triggers.";
 		// 'development', 'experimental', 'dolibarr' or version
-		$this->version = 'development';
+		$this->version = self::VERSION_DOLIBARR;
 		$this->picto = 'funding@funding';
 	}
 
@@ -151,9 +151,8 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 			// Customer orders
 			case 'ORDER_CREATE':
-				setEventMessages('youpi'.$object->id, null);
-			case 'ORDER_MODIFY':
-			case 'ORDER_VALIDATE':
+			//case 'ORDER_MODIFY':
+			//case 'ORDER_VALIDATE':
 			//case 'ORDER_DELETE':
 			//case 'ORDER_CANCEL':
 			//case 'ORDER_SENTBYMAIL':
@@ -180,13 +179,38 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 			// Proposals
 			//case 'PROPAL_CREATE':
-			case 'PROPAL_MODIFY':
-			    setEventMessages('youpi', null);
-			case 'PROPAL_VALIDATE':
+			//case 'PROPAL_MODIFY':
+			//case 'PROPAL_VALIDATE':
 			//case 'PROPAL_SENTBYMAIL':
 			case 'PROPAL_CLOSE_SIGNED':
-			case 'PROPAL_CLOSE_REFUSED':
-			case 'PROPAL_DELETE':
+				global $conf, $db;
+				if ($object->element == 'propal'){
+					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
+					$sql.= " WHERE c.origin = 'propal'";
+					$sql.= ' AND c.origin_id = '.$object->id;
+					$resql = $db->query($sql);
+
+					if ($resql)
+					{
+						$obj = $db->fetch_object($resql);
+						$srcid = $obj->rowid;
+					}
+					else
+					{
+						$errors = 'Error '.$this->db->lasterror();
+						dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+						setEventMessages($errors, null, 'errors');
+					}
+				}
+				if ($object->element == 'commande'){
+					dol_include_once('/funding/class/funding.class.php');
+					$newobject = new Funding($this->db);
+					$resut = $newobject->createSignPropal($user, $srcid, 'order', $object->id);
+					setEventMessages('Commande N°'.$object->id." result = ".$resut, null);
+				}
+			//var_dump($object);
+			//case 'PROPAL_CLOSE_REFUSED':
+			//case 'PROPAL_DELETE':
 			//case 'LINEPROPAL_INSERT':
 			//case 'LINEPROPAL_UPDATE':
 			//case 'LINEPROPAL_DELETE':
