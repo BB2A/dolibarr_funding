@@ -423,19 +423,19 @@ jQuery(document).ready(function() {
 </script>';
 
 //Regarde si on est dans un document ou fiche funding
-if (!empty($typedoc) || $object->fk_order || $object->fk_propal && !empty($iddoc) || $object->fk_order || $object->fk_propal)
+if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($object->origin_id))
 {
 	//BB2A_Récupération table propal
-	if ($typedoc == 'propal' || $object->fk_propal)
+	if ($typedoc == 'propal' || $object->origin == 'propal')
 	{
 		$prop = new Propal($db);
-		$result = $prop->fetch(empty($iddoc)?$object->fk_propal:$iddoc);
+		$result = $prop->fetch(empty($iddoc)?$object->origin_id:$iddoc);
 	}
 	//BB2A_Récupération table order
-	if ($typedoc == 'order' || $object->fk_order)
+	if ($typedoc == 'order' || $object->origin == 'order')
 	{
 		$ord = new Commande($db);
-		$result = $ord->fetch(empty($iddoc)?$object->fk_order:$iddoc);
+		$result = $ord->fetch(empty($iddoc)?$object->origin_id:$iddoc);
 	}
 }
 	
@@ -631,8 +631,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
 	// Thirdparty
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	if (!empty($object->fk_propal) && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
-	if (!empty($object->fk_order) && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
+	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
+	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
 	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref);
 	print '<div class="fichecenter">';

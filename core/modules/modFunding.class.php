@@ -598,7 +598,7 @@ class modFunding extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'CoefListe',
+            'titre'=>'RetentionListe',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
             'url'=>'/funding/coefficient_list.php',

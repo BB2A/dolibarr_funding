@@ -22,6 +22,7 @@ CREATE TABLE llx_funding_funding(
 	folder_number varchar(128), 
 	amount double DEFAULT NULL, 
 	amount_maint double DEFAULT NULL, 
+	retention_guarantee smallint NOT NULL, 
 	amount_total double DEFAULT NULL, 
 	fk_duration integer NOT NULL, 
 	coef real, 
