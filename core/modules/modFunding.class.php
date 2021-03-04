@@ -81,7 +81,7 @@ class modFunding extends DolibarrModules
 			// Set this to 1 if module has its own login method file (core/login)
 			'login' => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)
-			'substitutions' => 0,
+			'substitutions' => 1,
 			// Set this to 1 if module has its own menus handler directory (core/menus)
 			'menus' => 0,
 			// Set this to 1 if module overwrite template dir (core/tpl)
@@ -598,6 +598,26 @@ class modFunding extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
             // This is a Left menu entry
             'type'=>'left',
+            'titre'=>'CoefListe',
+            'mainmenu'=>'funding',
+            'leftmenu'=>'',
+            'url'=>'/funding/coefficient_list.php',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1300+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->coefficient->read',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0
+        );
+		/*$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
+            // This is a Left menu entry
+            'type'=>'left',
             'titre'=>'NewCoef',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
@@ -612,7 +632,7 @@ class modFunding extends DolibarrModules
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0
-        );
+        );*/
 
 		// Exports profiles provided by this module
 		$r = 1;

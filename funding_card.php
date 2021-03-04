@@ -115,14 +115,12 @@ foreach ($object->fields as $key => $val)
 
  //BB2A Affichage de la fiche dans la proposition ou la commande
  if ($typedoc && $iddoc && empty($crea)){
-	$sql = 'SELECT t.rowid, t.fk_propal, t.fk_order';
+	$sql = 'SELECT t.rowid, t.origin, t.origin_id';
 	$sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 	if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 	else $sql .= " WHERE 1 = 1";
-	//BB2A_Filtre si dans une proposition
-	if ($typedoc == 'propal') $sql.= " AND t.fk_propal = ".$iddoc;
-	//BB2A_Filtre si dans une commande
-	if ($typedoc == 'order') $sql.= " AND t.fk_order = ".$iddoc;
+	//BB2A_Filtre document origin
+	$sql.= " AND t.origin = '".$typedoc."' AND t.origin_id = ".$iddoc;
 	$resql = $db->query($sql);
 	if ($resql)
 	{
@@ -972,7 +970,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				}
 			}
 			*/
-var_dump($object);
+
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
 			{

@@ -57,6 +57,7 @@ Organization = Organisme
 ThirdPartyInvoice = Tiers facturation
 DateEnd = Date de fin
 Redemption = Rachat
+RetentionOfGuarantee = Retenue de garantie
 DateDelivery = Date de livraison
 ListFunding = Liste de financement
 ListFundingDraft = Brouillon
