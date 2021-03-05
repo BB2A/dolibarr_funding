@@ -191,7 +191,7 @@ class modFunding extends DolibarrModules
 			// Label of tables
 			'tablib'=>array("Funding_duration","Funding_scale","Funding_type"),
 			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_type_funding as f'),
+			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_type as f'),
 			// Sort order
 			'tabsqlsort'=>array("label ASC","label ASC","label ASC"),
 			// List of fields (result of select to show dictionary)

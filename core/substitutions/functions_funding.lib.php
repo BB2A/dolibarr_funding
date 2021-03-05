@@ -45,23 +45,51 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$substitutionarray['__FUNDING_AMOUNT__'] = isset($object->amount) ? price($object->amount, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
 		$substitutionarray['__FUNDING_AMOUNT_MAINT__'] = isset($object->amount_maint) ? price($object->amount_maint, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
 		$substitutionarray['__FUNDING_AMOUNT_TOTAL__'] = isset($object->amount_total) ? price($object->amount_total, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
-		$substitutionarray['__FUNDING_DURATION__'] = isset($object->fk_duration) ? $object->fk_duration : '';
+		$duration = $object->fetch_duration($object->fk_duration);
+		$substitutionarray['__FUNDING_DURATION__'] = isset($duration->label) ? $duration->label : '';
 		$substitutionarray['__FUNDING_COEF__'] = isset($object->coef) ? $object->coef : '';
-		$substitutionarray['__FUNDING_SCALE__'] = isset($object->fk_scale) ? $object->fk_scale : '';
+		$scale = $object->fetch_scale($object->fk_scale);
+		$substitutionarray['__FUNDING_SCALE__'] = isset($scale->label) ? $scale->label : '';
 	    $substitutionarray['__FUNDING_AMOUNT_RENT__'] = isset($object->amount_rent) ? price($object->amount_rent, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
 		$substitutionarray['__FUNDING_AMOUNT_RENT_EDIT__'] = isset($object->amount_rent_edit) ? price($object->amount_rent_edit, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
-		$substitutionarray['__FUNDING_DATE_DELIVERY__'] = isset($object->date_delivery) ? $object->date_delivery : '';
-		$substitutionarray['__FUNDING_DATE_END__'] = isset($object->date_end) ? $object->date_end : '';
-		$substitutionarray['__FUNDING_REDEMPTION__'] = isset($object->redemption) ? $object->redemption : '';
-		$substitutionarray['__FUNDING_TYPE__'] = isset($object->fk_funding_type) ? $object->fk_funding_type : '';
-		$substitutionarray['__FUNDING_USER_COMM__'] = isset($object->fk_user_comm) ? $object->fk_user_comm : '';
+		$substitutionarray['__FUNDING_DATE_DELIVERY__'] = isset($object->date_delivery) ? dol_print_date($object->date_delivery, 'day', 0, $outputlangs) : '';
+		$substitutionarray['__FUNDING_DATE_END__'] = isset($object->date_end) ? dol_print_date($object->date_end, 'day', 0, $outputlangs) : '';
+		$substitutionarray['__FUNDING_REDEMPTION__'] = isset($object->redemption) ? ($object->redemption == 1 ? $langs->trans("Yes") : $langs->trans("No")) : '';
+		$type = $object->fetch_type($object->fk_funding_type);
+		$substitutionarray['__FUNDING_TYPE__'] = isset($type->label) ? $type->label : '';
+		$substitutionarray['__FUNDING_USER_COMM_ID__'] = isset($object->fk_user_comm) ? $object->fk_user_comm : '';
+		if (!empty($object->fk_user_comm)){
+			$user_comm = new User($db);
+			$result = $user_comm->fetch($object->fk_user_comm);
+			$substitutionarray['__FUNDING_USER_COMM__'] = isset($result) ? $user_comm->getFullName($outputlangs) : '';
+		}
 		$substitutionarray['__FUNDING_DESCRIPTION__'] = isset($object->description) ? $object->description : '';
+		
+		//Organisme
+		$org = $object->fetch_soc($object->fk_org);
+		$substitutionarray['__FUNDING_ORG_NAME__'] = isset($org->nom) ? $org->nom : '';
+		$substitutionarray['__FUNDING_ORG_ALIAS__'] = isset($org->name_alias) ? $org->name_alias : '';
+		$substitutionarray['__FUNDING_ORG_ZIP__'] = isset($org->zip) ? $org->zip : '';
+		$substitutionarray['__FUNDING_ORG_TOWN__'] = isset($org->town) ? $org->town : '';
+		$substitutionarray['__FUNDING_ORG_ADDRESS__'] = isset($org->address) ? $org->address : '';
+		$substitutionarray['__FUNDING_ORG_PHONE__'] = isset($org->phone) ? $org->phone : '';
+		$substitutionarray['__FUNDING_ORG_MAIL__'] = isset($org->email) ? $org->email : '';
+		$substitutionarray['__FUNDING_ORG_IDPROF1__'] = isset($org->siren) ? $org->siren : '';
+		$substitutionarray['__FUNDING_ORG_IDPROF2__'] = isset($org->siret) ? $org->siret : '';
+
+		//Tiers de facturation
+		$soc_invoice = $object->fetch_soc($object->fk_soc_invoice);
+		$substitutionarray['__FUNDING_SOC_INVOICE_NAME__'] = isset($soc_invoice->nom) ? $soc_invoice->nom : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_ALIAS__'] = isset($soc_invoice->name_alias) ? $soc_invoice->name_alias : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_ZIP__'] = isset($soc_invoice->zip) ? $soc_invoice->zip : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_TOWN__'] = isset($soc_invoice->town) ? $soc_invoice->town : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_ADDRESS__'] = isset($soc_invoice->address) ? $soc_invoice->address : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_PHONE__'] = isset($soc_invoice->phone) ? $soc_invoice->phone : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_MAIL__'] = isset($soc_invoice->email) ? $soc_invoice->email : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_IDPROF1__'] = isset($soc_invoice->siren) ? $soc_invoice->siren : '';
+		$substitutionarray['__FUNDING_SOC_INVOICE_IDPROF2__'] = isset($soc_invoice->siret) ? $soc_invoice->siret : '';
+
 	}
-
-	/*
-	public $fk_org;
-	public $fk_soc_invoice;
-
-
-   __CONTACT_NAME_CUSTOMER__*/
+	// Contact
+	//__CONTACT_NAME_CUSTOMER__
 }

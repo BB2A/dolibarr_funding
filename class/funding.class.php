@@ -466,9 +466,9 @@ class Funding extends CommonObject
 		global $conf, $db;
 
 		//Récupére la durée
-		$duration = $this->fetch_duration($duration);
+		//$duration = $this->fetch_duration($duration);
 		//Récupére scale
-		$scale = $this->fetch_scale($scale);
+		//$scale = $this->fetch_scale($scale);
 		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_coefficient as c';
         $sql.= ' WHERE c.status = 1';
 		$sql.= ' AND c.fk_org = '.$org;
@@ -551,9 +551,9 @@ class Funding extends CommonObject
 							$this->date_delivery= $document->date_livraison;
 							//Ajoute la durée à la date de livraison pour avoir la date de fin
 							$duration = $this->fetch_duration($this->fk_duration);
-							if ($duration > 0)
+							if ($duration->code > 0)
 							{
-								$this->date_end		= date('Y-m-d', strtotime('+'.$duration.' month',strtotime(date('Y-m-d',$document->date_livraison))));
+								$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 							}
 						}
 						//Voir si delete
@@ -867,9 +867,7 @@ class Funding extends CommonObject
 		$resql = $db->query($sql);
 		if ($resql)
 		{
-			$row = $db->fetch_object($resql);
-			$duration = $row->rowid;
-			return $duration;
+			return $db->fetch_object($resql);
 		}
 		else
 		{
@@ -895,9 +893,32 @@ class Funding extends CommonObject
 		$resql = $db->query($sql);
 		if ($resql)
 		{
-			$row = $db->fetch_object($resql);
-			$scale = $row->rowid;
-			return $scale;
+			return $db->fetch_object($resql);
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}
+	}
+	
+	/**
+	 * Récupére type funding
+	 *
+	 * @param  id type
+	 * @return $idsocinvoic = ok or -1 = nok
+	 */
+	public function fetch_type($type)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_funding_type";
+		$sql.= " WHERE rowid = ".$type;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			return $db->fetch_object($resql);
 		}
 		else
 		{
@@ -935,6 +956,32 @@ class Funding extends CommonObject
 		}
 	}
 
+	/**
+	 * Récupére org
+	 *
+	 * @param  id contact invoice
+	 * @param  
+	 * @return $idsocinvoic = ok or -1 = nok
+	 */
+	public function fetch_soc($soc)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX."societe";
+		$sql.= " WHERE rowid = ".$soc;
+		$resql = $db->query($sql);
+		if ($resql)
+		{
+			return $db->fetch_object($resql);
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}
+	}
+	
 	/**
 	 * Update object into database
 	 *
@@ -1006,9 +1053,9 @@ class Funding extends CommonObject
 						$this->date_delivery= $document->date_livraison;
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
 						$duration = $this->fetch_duration($this->fk_duration);
-						if ($duration > 0)
+						if ($duration->code > 0)
 						{
-							$this->date_end		= date('Y-m-d', strtotime('+'.$duration.' month',strtotime(date('Y-m-d',$document->date_livraison))));
+							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 						}
 					}
 					return $this->updateCommon($user, $notrigger);
