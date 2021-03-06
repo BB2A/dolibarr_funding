@@ -38,7 +38,7 @@
  */
 function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 {
-   global $conf,$db;
+   global $langs, $conf,$db;
 	if (is_object($object) && $object->element = 'funding'){
 		$substitutionarray['__FUNDING_STUDY_NIMBER__'] = isset($object->study_number) ? $object->study_number : '';
 		$substitutionarray['__FUNDING_FOLDER_NUMBER__'] = isset($object->folder_number) ? $object->folder_number : '';
@@ -76,6 +76,17 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$substitutionarray['__FUNDING_ORG_MAIL__'] = isset($org->email) ? $org->email : '';
 		$substitutionarray['__FUNDING_ORG_IDPROF1__'] = isset($org->siren) ? $org->siren : '';
 		$substitutionarray['__FUNDING_ORG_IDPROF2__'] = isset($org->siret) ? $org->siret : '';
+		
+		//Contact CUSTOMER propal
+		if($object->origin == 'propal')$doc = new Propal($db);
+		if($object->origin == 'order')$doc = new Commande($db);
+		$result = $doc->fetch($object->origin_id);
+		$contacid = $doc->getIdContact('external', 'CUSTOMER');
+		
+		$contact = new Contact($db);
+		$result = $contact->fetch($contacid[0]);
+		$contactname = $contact->getFullName($langs,'1');
+		$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
 
 		//Tiers de facturation
 		$soc_invoice = $object->fetch_soc($object->fk_soc_invoice);

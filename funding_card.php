@@ -153,6 +153,7 @@ $permissiondellink = $user->rights->funding->funding->write; // Used by the incl
 $permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 
+
 // Security check - Protection if external user
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
@@ -212,6 +213,7 @@ if (empty($reshook))
 
 	//Documents
 	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
+
 	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 	
 	$documenturl = DOL_URL_ROOT.'/document.php';
@@ -343,6 +345,7 @@ if (empty($reshook))
 	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
 	{
 		$res = $object->send_org($user);
+		var_dump($conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]);
 	}
 	
 	if ($action == 'set_thirdparty' && $permissiontoadd)
@@ -388,8 +391,8 @@ if (empty($reshook))
 
 	// BB2A marque send mail
 	// Actions to send emails
-	$triggersendname = 'test@test.fr';//'FUNDING_SENTBYMAIL';
-	$autocopy = 'a.berton@gest-mag.com';//'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
+	$triggersendname = 'FUNDING_SENTBYMAIL';
+	$autocopy = 'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
 	$trackid = 'funding'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
@@ -559,7 +562,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Selec a accepted/refused
 	if ($action == 'AcceptedRefused')
 	{
-		//Form to close proposal (signed or not)
+		//Form to (signed or not)
 		$formquestion = array(
 			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED))),
 			// BB2A Saisie d'un text
@@ -898,7 +901,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// BB2A Envoie par mail	
 			// Send
 			if (empty($user->socid)) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init#formmailbeforetitle&addfile=	FUD2102-0001_RIB.pdf">'.$langs->trans('SendMail').'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
 
 			// BB2A Refresh
@@ -1058,12 +1061,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if (GETPOST('modelselected')) $action = 'presend';
 
 	// Presend form
-	$modelmail = 'funding';
+	$modelmail = 'funding_send';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->dir_output;
+	$diroutput = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity];
+
 	$trackid = 'funding'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
+
 }
 // End of page
 llxFooter();

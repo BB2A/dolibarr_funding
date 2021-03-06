@@ -298,11 +298,12 @@ class pdf_standard_funding extends ModelePDFFunding
 	        // Definition of $dir and $file
 	        if ($object->specimen)
 	        {
-	        	$dir = $conf->funding->dir_output.'/funding';
+	        	$dir = 	$diroutput = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity];
+;
 	            $file = $dir."/SPECIMEN.pdf";
 	        } else {
 	            $objectref = dol_sanitizeFileName($object->ref);
-	            $dir = $conf->funding->dir_output.'/funding/'.$objectref;
+	            $dir = 	$conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity].'/'.$objectref;
 	            $file = $dir."/".$objectref.".pdf";
 	        }
 	        if (!file_exists($dir))
