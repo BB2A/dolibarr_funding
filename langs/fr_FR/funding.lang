@@ -18,7 +18,7 @@
 #
 
 # Module label 'ModuleFundingName'
-ModuleFundingName = Financement
+ModuleFundingName = Financements
 # Module description 'ModuleFundingDesc'
 ModuleFundingDesc = Description de Financement
 #
@@ -60,7 +60,7 @@ Redemption = Rachat
 RetentionOfGuarantee = Retenue de garantie
 RetentionRate = Taux de retenue
 DateDelivery = Date de livraison
-ListFunding = Liste de financement
+ListFunding = Liste de financements
 ListFundingDraft = Brouillon
 ListFundingValidated = Validé
 ListFundingStudy = En étude
@@ -70,7 +70,7 @@ ListFundingDenied = Refusé
 ListFundingRunning = Actif
 ListFundingEnd = Terminé
 ListFundingCanceled = Annulé
-ListFundingPropal = Liste proposition de financement
+ListFundingPropal = Liste propositions de financements
 ListFundingPropalStudy = Demande d'étude
 ListFundingPropalAccept = Accepté
 ListFundingPropalDenied = Refusé

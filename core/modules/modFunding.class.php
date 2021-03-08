@@ -77,7 +77,7 @@ class modFunding extends DolibarrModules
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
-			'triggers' => 1,
+			'triggers' => 0,
 			// Set this to 1 if module has its own login method file (core/login)
 			'login' => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)
@@ -265,6 +265,7 @@ class modFunding extends DolibarrModules
 		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
+		//Permission for coefficient
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
@@ -278,6 +279,22 @@ class modFunding extends DolibarrModules
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
+		//Permission for retention
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
+		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'CreateUpdateCoefficient'; // Permission label
+		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
+		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		/* END MODULEBUILDER PERMISSIONS */
@@ -313,6 +330,26 @@ class modFunding extends DolibarrModules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'List',
+            'mainmenu'=>'funding',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1000+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->manage',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
@@ -593,26 +630,26 @@ class modFunding extends DolibarrModules
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0
         );
-		/*$this->menu[$r++]=array(
+		$this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'NewCoef',
+            'titre'=>'Retention',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/coefficient_card.php?action=create',
+            'url'=>'funding/retention_list.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1300+$r,
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->coefficient->write',
+            'perms'=>'$user->rights->funding->coefficient->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0
-        );*/
+        );
 
 		// Exports profiles provided by this module
 		$r = 1;
