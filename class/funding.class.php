@@ -117,7 +117,7 @@ class Funding extends CommonObject
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>45, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
-		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '2'=>'Oui'),),
+		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retention_rate",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>55, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
@@ -133,6 +133,7 @@ class Funding extends CommonObject
 		'funfoldoc1' => array('type'=>'varchar(255)', 'label'=>'funfoldoc1', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc2' => array('type'=>'varchar(255)', 'label'=>'funfoldoc2', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
+		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -179,6 +180,7 @@ class Funding extends CommonObject
 	public $funfoldoc1;
 	public $funfoldoc2;
 	public $funfoldoc3;
+	public $funfoldoc4;
 	public $note_public;
 	public $note_private;
 	public $date_creation;
@@ -458,9 +460,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére le coef corespondant
 	 *
-	 * @param  
-	 * @param  
-	 * @param  
+	 * @param  Total à fiancer
+	 * @param  La durée du fiancement
+	 * @param  Le béreme
+	 * @param  Organisme de financement
 	 * @return $coef = ok or -1 = nok
 	 */
 	public function coef($total, $duration, $scale, $org)
@@ -484,6 +487,34 @@ class Funding extends CommonObject
 		{
 			$obj = $db->fetch_object($resql);
 			return $obj->coef;
+		}
+		else
+		{
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			return -1;
+		}
+	}
+	
+	/**
+	 * Récupére le taux retenue de grantie
+	 *
+	 * @param  organisme de financement
+	 * @return $rate = ok or -1 = nok
+	 */
+	public function retention_rate($org)
+	{
+		global $conf, $db;
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_retention as c';
+        $sql.= ' WHERE c.status = 1';
+		$sql.= ' AND c.fk_soc = '.$org;
+		$resql = $db->query($sql);
+
+		if ($resql)
+		{
+			$obj = $db->fetch_object($resql);
+			return $obj->rate;
 		}
 		else
 		{
@@ -542,6 +573,10 @@ class Funding extends CommonObject
 					$this->fk_soc		= $document->socid;
 					$this->amount		= $document->total_ht;
 					$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
+					if($this->retention == 1){
+						$this->retention_rate = $this->retention_rate($this->fk_org);
+						$this->amount_total = $this->amount_total + ($this->amount_total*$this->retention_rate/100);
+					}
 					$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 					if ($coef > 0)
 					{
@@ -1002,18 +1037,6 @@ class Funding extends CommonObject
 		$typedoc = $this->origin;
 		$iddoc = $this->origin_id;
 		
-		//Old delete
-		/*
-		if ($this->fk_propal)
-		{
-			$typedoc = 'propal' ;
-			$iddoc = $this->fk_propal;
-		}
-		else{
-			$typedoc = 'order' ;
-			$iddoc = $this->fk_order;
-		}
-*/
 		//Document
 		if ($iddoc && $typedoc)
 		{
@@ -1040,6 +1063,10 @@ class Funding extends CommonObject
 
 				$this->amount		= $document->total_ht;
 				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
+				if($this->retention == 1){
+					$this->retention_rate = $this->retention_rate($this->fk_org);
+					$this->amount_total = $this->amount_total + ($this->amount_total*$this->retention_rate/100);
+				}
 				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0)
 				{

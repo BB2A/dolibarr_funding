@@ -805,6 +805,26 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->funfoldoc3)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=funfoldoc3&filedelet='.$object->funfoldoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 		}
 		print '</tr>';
+		/*//FundingFolderDoc 4
+		print '<tr class="hideonsmartphone">';
+		print '<td>'.$form->editfieldkey('funfoldoc4', 'funfoldoc4', '', $object, 0).'</td>';
+		if ($permissiontoadd == 1 && empty($object->funfoldoc4) )
+		{
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="doc" value="funfoldoc4">';
+			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc4input"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
+		}
+		else
+		{
+			$relativepath = $object->ref.'/'.$object->funfoldoc4;
+			($object->funfoldoc4)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->funfoldoc4.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+			($object->funfoldoc4)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=funfoldoc4&filedelet='.$object->funfoldoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
+		}
+		print '</tr>';*/
 	print '</table>';
 	print '<div class="center">';
 	print '</div>';
