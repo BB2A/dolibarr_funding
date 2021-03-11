@@ -19,7 +19,7 @@ CREATE TABLE llx_funding_retention(
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
 	fk_soc integer NOT NULL, 
-	rate real DEFAULT NULL NOT NULL, 
+	rate real NOT NULL, 
 	date_creation datetime NOT NULL, 
 	tms timestamp, 
 	fk_user_creat integer NOT NULL, 

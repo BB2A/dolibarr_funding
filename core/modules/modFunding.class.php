@@ -136,8 +136,8 @@ class modFunding extends DolibarrModules
 		//                             2 => array('FUNDING_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array(
-			1 => array('FUNDING_FUND_PREFIX', 'chaine', 'FUND', '', 0, 1, 0),
-			2 => array('FUNDING_COEF_PREFIX', 'chaine', 'COEF', '', 0, 1, 0),
+			//1 => array('FUNDING_FUND_PREFIX', 'chaine', 'FUND', '', 0, 1, 0),
+			//2 => array('FUNDING_COEF_PREFIX', 'chaine', 'COEF', '', 0, 1, 0),
 		);
 
 		// Some keys to add into the overwriting translation tables

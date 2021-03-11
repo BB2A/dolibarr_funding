@@ -1,0 +1,1 @@
+DROP TABLE `llx_funding_coefficient`, `llx_funding_coefficient_extrafields`, `llx_funding_funding`, `llx_funding_funding_extrafields`, `llx_funding_retention`, `llx_funding_retention_extrafields`;
