@@ -602,7 +602,7 @@ class Funding extends CommonObject
 						{
 							$this->fk_user_comm = $idcomm;
 							$this->status = 0;
-							$create = $this->createCommon($user, $notrigger);
+							$create = $this->createCommon($user, 1);
 							if ($create > 0)
 							{
 								// Add object linked
@@ -619,6 +619,12 @@ class Funding extends CommonObject
 								if (!$resql) $error++;
 								$this->date_creation = $now;
 								$this->validate($user);
+								if (!$error && !$notrigger){
+									// Call trigger
+									$result = $this->call_trigger('FUNDING_CREATE', $user);
+									if ($result < 0) { $error++; }
+									// End call triggers
+								}
 							}
 							return $create;				
 						}
@@ -1087,6 +1093,12 @@ class Funding extends CommonObject
 							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 						}
 					}
+					if (!$error && !$notrigger){
+						// Call trigger
+						$result = $this->call_trigger('FUNDING_UPDATE', $user);
+						if ($result < 0) { $error++; }
+						// End call triggers
+					}
 					return $this->updateCommon($user, $notrigger);
 				}
 				else
@@ -1140,7 +1152,7 @@ class Funding extends CommonObject
 			if (!$notrigger && empty($error))
 			{
 				// Call trigger
-				$result = $this->call_trigger('PROPAL_MODIFY', $user);
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
 				if ($result < 0) $error++;
 				// End call triggers
 			}
@@ -1197,7 +1209,7 @@ class Funding extends CommonObject
 			if (!$notrigger && empty($error))
 			{
 				// Call trigger
-				$result = $this->call_trigger('PROPAL_MODIFY', $user);
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
 				if ($result < 0) $error++;
 				// End call triggers
 			}
