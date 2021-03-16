@@ -244,7 +244,7 @@ class Funding extends CommonObject
 
 		$this->db = $db;
 
-		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 1;
+		if (!empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 1;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
 		
 		if (!empty($conf->global->FUNDING_DEFAULT_DURATION) && isset($this->fields['fk_duration'])) $this->fields['fk_duration']['default'] = $conf->global->FUNDING_DEFAULT_DURATION;
@@ -256,12 +256,6 @@ class Funding extends CommonObject
 		
 		if (GETPOST('action', 'alpha') == 'edit') $this->fields['amount_rent_edit']['visible'] = 1 & $this->fields['amount_rent']['visible'] = 1;
 
-		//array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__) AND fk_typent='
-		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->funding->funding->read) {
-			$this->fields['myfield']['visible'] = 1;
-			$this->fields['myfield']['noteditable'] = 0;
-		}*/
 
 		// Unset fields that are disabled
 		foreach ($this->fields as $key => $val)
@@ -575,7 +569,8 @@ class Funding extends CommonObject
 					$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 					if($this->retention == 1){
 						$this->retention_rate = $this->retention_rate($this->fk_org);
-						$this->amount_total = $this->amount_total + ($this->amount_total*$this->retention_rate/100);
+						$retention = $this->amount_total/(1-$this->retention_rate/100)-$this->amount_total;
+						$this->amount_total = $this->amount_total + $retention;
 					}
 					$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 					if ($coef > 0)
