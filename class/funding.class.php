@@ -108,9 +108,9 @@ class Funding extends CommonObject
 		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
 		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_maint",),
 		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_total",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array(),),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
-		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array(),),
+		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_date_delivery",),
@@ -134,6 +134,7 @@ class Funding extends CommonObject
 		'funfoldoc2' => array('type'=>'varchar(255)', 'label'=>'funfoldoc2', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
+		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -181,6 +182,7 @@ class Funding extends CommonObject
 	public $funfoldoc2;
 	public $funfoldoc3;
 	public $funfoldoc4;
+	public $funfoldoc5;
 	public $note_public;
 	public $note_private;
 	public $date_creation;
@@ -614,12 +616,12 @@ class Funding extends CommonObject
 								if (!$resql) $error++;
 								$this->date_creation = $now;
 								$this->validate($user);
-								if (!$error && !$notrigger){
+								/*if (!$error && !$notrigger){
 									// Call trigger
-									$result = $this->call_trigger('FUNDING_CREATE', $user);
+									$result = $this->FUNDING_CREATE('FUNDING_CREATE', $user);
 									if ($result < 0) { $error++; }
 									// End call triggers
-								}
+								}*/
 							}
 							return $create;				
 						}
@@ -1945,12 +1947,16 @@ class Funding extends CommonObject
 		}
 		
 		setEventMessages($langs->trans("SendOrgOk"), null);
+		
+		if (!$error && !$notrigger)
+		{
+			// Call trigger
+			$result = $this->call_trigger('FUNDING_SEND_ORG', $user);
+			if ($result < 0) $error++;
+			// End call triggers
+		}
+		
 		return $this->setStatusCommon($user, self::STATUS_SEND_ORG, $notrigger, 'FUNDING_SEND_ORG');
-	}
-	public function test()
-	{
-		setEventMessages("test Ok", null);
-		//setEventMessages($langs->trans("nodoc"), null, 'errors');
 	}
 }
 

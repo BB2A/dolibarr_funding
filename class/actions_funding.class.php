@@ -329,5 +329,29 @@ class ActionsFunding
 
 		return 0;
 	}
+	
+	/**
+	 * Overloading the initSendToSocid function : add email_template
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return  int 		      			  	<0 if KO,
+	 *                          				=0 if OK but we want to process standard actions too,
+	 *  	                            		>0 if OK and we want to replace standard actions.
+	 */
+	public function initSendToSocid($parameters, &$object, &$action, $hookmanager)
+	{
+		global $langs, $conf;
+		$contexts = explode(':',$parameters['context']);
+		
+		//$myvalue= (DOL_VERSION >= '13.0.0') ? img_picto('', 'object_funding.png@funding', 'class="paddingright"').dol_escape_htmltag($langs->trans('Funding')) : dol_escape_htmltag($langs->trans('Funding'));
+		$myvalue = $object->fk_org;
+		$this->results = array($sendtosocid = $object->fk_org);
+var_dump($object->fk_org);
+
+		return 0;
+	}
+	
 	/* Add here any other hooked methods... */
 }

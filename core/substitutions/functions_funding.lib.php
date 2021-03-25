@@ -60,7 +60,7 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$type = $object->fetch_type($object->fk_funding_type);
 		$substitutionarray['__FUNDING_TYPE__'] = isset($type->label) ? $type->label : '';
 		$substitutionarray['__FUNDING_USER_COMM_ID__'] = isset($object->fk_user_comm) ? $object->fk_user_comm : '';
-		if (!empty($obj->fk_user_comm)){
+		if (!empty($object->fk_user_comm)){
 			$user_comm = new User($db);
 			$result = $user_comm->fetch($object->fk_user_comm);
 			$substitutionarray['__FUNDING_USER_COMM__'] = isset($result) ? $user_comm->getFullName($outputlangs) : '';
