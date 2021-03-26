@@ -62,9 +62,9 @@ class Funding extends CommonObject
 		
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
-	const STATUS_STUDY_REQUEST = 2;
-	const STATUS_UPDATE = 3;
-	const STATUS_SEND_ORG = 4;
+	const STATUS_UPDATE = 2;
+	const STATUS_SEND_ORG = 3;
+	const STATUS_LACK = 4;
 	const STATUS_ACCEPT = 5;
 	const STATUS_DENIED = 6;
 	const STATUS_RUNNING = 7;
@@ -108,14 +108,14 @@ class Funding extends CommonObject
 		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
 		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_maint",),
 		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_total",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array(),),
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
-		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
+		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array(),),
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>35, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_date_delivery",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>45, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
-		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
+		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array(),),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retention_rate",),
@@ -1090,13 +1090,19 @@ class Funding extends CommonObject
 							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 						}
 					}
+					if ($this->status > 3){
+						$this->status = self::STATUS_UPDATE;
+					}
+					
 					if (!$error && !$notrigger){
 						// Call trigger
 						$result = $this->call_trigger('FUNDING_UPDATE', $user);
 						if ($result < 0) { $error++; }
 						// End call triggers
 					}
-					return $this->updateCommon($user, $notrigger);
+					if (!$error){
+						return $this->updateCommon($user, $notrigger);
+					}
 				}
 				else
 				{
@@ -1511,6 +1517,7 @@ class Funding extends CommonObject
 		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'FUNDING_CLOSE');
 	}
 
+//Supprimer
 	/**
 	 *	Set back to validated status
 	 *
@@ -1552,9 +1559,10 @@ class Funding extends CommonObject
 		{
 			return 0;
 		}
+		if ($status == self::STATUS_ACCEPT) $triger = 'FUNDING_ACCEPT';
+		if ($status == self::STATUS_DENIED) $triger = 'FUNDING_DENIED';
 		
-		
-		return $this->setStatusCommon($user, $status, $notrigger, 'FUNDING_ACCEPTED_REFUSED');
+		return $this->setStatusCommon($user, $status, $notrigger, $triger);
 	}
 
 
@@ -1684,9 +1692,9 @@ class Funding extends CommonObject
 			//$langs->load("funding");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
-			$this->labelStatus[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequest');
 			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
 			$this->labelStatus[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrg');
+			$this->labelStatus[self::STATUS_LACK] = $langs->trans('FundingStatusLack');
 			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
 			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
 			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
@@ -1694,9 +1702,9 @@ class Funding extends CommonObject
 			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
-			$this->labelStatusShort[self::STATUS_STUDY_REQUEST] = $langs->trans('FundingStatusRequestShort');
 			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
 			$this->labelStatusShort[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrgShort');
+			$this->labelStatusShort[self::STATUS_LACK] = $langs->trans('FundingStatustLackShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
 			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
@@ -1947,14 +1955,6 @@ class Funding extends CommonObject
 		}
 		
 		setEventMessages($langs->trans("SendOrgOk"), null);
-		
-		if (!$error && !$notrigger)
-		{
-			// Call trigger
-			$result = $this->call_trigger('FUNDING_SEND_ORG', $user);
-			if ($result < 0) $error++;
-			// End call triggers
-		}
 		
 		return $this->setStatusCommon($user, self::STATUS_SEND_ORG, $notrigger, 'FUNDING_SEND_ORG');
 	}

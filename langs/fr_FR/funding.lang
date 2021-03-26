@@ -94,6 +94,7 @@ RefreshFunding = Actiualiser le financement
 ConfirmRefreshFunding = Confirmer l'actualisation des informations?
 SendOrg = Envoyer à l'organisme
 ConfirmSendOrg = Confirmer l'envoie à l'organisme
+Lack = Manque
 
 #DICTIONNAIRES
 Funding_duration = Financement - Durée
@@ -152,22 +153,22 @@ socinvoicenok = Societe de facturation non trouvé
 
 #STATUS
 FundingStatusDraft = Brouillon
-FundingStatusValidated = Validé
+FundingStatusValidated = Nouveau
+FundingStatusUpdate = Mise à jour
+FundingStatusSendOrg = Envoyer à l'organisme
+FundingStatusLack = Manque
 FundingStatusAccept = Accepté
 FundingStatusDenied = Refusé
-FundingStatusUpdate = Mise à jour
-FundingStatusRequest = Demande d'étude
-FundingStatusSendOrg = Envoyer à l'organisme
 FundingStatusRunning = Actif
 FundingStatusEnd = Terminé
 FundingStatusDisabled = Annulé
 FundingStatusDraftShort = Brouillon
-FundingStatusEnabledShort = Validé
+FundingStatusEnabledShort = Nouveau
+FundingStatusUpdateShort = Mise à jour
+FundingStatusSendOrgShort = Envoyer à l'organisme
+FundingStatusLackShort = Manque
 FundingStatusAcceptShort = Accepté
 FundingStatusDeniedShort = Refusé
-FundingStatusUpdateShort = Mise à jour
-FundingStatusRequestShort = Demande d'étude
-FundingStatusSendOrgShort = Envoyer à l'organisme
 FundingStatusRunningShort = Actif
 FundingStatusEndShort = Terminé
 FundingStatusDisabledShort = Annulé

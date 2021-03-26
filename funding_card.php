@@ -277,7 +277,6 @@ if (empty($reshook))
 				//Vérifie si le fichier à bien ete créer pour inscription en db
 				if (file_exists($upload_dir.'/'.$fileuploadnewname)){
 					$rename = 1;
-					var_dump($rename);
 				}
 				//Delete old files
 				foreach ($fileupload as $file)
@@ -297,6 +296,9 @@ if (empty($reshook))
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
 				$resql = $db->query($sql);
 				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+				if ($object->status == $object::STATUS_LACK){
+					$res = $object->setStatusCommon($user, $object::STATUS_UPDATE, $notrigger, 'FUNDING_STATUS_UPDATE');
+				}
 			}
 			
 				
@@ -342,10 +344,14 @@ if (empty($reshook))
 		$res = $object->update($user);
 	}
 	
+	if ($action == 'Lack' && $permissionmanage)
+	{
+		$res = $object->setStatusCommon($user, $object::STATUS_LACK, $notrigger, 'FUNDING_LACK');
+	}
+	
 	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
 	{
 		$res = $object->send_org($user);
-		var_dump($conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]);
 	}
 	
 	if ($action == 'set_thirdparty' && $permissiontoadd)
@@ -552,7 +558,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	{
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
 	}
-	
 	
 	// Confirm send organization
 	if ($action == 'SendOrg')
@@ -860,11 +865,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="clearboth"></div>';
 
 	dol_fiche_end();
-
+	
+//Supprimer??
 	/*
 	 * Lines
 	 */
-
+/*
 	if (!empty($object->table_element_line))
 	{
 		// Show object lines
@@ -913,7 +919,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		print "</form>\n";
 	}
-
+*/
 
 	// Buttons for actions
 
@@ -930,6 +936,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				if ($permissionmanage)
 				{
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
+				}
+			}
+			
+			// BB2A Lack
+			if (empty($user->socid)) {
+				if ($permissionmanage)
+				{
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=Lack&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('Lack').'</a>'."\n";
 				}
 			}
 
