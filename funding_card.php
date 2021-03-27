@@ -272,6 +272,9 @@ if (empty($reshook))
 				}
 				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
+				$remove = array('\'' , '&nbsp;', ' ');
+				$fileuploadnewname = str_replace($remove,'_',$fileuploadnewname);
+				
 				// Output the new PDF
 				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
 				//Vérifie si le fichier à bien ete créer pour inscription en db
@@ -289,13 +292,15 @@ if (empty($reshook))
 				$file = $upload_dir.'/'.$fileupload;
 				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
-				$fileuploadnewname = str_replace(' ','_',$fileuploadnewname);
+				$fileuploadnewname = dol_string_nospecial($fileuploadnewname);
+				$remove = array('\'' , '&nbsp;', ' ');
+				$fileuploadnewname = str_replace($remove,'_',$fileuploadnewname);
 				if (file_exists($file)) $rename = rename ($file, $upload_dir.'/'.$fileuploadnewname);
 			}
 			if ($rename){
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
 				$resql = $db->query($sql);
-				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+				dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
 				if ($object->status == $object::STATUS_LACK){
 					$res = $object->setStatusCommon($user, $object::STATUS_UPDATE, $notrigger, 'FUNDING_STATUS_UPDATE');
 				}
@@ -398,8 +403,10 @@ if (empty($reshook))
 	// BB2A marque send mail
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
-	$autocopy = 'MAIN_MAIL_AUTOCOPY_FUNDING_TO';
-	$sendto = 'a.berton@gest-mag.com';
+	$autocopy = $conf->global->MAIN_MAIL_AUTOCOPY_FUNDING_TO;
+	$sendto = '';
+	$sendtosocid = $object->fk_org;
+	//$parameters = array('notifcode'=>$notifcode, 'sendto'=>$sendto, 'replyto'=>$replyto, 'file'=>$filename_list, 'mimefile'=>$mimetype_list, 'filename'=>$mimefilename_list);
 	$trackid = 'funding'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
@@ -741,8 +748,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		else
 		{
-			print '<td>'.$object->fundoc4.'</td>';//<td>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param).'</td>';
-			($object->fundoc4)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc2&filedelet='.$object->fundoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
+			($object->fundoc4)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->fundoc4.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+			($object->fundoc4)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc4&filedelet='.$object->fundoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
 		print '</tr>';
 

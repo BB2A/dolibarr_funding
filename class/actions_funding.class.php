@@ -318,7 +318,8 @@ class ActionsFunding
 	 *                          				=0 if OK but we want to process standard actions too,
 	 *  	                            		>0 if OK and we want to replace standard actions.
 	 */
-	public function emailElementlist($parameters, &$object, &$action, $hookmanager)
+	// public function emailElementlist($parameters, &$object, &$action, $hookmanager)
+	public function emailElementlist($parameters)
 	{
 		global $langs, $conf;
 		$contexts = explode(':',$parameters['context']);
@@ -340,15 +341,17 @@ class ActionsFunding
 	 *                          				=0 if OK but we want to process standard actions too,
 	 *  	                            		>0 if OK and we want to replace standard actions.
 	 */
-	public function initSendToSocid($parameters, &$object, &$action, $hookmanager)
+	public function initSendToSocid($parameters, &$object, &$action)
 	{
 		global $langs, $conf;
 		$contexts = explode(':',$parameters['context']);
+		var_dump($contexts);
 		
-		//$myvalue= (DOL_VERSION >= '13.0.0') ? img_picto('', 'object_funding.png@funding', 'class="paddingright"').dol_escape_htmltag($langs->trans('Funding')) : dol_escape_htmltag($langs->trans('Funding'));
-		$myvalue = $object->fk_org;
-		$this->results = array($sendtosocid = $object->fk_org);
-var_dump($object->fk_org);
+		$sendtosocid = $object->fk_org;
+			
+		//$myvalue = $sendtosocid = $object->fk_org;
+		//$object->results = $sendtosocid = $this->fk_org;
+		//$reshook = $hookmanager->executeHooks('getFormMail', $parameters, $this);
 
 		return 0;
 	}

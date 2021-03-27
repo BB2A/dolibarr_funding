@@ -309,7 +309,7 @@ class modFunding extends DolibarrModules
             'type'=>'top',                          // This is a Top menu entry
             'titre'=>'ModuleFundingName',
             'mainmenu'=>'funding',
-            'url'=>'/funding/fundingindex.php',
+            'url'=>'/funding/funding_list.php',
             'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>50,
             'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.

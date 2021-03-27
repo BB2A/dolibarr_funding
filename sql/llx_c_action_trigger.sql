@@ -1,7 +1,7 @@
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_CREATE', 'Funding create', 'A funding is created', '1830040');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_VALIDATE', 'Funding validate', 'A funding is validate', '1830041');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_UPDATE', 'Funding update', 'A funding is updated', '1830042');
-INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_SEND_ORG', 'Funding send org', 'A funding is send to organization', '1830043');
+INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_SENDORG', 'Funding send org', 'A funding is send to organization', '1830043');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_LACK', 'Funding lack', 'A funding is lack for organization', '1830044');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_ACCEPT', 'Funding accept', 'A funding is accept by organisation', '1830045');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_DENIED', 'Funding denied', 'A funding is denied by organisation', '1830046');

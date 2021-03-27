@@ -95,6 +95,8 @@ ConfirmRefreshFunding = Confirmer l'actualisation des informations?
 SendOrg = Envoyer à l'organisme
 ConfirmSendOrg = Confirmer l'envoie à l'organisme
 Lack = Manque
+SetAcceptedRefused = Accepter/Refuser
+CloseAs = Positionner le statut à
 
 #DICTIONNAIRES
 Funding_duration = Financement - Durée
@@ -185,4 +187,10 @@ funfoldoc4 = Facture
 funfoldoc5 = Rachat
 
 #Trigger
-FUNDING_UPDATE = Financement mis à jour
+UPDATEInDolibarr = Financement %s mis à jour
+SENDORGInDolibarr = %s Envoyer à l'organisme
+LACKInDolibarr = %s Piéce(s) manquante(s)
+ACCEPTInDolibarr = %s Accépté
+DENIEDInDolibarr = %s Refusé
+RUNNINGInDolibarr = %s En cours
+ENDInDolibarr = %s Fini

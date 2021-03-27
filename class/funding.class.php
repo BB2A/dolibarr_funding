@@ -63,7 +63,7 @@ class Funding extends CommonObject
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_UPDATE = 2;
-	const STATUS_SEND_ORG = 3;
+	const STATUS_SENDORG = 3;
 	const STATUS_LACK = 4;
 	const STATUS_ACCEPT = 5;
 	const STATUS_DENIED = 6;
@@ -1693,7 +1693,7 @@ class Funding extends CommonObject
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
 			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
-			$this->labelStatus[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrg');
+			$this->labelStatus[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrg');
 			$this->labelStatus[self::STATUS_LACK] = $langs->trans('FundingStatusLack');
 			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
 			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
@@ -1703,7 +1703,7 @@ class Funding extends CommonObject
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
 			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
-			$this->labelStatusShort[self::STATUS_SEND_ORG] = $langs->trans('FundingStatusSendOrgShort');
+			$this->labelStatusShort[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrgShort');
 			$this->labelStatusShort[self::STATUS_LACK] = $langs->trans('FundingStatustLackShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
@@ -1956,7 +1956,7 @@ class Funding extends CommonObject
 		
 		setEventMessages($langs->trans("SendOrgOk"), null);
 		
-		return $this->setStatusCommon($user, self::STATUS_SEND_ORG, $notrigger, 'FUNDING_SEND_ORG');
+		return $this->setStatusCommon($user, self::STATUS_SENDORG, $notrigger, 'FUNDING_SENDORG');
 	}
 }
 
