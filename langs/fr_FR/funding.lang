@@ -53,6 +53,7 @@ RentEdit = Loyer personnalisé
 duration = Durée
 StudyNumber = Numéro d'étude
 FolderNumber = Numéro de dossier
+RedemptionNumber = Numéro de rachat
 Organization = Organisme
 ThirdPartyInvoice = Tiers facturation
 DateEnd = Date de fin
@@ -123,6 +124,7 @@ Help_amount_maint = Montant de la maintenance
 Help_amount_total = Montant total du financement
 Help_duration = Durée du financement
 Help_coef = Coéficiant de calcul
+Help_redemption_number = Numéro de dossier racheté
 Help_retention_rate = Taux de retenue de garantie
 Help_amount_rent = Montant des loyer
 Help_date_delivery = Date de livraison du matériel
@@ -152,6 +154,7 @@ amount_rent_edit<amount_rent = Loyer personnalisé modifié, car inférieur ou �
 SendOrgOk = Dossier envoyer à l'organisme
 nodoc = Document non trouvé
 socinvoicenok = Societe de facturation non trouvé
+supppropalnok = Un financement existe suppresion impossible
 
 #STATUS
 FundingStatusDraft = Brouillon

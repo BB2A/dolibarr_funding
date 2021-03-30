@@ -301,9 +301,6 @@ if (empty($reshook))
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
 				$resql = $db->query($sql);
 				dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
-				if ($object->status == $object::STATUS_LACK){
-					$res = $object->setStatusCommon($user, $object::STATUS_UPDATE, $notrigger, 'FUNDING_STATUS_UPDATE');
-				}
 			}
 			
 				
@@ -347,11 +344,6 @@ if (empty($reshook))
 	{
 		$object->status = $object::STATUS_UPDATE;
 		$res = $object->update($user);
-	}
-	
-	if ($action == 'Lack' && $permissionmanage)
-	{
-		$res = $object->setStatusCommon($user, $object::STATUS_LACK, $notrigger, 'FUNDING_LACK');
 	}
 	
 	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
@@ -943,14 +935,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				if ($permissionmanage)
 				{
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
-				}
-			}
-			
-			// BB2A Lack
-			if (empty($user->socid)) {
-				if ($permissionmanage)
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=Lack&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('Lack').'</a>'."\n";
 				}
 			}
 

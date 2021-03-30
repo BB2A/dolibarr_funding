@@ -158,6 +158,7 @@ $arrayfields = dol_sort_array($arrayfields, 'position');
 $permissiontoread = $user->rights->funding->funding->read;
 $permissiontoadd = $user->rights->funding->funding->write;
 $permissiontodelete = $user->rights->funding->funding->delete;
+$permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
 
 // Security check
 if (empty($conf->funding->enabled)) accessforbidden('Module not enabled');
@@ -250,6 +251,8 @@ if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity
 else $sql .= " WHERE 1 = 1";
 //BB2A_Filtre si dans une societe
 if ($socid > 0) $sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
+if (empty($permissionmanage) && empty($socid)) $sql.= " AND t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id;
+
 foreach ($search as $key => $val)
 {
 	if ($key == 'status' && $search[$key] == -1) continue;

@@ -22,6 +22,7 @@ ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_folder_number (fol
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_duration FOREIGN KEY (fk_duration) REFERENCES llx_c_funding_duration(rowid);
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_scale FOREIGN KEY (fk_scale) REFERENCES llx_c_funding_scale(rowid);
 ALTER TABLE llx_funding_funding ADD CONSTRAINT llx_funding_funding_fk_funding_type FOREIGN KEY (fk_funding_type) REFERENCES llx_c_funding_type(rowid);
+ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_redemption_number (redemption_number);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_org (fk_org);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_soc (fk_soc);
 ALTER TABLE llx_funding_funding ADD INDEX idx_funding_funding_fk_soc_invoice (fk_soc_invoice);

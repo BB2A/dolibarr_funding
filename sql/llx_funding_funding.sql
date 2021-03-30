@@ -32,6 +32,7 @@ CREATE TABLE llx_funding_funding(
 	date_end date, 
 	fk_funding_type smallint NOT NULL, 
 	redemption smallint NOT NULL, 
+	redemption_number varchar(128), 
 	retention smallint NOT NULL, 
 	retention_rate real, 
 	fk_org integer NOT NULL, 
@@ -65,3 +66,5 @@ CREATE TABLE llx_funding_funding(
 	status smallint NOT NULL
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
+
+ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;

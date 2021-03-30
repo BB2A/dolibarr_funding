@@ -101,7 +101,32 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 		// Put here code you want to execute when a Dolibarr business events occurs.
 		// Data and type of action are stored into $object and $action
+		
+		//Check if there is funding for the maipulated document.		
+		global $conf, $db;
+		if ($object->element == 'propal' || $object->element == 'commande'){
+			$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
+			if ($object->element == 'propal') $sql.= " WHERE c.origin = 'propal'";
+			if ($object->element == 'commande') $sql.= " WHERE c.origin = 'order'";
+			$sql.= ' AND c.origin_id = '.$object->id;
+			$resql = $db->query($sql);
 
+			if ($resql){
+				$obj = $db->fetch_object($resql);
+				$fudid = $obj->rowid;
+			}
+			else{
+				$errors = 'Error '.$this->db->lasterror();
+				dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+				setEventMessages($errors, null, 'errors');
+				return -1;
+			}
+			if (!empty($fudid)){
+				dol_include_once('/funding/class/funding.class.php');
+				$fundingobject = new Funding($this->db);
+			}
+		}
+		
 		switch ($action) {
 			// Users
 			//case 'USER_CREATE':
@@ -151,6 +176,8 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 			// Customer orders
 			case 'ORDER_CREATE':
+			
+				return 0;
 			//case 'ORDER_MODIFY':
 			//case 'ORDER_VALIDATE':
 			//case 'ORDER_DELETE':
@@ -179,38 +206,35 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 			// Proposals
 			//case 'PROPAL_CREATE':
-			//case 'PROPAL_MODIFY':
+			case 'PROPAL_MODIFY':
+				//Maj date de livraison
+				return 0;
 			//case 'PROPAL_VALIDATE':
 			//case 'PROPAL_SENTBYMAIL':
 			case 'PROPAL_CLOSE_SIGNED':
-				global $conf, $db;
-				if ($object->element == 'propal'){
-					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
-					$sql.= " WHERE c.origin = 'propal'";
-					$sql.= ' AND c.origin_id = '.$object->id;
-					$resql = $db->query($sql);
-
-					if ($resql)
-					{
-						$obj = $db->fetch_object($resql);
-						$srcid = $obj->rowid;
-					}
-					else
-					{
-						$errors = 'Error '.$this->db->lasterror();
-						dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
-						setEventMessages($errors, null, 'errors');
-					}
-				}
+				
 				if ($object->element == 'commande'){
-					dol_include_once('/funding/class/funding.class.php');
-					$newobject = new Funding($this->db);
-					$resut = $newobject->createSignPropal($user, $srcid, 'order', $object->id);
+					$resut = $fundingobject->createSignPropal($user, $srcid, 'order', $object->id);
 					setEventMessages('Commande N°'.$object->id." result = ".$resut, null);
 				}
-			//var_dump($object);
-			//case 'PROPAL_CLOSE_REFUSED':
-			//case 'PROPAL_DELETE':
+				
+				return 0;
+				
+			case 'PROPAL_CLOSE_REFUSED':
+				
+				
+				
+				return 0;
+			
+			case 'PROPAL_DELETE':
+								//$object->status == $object::STATUS_DRAFT
+								var_dump($fundingobject->LibStatut($fundingobject::STATUS_SENDORG),$obj->status != $fundingobject::STATUS_UPDATE);
+				if (!empty($fudid) && $obj->status != $fundingobject::STATUS_UPDATE){
+					setEventMessages($langs->trans("supppropalnok"), null, 'errors');
+					return -1;
+				}
+				
+				return 0;
 			//case 'LINEPROPAL_INSERT':
 			//case 'LINEPROPAL_UPDATE':
 			//case 'LINEPROPAL_DELETE':
