@@ -572,14 +572,13 @@ class Funding extends CommonObject
 					$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 					if($this->retention == 1){
 						$this->retention_rate = $this->retention_rate($this->fk_org);
-						$this->amount_total = $this->amount_total / (1-($this->retention_rate/100));
-						$this->amount_total = price2num($this->amount_total, 'MT');
+						$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 					}
 					$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 					if ($coef > 0)
 					{
 						$this->coef			= $coef;
-						$this->amount_rent	= $this->amount_total * $coef / 100;
+						$this->amount_rent	= price2num($this->amount_total * $coef / 100, 'MT');
 						$this->amount_rent_edit = $this->amount_rent;
 						if ($document->date_livraison)
 						{
@@ -650,47 +649,6 @@ class Funding extends CommonObject
 		{
 			setEventMessages($langs->trans("paramnok"), null, 'errors');
 		}
-	}
-	
-	/**
-	 * Clone an object into another one
-	 *
-	 * @param  	User 	$user      	User that creates
-	 * @param  	int 	$srcid     	Funding origin
-	 * @param  	int 	$origin     New origin document
-	 * @param  	int 	$origin_id  New origin id document
-	 * @return 	mixed 				New object created, <0 if KO
-	 */
-	public function createSignPropal($user, $srcid, $origin, $origin_id)
-	{
-		
-		global $conf, $db;
-		$this->origin = $origin;
-		$this->origin_id = $origin_id;
-		//Voir si delete
-		$this->fk_order = $origin_id;
-		return 'ok le boss';
-		
-		/*//Création du nouveau funding
-		$create = $this->createCommon($user, $notrigger);
-		if ($create > 0)
-		{
-			// Add object linked
-			$ret = $this->add_object_linked($typedoc, $iddoc);
-			if (!$ret)
-			{
-				$this->error = $this->db->lasterror();
-				$error++;
-			}
-			// Créate ref
-			$this->ref = "(PROV".$this->id.")";
-			$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
-			$resql = $this->db->query($sql);
-			if (!$resql) $error++;
-			$this->date_creation = $now;
-			$this->validate($user);
-		}*/
-		//Copie des fichiers
 	}
 
 	/**
@@ -977,14 +935,14 @@ class Funding extends CommonObject
 				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if($this->retention == 1){
 					$this->retention_rate = $this->retention_rate($this->fk_org);
-					$this->amount_total = $this->amount_total / (1-($this->retention_rate/100));
-					$this->amount_total = price2num($this->amount_total, 'MT');
+					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 				}
 				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0)
 				{
 					$this->coef			= $coef;
-					$this->amount_rent	= $this->amount_total * $coef / 100;
+					$this->amount_rent	= price2num($this->amount_total * $coef / 100, 'MT');
+					
 					if(!empty($this->amount_rent_edit) && $this->amount_rent_edit < $this->amount_rent)
 					{
 						$this->amount_rent_edit = $this->amount_rent;
@@ -1000,10 +958,9 @@ class Funding extends CommonObject
 							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
 						}
 					}
-					if ($this->status > 3){
+
 						$this->status = self::STATUS_UPDATE;
-					}
-					
+
 					if (!$error && !$notrigger){
 						// Call trigger
 						$result = $this->call_trigger('FUNDING_UPDATE', $user);
@@ -1427,31 +1384,6 @@ class Funding extends CommonObject
 		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'FUNDING_CLOSE');
 	}
 
-//Supprimer
-	/**
-	 *	Set back to validated status
-	 *
-	 *	@param	User	$user			Object user that modify
-	 *  @param	int		$notrigger		1=Does not execute triggers, 0=Execute triggers
-	 *	@return	int						<0 if KO, 0=Nothing done, >0 if OK
-	 */
-	public function reopen($user, $notrigger = 0)
-	{
-		// Protection
-		if ($this->status != self::STATUS_CANCELED)
-		{
-			return 0;
-		}
-
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->funding->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->funding->funding_advance->validate))))
-		 {
-		 $this->error='Permission denied';
-		 return -1;
-		 }*/
-
-		return $this->setStatusCommon($user, self::STATUS_VALIDATED, $notrigger, 'FUNDING_REOPEN');
-	}
 
 	/**
 	 *	Set Accepted Refused  status
@@ -1876,4 +1808,14 @@ class FundingLine
 	// To complete with content of an object FundingLine
 	// We should have a field rowid, fk_funding and position
 }
+
+/* Notification
+	if (!empty($conf->notification->enabled)) {
+			require_once DOL_DOCUMENT_ROOT.'/core/class/notify.class.php';
+			$notify = new Notify($db);
+			$formquestion = array_merge($formquestion, array(
+				array('type' => 'onecolumn', 'value' => $notify->confirmMessage('PROPAL_CLOSE_SIGNED', $object->socid, $object)),
+			));
+		}
+*/
 

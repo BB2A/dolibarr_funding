@@ -155,6 +155,9 @@ SendOrgOk = Dossier envoyer à l'organisme
 nodoc = Document non trouvé
 socinvoicenok = Societe de facturation non trouvé
 supppropalnok = Un financement existe suppresion impossible
+updateok = Mise à jour du financement
+updatenok = Mise à jour du financement impossible
+orderreopennok = Réouverture impossible financement en cours
 
 #STATUS
 FundingStatusDraft = Brouillon

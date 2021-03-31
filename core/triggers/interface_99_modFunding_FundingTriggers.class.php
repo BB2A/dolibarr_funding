@@ -114,8 +114,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			if ($resql){
 				$obj = $db->fetch_object($resql);
 				$fudid = $obj->rowid;
-			}
-			else{
+			}else{
 				$errors = 'Error '.$this->db->lasterror();
 				dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 				setEventMessages($errors, null, 'errors');
@@ -124,6 +123,10 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			if (!empty($fudid)){
 				dol_include_once('/funding/class/funding.class.php');
 				$fundingobject = new Funding($this->db);
+				$fundingobject->fetch($fudid);
+			}
+			else{
+				return 0;
 			}
 		}
 		
@@ -175,16 +178,48 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'MYECMDIR_DELETE':
 
 			// Customer orders
-			case 'ORDER_CREATE':
-			
-				return 0;
-			//case 'ORDER_MODIFY':
-			//case 'ORDER_VALIDATE':
+			//case 'ORDER_CREATE':
+			case 'ORDER_MODIFY':
+				if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+					$result = $fundingobject->update($user);
+				}else{
+					$result = -1;
+				}
+				if ($result > 0){
+					setEventMessages($langs->trans("updateok"), null);
+				}else{
+					setEventMessages($langs->trans("updatenok"), null, 'errors');
+					$result -1;
+				}
+				return $result;
+
+			case 'ORDER_VALIDATE':
+
+				if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+					$result = $fundingobject->update($user);
+				}else{
+					$result = -1;
+				}
+				if ($result > 0){
+					setEventMessages($langs->trans("updateok"), null);
+				}else{
+					setEventMessages($langs->trans("updatenok"), null, 'errors');
+					$result -1;
+				}
+				return $result;
+
 			//case 'ORDER_DELETE':
 			//case 'ORDER_CANCEL':
 			//case 'ORDER_SENTBYMAIL':
 			//case 'ORDER_CLASSIFY_BILLED':
 			//case 'ORDER_SETDRAFT':
+			case 'ORDER_REOPEN':
+				setEventMessages($langs->trans("orderreopennok"), null, 'errors');
+				return -1;
+			case 'ORDER_CLOSE':
+
+			return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+
 			//case 'LINEORDER_INSERT':
 			//case 'LINEORDER_UPDATE':
 			//case 'LINEORDER_DELETE':
@@ -207,34 +242,44 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			// Proposals
 			//case 'PROPAL_CREATE':
 			case 'PROPAL_MODIFY':
-				//Maj date de livraison
-				return 0;
-			//case 'PROPAL_VALIDATE':
+
+				$result = $fundingobject->update($user);
+				if ($result > 0){
+					setEventMessages($langs->trans("updateok"), null);
+				}else{
+					setEventMessages($langs->trans("updatenok"), null, 'errors');
+					$result -1;
+				}
+				return $result;
+
+			case 'PROPAL_VALIDATE':
+
+				$result = $fundingobject->update($user);
+				if ($result > 0){
+					setEventMessages($langs->trans("updateok"), null);
+				}else{
+					setEventMessages($langs->trans("updatenok"), null, 'errors');
+					$result -1;
+				}
+				return $result;
+
 			//case 'PROPAL_SENTBYMAIL':
 			case 'PROPAL_CLOSE_SIGNED':
-				
-				if ($object->element == 'commande'){
-					$resut = $fundingobject->createSignPropal($user, $srcid, 'order', $object->id);
-					setEventMessages('Commande N°'.$object->id." result = ".$resut, null);
-				}
-				
-				return 0;
-				
+
+				return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
+
 			case 'PROPAL_CLOSE_REFUSED':
 				
-				
-				
-				return 0;
+				return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
 			
 			case 'PROPAL_DELETE':
-								//$object->status == $object::STATUS_DRAFT
-								var_dump($fundingobject->LibStatut($fundingobject::STATUS_SENDORG),$obj->status != $fundingobject::STATUS_UPDATE);
-				if (!empty($fudid) && $obj->status != $fundingobject::STATUS_UPDATE){
+
+				if (!empty($fudid) && $obj->status != $fundingobject::STATUS_CANCELED){
 					setEventMessages($langs->trans("supppropalnok"), null, 'errors');
 					return -1;
 				}
-				
-				return 0;
+				return $fundingobject->delete($User);
+
 			//case 'LINEPROPAL_INSERT':
 			//case 'LINEPROPAL_UPDATE':
 			//case 'LINEPROPAL_DELETE':

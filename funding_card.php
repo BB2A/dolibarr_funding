@@ -552,7 +552,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 {
 	$formconfirm = '';
 
-	// Confirmation of action refresh
+	// Confirmation of action refresh supprimer?
 	if ($action == 'refresh')
 	{
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
@@ -953,14 +953,15 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 			//$triggersendname
 
-			// BB2A Refresh
+			// BB2A Refresh supprimer?
+			/*
 			if (empty($user->socid)) {
 				if ($permissiontoadd)
 				{
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=refresh&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Refresh').'</a>'."\n";
 				}
 			}
-			
+			*/
 			// Modify
 			if ($permissiontoadd)
 			{
