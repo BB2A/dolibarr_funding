@@ -420,7 +420,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingLack',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=4&search_origin=order',
+            'url'=>'/funding/funding_list.php?search_status=3&search_origin=order',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -440,7 +440,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingAccept',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=5&search_origin=order',
+            'url'=>'/funding/funding_list.php?search_status=4&search_origin=order',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -460,7 +460,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingDenied',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=6&search_origin=order',
+            'url'=>'/funding/funding_list.php?search_status=5&search_origin=order',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -480,7 +480,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingRunning',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=7&search_origin=order',
+            'url'=>'/funding/funding_list.php?search_status=6&search_origin=order',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -500,7 +500,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingEnd',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=8&search_origin=order',
+            'url'=>'/funding/funding_list.php?search_status=7&search_origin=order',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -520,7 +520,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingCanceled',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=9&search_origin=order',
+            'url'=>'/funding/funding_list.php?search_status=8&search_origin=order',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1100+$r,
@@ -541,6 +541,26 @@ class modFunding extends DolibarrModules
             'mainmenu'=>'funding',
             'leftmenu'=>'ListFundingPropal',
             'url'=>'/funding/funding_list.php?search_origin=propal',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1200+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->read',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingPropalNew',
+            'mainmenu'=>'funding',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=3&search_origin=propal',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1200+$r,
@@ -580,7 +600,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingPropalAccept',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=5&search_origin=propal',
+            'url'=>'/funding/funding_list.php?search_status=4&search_origin=propal',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1200+$r,
@@ -600,7 +620,27 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingPropalDenied',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=6&search_origin=propal',
+            'url'=>'/funding/funding_list.php?search_status=5&search_origin=propal',
+            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',
+            'position'=>1200+$r,
+            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->funding->enabled',
+            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->funding->read',
+            'target'=>'',
+            // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>0,
+        );
+		$this->menu[$r++]=array(
+            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+            // This is a Left menu entry
+            'type'=>'left',
+            'titre'=>'ListFundingPropalCanceled',
+            'mainmenu'=>'funding',
+            'leftmenu'=>'',
+            'url'=>'/funding/funding_list.php?search_status=8&search_origin=propal',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1200+$r,

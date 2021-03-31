@@ -62,20 +62,6 @@ Retention = Retenue de garantie
 RetentionOfGuarantee = Retenue de garantie
 RetentionRate = Taux de retenue
 DateDelivery = Date de livraison
-ListFunding = Liste de financements
-ListFundingDraft = Brouillon
-ListFundingValidated = Nouveaux
-ListFundingUpdate = Mise à jour
-ListFundingLack = Document manquant
-ListFundingAccept = Accepté
-ListFundingDenied = Refusé
-ListFundingRunning = Actif
-ListFundingEnd = Terminé
-ListFundingCanceled = Annulé
-ListFundingPropal = Liste propositions de financements
-ListFundingPropalSend = Demande d'étude
-ListFundingPropalAccept = Accepté
-ListFundingPropalDenied = Refusé
 CoefListe = Liste coef
 NewFunding = Nouveau financement
 NewCoef = Nouveau coef
@@ -98,6 +84,25 @@ ConfirmSendOrg = Confirmer l'envoie à l'organisme
 Lack = Manque
 SetAcceptedRefused = Accepter/Refuser
 CloseAs = Positionner le statut à
+DateVerbalTrial = Date signature P.V.
+
+#MENU
+ListFunding = Liste de financements
+ListFundingDraft = Brouillon
+ListFundingValidated = Nouveaux
+ListFundingUpdate = Mise à jour
+ListFundingLack = Document manquant
+ListFundingAccept = Accepté
+ListFundingDenied = Refusé
+ListFundingRunning = Actif
+ListFundingEnd = Terminé
+ListFundingCanceled = Annulé
+ListFundingPropal = Liste propositions de financements
+ListFundingPropalNew = Nouveaux
+ListFundingPropalSend = Demande d'étude
+ListFundingPropalAccept = Accepté
+ListFundingPropalDenied = Refusé
+ListFundingPropalCanceled = Annulé
 
 #DICTIONNAIRES
 Funding_duration = Financement - Durée

@@ -100,7 +100,7 @@ class Funding extends CommonObject
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields=array(
-		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
+		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>2, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>3, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_study_number", 'showoncombobox'=>'1',),
 		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>4, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folder_number", 'showoncombobox'=>'1',),
@@ -113,6 +113,7 @@ class Funding extends CommonObject
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>11, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>12, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_date_delivery",),
+		'date_sign_verbaltrial' => array('type'=>'date', 'label'=>'DateVerbalTrial', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_date_delivery",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>16, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
@@ -162,6 +163,7 @@ class Funding extends CommonObject
 	public $amount_rent;
 	public $amount_rent_edit;
 	public $date_delivery;
+	public $date_sign_verbaltrial;
 	public $date_end;
 	public $fk_funding_type;
 	public $redemption;
