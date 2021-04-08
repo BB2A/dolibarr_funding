@@ -98,6 +98,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 	public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
 	{
 		if (empty($conf->funding->enabled)) return 0; // If module is not enabled, we do nothing
+		$permissiontoadd = $user->rights->funding->funding->write;
 
 		// Put here code you want to execute when a Dolibarr business events occurs.
 		// Data and type of action are stored into $object and $action
@@ -124,9 +125,6 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				dol_include_once('/funding/class/funding.class.php');
 				$fundingobject = new Funding($this->db);
 				$fundingobject->fetch($fudid);
-			}
-			else{
-				return 0;
 			}
 		}
 		
@@ -180,32 +178,94 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			// Customer orders
 			//case 'ORDER_CREATE':
 			case 'ORDER_MODIFY':
-				if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
-					$result = $fundingobject->update($user);
-				}else{
-					$result = -1;
+				if (!empty($fudid)){
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+						$result = $fundingobject->update($user);
+					}else{
+						$result = -1;
+					}
+					if ($result > 0){
+						setEventMessages($langs->trans("updateok"), null);
+					}else{
+						setEventMessages($langs->trans("updatenok"), null, 'errors');
+						$result -1;
+					}
+					return $result;
 				}
-				if ($result > 0){
-					setEventMessages($langs->trans("updateok"), null);
-				}else{
-					setEventMessages($langs->trans("updatenok"), null, 'errors');
-					$result -1;
-				}
-				return $result;
-
+				return 0;
 			case 'ORDER_VALIDATE':
+				//Update si financement existe déja
+				if (!empty($fudid)){
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+						$result = $fundingobject->update($user);
+					}else{
+						$result = -1;
+					}
+					if ($result > 0){
+						setEventMessages($langs->trans("updateok"), null);
+					}else{
+						setEventMessages($langs->trans("updatenok"), null, 'errors');
+						$result -1;
+					}
+				//Regarde si il existe un lien sur une proposition
+				}elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT){
+					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
+					$sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = ".$object->id;
+					$resql = $db->query($sql);
 
-				if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
-					$result = $fundingobject->update($user);
-				}else{
-					$result = -1;
+					if ($resql){
+						$obj = $db->fetch_object($resql);
+						$sourceid = $obj->fk_source;
+					}else{
+						$errors = 'Error '.$this->db->lasterror();
+						dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+						setEventMessages('1'.$errors, null, 'errors');
+						$result = -1;
+					}
+					//Si existe un lien vérifie si un financement sur propo
+					if (!empty($sourceid)){
+						$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as f';
+						$sql.= " WHERE f.origin = 'propal' and f.origin_id = ".$sourceid;
+						$resql = $db->query($sql);
+
+						if ($resql){
+							$obj = $db->fetch_object($resql);
+							$fudid= $obj->rowid;
+						}else{
+							$errors = 'Error '.$this->db->lasterror();
+							dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+							setEventMessages('2'.$errors, null, 'errors');
+							$result = -1;
+						}
+					}
+					//Création du financeemnt sur commande
+					if (!empty($fudid)){
+						dol_include_once('/funding/class/funding.class.php');
+						$fundingobject = new Funding($this->db);
+						$result = $fundingobject->createFromClone($user, $fudid, 'order', $object->id);
+						if  ($result > 0){
+							$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as f';
+							$sql.= " WHERE f.origin = 'order' and f.origin_id = ".$object->id;
+							$resql = $db->query($sql);
+
+							if ($resql){
+								$obj = $db->fetch_object($resql);
+								$fudid= $obj->rowid;
+								$fundingobject->fetch($fudid);
+							}else{
+								$errors = 'Error '.$this->db->lasterror();
+								dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+								setEventMessages('2'.$errors, null, 'errors');
+								$result = -1;
+							}
+							$result = $fundingobject->update($user,true);
+						}
+						if  ($result > 0) setEventMessages($langs->trans("clonfudpropal"), null);
+					}else{
+						$result = 0;
+					}
 				}
-				if ($result > 0){
-					setEventMessages($langs->trans("updateok"), null);
-				}else{
-					setEventMessages($langs->trans("updatenok"), null, 'errors');
-					$result -1;
-				}
+			
 				return $result;
 
 			//case 'ORDER_DELETE':
@@ -214,11 +274,16 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'ORDER_CLASSIFY_BILLED':
 			//case 'ORDER_SETDRAFT':
 			case 'ORDER_REOPEN':
-				setEventMessages($langs->trans("orderreopennok"), null, 'errors');
-				return -1;
+				if (!empty($fudid)){
+					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
+					return -1;
+				}
+				return 0;
 			case 'ORDER_CLOSE':
-
-			return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+				if (!empty($fudid)){
+					return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+				}
+				return 0;
 
 			//case 'LINEORDER_INSERT':
 			//case 'LINEORDER_UPDATE':
@@ -242,36 +307,42 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			// Proposals
 			//case 'PROPAL_CREATE':
 			case 'PROPAL_MODIFY':
-
-				$result = $fundingobject->update($user);
-				if ($result > 0){
-					setEventMessages($langs->trans("updateok"), null);
-				}else{
-					setEventMessages($langs->trans("updatenok"), null, 'errors');
-					$result -1;
+				if (!empty($fudid)){
+					$result = $fundingobject->update($user);
+					if ($result > 0){
+						setEventMessages($langs->trans("updateok"), null);
+					}else{
+						setEventMessages($langs->trans("updatenok"), null, 'errors');
+						$result -1;
+					}
+					return $result;
 				}
-				return $result;
+				return 0;
 
 			case 'PROPAL_VALIDATE':
-
-				$result = $fundingobject->update($user);
-				if ($result > 0){
-					setEventMessages($langs->trans("updateok"), null);
-				}else{
-					setEventMessages($langs->trans("updatenok"), null, 'errors');
-					$result -1;
+				if (!empty($fudid)){
+					$result = $fundingobject->update($user);
+					if ($result > 0){
+						setEventMessages($langs->trans("updateok"), null);
+					}else{
+						setEventMessages($langs->trans("updatenok"), null, 'errors');
+						$result -1;
+					}
+					return $result;
 				}
-				return $result;
+				return 0;
 
 			//case 'PROPAL_SENTBYMAIL':
 			case 'PROPAL_CLOSE_SIGNED':
-
-				return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
-
+				if (!empty($fudid)){
+					return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
+				}
+				return 0;
 			case 'PROPAL_CLOSE_REFUSED':
-				
-				return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
-			
+				if (!empty($fudid)){
+					return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
+				}
+				return 0;
 			case 'PROPAL_DELETE':
 
 				if (!empty($fudid) && $obj->status != $fundingobject::STATUS_CANCELED){

@@ -29,7 +29,7 @@ CREATE TABLE llx_funding_funding(
 	amount_rent double DEFAULT NULL, 
 	amount_rent_edit double DEFAULT NULL, 
 	date_delivery date, 
-	date_sign_verbaltrial date, 
+	date_signature date, 
 	date_end date, 
 	fk_funding_type smallint NOT NULL, 
 	redemption smallint NOT NULL, 
@@ -69,4 +69,4 @@ CREATE TABLE llx_funding_funding(
 ) ENGINE=innodb;
 
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
-ALTER TABLE llx_funding_funding ADD COLUMN date_sign_verbaltrial date AFTER date_delivery;
+ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;

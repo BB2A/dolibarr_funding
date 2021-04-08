@@ -62,6 +62,7 @@ $arrayofparameters = array(
 
 
 	'MAIN_MAIL_AUTOCOPY_FUNDING_TO'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_CODE_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),

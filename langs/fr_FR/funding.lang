@@ -84,7 +84,7 @@ ConfirmSendOrg = Confirmer l'envoie à l'organisme
 Lack = Manque
 SetAcceptedRefused = Accepter/Refuser
 CloseAs = Positionner le statut à
-DateVerbalTrial = Date signature P.V.
+DateSignature = Date signature P.V.
 
 #MENU
 ListFunding = Liste de financements
@@ -110,10 +110,10 @@ Funding_scale = Financement - Baréme
 Funding_type = Financement - Type
 
 #PARAMETTRES
-FUNDING_FUND_PREFIX = Préfix numérotation des financements
-FUNDING_COEF_PREFIX = Préfix numérotation des coef
+
 FUNDING_MAIL_VALIDATION = Adresse mail notification validation fiancement
 MAIN_MAIL_AUTOCOPY_FUNDING_TO = Adresse mail de copie automatique
+FUNDING_CODE_REGLEMENT = Code mode de réglement pour financement
 FUNDING_DEFAULT_DURATION = Valeur par default pour la durée de financement
 FUNDING_DEFAULT_SCALE = Barème par default
 FUNDING_DEFAULT_REDEMPTION = Valeur par default pour le rachat
@@ -133,11 +133,13 @@ Help_redemption_number = Numéro de dossier racheté
 Help_retention_rate = Taux de retenue de garantie
 Help_amount_rent = Montant des loyer
 Help_date_delivery = Date de livraison du matériel
+Help_date_signature = Date de signature du procès verbale de livraison
 Help_date_end = Date de fin du financement
 Help_Scale = Barème de financement
 Help_amount_rent_edit = Montant des loyers personalisé
 LinkToOrganization = Organisme de financement
 LinkToThirparty = Tiers concerné par le financement
+LinkToThirpartyInvoice = Tiers payeur défini sur la commande ou la proposition
 
 #DROITS
 ReadFunding = Lire
@@ -163,6 +165,7 @@ supppropalnok = Un financement existe suppresion impossible
 updateok = Mise à jour du financement
 updatenok = Mise à jour du financement impossible
 orderreopennok = Réouverture impossible financement en cours
+clonfudpropal = Financement copier depuis la proposition
 
 #STATUS
 FundingStatusDraft = Brouillon
@@ -174,7 +177,7 @@ FundingStatusAccept = Accepté
 FundingStatusDenied = Refusé
 FundingStatusRunning = Actif
 FundingStatusEnd = Terminé
-FundingStatusDisabled = Annulé
+FundingStatusDisabled = Abandonné
 FundingStatusDraftShort = Brouillon
 FundingStatusEnabledShort = Nouveau
 FundingStatusUpdateShort = Mise à jour
@@ -184,7 +187,7 @@ FundingStatusAcceptShort = Accepté
 FundingStatusDeniedShort = Refusé
 FundingStatusRunningShort = Actif
 FundingStatusEndShort = Terminé
-FundingStatusDisabledShort = Annulé
+FundingStatusDisabledShort = Abandonné
 
 #Documents
 fundoc1 = RIB

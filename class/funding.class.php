@@ -100,7 +100,7 @@ class Funding extends CommonObject
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields=array(
-		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
+		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>2, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>3, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_study_number", 'showoncombobox'=>'1',),
 		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>4, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folder_number", 'showoncombobox'=>'1',),
@@ -113,7 +113,7 @@ class Funding extends CommonObject
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>11, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>12, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_date_delivery",),
-		'date_sign_verbaltrial' => array('type'=>'date', 'label'=>'DateVerbalTrial', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_date_delivery",),
+		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_date_signature",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>16, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
@@ -163,7 +163,7 @@ class Funding extends CommonObject
 	public $amount_rent;
 	public $amount_rent_edit;
 	public $date_delivery;
-	public $date_sign_verbaltrial;
+	public $date_signature;
 	public $date_end;
 	public $fk_funding_type;
 	public $redemption;
@@ -437,23 +437,6 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
 		}
-		/*Old version
-		if ($typedoc == 'propal')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."propal";
-		if ($typedoc == 'order')$sql = "SELECT * FROM ".MAIN_DB_PREFIX."commande";
-		$sql.= " WHERE rowid = ".$iddoc;
-		$resql = $db->query($sql);
-		if ($resql)
-		{
-			$document = $db->fetch_object($resql);
-			$document->id = $document->rowid;
-			return $document;
-		}
-		else
-		{
-			$this->errors[] = 'Error '.$this->db->lasterror();
-			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
-			return -1;
-		}*/
 	}
 
 	/**
@@ -550,10 +533,10 @@ class Funding extends CommonObject
 		{
 			$this->origin = $typedoc;
 			$this->origin_id = $iddoc;
-			$document			= $this->info_doc($iddoc,$typedoc);
+			$document = $this->info_doc($iddoc,$typedoc);
 			if ($document > 0)
 			{
-				if ($document->statut >= 1)
+				if (is_object($document) && $document->statut >= 1)
 				{
 					//Récupére si une adresse facturation différente
 					$socpeopleinvoice	= $document->getIdContact('external', 'BILLING');
@@ -568,7 +551,11 @@ class Funding extends CommonObject
 							setEventMessages($langs->trans("socinvoicenok".'-'.$socpeopleinvoice[0]), null, 'errors');
 						}
 					}
-
+					else
+					{
+						$this->fk_soc_invoice = '';
+					}
+					
 					$this->fk_soc		= $document->socid;
 					$this->amount		= $document->total_ht;
 					$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
@@ -582,14 +569,17 @@ class Funding extends CommonObject
 						$this->coef			= $coef;
 						$this->amount_rent	= price2num($this->amount_total * $coef / 100, 'MT');
 						$this->amount_rent_edit = $this->amount_rent;
-						if ($document->date_livraison)
+						
+						//Information sur date de livraison date de fin
+						$this->date_delivery = $document->date_livraison;
+						if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
+						if ($this->date_signature)
 						{
-							$this->date_delivery= $document->date_livraison;
 							//Ajoute la durée à la date de livraison pour avoir la date de fin
 							$duration = $this->fetch_duration($this->fk_duration);
 							if ($duration->code > 0)
 							{
-								$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
+								$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
 							}
 						}
 						//Voir si delete
@@ -600,8 +590,8 @@ class Funding extends CommonObject
 						if($idcomm > 0)
 						{
 							$this->fk_user_comm = $idcomm;
-							$this->status = 0;
-							$create = $this->createCommon($user, 1);
+							$this->status = self::STATUS_DRAFT;
+							$create = $this->createCommon($user, $notrigger);
 							if ($create > 0)
 							{
 								// Add object linked
@@ -612,18 +602,11 @@ class Funding extends CommonObject
 									$error++;
 								}
 								// Créate ref
-								$this->ref = "(PROV".$this->id.")";
-								$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
-								$resql = $this->db->query($sql);
-								if (!$resql) $error++;
+								// Probléme récupére pas les info du document avec le update a la suite
+								//$this->update($user, true); //No trigger
+								//$this->ref = "(PROV".$this->id.")";
 								$this->date_creation = $now;
 								$this->validate($user);
-								/*if (!$error && !$notrigger){
-									// Call trigger
-									$result = $this->FUNDING_CREATE('FUNDING_CREATE', $user);
-									if ($result < 0) { $error++; }
-									// End call triggers
-								}*/
 							}
 							return $create;				
 						}
@@ -653,6 +636,151 @@ class Funding extends CommonObject
 		}
 	}
 
+	/**
+	 * Clone an object into another one
+	 *
+	 * @param  	User 	$user      	User that creates
+	 * @param  	int 	$fromid     Id of object to clone
+	 * @return 	mixed 				New object created, <0 if KO
+	 */
+	public function createFromClone(User $user, $fromid, $origin, $origin_id)
+	{
+		global $conf, $db, $langs, $extrafields;
+		$error = 0;
+
+		dol_syslog(__METHOD__, LOG_DEBUG);
+
+		$object = new self($this->db);
+
+		$this->db->begin();
+
+		// Load source object
+		$result = $object->fetchCommon($fromid);
+		$oldref = $object->ref;
+		if ($result > 0 && !empty($object->table_element_line)) $object->fetchLines();
+
+		// get lines so they will be clone
+		//foreach($this->lines as $line)
+		//	$line->fetch_optionals();
+
+		// Reset some properties
+		unset($object->id);
+		unset($object->fk_user_creat);
+		unset($object->import_key);
+
+		// Clear fields
+		if (property_exists($object, 'ref')) $object->ref = empty($this->fields['ref']['default']) ? "Copy_Of_".$object->ref : $this->fields['ref']['default'];
+		//if (property_exists($object, 'label')) $object->label = empty($this->fields['label']['default']) ? $langs->trans("CopyOf")." ".$object->label : $this->fields['label']['default'];
+		if (property_exists($object, 'origin')) { $object->origin = $origin; }
+		if (property_exists($object, 'origin_id')) { $object->origin_id = $origin_id; }
+		if (property_exists($object, 'fk_order')) { $object->fk_order = $origin_id; }
+		if (property_exists($object, 'status')) { $object->status = self::STATUS_DRAFT; }
+		if (property_exists($object, 'date_creation')) { $object->date_creation = dol_now(); }
+		if (property_exists($object, 'date_modification')) { $object->date_modification = null; }
+		// ...
+		// Clear extrafields that are unique
+		if (is_array($object->array_options) && count($object->array_options) > 0)
+		{
+			$extrafields->fetch_name_optionals_label($this->table_element);
+			foreach ($object->array_options as $key => $option)
+			{
+				$shortkey = preg_replace('/options_/', '', $key);
+				if (!empty($extrafields->attributes[$this->table_element]['unique'][$shortkey]))
+				{
+					//var_dump($key); var_dump($clonedObj->array_options[$key]); exit;
+					unset($object->array_options[$key]);
+				}
+			}
+		}
+
+		// Create clone
+		$object->context['createfromclone'] = 'createfromclone';
+		$result = $object->createCommon($user);
+		if ($result < 0) {
+			$error++;
+			$this->error = $object->error;
+			$this->errors = $object->errors;
+		}
+
+		if (!$error)
+		{
+			// copy internal contacts
+			if ($this->copy_linked_contact($object, 'internal') < 0)
+			{
+				$error++;
+			}
+		}
+
+		if (!$error)
+		{
+			// copy external contacts if same company
+			if (property_exists($this, 'socid') && $this->socid == $object->socid)
+			{
+				if ($this->copy_linked_contact($object, 'external') < 0)
+					$error++;
+			}
+		}
+		if (!$error)
+		{
+			// Validate
+			$this->date_creation = $now;
+			if ($object->validate($user, $notrigger) < 0) 
+			$error++;
+		}
+		unset($object->context['createfromclone']);
+
+		if (!$error)
+		{
+			// Copy documents
+			$oldref = dol_sanitizeFileName($oldref);
+			$newref = dol_sanitizeFileName($object->ref);
+
+			$dirsource = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($oldref).'/';
+			$dirdest = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($newref).'/';
+
+			$filesmove = array(
+			'fundoc1'=>$object->fundoc1,
+			'fundoc2'=>$object->fundoc2,
+			'fundoc3'=>$object->fundoc3,
+			'fundoc4'=>$object->fundoc4,
+			'funfoldoc1'=>$object->funfoldoc1,
+			'funfoldoc2'=>$object->funfoldoc2,
+			'funfoldoc3'=>$object->funfoldoc3,
+			'funfoldoc4'=>$object->funfoldoc4,
+			'funfoldoc5'=>$object->funfoldoc5
+			);
+
+			if(!(is_dir($dirdest))) mkdir($dirdest);
+
+			foreach ($filesmove as $key=>$file){
+				if(!empty($file)){
+					if (!copy($dirsource.$file, $dirdest.$file)) {
+						setEventMessages($langs->trans("filesmovenok").' '.$file, null, 'errors');
+					}
+
+					$newnamefile = str_replace($oldref,$newref,$file);
+
+					if (file_exists($dirdest.$file)) $rename = rename ($dirdest.$file, $dirdest.$newnamefile);
+
+					if ($rename){
+						$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$key." = '".$newnamefile."' WHERE rowid = ".$object->id;
+						$resql = $db->query($sql);
+						dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
+					}
+				}
+			}
+		}
+
+
+		// End
+		if (!$error) {
+			$this->db->commit();
+			return $object;
+		} else {
+			$this->db->rollback();
+			return -1;
+		}
+	}
 	/**
 	 * Load object in memory from the database
 	 *
@@ -871,7 +999,7 @@ class Funding extends CommonObject
 	 * @param  id contact invoice
 	 * @param  
 	 * @return $idsocinvoic = ok or -1 = nok
-	 */
+
 	public function fetch_soc($soc)
 	{
 		global $conf, $db;
@@ -890,7 +1018,8 @@ class Funding extends CommonObject
 			return -1;
 		}
 	}
-	
+	 */
+
 	/**
 	 * Update object into database
 	 *
@@ -903,7 +1032,7 @@ class Funding extends CommonObject
 		global $langs;
 		
 		$coef = -1;
-		$document = -1;
+		$document = '';
 		$idcomm = -1;
 		$duration = -1;
 		$typedoc = $this->origin;
@@ -913,25 +1042,26 @@ class Funding extends CommonObject
 		if ($iddoc && $typedoc)
 		{
 			$document = $this->info_doc($iddoc,$typedoc);
-			if ($document->statut >= 1)
+			
+			if (is_object($document) && $document->statut > 0)
 			{
 				//Récupére si une adresse facturation différente
-					$socpeopleinvoice	= $document->getIdContact('external', 'BILLING');
-					if ($socpeopleinvoice)
+				$socpeopleinvoice	= $document->getIdContact('external', 'BILLING');
+				if ($socpeopleinvoice)
+				{
+					$socinvoice			= $this->fetch_socinvoice($socpeopleinvoice[0]);
+					if ($socinvoice > -1)
 					{
-						$socinvoice			= $this->fetch_socinvoice($socpeopleinvoice[0]);
-						if ($socinvoice > -1)
-						{
-							$this->fk_soc_invoice = $socinvoice;
-						}
-						else{
-							setEventMessages($langs->trans("socinvoicenok".'-'.$socpeopleinvoice[0]), null, 'errors');
-						}
+						$this->fk_soc_invoice = $socinvoice;
 					}
-					else
-					{
-						$this->fk_soc_invoice = '';
+					else{
+						setEventMessages($langs->trans("socinvoicenok".'-'.$socpeopleinvoice[0]), null, 'errors');
 					}
+				}
+				else
+				{
+					$this->fk_soc_invoice = '';
+				}
 
 				$this->amount		= $document->total_ht;
 				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
@@ -939,7 +1069,7 @@ class Funding extends CommonObject
 					$this->retention_rate = $this->retention_rate($this->fk_org);
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 				}
-				$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
+				$coef = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0)
 				{
 					$this->coef			= $coef;
@@ -950,20 +1080,19 @@ class Funding extends CommonObject
 						$this->amount_rent_edit = $this->amount_rent;
 						setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
 					}
-					if ($document->date_livraison)
+					$this->date_delivery = $document->date_livraison;
+					if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
+					if ($this->date_signature)
 					{
-						$this->date_delivery= $document->date_livraison;
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
 						$duration = $this->fetch_duration($this->fk_duration);
 						if ($duration->code > 0)
 						{
-							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$document->date_livraison))));
+							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
 						}
 					}
-
-						$this->status = self::STATUS_UPDATE;
-
 					if (!$error && !$notrigger){
+						$this->status = self::STATUS_UPDATE;
 						// Call trigger
 						$result = $this->call_trigger('FUNDING_UPDATE', $user);
 						if ($result < 0) { $error++; }

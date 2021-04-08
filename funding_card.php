@@ -302,11 +302,7 @@ if (empty($reshook))
 				$resql = $db->query($sql);
 				dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
 			}
-			
-				
-			/*
-			if ($doc == 'fundoc3')$object->fundoc3 = $files;
-			if ($doc == 'fundoc4')$object->fundoc4 = $files;*/
+
 		}
 		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet){
 			$file = $upload_dir.'/'.$filedelet;
@@ -740,6 +736,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		else
 		{
+			$relativepath = $object->ref.'/'.$object->fundoc4;
 			($object->fundoc4)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->fundoc4.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
 			($object->fundoc4)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc4&filedelet='.$object->fundoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
