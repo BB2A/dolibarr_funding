@@ -268,7 +268,12 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			
 				return $result;
 
-			//case 'ORDER_DELETE':
+			case 'ORDER_DELETE':
+				if (!empty($fudid) && $obj->status >= $fundingobject::STATUS_END){
+					setEventMessages($langs->trans("supppropalnok"), null, 'errors');
+					return -1;
+				}
+				return $fundingobject->delete($User);
 			//case 'ORDER_CANCEL':
 			//case 'ORDER_SENTBYMAIL':
 			//case 'ORDER_CLASSIFY_BILLED':

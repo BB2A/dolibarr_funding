@@ -145,6 +145,10 @@ if (empty($action) && empty($id) && empty($ref)) $action = 'view';
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
+// Fetch organisme
+$org = $object->fetch_soc($object->fk_org);
+$soc_invoice =  $object->fetch_soc($object->fk_soc_invoice);
+
 $permissiontoread = $user->rights->funding->funding->read;
 $permissiontoadd = $user->rights->funding->funding->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
 $permissiontodelete = $user->rights->funding->funding->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
@@ -319,7 +323,7 @@ if (empty($reshook))
 		}
 	}
 	// Load object
-	include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
+	//include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
@@ -918,7 +922,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 */
 
 	// Buttons for actions
-
 	if ($action != 'presend' && $action != 'editline') {
 		print '<div class="tabsAction">'."\n";
 		$parameters = array();
@@ -931,7 +934,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($user->socid)) {
 				if ($permissionmanage)
 				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
+					//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
 				}
 			}
 
@@ -942,8 +946,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
 				}
 			}
-
-			// BB2A Envoie par mail	
+	
 			// Send
 			if (empty($user->socid)) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";

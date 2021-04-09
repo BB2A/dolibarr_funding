@@ -123,8 +123,8 @@ class Funding extends CommonObject
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
 		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirpartyInvoice",),
-		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>23, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1',),
-		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>24, 'notnull'=>-1, 'visible'=>-2, 'noteditable'=>'1',),
+		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>23, 'notnull'=>3, 'visible'=>-2, 'noteditable'=>'1',),
+		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>24, 'notnull'=>3, 'visible'=>-2, 'noteditable'=>'1',),
 		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
 		'fundoc1' => array('type'=>'varchar(255)', 'label'=>'fundoc1', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>0,),
@@ -142,7 +142,7 @@ class Funding extends CommonObject
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
-		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
@@ -791,7 +791,8 @@ class Funding extends CommonObject
 	public function fetch($id, $ref = null)
 	{
 		$result = $this->fetchCommon($id, $ref);
-		if ($result > 0 && !empty($this->table_element_line)) $this->fetchLines();
+		//if ($result > 0 && !empty($this->table_element_line)) $this->fetchLines();
+
 		return $result;
 	}
 
@@ -999,7 +1000,7 @@ class Funding extends CommonObject
 	 * @param  id contact invoice
 	 * @param  
 	 * @return $idsocinvoic = ok or -1 = nok
-
+	*/
 	public function fetch_soc($soc)
 	{
 		global $conf, $db;
@@ -1018,7 +1019,6 @@ class Funding extends CommonObject
 			return -1;
 		}
 	}
-	 */
 
 	/**
 	 * Update object into database

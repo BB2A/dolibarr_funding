@@ -89,7 +89,7 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		
 		
 		$contact = new Contact($db);
-		$result = $contact->fetch($contacid[0]);
+		$obj_contact = $contact->fetch($contacid[0]);
 		$contactname = $contact->getFullName($langs,'1');
 		$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
 
@@ -104,7 +104,6 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$substitutionarray['__FUNDING_SOC_INVOICE_MAIL__'] = isset($soc_invoice->email) ? $soc_invoice->email : '';
 		$substitutionarray['__FUNDING_SOC_INVOICE_IDPROF1__'] = isset($soc_invoice->siren) ? $soc_invoice->siren : '';
 		$substitutionarray['__FUNDING_SOC_INVOICE_IDPROF2__'] = isset($soc_invoice->siret) ? $soc_invoice->siret : '';
-
 	}
 	// Contact
 	//__CONTACT_NAME_CUSTOMER__
