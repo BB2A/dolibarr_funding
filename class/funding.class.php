@@ -687,7 +687,6 @@ class Funding extends CommonObject
 				$shortkey = preg_replace('/options_/', '', $key);
 				if (!empty($extrafields->attributes[$this->table_element]['unique'][$shortkey]))
 				{
-					//var_dump($key); var_dump($clonedObj->array_options[$key]); exit;
 					unset($object->array_options[$key]);
 				}
 			}
@@ -1242,6 +1241,12 @@ class Funding extends CommonObject
 	public function delete(User $user, $notrigger = false)
 	{
 		global $langs, $conf;
+
+		if ($this->status == self::STATUS_RUNNING){
+			setEventMessages($langs->trans("deletnok").' - '.$this->ref, null, 'errors');
+			return -1;
+		}
+		
 		// Removed extrafields of object
 		if (!$error) {
 			$result = $this->deleteExtraFields();
@@ -1281,6 +1286,7 @@ class Funding extends CommonObject
 						return 0;
 					}
 				}
+
 				if (file_exists($dir)) {
 					$res = @dol_delete_dir_recursive($dir);
 					if (!$res) {

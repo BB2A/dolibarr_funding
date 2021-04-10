@@ -166,6 +166,7 @@ updateok = Mise à jour du financement
 updatenok = Mise à jour du financement impossible
 orderreopennok = Réouverture impossible financement en cours
 clonfudpropal = Financement copier depuis la proposition
+deletnok = Suppresion impossible
 
 #STATUS
 FundingStatusDraft = Brouillon
