@@ -85,6 +85,7 @@ Lack = Manque
 SetAcceptedRefused = Accepter/Refuser
 CloseAs = Positionner le statut à
 DateSignature = Date signature P.V.
+closefinich = Fini
 
 #MENU
 ListFunding = Liste de financements

@@ -930,12 +930,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		if (empty($reshook))
 		{
-			// BB2A Send organization
+			// Send organization
 			if (empty($user->socid)) {
 				if ($permissionmanage)
 				{
-					//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
+					//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
 				}
 			}
 
@@ -953,7 +953,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 			//$triggersendname
 
-			// BB2A Refresh supprimer?
+			// Refresh supprimer?
 			/*
 			if (empty($user->socid)) {
 				if ($permissiontoadd)
@@ -962,6 +962,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				}
 			}
 			*/
+			// closefinich
+			if (empty($user->socid)) {
+				if ($permissionmanage && $object->status == $object::STATUS_RUNNING)
+				{
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=closefinich&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('closefinich').'</a>'."\n";
+				}
+			}
+			
 			// Modify
 			if ($permissiontoadd)
 			{

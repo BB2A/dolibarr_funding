@@ -1269,6 +1269,7 @@ class Funding extends CommonObject
 				$error++;
 			}
 		}
+
 		if (!$error) {
 			// We remove directory
 			$ref = dol_sanitizeFileName($this->ref);

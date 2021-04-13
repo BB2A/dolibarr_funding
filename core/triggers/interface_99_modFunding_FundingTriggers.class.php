@@ -269,11 +269,15 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return $result;
 
 			case 'ORDER_DELETE':
-				if (!empty($fudid) && $obj->status >= $fundingobject::STATUS_END){
-					setEventMessages($langs->trans("supppropalnok"), null, 'errors');
-					return -1;
+				if (!empty($fudid)){
+					if ($obj->status >= $fundingobject::STATUS_END){
+						setEventMessages($langs->trans("supppropalnok"), null, 'errors');
+						return -1;
+					}else{
+						return $fundingobject->delete($User);
+					}
 				}
-				return $fundingobject->delete($User);
+				return 0;
 			//case 'ORDER_CANCEL':
 			//case 'ORDER_SENTBYMAIL':
 			//case 'ORDER_CLASSIFY_BILLED':
@@ -350,11 +354,15 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return 0;
 			case 'PROPAL_DELETE':
 
-				if (!empty($fudid) && $obj->status != $fundingobject::STATUS_CANCELED){
-					setEventMessages($langs->trans("supppropalnok"), null, 'errors');
-					return -1;
+				if (!empty($fudid) && ){
+					if ($obj->status != $fundingobject::STATUS_CANCELED){
+						setEventMessages($langs->trans("supppropalnok"), null, 'errors');
+						return -1;
+					}else{
+						return  $fundingobject->delete($user);
+					}					
 				}
-				return $fundingobject->delete($User);
+				return 0;
 
 			//case 'LINEPROPAL_INSERT':
 			//case 'LINEPROPAL_UPDATE':
