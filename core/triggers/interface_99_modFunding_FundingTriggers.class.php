@@ -354,7 +354,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return 0;
 			case 'PROPAL_DELETE':
 
-				if (!empty($fudid) && ){
+				if (!empty($fudid)){
 					if ($obj->status != $fundingobject::STATUS_CANCELED){
 						setEventMessages($langs->trans("supppropalnok"), null, 'errors');
 						return -1;
