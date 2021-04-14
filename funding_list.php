@@ -430,7 +430,7 @@ $arrayofmassactions = array(
 	//'builddoc'=>img_picto('', 'pdf').'&ensp;'.$langs->trans("PDFMerge"),
 	//'presend'=>img_picto('', 'email').'&ensp;'.$langs->trans("SendByMail"),
 );
-if ($permissiontodelete) $arrayofmassactions['predelete'] = img_picto('', 'delete').'&ensp;'.$langs->trans("Delete");
+if ($permissiontodelete) $arrayofmassactions['predelete'] = $langs->trans("Delete",'','','','',0,'delete');
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete'))) $arrayofmassactions = array();
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
