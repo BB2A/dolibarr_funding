@@ -582,10 +582,10 @@ class Funding extends CommonObject
 								$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
 							}
 						}
-						//Voir si delete
+						// Voir si delete
 						if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
 						if ($typedoc == 'order') $this->fk_order	= $iddoc;
-						//Commercial
+						// Commercial
 						$idcomm				= $this->comm_tiers($document->socid);
 						if($idcomm > 0)
 						{
@@ -695,10 +695,20 @@ class Funding extends CommonObject
 		// Create clone
 		$object->context['createfromclone'] = 'createfromclone';
 		$result = $object->createCommon($user);
+
 		if ($result < 0) {
 			$error++;
 			$this->error = $object->error;
 			$this->errors = $object->errors;
+		}
+$this->fetch($result);
+		if (!$error)
+		{
+			// Add object linked
+			if ($this->add_object_linked($origin, $origin_id) < 0)
+			{
+				$error++;
+			}
 		}
 
 		if (!$error)
@@ -1090,8 +1100,11 @@ class Funding extends CommonObject
 							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
 						}
 					}
+					// Changement du status (Changement du status si il a ete envoyer à l'organisme)
+					if ($this->status >= self::STATUS_SENDORG){
+							$this->status = self::STATUS_UPDATE;
+					}
 					if (!$error && !$notrigger){
-						$this->status = self::STATUS_UPDATE;
 						// Call trigger
 						$result = $this->call_trigger('FUNDING_UPDATE', $user);
 						if ($result < 0) { $error++; }

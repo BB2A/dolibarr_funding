@@ -179,7 +179,7 @@ FundingStatusAccept = Accepté
 FundingStatusDenied = Refusé
 FundingStatusRunning = Actif
 FundingStatusEnd = Terminé
-FundingStatusDisabled = Abandonné
+FundingStatusDisabled = Annulé
 FundingStatusDraftShort = Brouillon
 FundingStatusEnabledShort = Nouveau
 FundingStatusUpdateShort = Mise à jour
@@ -189,8 +189,7 @@ FundingStatusAcceptShort = Accepté
 FundingStatusDeniedShort = Refusé
 FundingStatusRunningShort = Actif
 FundingStatusEndShort = Terminé
-FundingStatusDisabledShort = Abandonné
-
+FundingStatusDisabledShort = Annulé
 #Documents
 fundoc1 = RIB
 fundoc2 = Kbis
@@ -205,7 +204,6 @@ funfoldoc5 = Rachat
 #Trigger
 UPDATEInDolibarr = Financement %s mis à jour
 SENDORGInDolibarr = %s Envoyer à l'organisme
-LACKInDolibarr = %s Piéce(s) manquante(s)
 ACCEPTInDolibarr = %s Accépté
 DENIEDInDolibarr = %s Refusé
 RUNNINGInDolibarr = %s En cours

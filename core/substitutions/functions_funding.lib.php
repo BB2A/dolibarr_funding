@@ -66,6 +66,7 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 			$substitutionarray['__FUNDING_USER_COMM__'] = isset($result) ? $user_comm->getFullName($outputlangs) : '';
 		}
 		$substitutionarray['__FUNDING_DESCRIPTION__'] = isset($object->description) ? $object->description : '';
+		$substitutionarray['__FUNDING_STATUS__'] = isset($object->status) ? $object->getLibStatut() : '';
 		
 		//Organisme
 		$org = $object->fetch_soc($object->fk_org);

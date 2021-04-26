@@ -274,7 +274,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						setEventMessages($langs->trans("supppropalnok"), null, 'errors');
 						return -1;
 					}else{
-						return $fundingobject->delete($User);
+						return $fundingobject->delete($user);
 					}
 				}
 				return 0;
