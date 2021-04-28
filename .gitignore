@@ -15,5 +15,8 @@
 /.buildpath
 /.project
 # Other
+#ModuleBuilder
 *.back
+#VSCode
 .vscode/launch.json
+.vs
