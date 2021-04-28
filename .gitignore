@@ -18,5 +18,5 @@
 #ModuleBuilder
 *.back
 #VSCode
-.vscode/launch.json
-.vs
+/.vscode
+/.vs
