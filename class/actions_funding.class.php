@@ -324,7 +324,7 @@ class ActionsFunding
 		global $langs, $conf;
 		$contexts = explode(':',$parameters['context']);
 		
-		$myvalue= (DOL_VERSION >= '13.0.0') ? img_picto('', 'object_funding.png@funding', 'class="paddingright"').dol_escape_htmltag($langs->trans('Funding')) : dol_escape_htmltag($langs->trans('Funding'));
+		$myvalue= (DOL_VERSION >= '13.0.0') ? img_picto('', 'object_funding.png@funding', 'class="paddingright"').dol_escape_htmltag($langs->trans('Fundings')) : dol_escape_htmltag($langs->trans('Funding'));
 		$this->results = array('funding_send' => $myvalue);
 
 
