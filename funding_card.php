@@ -237,43 +237,32 @@ if (empty($reshook))
 				//Fusion des PDF
 				// Libraries
 				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
-
 				$pdf = pdf_getInstance();
-				$pdf->setPrintHeader(false);
-				$pdf->setPrintFooter(false);
-
-				foreach ($fileupload as $file)
-				{
-					$file = $upload_dir.'/'.$file;
-					if (file_exists($file) && is_readable($file))
-					{
-						$pageCount = $pdf->setSourceFile($file);
-						// get the page count
-						$pageCount = $pdf->setSourceFile($file);
-						// iterate through all pages
-						for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-							// import a page
-							$templateId = $pdf->importPage($pageNo);
-							// get the size of the imported page
-							$size = $pdf->getTemplateSize($templateId);
-
-							// create a page (landscape or portrait depending on the imported page size)
-							if ($size['w'] > $size['h']) {
-								$pdf->AddPage('L', 'A4');
-								// $pdf->AddPage('L', array($size['w'], $size['h']));
+				$pdf->SetMargins(0,0,0);
+				$pdf->SetAuthor("GEST-MAG");
+				if (class_exists('TCPDF')) {
+					$pdf->setPrintHeader(false);
+					$pdf->setPrintFooter(false);
+				}
+				
+				foreach ($fileupload as $file){
+					$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
+					if (file_exists($infile) && is_readable($infile)) {
+						//var_dump($infile);
+						$pagecount = $pdf->setSourceFile($infile);
+						for ($i = 1; $i <= $pagecount; $i++) {
+							$tplIdx = $pdf->importPage($i);
+							if ($tplIdx !== false) {
+								$s = $pdf->getTemplatesize($tplIdx);
+								$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
+								$pdf->useTemplate($tplIdx);
 							} else {
-								$pdf->AddPage('P', 'A4');
-								// $pdf->AddPage('P', array($size['w'], $size['h']));
+								setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
 							}
-
-							// use the imported page
-							$pdf->useTemplate($templateId,null,null,0,0,true);
 						}
 					}
-					else{
-						setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
-					}
 				}
+
 				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
 				$remove = array('\'' , '&nbsp;', ' ');
@@ -288,11 +277,10 @@ if (empty($reshook))
 				//Delete old files
 				foreach ($fileupload as $file)
 				{
-					$file = $upload_dir.'/'.$file;
+					$file = $upload_dir.'/'.dol_sanitizeFileName($file);
 					if (file_exists($file)) unlink($file);
 				}
-			}
-			else{
+			}else{
 				$file = $upload_dir.'/'.$fileupload;
 				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
@@ -308,6 +296,7 @@ if (empty($reshook))
 			}
 
 		}
+		// Delete document
 		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet){
 			$file = $upload_dir.'/'.$filedelet;
 			if (file_exists($file))$delet = unlink($file);
@@ -322,8 +311,9 @@ if (empty($reshook))
 			}
 		}
 	}
+	
 	// Load object
-	//include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
+	include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
