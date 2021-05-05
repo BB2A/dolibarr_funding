@@ -278,16 +278,16 @@ if (empty($reshook))
 				foreach ($fileupload as $file)
 				{
 					$file = $upload_dir.'/'.dol_sanitizeFileName($file);
-					if (file_exists($file)) unlink($file);
+					if (file_exists($file)) dol_delete_file($file);
 				}
 			}else{
-				$file = $upload_dir.'/'.$fileupload;
+				$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
 				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
 				$fileuploadnewname = dol_string_nospecial($fileuploadnewname);
 				$remove = array('\'' , '&nbsp;', ' ');
 				$fileuploadnewname = str_replace($remove,'_',$fileuploadnewname);
-				if (file_exists($file)) $rename = rename ($file, $upload_dir.'/'.$fileuploadnewname);
+				if (file_exists($file)) $rename = dol_move($file, $upload_dir.'/'.$fileuploadnewname);//rename ($file, $upload_dir.'/'.$fileuploadnewname);
 			}
 			if ($rename){
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
