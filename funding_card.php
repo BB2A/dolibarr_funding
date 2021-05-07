@@ -629,6 +629,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
 	// Thirdparty
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
+	$morehtmlref .= '<br>'.$langs->trans("Phone").' : '.dol_print_phone($object->thirdparty->phone, $obj->country_code, 0, $obj->rowid, 'AC_TEL', ' ', 'phone');
+
 	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
 	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
@@ -649,12 +651,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '</table>';
 
-//Documents
+// Documents
 	print '<table class="noborder tableforfield centpercent margintable">';
 	print '<tr class="liste_titre">';
 		print '<td colspan="3">'.$langs->trans("DocumentsForFunding").'</td>';
 		print '</tr>';
-		//Document 1
+		// Document 1
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->fundoc1))
@@ -675,7 +677,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->fundoc1)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc1&filedelet='.$object->fundoc1.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
 		print '</tr>';
-		//Document 2
+		// Document 2
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('fundoc2', 'fundoc2', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->fundoc2))
@@ -695,7 +697,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->fundoc2)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc2&filedelet='.$object->fundoc2.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
 		print '</tr>';
-		//Document 3
+		// Document 3
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('fundoc3', 'fundoc3', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->fundoc3))
@@ -715,7 +717,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->fundoc3)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc3&filedelet='.$object->fundoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
 		print '</tr>';
-		//Document 4
+		// Document 4
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('fundoc4', 'fundoc4', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->fundoc4))
@@ -740,7 +742,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<td td colspan="2">'.$langs->trans("FundingFolder").'</td>';
 		print '<td></td>';
 		print '</tr>';
-		//FundingFolderDoc 1
+		// FundingFolderDoc 1
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1', '', $object, 0).'</td>';
 		if ($permissionmanage == 1 && empty($object->funfoldoc1))
@@ -761,7 +763,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->funfoldoc1)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=funfoldoc1&filedelet='.$object->funfoldoc1.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 		}
 		print '</tr>';
-		//FundingFolderDoc 2
+		// FundingFolderDoc 2
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2', '', $object, 0).'</td>';
 		if ($permissionmanage == 1 && empty($object->funfoldoc2))
@@ -781,7 +783,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->funfoldoc2)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=funfoldoc2&filedelet='.$object->funfoldoc2.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 		}
 		print '</tr>';
-		//FundingFolderDoc 3
+		// FundingFolderDoc 3
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc3', 'funfoldoc3', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->funfoldoc3) )
@@ -801,7 +803,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->funfoldoc3)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=funfoldoc3&filedelet='.$object->funfoldoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 		}
 		print '</tr>';
-		//FundingFolderDoc 4
+		// FundingFolderDoc 4
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc4', 'funfoldoc4', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->funfoldoc4) )
@@ -821,7 +823,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			($object->funfoldoc4)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=funfoldoc4&filedelet='.$object->funfoldoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 		}
 		print '</tr>';
-		//FundingFolderDoc 5
+		// FundingFolderDoc 5
 		if ($object->redemption == 1){
 			print '<tr class="hideonsmartphone">';
 			print '<td>'.$form->editfieldkey('funfoldoc5', 'funfoldoc5', '', $object, 0).'</td>';
