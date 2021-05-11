@@ -64,9 +64,9 @@ class modFunding extends DolibarrModules
 		$this->editor_name = 'BB2A - Anthony Berton';
 		$this->editor_url = 'https://www.bb2a.fr';
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
-		$this->version = 'dolibarr';
+		$this->version = '1.0.0';
 		// Url to the file with your last numberversion of this module
-		//$this->url_last_version = 'http://www.example.com/versionmodule.txt';
+		$this->url_last_version = 'http://127.0.0.1/versionmodule.txt';
 
 		// Key used in llx_const table to save module status enabled/disabled (where FUNDING is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
