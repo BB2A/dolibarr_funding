@@ -58,15 +58,16 @@ class modFunding extends DolibarrModules
 		// Module label (no space allowed), used if translation string 'ModuleFundingName' not found (Funding is name of module).
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 		// Module description, used if translation string 'ModuleFundingDesc' not found (Funding is name of module).
-		$this->description = "Gestion des financements";
+		$this->description = "Gestion des financements client";
 		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "Création d'un financement pour les commandes. Intégration des financement dans les propositions. Rappel fin de financement.";
+		$this->descriptionlong = "Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.";
 		$this->editor_name = 'BB2A - Anthony Berton';
 		$this->editor_url = 'https://www.bb2a.fr';
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 		// Url to the file with your last numberversion of this module
-		$this->url_last_version = 'http://127.0.0.1/versionmodule.txt';
+		//$this->url_last_version = 'http://127.0.0.1/versionmodule.txt';
+		//$this->needUpdate = '1.0.1';
 
 		// Key used in llx_const table to save module status enabled/disabled (where FUNDING is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
