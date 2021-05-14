@@ -1576,10 +1576,13 @@ $this->fetch($result);
 		if (!empty($conf->dol_no_mouse_hover)) $notooltip = 1; // Force disable tooltips
 
 		$result = '';
-
-		$label = '<u>'.$langs->trans("Funding").'</u>';
-		$label .= '<br>';
-		$label .= '<b>'.$langs->trans('Ref').':</b> '.$this->ref;
+		//$label = img_picto('', $this->picto).' <u class="paddingrightonly">'.$langs->trans("Proposal").'</u>';
+		$label = '<u>'.$langs->trans("Funding").'</u>';		$label .= '';
+		$label .= '<br><b>'.$langs->trans('Ref').':</b> '.$this->ref;
+		$label .= '<br><b>'.$langs->trans('Amount').':</b> '.price($this->amount_total, 0, $langs, 0, -1, -1, $conf->currency);
+		$label .= '<br><b>'.$langs->trans('Rent').':</b> '.price($this->amount_rent, 0, $langs, 0, -1, -1, $conf->currency);
+		//var_dump($this->fetch_duration($this->fk_duration)->label);
+		$label .= '<br><b>'.$langs->trans('Duration').':</b> '.$this->fetch_duration($this->fk_duration)->label;
 		if (isset($this->status)) {
 			$label .= '<br><b>'.$langs->trans("Status").":</b> ".$this->getLibStatut(5);
 		}
