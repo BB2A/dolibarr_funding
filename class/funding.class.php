@@ -118,7 +118,7 @@ class Funding extends CommonObject
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>16, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>17, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemption_number", 'showoncombobox'=>'1',),
-		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retention_rate",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
@@ -137,6 +137,7 @@ class Funding extends CommonObject
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>113, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
+		'pre_study' => array('type'=>'smallint', 'label'=>'pre_study', 'enabled'=>'1', 'position'=>16, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -188,6 +189,7 @@ class Funding extends CommonObject
 	public $funfoldoc3;
 	public $funfoldoc4;
 	public $funfoldoc5;
+	public $pre_study;
 	public $note_public;
 	public $note_private;
 	public $date_creation;
@@ -260,7 +262,7 @@ class Funding extends CommonObject
 		
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
 		if (!empty($conf->global->FUNDING_DEFAULT_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['default'] = $this->fields['fk_org']['default'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
-		
+
 		if (GETPOST('action', 'alpha') == 'edit') $this->fields['amount_rent_edit']['visible'] = 1 & $this->fields['amount_rent']['visible'] = 1;
 
 
@@ -1133,120 +1135,6 @@ $this->fetch($result);
 	}
 
 	/**
-	 * Update object into database
-	 *
-	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
-	 * @return int             <0 if KO, >0 if OK
-	 */
-	public function set_study_number($user, $study_number, $notrigger = 0)
-	{
-			$error = 0;
-
-			$this->db->begin();
-
-			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
-			$sql .= " SET study_number = ".($study_number != '' ? "'".$study_number."'" : 'null');
-			$sql .= " WHERE rowid = ".$this->id;
-			
-			dol_syslog(__METHOD__.' $this->id='.$this->id.', study_number='.$study_number, LOG_DEBUG);
-			
-			$resql = $this->db->query($sql);
-			if (!$resql)
-			{
-				$this->errors[] = $this->db->error();
-				$error++;
-			}
-
-			if (!$error)
-			{
-				$this->oldcopy = clone $this;
-				$this->study_number = $study_number;
-			}
-
-			if (!$notrigger && empty($error))
-			{
-				// Call trigger
-				$result = $this->call_trigger('FUNDING_MODIFY', $user);
-				if ($result < 0) $error++;
-				// End call triggers
-			}
-
-			if (!$error)
-			{
-				$this->db->commit();
-				return 1;
-			}
-			else
-			{
-				foreach ($this->errors as $errmsg)
-				{
-					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
-					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
-				}
-				$this->db->rollback();
-				return -1 * $error;
-			}
-	}
-
-	/**
-	 * Update object into database
-	 *
-	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
-	 * @return int             <0 if KO, >0 if OK
-	 */
-	public function set_folder_number($user, $folder_number, $notrigger = 0)
-	{
-			$error = 0;
-
-			$this->db->begin();
-
-			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
-			$sql .= " SET folder_number = ".($folder_number != '' ? "'".$folder_number."'" : 'null');
-			$sql .= " WHERE rowid = ".$this->id;
-
-			dol_syslog(__METHOD__.' $this->id='.$this->id.', folder_number='.$folder_number, LOG_DEBUG);
-			
-			$resql = $this->db->query($sql);
-			if (!$resql)
-			{
-				$this->errors[] = $this->db->error();
-				$error++;
-			}
-
-			if (!$error)
-			{
-				$this->oldcopy = clone $this;
-				$this->folder_number = $folder_number;
-			}
-
-			if (!$notrigger && empty($error))
-			{
-				// Call trigger
-				$result = $this->call_trigger('FUNDING_MODIFY', $user);
-				if ($result < 0) $error++;
-				// End call triggers
-			}
-
-			if (!$error)
-			{
-				$this->db->commit();
-				return 1;
-			}
-			else
-			{
-				foreach ($this->errors as $errmsg)
-				{
-					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
-					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
-				}
-				$this->db->rollback();
-				return -1 * $error;
-			}
-	}
-
-	/**
 	 * Delete object in database
 	 *
 	 * @param User $user       User that deletes
@@ -1560,6 +1448,167 @@ $this->fetch($result);
 		return $this->setStatusCommon($user, $status, $notrigger, $triger);
 	}
 
+	/**
+	 * Update object into database
+	 *
+	 * @param  User $user      User that modifies
+	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @return int             <0 if KO, >0 if OK
+	 */
+	public function set_study_number($user, $study_number, $notrigger = 0)
+	{
+			$error = 0;
+
+			$this->db->begin();
+
+			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+			$sql .= " SET study_number = ".($study_number != '' ? "'".$study_number."'" : 'null');
+			$sql .= " WHERE rowid = ".$this->id;
+			
+			dol_syslog(__METHOD__.' $this->id='.$this->id.', study_number='.$study_number, LOG_DEBUG);
+			
+			$resql = $this->db->query($sql);
+			if (!$resql)
+			{
+				$this->errors[] = $this->db->error();
+				$error++;
+			}
+
+			if (!$error)
+			{
+				$this->oldcopy = clone $this;
+				$this->study_number = $study_number;
+			}
+
+			if (!$notrigger && empty($error))
+			{
+				// Call trigger
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
+				if ($result < 0) $error++;
+				// End call triggers
+			}
+
+			if (!$error)
+			{
+				$this->db->commit();
+				return 1;
+			}
+			else
+			{
+				foreach ($this->errors as $errmsg)
+				{
+					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
+					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
+				}
+				$this->db->rollback();
+				return -1 * $error;
+			}
+	}
+
+	/**
+	 * Update object into database
+	 *
+	 * @param  User $user      User that modifies
+	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @return int             <0 if KO, >0 if OK
+	 */
+	public function set_folder_number($user, $folder_number, $notrigger = 0)
+	{
+			$error = 0;
+
+			$this->db->begin();
+
+			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+			$sql .= " SET folder_number = ".($folder_number != '' ? "'".$folder_number."'" : 'null');
+			$sql .= " WHERE rowid = ".$this->id;
+
+			dol_syslog(__METHOD__.' $this->id='.$this->id.', folder_number='.$folder_number, LOG_DEBUG);
+			
+			$resql = $this->db->query($sql);
+			if (!$resql)
+			{
+				$this->errors[] = $this->db->error();
+				$error++;
+			}
+
+			if (!$error)
+			{
+				$this->oldcopy = clone $this;
+				$this->folder_number = $folder_number;
+			}
+
+			if (!$notrigger && empty($error))
+			{
+				// Call trigger
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
+				if ($result < 0) $error++;
+				// End call triggers
+			}
+
+			if (!$error)
+			{
+				$this->db->commit();
+				return 1;
+			}
+			else
+			{
+				foreach ($this->errors as $errmsg)
+				{
+					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
+					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
+				}
+				$this->db->rollback();
+				return -1 * $error;
+			}
+	}
+
+	/**
+	 * Update object into database
+	 *
+	 * @param  User $user      User that modifies
+	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @return int             <0 if KO, >0 if OK
+	 */
+	public function set_PreStudy($user)
+	{
+			$error = 0;
+
+			$this->db->begin();
+
+			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+			if(empty($this->pre_study)){
+				$sql .= " SET pre_study = 1";
+			} else {
+				$sql .= " SET pre_study = 0";
+			}
+			
+			$sql .= " WHERE rowid = ".$this->id;
+			
+			dol_syslog(__METHOD__.' $this->id='.$this->id.', pre_study', LOG_DEBUG);
+			
+			$resql = $this->db->query($sql);
+			if (!$resql)
+			{
+				$this->errors[] = $this->db->error();
+				$error++;
+			}
+
+			if (!$error)
+			{
+				$this->db->commit();
+				return 1;
+			}
+			else
+			{
+				foreach ($this->errors as $errmsg)
+				{
+					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
+					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
+				}
+				$this->db->rollback();
+				return -1 * $error;
+			}
+	}
 
 	/**
 	 *  Return a link to the object card (with optionaly the picto)

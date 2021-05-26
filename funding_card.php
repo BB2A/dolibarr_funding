@@ -215,6 +215,57 @@ if (empty($reshook))
 		}
 	}
 
+	if ($action == 'pre_study' && $permissiontoadd)
+	{
+		$result = $object->Set_PreStudy($user);
+		if ($result <= 0)
+		{
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+
+	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
+	{
+		$res = $object->send_org($user);
+	}
+	
+	if ($action == 'set_thirdparty' && $permissiontoadd)
+	{
+		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'FUNDING_MODIFY');
+	}
+	if ($action == 'classin' && $permissiontoadd)
+	{
+		$object->setProject(GETPOST('projectid', 'int'));
+	}
+	
+	if ($action == 'setAcceptedRefused' && $permissionmanage && !GETPOST('cancel', 'alpha'))
+	{
+		if (!(GETPOST('statut', 'int') > 0))
+		{
+			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("CloseAs")), null, 'errors');
+			$action = 'statut';
+		} else {
+			// prevent browser refresh from closing proposal several times
+			if ($object->status >= $object::STATUS_VALIDATED)
+			{
+				$db->begin();
+
+				$result = $object->Set_AcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('note', 'none'));
+				if ($result <= 0)
+				{
+					setEventMessages($object->error, $object->errors, 'errors');
+					$error++;
+				}
+				if (!$error)
+				{
+					$db->commit();
+				} else {
+					$db->rollback();
+				}
+			}
+		}
+	}
+
 	//Documents
 	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 
@@ -311,7 +362,7 @@ if (empty($reshook))
 			}
 		}
 	}
-	
+
 	// Load object
 	include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
@@ -329,58 +380,6 @@ if (empty($reshook))
 
 	// Action to build doc
 	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
-
-	if ($action == 'confirm_refresh' && $confirm == 'yes' && $permissiontoadd)
-	{
-		$object->status = $object::STATUS_UPDATE;
-		$res = $object->update($user);
-	}
-	
-	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
-	{
-		$res = $object->send_org($user);
-	}
-	
-	if ($action == 'set_thirdparty' && $permissiontoadd)
-	{
-		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'FUNDING_MODIFY');
-	}
-	if ($action == 'classin' && $permissiontoadd)
-	{
-		$object->setProject(GETPOST('projectid', 'int'));
-	}
-	
-	if ($action == 'setAcceptedRefused' && $permissionmanage && !GETPOST('cancel', 'alpha'))
-	{
-		if (!(GETPOST('statut', 'int') > 0))
-		{
-			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("CloseAs")), null, 'errors');
-			$action = 'statut';
-		}
-		else
-		{
-			// prevent browser refresh from closing proposal several times
-			if ($object->status >= $object::STATUS_VALIDATED)
-			{
-				$db->begin();
-
-				$result = $object->Set_AcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('note', 'none'));
-				if ($result <= 0)
-				{
-					setEventMessages($object->error, $object->errors, 'errors');
-					$error++;
-				}
-				if (!$error)
-				{
-					$db->commit();
-				}
-				else
-				{
-					$db->rollback();
-				}
-			}
-		}
-	}
 
 	// BB2A marque send mail
 	// Actions to send emails
@@ -633,7 +632,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
 	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
-	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref);
+	if (!empty($object->pre_study)){
+		$morehtmlstatus .= '<div>'.$langs->trans('pre_study').'</div>';
+	}
+	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref,'','',	$morehtmlleft, 	$morehtmlstatus, '', $morehtmlright);
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';
@@ -941,6 +943,19 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		if (empty($reshook))
 		{
+			
+			// Request pre-study
+			if (empty($user->socid) && $object->origin == 'propal') {
+				if ($permissiontoadd && $object->status < $object::STATUS_SENDORG)
+				{
+					if (empty($object->pre_study)){
+						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('pre_study').'</a>'."\n";
+					} else {
+						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('no_pre_study').'</a>'."\n";
+					}
+				}
+			}
+
 			// Send organization
 			if (empty($user->socid)) {
 				if ($permissionmanage)
@@ -1116,7 +1131,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		$MAXEVENT = 10;
 
-		$morehtmlright = '<a href="'.dol_buildpath('/funding/funding_agenda.php', 1).'?id='.$object->id.'">';
+		$morehtmlright .= '<a href="'.dol_buildpath('/funding/funding_agenda.php', 1).'?id='.$object->id.'">';
 		$morehtmlright .= $langs->trans("SeeAll");
 		$morehtmlright .= '</a>';
 

@@ -53,6 +53,7 @@ CREATE TABLE llx_funding_funding(
 	funfoldoc3 varchar(255), 
 	funfoldoc4 varchar(255), 
 	funfoldoc5 varchar(255), 
+	pre_study smallint DEFAULT 0, 
 	note_public text, 
 	note_private text, 
 	date_creation datetime NOT NULL, 
@@ -72,3 +73,5 @@ CREATE TABLE llx_funding_funding(
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
 ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc5 varchar(255) AFTER fundoc4;
+ALTER TABLE llx_funding_funding ADD COLUMN pre_study smallint AFTER funfoldoc5;
+
