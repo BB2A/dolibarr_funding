@@ -422,19 +422,32 @@ print '<table class="tagtable nobottomiftotal liste'.($moreforfilter ? " listwit
 print '<tr class="liste_titre">';
 foreach ($object->fields as $key => $val)
 {
-	$cssforfield = (empty($val['css']) ? '' : $val['css']);
-	if ($key == 'status') $cssforfield .= ($cssforfield ? ' ' : '').'center';
-	elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) $cssforfield .= ($cssforfield ? ' ' : '').'center';
-	elseif (in_array($val['type'], array('timestamp'))) $cssforfield .= ($cssforfield ? ' ' : '').'nowrap';
-	elseif (in_array($val['type'], array('double(24,8)', 'double(6,3)', 'integer', 'real', 'price')) && $val['label'] != 'TechnicalID') $cssforfield .= ($cssforfield ? ' ' : '').'right';
-	if (!empty($arrayfields['t.'.$key]['checked']))
-	{
+	$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
+	if ($key == 'status') {
+		$cssforfield .= ($cssforfield ? ' ' : '').'center';
+	} elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
+		$cssforfield .= ($cssforfield ? ' ' : '').'center';
+	} elseif (in_array($val['type'], array('timestamp'))) {
+		$cssforfield .= ($cssforfield ? ' ' : '').'nowrap';
+	} elseif (in_array($val['type'], array('double(24,8)', 'double(6,3)', 'integer', 'real', 'price')) && $val['label'] != 'TechnicalID' && empty($val['arrayofkeyval'])) {
+		$cssforfield .= ($cssforfield ? ' ' : '').'right';
+	}
+	if (!empty($arrayfields['t.'.$key]['checked'])) {
 		print '<td class="liste_titre'.($cssforfield ? ' '.$cssforfield : '').'">';
-		if (is_array($val['arrayofkeyval'])) print $form->selectarray('search_'.$key, $val['arrayofkeyval'], $search[$key], $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth75');
-		elseif (strpos($val['type'], 'integer:') === 0) {
-			print $object->showInputField($val, $key, $search[$key], '', '', 'search_', 'maxwidth150', 1);
+		if (!empty($val['arrayofkeyval']) && is_array($val['arrayofkeyval'])) {
+			print $form->selectarray('search_'.$key, $val['arrayofkeyval'], $search[$key], $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth100', 1);
+		} elseif ((strpos($val['type'], 'integer:') === 0) || (strpos($val['type'], 'sellist:')=== 0)) {
+			print $object->showInputField($val, $key, $search[$key], '', '', 'search_', 'maxwidth125', 1);
+		} elseif (!preg_match('/^(date|timestamp|datetime)/', $val['type'])) {
+			print '<input type="text" class="flat maxwidth75" name="search_'.$key.'" value="'.dol_escape_htmltag($search[$key]).'">';
+		} elseif (preg_match('/^(date|timestamp|datetime)/', $val['type'])) {
+			print '<div class="nowrap">';
+			print $form->selectDate($search[$key.'_dtstart'] ? $search[$key.'_dtstart'] : '', "search_".$key."_dtstart", 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('From'));
+			print '</div>';
+			print '<div class="nowrap">';
+			print $form->selectDate($search[$key.'_dtend'] ? $search[$key.'_dtend'] : '', "search_".$key."_dtend", 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('to'));
+			print '</div>';
 		}
-		elseif (!preg_match('/^(date|timestamp)/', $val['type'])) print '<input type="text" class="flat maxwidth75" name="search_'.$key.'" value="'.dol_escape_htmltag($search[$key]).'">';
 		print '</td>';
 	}
 }
