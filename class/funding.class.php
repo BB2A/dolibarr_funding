@@ -131,6 +131,7 @@ class Funding extends CommonObject
 		'fundoc2' => array('type'=>'varchar(255)', 'label'=>'fundoc2', 'enabled'=>'1', 'position'=>102, 'notnull'=>0, 'visible'=>0,),
 		'fundoc3' => array('type'=>'varchar(255)', 'label'=>'fundoc3', 'enabled'=>'1', 'position'=>103, 'notnull'=>0, 'visible'=>0,),
 		'fundoc4' => array('type'=>'varchar(255)', 'label'=>'fundoc4', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
+		'fundoc5' => array('type'=>'varchar(255)', 'label'=>'fundoc5', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc1' => array('type'=>'varchar(255)', 'label'=>'funfoldoc1', 'enabled'=>'1', 'position'=>110, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc2' => array('type'=>'varchar(255)', 'label'=>'funfoldoc2', 'enabled'=>'1', 'position'=>111, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
@@ -181,6 +182,7 @@ class Funding extends CommonObject
 	public $fundoc2;
 	public $fundoc3;
 	public $fundoc4;
+	public $fundoc5;
 	public $funfoldoc1;
 	public $funfoldoc2;
 	public $funfoldoc3;

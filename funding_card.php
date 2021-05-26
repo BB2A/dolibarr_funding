@@ -232,7 +232,7 @@ if (empty($reshook))
 
 		if ($action == 'savedoc' && !empty($upload_dir))
 		{
-			if ($doc == 'fundoc3' || $doc == 'fundoc4')
+			if ($doc == 'fundoc3' || $doc == 'fundoc4' || $doc == 'fundoc5')
 			{
 				//Fusion des PDF
 				// Libraries
@@ -629,7 +629,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
 	// Thirdparty
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	$morehtmlref .= '<br>'.$langs->trans("Phone").' : '.dol_print_phone($object->thirdparty->phone, $obj->country_code, 0, $obj->rowid, 'AC_TEL', ' ', 'phone');
 
 	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
 	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
@@ -735,6 +734,26 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$relativepath = $object->ref.'/'.$object->fundoc4;
 			($object->fundoc4)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->fundoc4.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
 			($object->fundoc4)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc4&filedelet='.$object->fundoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
+		}
+		print '</tr>';
+		// Document 5
+		print '<tr class="hideonsmartphone">';
+		print '<td>'.$form->editfieldkey('fundoc5', 'fundoc5', '', $object, 0).'</td>';
+		if ($permissiontoadd == 1 && empty($object->fundoc5))
+		{
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="doc" value="fundoc5">';
+			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
+			print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
+			print '</form>';
+		}
+		else
+		{
+			$relativepath = $object->ref.'/'.$object->fundoc5;
+			($object->fundoc5)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->fundoc5.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+			($object->fundoc5)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc5&filedelet='.$object->fundoc5.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 		}
 		print '</tr>';
 
