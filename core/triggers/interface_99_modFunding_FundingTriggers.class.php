@@ -289,8 +289,14 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				}
 				return 0;
 			case 'ORDER_CLOSE':
-				if (!empty($fudid)){
+				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT){
 					return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+				} elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+					setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');
+					return -1;
+				} elseif (!empty($fudid) && $object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+					setEventMessages($langs->trans("fundingexist"), null, 'errors');
+					return -1;
 				}
 				return 0;
 

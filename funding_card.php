@@ -632,8 +632,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
 	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
-	if (!empty($object->pre_study)){
-		$morehtmlstatus .= '<div>'.$langs->trans('pre_study').'</div>';
+	if ($object->origin == 'propal'){
+		$morehtmlstatus .= '<div><h3>'.$langs->trans('fundingpropal').'</h3></div>';
+		if (!empty($object->pre_study)){
+			$morehtmlstatus .= '<div><p>'.$langs->trans('pre_study').'</p></div>';
+		}
 	}
 	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref,'','',	$morehtmlleft, 	$morehtmlstatus, '', $morehtmlright);
 	print '<div class="fichecenter">';

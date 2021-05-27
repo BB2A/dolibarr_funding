@@ -48,6 +48,7 @@ MyWidgetDescription = Description de mon widget
 
 Funding = Financement
 Fundings = Financements
+fundingpropal = Proposition financiére
 Rent = Loyer
 RentEdit = Loyer personnalisé
 duration = Durée
@@ -170,6 +171,8 @@ updatenok = Mise à jour du financement impossible
 orderreopennok = Réouverture impossible financement en cours
 clonfudpropal = Financement copier depuis la proposition
 deletnok = Suppresion impossible
+fundingnotaccepted = Financement non accépté
+fundingexist = Il existe un financement incohérence avec le mode de réglement
 
 #STATUS
 FundingStatusDraft = Brouillon
@@ -192,6 +195,7 @@ FundingStatusDeniedShort = Refusé
 FundingStatusRunningShort = Actif
 FundingStatusEndShort = Terminé
 FundingStatusDisabledShort = Annulé
+
 #Documents
 fundoc1 = RIB
 fundoc2 = Kbis
