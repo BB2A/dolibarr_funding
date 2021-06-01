@@ -310,7 +310,7 @@ class modFunding extends DolibarrModules
             'type'=>'top',                          // This is a Top menu entry
             'titre'=>'ModuleFundingName',
             'mainmenu'=>'funding',
-            'url'=>'/funding/funding_list.php',
+            'url'=>'/funding/fundingindex.php',
             'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>50,
             'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.
@@ -334,26 +334,6 @@ class modFunding extends DolibarrModules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
-		$this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'List',
-            'mainmenu'=>'funding',
-            'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'funding@funding',
-            'position'=>1000+$r,
-            // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->funding->enabled',
-            // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>0,
-        );
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',

@@ -90,6 +90,8 @@ $socid      	= GETPOST('socid', 'int');
 $iddoc    		= GETPOST('iddoc', 'int');
 $typedoc      	= GETPOST('typedoc', 'alpha');
 
+$filter     	= GETPOST('filter', 'alpha');
+
 // Load variable for pagination
 $limit = GETPOST('limit', 'int') ? GETPOST('limit', 'int') : $conf->liste_limit;
 $sortfield = GETPOST('sortfield', 'alpha');
