@@ -605,8 +605,10 @@ while ($i < ($limit ? min($num, $limit) : $num))
 		if (!empty($arrayfields['t.'.$key]['checked']))
 		{
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
+			if (in_array($val['type'], array('price'))) print '<span class="amount">';
 			if ($key == 'status') print $object->getLibStatut(5);
 			else print $object->showOutputField($val, $key, $object->$key, '');
+			if (in_array($val['type'], array('price'))) print '</span>';
 			print '</td>';
 			if (!$i) $totalarray['nbfield']++;
 			if (!empty($val['isameasure']))

@@ -80,7 +80,7 @@ FundingFolder = Dossier de financement
 ConfirmDeleteFunding = Êtes-vous sûr de vouloir supprimer ce financement ?
 RefreshFunding = Actiualiser le financement
 ConfirmRefreshFunding = Confirmer l'actualisation des informations?
-pre_study = Pré etude
+pre_study = Pré étude
 no_pre_study = No pré etude
 SendOrg = Envoyer à l'organisme
 ConfirmSendOrg = Confirmer l'envoie à l'organisme
@@ -89,6 +89,9 @@ SetAcceptedRefused = Accepter/Refuser
 CloseAs = Positionner le statut à
 DateSignature = Date signature P.V.
 closefinich = Fini
+NoFunding = Pas de financement
+FundingPreStudy = Financement Pré étude
+
 
 #MENU
 ListFunding = Liste de financements
