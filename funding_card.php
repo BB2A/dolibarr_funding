@@ -145,9 +145,9 @@ if (empty($action) && empty($id) && empty($ref)) $action = 'view';
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
-// Fetch organisme
-$org = $object->fetch_soc($object->fk_org);
-$soc_invoice =  $object->fetch_soc($object->fk_soc_invoice);
+// Fetch organisme Erreur???
+if (!empty($object->fk_org))$org = $object->fetch_soc($object->fk_org);
+if (!empty($object->fk_soc_invoice))$soc_invoice =  $object->fetch_soc($object->fk_soc_invoice);
 
 $permissiontoread = $user->rights->funding->funding->read;
 $permissiontoadd = $user->rights->funding->funding->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php

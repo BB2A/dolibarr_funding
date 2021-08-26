@@ -540,7 +540,8 @@ class Funding extends CommonObject
 			$document = $this->info_doc($iddoc,$typedoc);
 			if ($document > 0)
 			{
-				if (is_object($document) && $document->statut >= 1)
+				//Création imposible si document non validé ou déja livré facturé
+				if (is_object($document) && $document->statut >= 1 && $document->statut != 3)
 				{
 					//Récupére si une adresse facturation différente
 					$socpeopleinvoice	= $document->getIdContact('external', 'BILLING');
@@ -626,7 +627,7 @@ class Funding extends CommonObject
 				}
 				else
 				{
-					setEventMessages($langs->trans("docnotvalidate"), null, 'errors');
+					setEventMessages($langs->trans("docnotvalidateorclosed"), null, 'errors');
 				}
 			}
 			else
