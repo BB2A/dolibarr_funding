@@ -283,7 +283,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'ORDER_CLASSIFY_BILLED':
 			//case 'ORDER_SETDRAFT':
 			case 'ORDER_REOPEN':
-				if (!empty($fudid)){
+				if (!empty($fudid) && $fundingobject->status == $fundingobject::STATUS_RUNNING){
 					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
 					return -1;
 				}

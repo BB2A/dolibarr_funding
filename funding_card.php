@@ -976,7 +976,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			// Request extension
 			if (empty($user->socid) && $object->origin == 'order') {
-				if ($permissiontoadd && $object->status = $object::STATUS_RUNNING) {
+				if ($permissiontoadd && $object->status == $object::STATUS_RUNNING) {
 					if (empty($object->extension)){
 						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('Extension').'</a>'."\n";
 					}

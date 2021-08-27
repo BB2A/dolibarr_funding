@@ -579,7 +579,10 @@ class Funding extends CommonObject
 						
 						//Information sur date de livraison date de fin
 						$this->date_delivery = $document->date_livraison;
-						if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
+						// Date de signature renseigné si commande livré
+						if ($document->status == 3){
+							if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
+						}
 						if ($this->date_signature)
 						{
 							//Ajoute la durée à la date de livraison pour avoir la date de fin
@@ -1098,7 +1101,7 @@ $this->fetch($result);
 					}
 					$this->date_delivery = $document->date_livraison;
 					// Date de signature renseigné si commande livré
-					if ($document->status == 3){
+					if ($document->fk_status == 3){
 						if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
 					}
 						
