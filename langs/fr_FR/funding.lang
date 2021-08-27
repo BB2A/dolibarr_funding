@@ -18,204 +18,206 @@
 #
 
 # Module label 'ModuleFundingName'
-ModuleFundingName = Financements
+ModuleFundingName=Financements
 # Module description 'ModuleFundingDesc'
-ModuleFundingDesc = Description de Financement
+ModuleFundingDesc=Description de Financement
 #
 # Page d'administration
 #
-FundingSetup = Configuration du module Financement
-Settings = Réglages
-FundingSetupPage = Page de configuration du module Financement
+FundingSetup=Configuration du module Financement
+Settings=Réglages
+FundingSetupPage=Page de configuration du module Financement
 
 #
 # Page À propos
 #
-About = À propos
-FundingAbout = À propos de Financement
-FundingAboutPage = Page à propos de Financement
+About=À propos
+FundingAbout=À propos de Financement
+FundingAboutPage=Page à propos de Financement
 
 #
 # Page d'exemple
 #
-MyPageName = Nom de ma page
+MyPageName=Nom de ma page
 
 #
 # Box d'exemple
 #
-FundindValidate = Financement validé
-MyWidgetDescription = Description de mon widget
+FundindValidate=Financement validé
+MyWidgetDescription=Description de mon widget
 
-Funding = Financement
-Fundings = Financements
-fundingpropal = Proposition financiére
-Rent = Loyer
-RentEdit = Loyer personnalisé
-duration = Durée
-StudyNumber = Numéro d'étude
-FolderNumber = Numéro de dossier
-RedemptionNumber = Numéro de rachat
-Organization = Organisme
-ThirdPartyInvoice = Tiers facturation
-DateEnd = Date de fin
-Redemption = Rachat
-Retention = Retenue de garantie
-RetentionOfGuarantee = Retenue de garantie
-RetentionRate = Taux de retenue
-DateDelivery = Date de livraison
-CoefListe = Liste coef
-NewFunding = Nouveau financement
-NewCoef = Nouveau coef
-Amount_of = Montant de
-Amount_to = Montant a
-StatusFolder = Statut dossier
-AmountMaint = Montant maintenance
-AmountTotal = Montant total
-Scale = Barème
-TypeFunding = Type de financement
-FundingCard = Fiche financement
-CoefCard = Fiche coefficient
-DocumentsForFunding = Documents pour le financement
-FundingFolder = Dossier de financement
-ConfirmDeleteFunding = Êtes-vous sûr de vouloir supprimer ce financement ?
-RefreshFunding = Actiualiser le financement
-ConfirmRefreshFunding = Confirmer l'actualisation des informations?
-pre_study = Pré étude
-no_pre_study = No pré etude
-SendOrg = Envoyer à l'organisme
-ConfirmSendOrg = Confirmer l'envoi à l'organisme
-Lack = Manque
-SetAcceptedRefused = Accepter/Refuser
-CloseAs = Positionner le statut à
-DateSignature = Date signature P.V.
-closefinich = Cloturer
-NoFunding = Pas de financement
-FundingPreStudy = Financement Pré étude
+Funding=Financement
+Fundings=Financements
+fundingpropal=Proposition financiére
+Rent=Loyer
+RentEdit=Loyer personnalisé
+duration=Durée
+StudyNumber=Numéro d'étude
+FolderNumber=Numéro de dossier
+RedemptionNumber=Numéro de rachat
+Organization=Organisme
+ThirdPartyInvoice=Tiers facturation
+DateEnd=Date de fin
+Redemption=Rachat
+Retention=Retenue de garantie
+RetentionOfGuarantee=Retenue de garantie
+RetentionRate=Taux de retenue
+DateDelivery=Date de livraison
+CoefListe=Liste coef
+NewFunding=Nouveau financement
+NewCoef=Nouveau coef
+Amount_of=Montant de
+Amount_to=Montant a
+StatusFolder=Statut dossier
+AmountMaint=Montant maintenance
+AmountTotal=Montant total
+Scale=Barème
+TypeFunding=Type de financement
+FundingCard=Fiche financement
+CoefCard=Fiche coefficient
+DocumentsForFunding=Documents pour le financement
+FundingFolder=Dossier de financement
+ConfirmDeleteFunding=Êtes-vous sûr de vouloir supprimer ce financement ?
+RefreshFunding=Actiualiser le financement
+ConfirmRefreshFunding=Confirmer l'actualisation des informations?
+pre_study=Pré étude
+no_pre_study=No pré etude
+Extension=Prolongation
+SendOrg=Envoyer à l'organisme
+ConfirmSendOrg=Confirmer l'envoi à l'organisme
+Lack=Manque
+SetAcceptedRefused=Accepter/Refuser
+CloseAs=Positionner le statut à
+DateSignature=Date signature P.V.
+closefinich=Cloturer
+NoFunding=Pas de financement
+FundingPreStudy=Financement Pré étude
 
 
 #MENU
-ListFunding = Liste de financements
-ListFundingDraft = Brouillon
-ListFundingValidated = Nouveaux
-ListFundingUpdate = Mise à jour
-ListFundingLack = Document manquant
-ListFundingAccept = Accepté
-ListFundingDenied = Refusé
-ListFundingRunning = Actif
-ListFundingEnd = Terminé
-ListFundingCanceled = Annulé
-ListFundingPropal = Liste propositions de financements
-ListFundingPropalNew = Nouveaux
-ListFundingPropalSend = Demande d'étude
-ListFundingPropalAccept = Accepté
-ListFundingPropalDenied = Refusé
-ListFundingPropalCanceled = Annulé
+ListFunding=Liste de financements
+ListFundingDraft=Brouillon
+ListFundingValidated=Nouveaux
+ListFundingUpdate=Mise à jour
+ListFundingLack=Document manquant
+ListFundingAccept=Accepté
+ListFundingDenied=Refusé
+ListFundingRunning=Actif
+ListFundingEnd=Terminé
+ListFundingExtension=Prolongation
+ListFundingCanceled=Annulé
+ListFundingPropal=Liste propositions de financements
+ListFundingPropalNew=Nouveaux
+ListFundingPropalSend=Demande d'étude
+ListFundingPropalAccept=Accepté
+ListFundingPropalDenied=Refusé
+ListFundingPropalCanceled=Annulé
 
 #DICTIONNAIRES
-Funding_duration = Financement - Durée
-Funding_scale = Financement - Baréme
-Funding_type = Financement - Type
+Funding_duration=Financement - Durée
+Funding_scale=Financement - Baréme
+Funding_type=Financement - Type
 
 #PARAMETTRES
 
-FUNDING_MAIL_VALIDATION = Adresse mail notification validation fiancement
-MAIN_MAIL_AUTOCOPY_FUNDING_TO = Adresse mail de copie automatique
-FUNDING_CODE_REGLEMENT = Code mode de réglement pour financement
-FUNDING_DEFAULT_DURATION = Valeur par default pour la durée de financement
-FUNDING_DEFAULT_SCALE = Barème par default
-FUNDING_DEFAULT_REDEMPTION = Valeur par default pour le rachat
-FUNDING_DEFAULT_TYPE = Type de financement par default
-FUNDING_DEFAULT_ORGANIZATION = Organisme par default
-FUNDING_FILTRE_ORGANIZATION = Filtre organisme financement
+FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
+MAIN_MAIL_AUTOCOPY_FUNDING_TO=Adresse mail de copie automatique
+FUNDING_CODE_REGLEMENT=Code mode de réglement pour financement
+FUNDING_DEFAULT_DURATION=Valeur par default pour la durée de financement
+FUNDING_DEFAULT_SCALE=Barème par default
+FUNDING_DEFAULT_REDEMPTION=Valeur par default pour le rachat
+FUNDING_DEFAULT_TYPE=Type de financement par default
+FUNDING_DEFAULT_ORGANIZATION=Organisme par default
+FUNDING_FILTRE_ORGANIZATION=Filtre organisme financement
 
 #AIDES
-Help_study_number = Numéro d'etude délivré par l'organisme de financement
-Help_folder_number = Numéro de dossier délivré par l'organisme de financement
-Help_amount = Montant à financer
-Help_amount_maint = Montant de la maintenance
-Help_amount_total = Montant total du financement
-Help_duration = Durée du financement
-Help_coef = Coéficiant de calcul
-Help_redemption_number = Numéro de dossier racheté
-Help_retention_rate = Taux de retenue de garantie
-Help_amount_rent = Montant des loyer
-Help_date_delivery = Date de livraison du matériel
-Help_date_signature = Date de signature du procès verbale de livraison
-Help_date_end = Date de fin du financement
-Help_Scale = Barème de financement
-Help_amount_rent_edit = Montant des loyers personalisé
-LinkToOrganization = Organisme de financement
-LinkToThirparty = Tiers concerné par le financement
-LinkToThirpartyInvoice = Tiers payeur défini sur la commande ou la proposition
+Help_study_number=Numéro d'etude délivré par l'organisme de financement
+Help_folder_number=Numéro de dossier délivré par l'organisme de financement
+Help_amount=Montant à financer
+Help_amount_maint=Montant de la maintenance
+Help_amount_total=Montant total du financement
+Help_duration=Durée du financement
+Help_coef=Coéficiant de calcul
+Help_redemption_number=Numéro de dossier racheté
+Help_retention_rate=Taux de retenue de garantie
+Help_amount_rent=Montant des loyer
+Help_date_delivery=Date de livraison du matériel
+Help_date_signature=Date de signature du procès verbale de livraison
+Help_date_end=Date de fin du financement
+Help_Scale=Barème de financement
+Help_amount_rent_edit=Montant des loyers personalisé
+LinkToOrganization=Organisme de financement
+LinkToThirparty=Tiers concerné par le financement
+LinkToThirpartyInvoice=Tiers payeur défini sur la commande ou la proposition
 
 #DROITS
-ReadFunding = Lire
-CreateUpdateFunding = Créer modifier
-DeleteFunding = Supprimer
-ManageFunding = Manage funding
-ReadCoefficient = Lire les coef
-CreateUpdateCoefficient = Creer modifier les coef
-DeleteCoefficient = Supprimer les coef
+ReadFunding=Lire
+CreateUpdateFunding=Créer modifier
+DeleteFunding=Supprimer
+ManageFunding=Manage funding
+ReadCoefficient=Lire les coef
+CreateUpdateCoefficient=Creer modifier les coef
+DeleteCoefficient=Supprimer les coef
 
 #EVENTS MESSAGES
-commnok = Commercial introuvable
-coefnok = Coef introuvable
-docnotvalidate = Document non validé
-docnotvalidateorclosed = Document non validé ou cloturé
-paramnok = Parametres manquants
-checknok = Tous les paramétres ne sont pas réunis
-creatrefnok = Création ref impossible
-amount_rent_edit<amount_rent = Loyer personnalisé modifié, car inférieur ou égale au montant calculé
-SendOrgOk = Dossier envoyer à l'organisme
-nodoc = Document non trouvé
-socinvoicenok = Societe de facturation non trouvé
-supppropalnok = Un financement existe suppresion impossible
-updateok = Mise à jour du financement
-updatenok = Mise à jour du financement impossible
-orderreopennok = Réouverture impossible financement en cours
-clonfudpropal = Financement copier depuis la proposition
-deletnok = Suppresion impossible
-fundingnotaccepted = Financement non accépté
-fundingexist = Il existe un financement incohérence avec le mode de réglement
+commnok=Commercial introuvable
+coefnok=Coef introuvable
+docnotvalidate=Document non validé
+docnotvalidateorclosed=Document non validé ou cloturé
+paramnok=Parametres manquants
+checknok=Tous les paramétres ne sont pas réunis
+creatrefnok=Création ref impossible
+amount_rent_edit<amount_rent=Loyer personnalisé modifié, car inférieur ou égale au montant calculé
+SendOrgOk=Dossier envoyer à l'organisme
+nodoc=Document non trouvé
+socinvoicenok=Societe de facturation non trouvé
+supppropalnok=Un financement existe suppresion impossible
+updateok=Mise à jour du financement
+updatenok=Mise à jour du financement impossible
+orderreopennok=Réouverture impossible financement en cours
+clonfudpropal=Financement copier depuis la proposition
+deletnok=Suppresion impossible
+fundingnotaccepted=Financement non accépté
+fundingexist=Il existe un financement incohérence avec le mode de réglement
 
 #STATUS
-FundingStatusDraft = Brouillon
-FundingStatusValidated = Nouveau
-FundingStatusUpdate = Mise à jour
-FundingStatusSendOrg = Envoyer à l'organisme
-FundingStatusLack = Manque
-FundingStatusAccept = Accepté
-FundingStatusDenied = Refusé
-FundingStatusRunning = Actif
-FundingStatusEnd = Terminé
-FundingStatusDisabled = Annulé
-FundingStatusDraftShort = Brouillon
-FundingStatusEnabledShort = Nouveau
-FundingStatusUpdateShort = Mise à jour
-FundingStatusSendOrgShort = Envoyer à l'organisme
-FundingStatusLackShort = Manque
-FundingStatusAcceptShort = Accepté
-FundingStatusDeniedShort = Refusé
-FundingStatusRunningShort = Actif
-FundingStatusEndShort = Terminé
-FundingStatusDisabledShort = Annulé
+FundingStatusDraft=Brouillon
+FundingStatusValidated=Nouveau
+FundingStatusUpdate=Mise à jour
+FundingStatusSendOrg=Envoyer à l'organisme
+FundingStatusLack=Manque
+FundingStatusAccept=Accepté
+FundingStatusDenied=Refusé
+FundingStatusRunning=Actif
+FundingStatusEnd=Terminé
+FundingStatusDisabled=Annulé
+FundingStatusDraftShort=Brouillon
+FundingStatusEnabledShort=Nouveau
+FundingStatusUpdateShort=Mise à jour
+FundingStatusSendOrgShort=Envoyer à l'organisme
+FundingStatusLackShort=Manque
+FundingStatusAcceptShort=Accepté
+FundingStatusDeniedShort=Refusé
+FundingStatusRunningShort=Actif
+FundingStatusEndShort=Terminé
+FundingStatusDisabledShort=Annulé
 
 #Documents
-fundoc1 = RIB
-fundoc2 = Kbis
-fundoc3 = Bilan
-fundoc4 = Piéce d'identitée
-fundoc5 = Acte notarié
-funfoldoc1 = Acceptation
-funfoldoc2 = Dossier
-funfoldoc3 = Dossier signé
-funfoldoc4 = Facture
-funfoldoc5 = Rachat
+fundoc1=RIB
+fundoc2=Kbis
+fundoc3=Bilan
+fundoc4=Piéce d'identitée
+fundoc5=Acte notarié
+funfoldoc1=Acceptation
+funfoldoc2=Dossier
+funfoldoc3=Dossier signé
+funfoldoc4=Facture
+funfoldoc5=Rachat
 
 #Trigger
-UPDATEInDolibarr = Financement %s mis à jour
-SENDORGInDolibarr = %s Envoyer à l'organisme
-ACCEPTInDolibarr = %s Accépté
-DENIEDInDolibarr = %s Refusé
-RUNNINGInDolibarr = %s En cours
-ENDInDolibarr = %s Fini
+UPDATEInDolibarr=Financement %s mis à jour
+SENDORGInDolibarr=%s Envoyer à l'organisme
+ACCEPTInDolibarr=%s Accépté
+DENIEDInDolibarr=%s Refusé
+RUNNINGInDolibarr=%s En cours
+ENDInDolibarr=%s Fini

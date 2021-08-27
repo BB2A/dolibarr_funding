@@ -224,6 +224,15 @@ if (empty($reshook))
 		}
 	}
 
+	if ($action == 'extension' && $permissiontoadd)
+	{
+		$result = $object->Set_Extension($user);
+		if ($result <= 0)
+		{
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+
 	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
 	{
 		$res = $object->send_org($user);
@@ -629,6 +638,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Thirdparty
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
 
+	// Affiche le document lié
 	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
 	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
@@ -636,6 +646,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$morehtmlstatus .= '<div><h3>'.$langs->trans('fundingpropal').'</h3></div>';
 		if (!empty($object->pre_study)){
 			$morehtmlstatus .= '<div><p>'.$langs->trans('pre_study').'</p></div>';
+		}
+	}
+	if ($object->origin == 'order'){
+		$morehtmlstatus .= '<div><h3>'.$langs->trans('Funding').'</h3></div>';
+		if (!empty($object->extension)){
+			$morehtmlstatus .= '<div><p>'.$langs->trans('Extension').'</p></div>';
 		}
 	}
 	dol_banner_tab($object, 'ref',	$morehtml, 0, 'ref', 'ref', $morehtmlref,'','',	$morehtmlleft, 	$morehtmlstatus, '', $morehtmlright);
@@ -949,12 +965,20 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			
 			// Request pre-study
 			if (empty($user->socid) && $object->origin == 'propal') {
-				if ($permissiontoadd && $object->status < $object::STATUS_SENDORG)
-				{
+				if ($permissiontoadd && $object->status < $object::STATUS_SENDORG) {
 					if (empty($object->pre_study)){
 						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('pre_study').'</a>'."\n";
 					} else {
 						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('no_pre_study').'</a>'."\n";
+					}
+				}
+			}
+
+			// Request extension
+			if (empty($user->socid) && $object->origin == 'order') {
+				if ($permissiontoadd && $object->status = $object::STATUS_RUNNING) {
+					if (empty($object->extension)){
+						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('Extension').'</a>'."\n";
 					}
 				}
 			}

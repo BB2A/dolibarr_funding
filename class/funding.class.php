@@ -114,18 +114,18 @@ class Funding extends CommonObject
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>12, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent_edit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_date_delivery",),
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_date_signature",),
-		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
-		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>15, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
-		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>16, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
-		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>17, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemption_number", 'showoncombobox'=>'1',),
-		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
-		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retention_rate",),
-		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
-		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
-		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirpartyInvoice",),
-		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>23, 'notnull'=>3, 'visible'=>0, 'noteditable'=>'1',),
-		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>24, 'notnull'=>3, 'visible'=>0, 'noteditable'=>'1',),
-		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
+		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>16, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_date_end",),
+		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>17, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
+		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemption_number", 'showoncombobox'=>'1',),
+		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>21, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retention_rate",),
+		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>22, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToOrganization",),
+		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>23, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirparty",),
+		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>24, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'help'=>"LinkToThirpartyInvoice",),
+		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>25, 'notnull'=>3, 'visible'=>0, 'noteditable'=>'1',),
+		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>26, 'notnull'=>3, 'visible'=>0, 'noteditable'=>'1',),
+		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>27, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
 		'fundoc1' => array('type'=>'varchar(255)', 'label'=>'fundoc1', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>0,),
 		'fundoc2' => array('type'=>'varchar(255)', 'label'=>'fundoc2', 'enabled'=>'1', 'position'=>102, 'notnull'=>0, 'visible'=>0,),
@@ -137,7 +137,8 @@ class Funding extends CommonObject
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>113, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
-		'pre_study' => array('type'=>'smallint', 'label'=>'pre_study', 'enabled'=>'1', 'position'=>16, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'pre_study' => array('type'=>'smallint', 'label'=>'pre_study', 'enabled'=>'1', 'position'=>200, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -190,6 +191,7 @@ class Funding extends CommonObject
 	public $funfoldoc4;
 	public $funfoldoc5;
 	public $pre_study;
+	public $extension;
 	public $note_public;
 	public $note_private;
 	public $date_creation;
@@ -1586,6 +1588,54 @@ $this->fetch($result);
 			$sql .= " WHERE rowid = ".$this->id;
 			
 			dol_syslog(__METHOD__.' $this->id='.$this->id.', pre_study', LOG_DEBUG);
+			
+			$resql = $this->db->query($sql);
+			if (!$resql)
+			{
+				$this->errors[] = $this->db->error();
+				$error++;
+			}
+
+			if (!$error)
+			{
+				$this->db->commit();
+				return 1;
+			}
+			else
+			{
+				foreach ($this->errors as $errmsg)
+				{
+					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
+					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
+				}
+				$this->db->rollback();
+				return -1 * $error;
+			}
+	}
+
+	/**
+	 * Update object into database
+	 *
+	 * @param  User $user      User that modifies
+	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @return int             <0 if KO, >0 if OK
+	 */
+	public function set_Extension($user)
+	{
+			$error = 0;
+
+			$this->db->begin();
+
+			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+			if(empty($this->extension)){
+				$sql .= " SET extension = 1";
+			} else {
+				$sql .= " SET extension = 0";
+			}
+			
+			$sql .= " WHERE rowid = ".$this->id;
+			
+			dol_syslog(__METHOD__.' $this->id='.$this->id.', extension', LOG_DEBUG);
 			
 			$resql = $this->db->query($sql);
 			if (!$resql)
