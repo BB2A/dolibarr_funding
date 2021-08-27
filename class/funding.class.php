@@ -1097,7 +1097,11 @@ $this->fetch($result);
 						setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
 					}
 					$this->date_delivery = $document->date_livraison;
-					if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
+					// Date de signature renseigné si commande livré
+					if ($document->status == 3){
+						if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
+					}
+						
 					if ($this->date_signature)
 					{
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
