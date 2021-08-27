@@ -639,8 +639,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
 
 	// Affiche le document lié
-	if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
-	if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
+	//if ($object->origin == 'propal' && is_object($prop)){$morehtmlref .= '<br>'.$langs->trans('Propal').' : '.$prop->getNomUrl(1);}
+	//if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
 	if ($object->origin == 'propal'){
 		$morehtmlstatus .= '<div><h3>'.$langs->trans('fundingpropal').'</h3></div>';
@@ -1008,15 +1008,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 			//$triggersendname
 
-			// Refresh supprimer?
-			/*
-			if (empty($user->socid)) {
-				if ($permissiontoadd)
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=refresh&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Refresh').'</a>'."\n";
-				}
-			}
-			*/
 			// closefinich
 			if (empty($user->socid)) {
 				if ($permissionmanage && $object->status == $object::STATUS_RUNNING)
