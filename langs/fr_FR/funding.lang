@@ -158,6 +158,9 @@ ManageFunding=Manage funding
 ReadCoefficient=Lire les coef
 CreateUpdateCoefficient=Creer modifier les coef
 DeleteCoefficient=Supprimer les coef
+ReadRetention=Lire les retenues de garanties
+CreateUpdateRetention=Creer modifier les retenues de garanties
+DeleteRetention=Supprimer les retenues de garanties
 
 #EVENTS MESSAGES
 commnok=Commercial introuvable

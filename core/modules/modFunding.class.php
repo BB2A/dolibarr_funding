@@ -286,17 +286,17 @@ class modFunding extends DolibarrModules
 		$r++;
 		//Permission for retention
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
+		$this->rights[$r][1] = 'ReadRetention'; // Permission label
 		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateCoefficient'; // Permission label
+		$this->rights[$r][1] = 'CreateUpdateRetention'; // Permission label
 		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
+		$this->rights[$r][1] = 'DeleteRetention'; // Permission label
 		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
@@ -669,7 +669,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->coefficient->read',
+            'perms'=>'$user->rights->funding->retention->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0
