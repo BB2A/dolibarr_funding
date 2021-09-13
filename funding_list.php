@@ -124,6 +124,10 @@ $search = array();
 foreach ($object->fields as $key => $val)
 {
 	if (GETPOST('search_'.$key, 'alpha') !== '') $search[$key] = GETPOST('search_'.$key, 'alpha');
+	//FIX - Filtre date ne fonctionne pas sur liste
+	if (preg_match('/(_dtstart|_dtend)$/', 'search_'.$key) && $search[$key] != '') {
+		var_dump(GETPOST('search_'.$key.'_dtstart'));
+	}
 }
 
 // List of fields to search into when doing a "search in all"
@@ -259,15 +263,29 @@ if (empty($permissionmanage) && empty($socid)) $sql.= " AND t.fk_user_comm = ".$
 
 foreach ($search as $key => $val)
 {
-	if ($key == 'status' && $search[$key] == -1) continue;
-	$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
-	//BB2A Probléme de recherche ancinne ligne "if (strpos($object->fields[$key]['type'], 'integer:') === 0) {"
-	if ($search[$key] == '-1') $search[$key] = '';
-	if (strpos($object->fields[$key]['type'], 'integer:') === 0) {
+	if (array_key_exists($key, $object->fields)) {
+		if ($key == 'status' && $search[$key] == -1) continue;
+		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
+		//BB2A Probléme de recherche ancinne ligne "if (strpos($object->fields[$key]['type'], 'integer:') === 0) {"
 		if ($search[$key] == '-1') $search[$key] = '';
-		$mode_search = 2;
+		if (strpos($object->fields[$key]['type'], 'integer:') === 0) {
+			if ($search[$key] == '-1') $search[$key] = '';
+			$mode_search = 2;
+		}
+		if ($search[$key] != '') $sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
+	} else {
+		if (preg_match('/(_dtstart|_dtend)$/', $key) && $search[$key] != '') {
+			$columnName = preg_replace('/(_dtstart|_dtend)$/', '', $key);
+			if (preg_match('/^(date|timestamp|datetime)/', $object->fields[$columnName]['type'])) {
+				if (preg_match('/_dtstart$/', $key)) {
+					$sql .= " AND t.".$columnName." >= '".$db->idate($search[$key])."'";
+				}
+				if (preg_match('/_dtend$/', $key)) {
+					$sql .= " AND t." . $columnName . " <= '" . $db->idate($search[$key]) . "'";
+				}
+			}
+		}
 	}
-	if ($search[$key] != '') $sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
 }
 
 if ($search_all) $sql .= natural_search(array_keys($fieldstosearchall), $search_all);

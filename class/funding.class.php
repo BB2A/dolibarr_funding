@@ -579,19 +579,7 @@ class Funding extends CommonObject
 						
 						//Information sur date de livraison date de fin
 						$this->date_delivery = $document->date_livraison;
-						// Date de signature renseigné si commande livré
-						if ($document->status == 3){
-							if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
-						}
-						if ($this->date_signature)
-						{
-							//Ajoute la durée à la date de livraison pour avoir la date de fin
-							$duration = $this->fetch_duration($this->fk_duration);
-							if ($duration->code > 0)
-							{
-								$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
-							}
-						}
+
 						// Voir si delete
 						if ($typedoc == 'propal') $this->fk_propal	= $iddoc;
 						if ($typedoc == 'order') $this->fk_order	= $iddoc;
@@ -1100,19 +1088,23 @@ $this->fetch($result);
 						setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
 					}
 					$this->date_delivery = $document->date_livraison;
+					
 					// Date de signature renseigné si commande livré
-					if ($document->fk_status == 3){
+					if ($document->status == 3){
 						if (empty($this->date_signature)) $this->date_signature = $this->date_delivery;
 					}
-						
+
+					// Si date de signature calcul date de fin
 					if ($this->date_signature)
 					{
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
 						$duration = $this->fetch_duration($this->fk_duration);
 						if ($duration->code > 0)
 						{
-							$this->date_end		= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
+							$this->date_end	= date('Y-m-d', strtotime('+'.$duration->code.' month',strtotime(date('Y-m-d',$this->date_signature))));
 						}
+					}else{
+						$this->date_end = '';
 					}
 					// Changement du status (Changement du status si il a ete envoyer à l'organisme)
 					if ($this->status >= self::STATUS_SENDORG){
