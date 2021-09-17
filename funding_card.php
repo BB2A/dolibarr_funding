@@ -275,7 +275,7 @@ if (empty($reshook))
 		}
 	}
 
-	//Documents
+	// Documents
 	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 
 	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
