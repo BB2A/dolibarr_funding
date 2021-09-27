@@ -785,7 +785,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		// FundingFolderDoc 1
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1', '', $object, 0).'</td>';
-		if ($permissiontoadd == 1 && empty($object->funfoldoc1))
+		if ($permissionmanage == 1 && empty($object->funfoldoc1))
 		{
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -806,7 +806,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		// FundingFolderDoc 2
 		print '<tr class="hideonsmartphone">';
 		print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2', '', $object, 0).'</td>';
-		if ($permissiontoadd == 1 && empty($object->funfoldoc2))
+		if ($permissionmanage == 1 && empty($object->funfoldoc2))
 		{
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
