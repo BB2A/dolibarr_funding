@@ -562,7 +562,7 @@ class modFunding extends DolibarrModules
             'titre'=>'ListFundingPropalSend',
             'mainmenu'=>'funding',
             'leftmenu'=>'',
-            'url'=>'/funding/funding_list.php?search_status=3&search_origin=propal',
+            'url'=>'/funding/funding_list.php?search_pre_study=1&search_origin=propal',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'funding@funding',
             'position'=>1200+$r,
