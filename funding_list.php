@@ -259,7 +259,7 @@ else $sql .= " WHERE 1 = 1";
 // Filtre si dans une societe - BB2A
 if ($socid > 0) $sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
 // Filtre l'autorisation de voir certain financement - BB2A
-if (empty($permissionmanage) && empty($socid)) $sql.= " AND t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id;
+if (empty($user->rights->societe->client->voir) && empty($socid)) $sql.= " AND t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id;
 
 foreach ($search as $key => $val)
 {
