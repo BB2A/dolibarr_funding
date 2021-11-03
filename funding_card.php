@@ -232,6 +232,31 @@ if (empty($reshook))
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
+	
+	if ($action == 'run' && $permissiontoadd)
+	{
+		if (!empty($object->date_signature)){
+			$object->status = $object::STATUS_RUNNING;
+			// Passage par update et non setStatut pour verifier si le document est validé.
+			$result = $object->update($user);
+			if ($result <= 0)
+			{
+				setEventMessages($object->error, $object->errors, 'errors');
+			}
+		}else{
+			setEventMessages($langs->trans("fundingnotdatedelivry").$langs->trans("fundingnotdatesign"), null, 'errors');
+		}
+		
+	}
+	
+	if ($action == 'reopen' && $permissiontoadd)
+	{
+		$result = $object->setStatusCommon($user, $object::STATUS_ACCEPT, $notrigger, 'STATUS_ACCEPT');
+		if ($result <= 0)
+		{
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
 
 	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd)
 	{
@@ -964,42 +989,33 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			
 			// Request pre-study
-			if (empty($user->socid) && $object->origin == 'propal') {
-				if ($permissiontoadd && $object->status < $object::STATUS_SENDORG) {
-					if (empty($object->pre_study)){
-						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('pre_study').'</a>'."\n";
-					} else {
-						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('no_pre_study').'</a>'."\n";
-					}
+			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_SENDORG && $object->origin == 'propal') {
+				if (empty($object->pre_study)){
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('pre_study').'</a>'."\n";
+				} else {
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('no_pre_study').'</a>'."\n";
 				}
 			}
 
 			// Request extension
-			if (empty($user->socid) && $object->origin == 'order') {
-				if ($permissiontoadd && $object->status == $object::STATUS_RUNNING) {
-					if (empty($object->extension)){
-						print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('Extension').'</a>'."\n";
-					}
+			if (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin == 'order') {
+				if (empty($object->extension)){
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('Extension').'</a>'."\n";
 				}
 			}
 
 			// Send organization
-			if (empty($user->socid)) {
-				if ($permissionmanage)
-				{
-					//Voir pour changer le trigger
-					//$triggersendname = 'FUNDING_SENTORG';
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
-					//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
-				}
+			if (empty($user->socid) && $permissionmanage) {
+				//Voir pour changer le trigger
+				//$triggersendname = 'FUNDING_SENTORG';
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
+				//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
 			}
 
 			// Set status accepted/refused
-			if (empty($user->socid)) {
-				if ($object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) 
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
-				}
+			if (empty($user->socid) && $object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) 
+			{
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
 			}
 	
 			// Send
@@ -1009,24 +1025,21 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			//$triggersendname
 
 			// closefinich
-			if (empty($user->socid)) {
-				if ($permissionmanage && $object->status == $object::STATUS_RUNNING)
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=closefinich&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('closefinich').'</a>'."\n";
-				}
+			if (empty($user->socid) && $permissionmanage && $object->status == $object::STATUS_RUNNING)
+			{
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=closefinich&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('closefinich').'</a>'."\n";
 			}
 			
 			// Modify
-			if ($permissiontoadd)
+			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_RUNNING)
 			{
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Modify").'</a>'."\n";
 			}
-			else
+			/*else
 			{
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
 			}
-			
-			/*
+
 			// Back to draft
 			if ($object->status == $object::STATUS_VALIDATED)
 			{
@@ -1065,21 +1078,22 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=enable">'.$langs->trans("Enable").'</a>'."\n";
 				}
 			}
-			if ($permissiontoadd)
+			*/
+			if (empty($user->socid) && $permissiontoadd)
 			{
-				if ($object->status == $object::STATUS_VALIDATED)
+				if ($object->status == $object::STATUS_ACCEPT)
 				{
-					print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=close">'.$langs->trans("Cancel").'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("FundingStatusRunningShort").'</a>'."\n";
 				}
-				else
+				elseif ($object->status >= $object::STATUS_RUNNING)
 				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen">'.$langs->trans("Re-Open").'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("ReOpen").'</a>'."\n";
 				}
 			}
-			*/
+			
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
-			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
+			if (empty($user->socid) && $permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
 			{
 				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Delete').'</a>'."\n";
 			}

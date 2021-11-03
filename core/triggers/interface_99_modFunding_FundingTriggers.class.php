@@ -179,7 +179,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'ORDER_CREATE':
 			case 'ORDER_MODIFY':
 				if (!empty($fudid)){
-					if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount = $object->total_ht){
 						$result = $fundingobject->update($user);
 					}else{
 						$result = -1;
@@ -196,7 +196,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			case 'ORDER_VALIDATE':
 				//Update si financement existe déja
 				if (!empty($fudid)){
-					if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount = $object->total_ht){
 						$result = $fundingobject->update($user);
 					}else{
 						$result = -1;
@@ -290,13 +290,18 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return 0;
 			case 'ORDER_CLOSE':
 				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT){
-					// Date de signature renseigné si commande livré
-					if (empty($obj->date_signature)) $obj->date_signature = $obj->date_delivery;
-					$result = $fundingobject->update($user);
-					if ($result <> -1) {
-						return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+					if (!empty($object->date_livraison)) {
+						// Date de signature renseigné si commande livré
+						if (empty($obj->date_signature)) $obj->date_signature = $obj->date_delivery;
+						$result = $fundingobject->update($user);
+						if ($result <> -1) {
+							return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+						}else{
+							return $result;
+						}
 					}else{
-						return $result;
+						setEventMessages($langs->trans("fundingnotdatedelivry"), null, 'errors');
+						return -1;
 					}
 				} elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
 					setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');

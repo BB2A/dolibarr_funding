@@ -182,6 +182,8 @@ clonfudpropal=Financement copier depuis la proposition
 deletnok=Suppresion impossible
 fundingnotaccepted=Financement non accépté
 fundingexist=Il existe un financement incohérence avec le mode de réglement
+fundingnotdatedelivry=Pas de date de livraison
+fundingnotdatesign=Pas de date de signature
 
 #STATUS
 FundingStatusDraft=Brouillon

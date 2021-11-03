@@ -1107,7 +1107,7 @@ $this->fetch($result);
 						$this->date_end = '';
 					}
 					// Changement du status (Changement du status si il a ete envoyer à l'organisme)
-					if ($this->status >= self::STATUS_SENDORG){
+					if ($this->status >= self::STATUS_SENDORG && $this->amount <> $document->total_ht){
 							$this->status = self::STATUS_UPDATE;
 					}
 					if (!$error && !$notrigger){
