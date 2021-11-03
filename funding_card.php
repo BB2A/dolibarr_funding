@@ -235,18 +235,23 @@ if (empty($reshook))
 	
 	if ($action == 'run' && $permissiontoadd)
 	{
-		$object->status = $object::STATUS_RUNNING;
-		// Passage par update et non setStatut pour verifier si le document est validé.
-		$result = $object->update($user);
-		if ($result <= 0)
-		{
-			setEventMessages($object->error, $object->errors, 'errors');
+		if (!empty($object->date_signature)){
+			$object->status = $object::STATUS_RUNNING;
+			// Passage par update et non setStatut pour verifier si le document est validé.
+			$result = $object->update($user);
+			if ($result <= 0)
+			{
+				setEventMessages($object->error, $object->errors, 'errors');
+			}
+		}else{
+			setEventMessages($langs->trans("fundingnotdatedelivry").$langs->trans("fundingnotdatesign"), null, 'errors');
 		}
+		
 	}
 	
 	if ($action == 'reopen' && $permissiontoadd)
 	{
-		$result = $object->setStatut($object::STATUS_ACCEPT);
+		$result = $object->setStatusCommon($user, $object::STATUS_ACCEPT, $notrigger, 'STATUS_ACCEPT');
 		if ($result <= 0)
 		{
 			setEventMessages($object->error, $object->errors, 'errors');
