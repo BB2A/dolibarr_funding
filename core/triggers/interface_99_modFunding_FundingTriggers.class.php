@@ -179,7 +179,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'ORDER_CREATE':
 			case 'ORDER_MODIFY':
 				if (!empty($fudid)){
-					if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount = $object->total_ht){
 						$result = $fundingobject->update($user);
 					}else{
 						$result = -1;
@@ -196,7 +196,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			case 'ORDER_VALIDATE':
 				//Update si financement existe déja
 				if (!empty($fudid)){
-					if ($fundingobject->status < $fundingobject::STATUS_RUNNING){
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount = $object->total_ht){
 						$result = $fundingobject->update($user);
 					}else{
 						$result = -1;
