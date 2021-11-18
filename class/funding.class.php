@@ -568,7 +568,7 @@ class Funding extends CommonObject
 					$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 					if($this->retention == 1){
 						$this->retention_rate = $this->retention_rate($this->fk_org);
-						$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
+						$this->amount_total = price2num($this->amount_total + ($this->amount_total * $this->retention_rate/100), 'MT');
 					}
 					$coef				= $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 					if ($coef > 0)
@@ -1074,7 +1074,7 @@ $this->fetch($result);
 				$this->amount_total	= empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if($this->retention == 1){
 					$this->retention_rate = $this->retention_rate($this->fk_org);
-					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
+					$this->amount_total = price2num($this->amount_total + ($this->amount_total * $this->retention_rate/100), 'MT');
 				}
 				$coef = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0)
