@@ -582,10 +582,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	
 	// Confirm send organization
+	/*
 	if ($action == 'SendOrg')
 	{
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SendOrg'), $langs->trans('ConfirmSendOrg'), 'send_org', '', 0, 1);
-	}
+	}*/
 	
 	// Selec a accepted/refused
 	if ($action == 'AcceptedRefused')
@@ -989,7 +990,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		{
 			
 			// Request pre-study
-			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_SENDORG && $object->origin == 'propal') {
+			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_ACCEPT && $object->origin == 'propal') {
 				if (empty($object->pre_study)){
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('pre_study').'</a>'."\n";
 				} else {
@@ -1005,12 +1006,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Send organization
+			/*
 			if (empty($user->socid) && $permissionmanage) {
 				//Voir pour changer le trigger
 				//$triggersendname = 'FUNDING_SENTORG';
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
 				//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
-			}
+			}*/
 
 			// Set status accepted/refused
 			if (empty($user->socid) && $object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) 
