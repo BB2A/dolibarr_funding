@@ -604,7 +604,7 @@ class Funding extends CommonObject
 								//$this->update($user, true); //No trigger
 								//$this->ref = "(PROV".$this->id.")";
 								$this->date_creation = $now;
-								$this->validate($user);
+								//$this->validate($user);
 							}
 							return $create;				
 						}
