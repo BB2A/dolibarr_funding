@@ -63,7 +63,7 @@ class Funding extends CommonObject
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_UPDATE = 2;
-	const STATUS_SENDORG = 3;
+	/*const STATUS_SENDORG = 3;*/
 	const STATUS_ACCEPT = 4;
 	const STATUS_DENIED = 5;
 	const STATUS_RUNNING = 6;
@@ -151,7 +151,7 @@ class Funding extends CommonObject
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraft', '1' => 'FundingStatusValidated', '2' => 'FundingStatusUpdate', '3' => 'FundingStatusSendOrg', '4' => 'FundingStatusAccept', '5' => 'FundingStatusDenied', '6' => 'FundingStatusRunning', '7' => 'FundingStatusEnd', '8' => 'FundingStatusDisabled'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraft', '1' => 'FundingStatusValidated', '2' => 'FundingStatusUpdate',/* '3' => 'FundingStatusSendOrg', */'4' => 'FundingStatusAccept', '5' => 'FundingStatusDenied', '6' => 'FundingStatusRunning', '7' => 'FundingStatusEnd', '8' => 'FundingStatusDisabled'),),
 	);
 	public $rowid;
 	public $ref;
@@ -1107,7 +1107,8 @@ $this->fetch($result);
 						$this->date_end = '';
 					}
 					// Changement du status (Changement du status si il a ete envoyer à l'organisme)
-					if ($this->status >= self::STATUS_SENDORG && $this->amount <> $document->total_ht){
+					//if ($this->status >= self::STATUS_SENDORG && $this->amount <> $document->total_ht){
+					if ($this->status >= self::STATUS_ACCEPT && $this->amount <> $document->total_ht){
 							$this->status = self::STATUS_UPDATE;
 					}
 					if (!$error && !$notrigger){
@@ -1789,7 +1790,7 @@ $this->fetch($result);
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
 			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
-			$this->labelStatus[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrg');
+			//$this->labelStatus[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrg');
 			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
 			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
 			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
@@ -1798,7 +1799,7 @@ $this->fetch($result);
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
 			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
-			$this->labelStatusShort[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrgShort');
+			//$this->labelStatusShort[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrgShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
 			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
