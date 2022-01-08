@@ -36,6 +36,11 @@ FundingAbout=À propos de Financement
 FundingAboutPage=Page à propos de Financement
 
 #
+# Page À changelog
+#
+FundingChangelog = Changelog de financement
+
+#
 # Page d'exemple
 #
 MyPageName=Nom de ma page
