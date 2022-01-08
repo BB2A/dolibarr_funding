@@ -34,6 +34,7 @@ FundingSetupPage=Page de configuration du module Financement
 About=À propos
 FundingAbout=À propos de Financement
 FundingAboutPage=Page à propos de Financement
+BB2ADesc = Intégrateur et Dévellopeur Dolibarr<br> <a href=http://www.bb2a.fr target="_blank">http://www.bb2a.fr</a> - <a href=mailto:contact@bb2a.fr>contact@bb2a.fr</a><br>Documentation dans le dossier doc du module ou sur notre site
 
 #
 # Page À changelog

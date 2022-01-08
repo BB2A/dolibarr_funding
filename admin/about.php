@@ -79,7 +79,11 @@ dol_fiche_head($head, 'about', '', 0, 'funding@funding');
 
 dol_include_once('/funding/core/modules/modFunding.class.php');
 $tmpmodule = new modFunding($db);
-print $tmpmodule->getDescLong();
+//print $tmpmodule->getDescLong();
+print '<table width="100%"><tr>' . "\n";
+print '<td width="310px"><img src="../img/logo-bb2a.jpg" /></td>' . "\n";
+print '<td align="left" valign="top"><p>' . $langs->trans("BB2ADesc") . '</p></td>' . "\n";
+print '</tr></table>' . "\n";
 
 // Page end
 dol_fiche_end();
