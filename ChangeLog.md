@@ -2,13 +2,15 @@
 
 ## [1.0.1] - 05/01/2022
 
-- UPDATE - Désactiver envoie organisme pour plus de clarté car non foctionnel pour le moment
-- FIX - Menu Nouvelle proposition financiere ne filtré pas sur le bon statut. (Désactiver activer le module)
+- Désactiver envoie organisme pour plus de clarté car non foctionnel pour le moment
+- Menu Nouvelle proposition financiere ne filtré pas sur le bon statut. (Désactiver activer le module)
+- Ajout du changelog dans param du module
+- Modification de à propo dans param du module
 
 ## [1.0.1] - 13/10/2021
 
-- FIX - liste des demandes de pre-etude afficche correctement la liste
-- UPDATE - Affichage de la liste compléte des financements si l'utilisateur peut voir tout les tiers et non le droit de managemente des financements
+- Liste des demandes de pre-etude afficche correctement la liste
+- Affichage de la liste compléte des financements si l'utilisateur peut voir tout les tiers et non le droit de managemente des financements
 
 ## [1.0.0]
 
