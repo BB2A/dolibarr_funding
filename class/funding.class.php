@@ -137,7 +137,6 @@ class Funding extends CommonObject
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>113, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
-		'pre_study' => array('type'=>'smallint', 'label'=>'pre_study', 'enabled'=>'1', 'position'=>200, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
@@ -190,7 +189,6 @@ class Funding extends CommonObject
 	public $funfoldoc3;
 	public $funfoldoc4;
 	public $funfoldoc5;
-	public $pre_study;
 	public $extension;
 	public $note_public;
 	public $note_private;
@@ -1546,54 +1544,6 @@ $this->fetch($result);
 				$result = $this->call_trigger('FUNDING_MODIFY', $user);
 				if ($result < 0) $error++;
 				// End call triggers
-			}
-
-			if (!$error)
-			{
-				$this->db->commit();
-				return 1;
-			}
-			else
-			{
-				foreach ($this->errors as $errmsg)
-				{
-					dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
-					$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
-				}
-				$this->db->rollback();
-				return -1 * $error;
-			}
-	}
-
-	/**
-	 * Update object into database
-	 *
-	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
-	 * @return int             <0 if KO, >0 if OK
-	 */
-	public function set_PreStudy($user)
-	{
-			$error = 0;
-
-			$this->db->begin();
-
-			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
-			if(empty($this->pre_study)){
-				$sql .= " SET pre_study = 1";
-			} else {
-				$sql .= " SET pre_study = 0";
-			}
-			
-			$sql .= " WHERE rowid = ".$this->id;
-			
-			dol_syslog(__METHOD__.' $this->id='.$this->id.', pre_study', LOG_DEBUG);
-			
-			$resql = $this->db->query($sql);
-			if (!$resql)
-			{
-				$this->errors[] = $this->db->error();
-				$error++;
 			}
 
 			if (!$error)

@@ -215,15 +215,6 @@ if (empty($reshook))
 		}
 	}
 
-	if ($action == 'pre_study' && $permissiontoadd)
-	{
-		$result = $object->Set_PreStudy($user);
-		if ($result <= 0)
-		{
-			setEventMessages($object->error, $object->errors, 'errors');
-		}
-	}
-
 	if ($action == 'extension' && $permissiontoadd)
 	{
 		$result = $object->Set_Extension($user);
@@ -988,16 +979,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		if (empty($reshook))
 		{
-			
-			// Request pre-study
-			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_ACCEPT && $object->origin == 'propal') {
-				if (empty($object->pre_study)){
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('pre_study').'</a>'."\n";
-				} else {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=pre_study">'.$langs->trans('no_pre_study').'</a>'."\n";
-				}
-			}
-
 			// Request extension
 			if (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin == 'order') {
 				if (empty($object->extension)){
