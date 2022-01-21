@@ -63,7 +63,7 @@ class Funding extends CommonObject
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_UPDATE = 2;
-	/*const STATUS_SENDORG = 3;*/
+	//const STATUS_SENDORG = 3;
 	const STATUS_ACCEPT = 4;
 	const STATUS_DENIED = 5;
 	const STATUS_RUNNING = 6;
@@ -1104,8 +1104,7 @@ $this->fetch($result);
 					}else{
 						$this->date_end = '';
 					}
-					// Changement du status (Changement du status si il a ete envoyer à l'organisme)
-					//if ($this->status >= self::STATUS_SENDORG && $this->amount <> $document->total_ht){
+					// Changement du status si le montant du document change et que le financement est accept
 					if ($this->status >= self::STATUS_ACCEPT && $this->amount <> $document->total_ht){
 							$this->status = self::STATUS_UPDATE;
 					}
@@ -1740,7 +1739,6 @@ $this->fetch($result);
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
 			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
-			//$this->labelStatus[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrg');
 			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
 			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
 			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
@@ -1749,7 +1747,6 @@ $this->fetch($result);
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
 			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
-			//$this->labelStatusShort[self::STATUS_SENDORG] = $langs->trans('FundingStatusSendOrgShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
 			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
@@ -1984,24 +1981,6 @@ $this->fetch($result);
 		$this->db->commit();
 
 		return $error;
-	}
-	
-	/**
-	 * Action send folder to organization
-	 * @return send 1 OK -1 NOK
-	 */
-	public function send_org($user)
-	{
-		global $langs;
-		// Protection
-		if ($this->status == self::STATUS_CANCELED)
-		{
-			return 0;
-		}
-		
-		setEventMessages($langs->trans("SendOrgOk"), null);
-		
-		return $this->setStatusCommon($user, self::STATUS_SENDORG, $notrigger, 'FUNDING_SENDORG');
 	}
 }
 
