@@ -156,9 +156,9 @@ class modFunding extends DolibarrModules
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
-		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?socid=__ID__');
-		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
-		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
+		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_list.php?socid=__ID__');
+		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
+		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
        
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@funding:$user->rights->funding->read:/funding/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
@@ -250,23 +250,19 @@ class modFunding extends DolibarrModules
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'ReadFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][4] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'CreateUpdateFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][4] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'DeleteFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][4] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'ManageFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$this->rights[$r][4] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		//Permission for coefficient
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
@@ -314,7 +310,7 @@ class modFunding extends DolibarrModules
             'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>50,
             'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.
-            'perms'=>'$user->rights->funding->funding->read',			                // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->read',			                // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
             'target'=>'',
             'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
         );
@@ -330,7 +326,7 @@ class modFunding extends DolibarrModules
 			'langs'=>'funding@funding', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'$conf->funding->enabled', // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->funding->funding->read', // Use 'perms'=>'$user->rights->funding->funding->read' if you want your menu with a permission rules
+			'perms'=>'$user->rights->funding->read', // Use 'perms'=>'$user->rights->funding->read' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -349,7 +345,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -369,7 +365,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -389,7 +385,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -409,7 +405,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -429,7 +425,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -449,7 +445,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -469,7 +465,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -489,7 +485,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -509,7 +505,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -529,7 +525,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -549,7 +545,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -569,7 +565,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -589,7 +585,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -609,7 +605,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -629,7 +625,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,

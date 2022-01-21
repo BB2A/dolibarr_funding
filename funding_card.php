@@ -149,12 +149,12 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 if (!empty($object->fk_org))$org = $object->fetch_soc($object->fk_org);
 if (!empty($object->fk_soc_invoice))$soc_invoice =  $object->fetch_soc($object->fk_soc_invoice);
 
-$permissiontoread = $user->rights->funding->funding->read;
-$permissiontoadd = $user->rights->funding->funding->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->funding->funding->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->funding->funding->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->funding->funding->write; // Used by the include of actions_dellink.inc.php
-$permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
+$permissiontoread = $user->rights->funding->read;
+$permissiontoadd = $user->rights->funding->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->funding->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissionnote = $user->rights->funding->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->funding->write; // Used by the include of actions_dellink.inc.php
+$permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 
@@ -1113,8 +1113,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$relativepath = $objref . '/' . $objref . '.pdf';
 			$filedir = $conf->funding->dir_output.'/'.$object->element.'/'.$objref;
 			$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
-			$genallowed = $user->rights->funding->funding->read;	// If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->funding->funding->write;	// If you can create/edit, you can remove a file on card
+			$genallowed = $user->rights->funding->read;	// If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->funding->write;	// If you can create/edit, you can remove a file on card
 			print $formfile->showdocuments('funding', $objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
 */
