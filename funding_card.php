@@ -581,13 +581,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
 	}
 	
-	// Confirm send organization
-	/*
-	if ($action == 'SendOrg')
-	{
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SendOrg'), $langs->trans('ConfirmSendOrg'), 'send_org', '', 0, 1);
-	}*/
-	
 	// Selec a accepted/refused
 	if ($action == 'AcceptedRefused')
 	{
@@ -1004,15 +997,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('Extension').'</a>'."\n";
 				}
 			}
-
-			// Send organization
-			/*
-			if (empty($user->socid) && $permissionmanage) {
-				//Voir pour changer le trigger
-				//$triggersendname = 'FUNDING_SENTORG';
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=SendOrg&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SendOrg').'</a>'."\n";
-				//print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$org->email.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendOrg').'</a>'."\n";
-			}*/
 
 			// Set status accepted/refused
 			if (empty($user->socid) && $object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) 
