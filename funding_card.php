@@ -1075,6 +1075,29 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$action = 'presend';
 	}
 
+	// BB2A Fichiers joints
+	//Code isssue de funding_docuement.php
+	/*
+	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
+
+	// Build file list
+	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
+	$totalsize = 0;
+	foreach ($filearray as $key => $file)
+	{
+		$totalsize += $file['size'];
+	}
+	
+	$modulepart = 'funding';
+	$permission = $permissiontoadd;
+	$permtoedit = 0;
+	$param = '&id='.$object->id;
+	$relativepathwithnofile = dol_sanitizeFileName($object->ref).'/';
+	$savingdocmask ='';
+	
+	include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
+*/
+
 // BB2A Affichage des evenements, Document, Objets liés
 
 	if ($action != 'presend')
@@ -1083,7 +1106,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<a name="builddoc"></a>'; // ancre
 
 		$includedocgeneration = 1;
-
+/*
+		// Documents
+		if ($includedocgeneration) {
+			$objref = dol_sanitizeFileName($object->ref);
+			$relativepath = $objref . '/' . $objref . '.pdf';
+			$filedir = $conf->funding->dir_output.'/'.$object->element.'/'.$objref;
+			$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
+			$genallowed = $user->rights->funding->read;	// If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->funding->write;	// If you can create/edit, you can remove a file on card
+			print $formfile->showdocuments('funding', $objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
+		}
+*/
 		// Show links to link elements
 		$linktoelem = $form->showLinkToObjectBlock($object, null, array('funding'));
 		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
