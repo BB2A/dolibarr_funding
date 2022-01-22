@@ -1,6 +1,8 @@
 linters:
   phpcs:
     standard: PSR2
+    extensions: 'php'
+    tab_width: 4
     fixer: true
 files:
   ignore:
