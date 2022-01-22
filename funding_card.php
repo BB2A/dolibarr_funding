@@ -239,7 +239,7 @@ if (empty($reshook))
 				setEventMessages($object->error, $object->errors, 'errors');
 			}
 		}else{
-			setEventMessages($langs->trans("fundingnotdatedelivry").$langs->trans("fundingnotdatesign"), null, 'errors');
+			setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
 		}
 		
 	}
