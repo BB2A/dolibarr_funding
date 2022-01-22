@@ -64,10 +64,10 @@ if (isset($user->socid) && $user->socid > 0)
 $max = 5;
 $now = dol_now();
 
-$permissiontoread = $user->rights->funding->funding->read;
-$permissiontoadd = $user->rights->funding->funding->write;
-$permissiontodelete = $user->rights->funding->funding->delete;
-$permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
+$permissiontoread = $user->rights->funding->read;
+$permissiontoadd = $user->rights->funding->write;
+$permissiontodelete = $user->rights->funding->delete;
+$permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
 
 /*
  * Actions
