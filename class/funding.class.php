@@ -527,7 +527,9 @@ class Funding extends CommonObject
         $document = -1;
         $idcomm = -1;
         $duration = -1;
-        
+
+        $this->ref = $this->getNextNumRef();
+
         //Initialise les information obligatoire non editable
         //Document
         if ($iddoc && $typedoc) {
