@@ -26,134 +26,141 @@ dol_include_once('/funding/core/modules/funding/modules_funding.php');
 
 
 /**
- *	Class to manage customer order numbering rules standard
+ *  Class to manage customer order numbering rules standard
  */
 class mod_funding_standard extends ModeleNumRefFunding
 {
-	/**
-	 * Dolibarr version of the loaded document
-	 * @var string
-	 */
-	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
+    /**
+     * Dolibarr version of the loaded document
+     * @var string
+     */
+    public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
-	public $prefix = 'FUD';
+    public $prefix = 'FUD';
 
-	/**
-	 * @var string Error code (or message)
-	 */
-	public $error = '';
+    /**
+     * @var string Error code (or message)
+     */
+    public $error = '';
 
-	/**
-	 * @var string name
-	 */
-	public $name = 'standard';
-
-
-	/**
-	 *  Return description of numbering module
-	 *
-	 *  @return     string      Text with description
-	 */
-	public function info()
-	{
-		global $langs;
-		return $langs->trans("SimpleNumRefModelDesc", $this->prefix);
-	}
+    /**
+     * @var string name
+     */
+    public $name = 'standard';
 
 
-	/**
-	 *  Return an example of numbering
-	 *
-	 *  @return     string      Example
-	 */
-	public function getExample()
-	{
-		return $this->prefix."0501-0001";
-	}
+    /**
+     *  Return description of numbering module
+     *
+     *  @return     string      Text with description
+     */
+    public function info()
+    {
+        global $langs;
+        return $langs->trans("SimpleNumRefModelDesc", $this->prefix);
+    }
 
 
-	/**
-	 *  Checks if the numbers already in the database do not
-	 *  cause conflicts that would prevent this numbering working.
-	 *
-	 *  @param  Object		$object		Object we need next value for
-	 *  @return boolean     			false if conflict, true if ok
-	 */
-	public function canBeActivated($object)
-	{
-		global $conf, $langs, $db;
+    /**
+     *  Return an example of numbering
+     *
+     *  @return     string      Example
+     */
+    public function getExample()
+    {
+        return $this->prefix."0501-0001";
+    }
 
-		$coyymm = ''; $max = '';
 
-		$posindice = strlen($this->prefix) + 6;
-		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding";
-		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
-		if ($object->ismultientitymanaged == 1) {
-			$sql .= " AND entity = ".$conf->entity;
-		}
-		elseif ($object->ismultientitymanaged == 2) {
-			// TODO
-		}
+    /**
+     *  Checks if the numbers already in the database do not
+     *  cause conflicts that would prevent this numbering working.
+     *
+     *  @param  Object      $object     Object we need next value for
+     *  @return boolean                 false if conflict, true if ok
+     */
+    public function canBeActivated($object)
+    {
+        global $conf, $langs, $db;
 
-		$resql = $db->query($sql);
-		if ($resql)
-		{
-			$row = $db->fetch_row($resql);
-			if ($row) { $coyymm = substr($row[0], 0, 6); $max = $row[0]; }
-		}
-		if ($coyymm && !preg_match('/'.$this->prefix.'[0-9][0-9][0-9][0-9]/i', $coyymm))
-		{
-			$langs->load("errors");
-			$this->error = $langs->trans('ErrorNumRefModel', $max);
-			return false;
-		}
+        $coyymm = '';
+        $max = '';
 
-		return true;
-	}
+        $posindice = strlen($this->prefix) + 6;
+        $sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
+        $sql .= " FROM ".MAIN_DB_PREFIX."funding_funding";
+        $sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
+        if ($object->ismultientitymanaged == 1) {
+            $sql .= " AND entity = ".$conf->entity;
+        } elseif ($object->ismultientitymanaged == 2) {
+            // TODO
+        }
 
-	/**
-	 * 	Return next free value
-	 *
-	 *  @param  Object		$object		Object we need next value for
-	 *  @return string      			Value if KO, <0 if KO
-	 */
-	public function getNextValue($object)
-	{
-		global $db, $conf;
+        $resql = $db->query($sql);
+        if ($resql) {
+            $row = $db->fetch_row($resql);
+            if ($row) {
+                $coyymm = substr($row[0], 0, 6);
+                $max = $row[0];
+            }
+        }
+        if ($coyymm && !preg_match('/'.$this->prefix.'[0-9][0-9][0-9][0-9]/i', $coyymm)) {
+            $langs->load("errors");
+            $this->error = $langs->trans('ErrorNumRefModel', $max);
+            return false;
+        }
 
-		// first we get the max value
-		$posindice = strlen($this->prefix) + 6;
-		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding";
-		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
-		if ($object->ismultientitymanaged == 1) {
-			$sql .= " AND entity = ".$conf->entity;
-		}
-		elseif ($object->ismultientitymanaged == 2) {
-			// TODO
-		}
+        return true;
+    }
 
-		$resql = $db->query($sql);
-		if ($resql)
-		{
-			$obj = $db->fetch_object($resql);
-			if ($obj) $max = intval($obj->max);
-			else $max = 0;
-		}
-		else
-		{
-			dol_syslog("mod_funding_standard::getNextValue", LOG_DEBUG);
-			return -1;
-		}
+    /**
+     *  Return next free value
+     *
+     *  @param  Object      $object     Object we need next value for
+     *  @return string                  Value if KO, <0 if KO
+     */
+    public function getNextValue($object)
+    {
+        global $db, $conf;
 
-		//$date=time();
-		$date = $object->date_creation;
-		$yymm = strftime("%y%m", $date);
-		if ($max >= (pow(10, 4) - 1)) $num = $max + 1; // If counter > 9999, we do not format on 4 chars, we take number as it is
-		else $num = sprintf("%04s", $max + 1);
+        // first we get the max value
+        $posindice = strlen($this->prefix) + 6;
+        $sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
+        $sql .= " FROM ".MAIN_DB_PREFIX."funding_funding";
+        $sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
+        if ($object->ismultientitymanaged == 1) {
+            $sql .= " AND entity = ".$conf->entity;
+        } elseif ($object->ismultientitymanaged == 2) {
+            // TODO
+        }
 
-		dol_syslog("mod_funding_standard::getNextValue return ".$this->prefix.$yymm."-".$num);
-		return $this->prefix.$yymm."-".$num;
-	}
+        $resql = $db->query($sql);
+        if ($resql) {
+            $obj = $db->fetch_object($resql);
+            if ($obj) {
+                $max = intval($obj->max);
+            } else {
+                $max = 0;
+            }
+        } else {
+            dol_syslog("mod_funding_standard::getNextValue", LOG_DEBUG);
+            return -1;
+        }
+
+        if (empty($object->date_creation)) {
+            $date = dol_now();
+        } else {
+            $date = $object->date_creation;
+        }
+
+        $yymm = strftime("%y%m", $date);
+        if ($max >= (pow(10, 4) - 1)) {
+            $num = $max + 1; // If counter > 9999, we do not format on 4 chars, we take number as it is
+        } else {
+            $num = sprintf("%04s", $max + 1);
+        }
+
+        dol_syslog("mod_funding_standard::getNextValue return ".$this->prefix.$yymm."-".$num);
+        return $this->prefix.$yymm."-".$num;
+    }
 }
