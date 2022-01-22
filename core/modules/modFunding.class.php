@@ -33,307 +33,303 @@ include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
  */
 class modFunding extends DolibarrModules
 {
-	/**
-	 * Constructor. Define names, constants, directories, boxes, permissions
-	 *
-	 * @param DoliDB $db Database handler
-	 */
-	public function __construct($db)
-	{
-		global $langs, $conf;
-		$this->db = $db;
+    /**
+     * Constructor. Define names, constants, directories, boxes, permissions
+     *
+     * @param DoliDB $db Database handler
+     */
+    public function __construct($db)
+    {
+        global $langs, $conf;
+        $this->db = $db;
 
-		// Id for module (must be unique).
-		// Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
-		$this->numero = 183004; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
-		// Key text used to identify module (for permissions, menus, etc...)
-		$this->rights_class = 'funding';
-		// Family can be 'base' (core modules),'crm','financial','hr','projects','products','ecm','technic' (transverse modules),'interface' (link with external tools),'other','...'
-		// It is used to group modules by family in module setup page
-		$this->family = "financial";
-		// Module position in the family on 2 digits ('01', '10', '20', ...)
-		$this->module_position = '90';
-		// Gives the possibility for the module, to provide his own family info and position of this family (Overwrite $this->family and $this->module_position. Avoid this)
-		//$this->familyinfo = array('myownfamily' => array('position' => '01', 'label' => $langs->trans("MyOwnFamily")));
-		// Module label (no space allowed), used if translation string 'ModuleFundingName' not found (Funding is name of module).
-		$this->name = preg_replace('/^mod/i', '', get_class($this));
-		// Module description, used if translation string 'ModuleFundingDesc' not found (Funding is name of module).
-		$this->description = "Gestion des financements client";
-		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.";
-		$this->editor_name = 'BB2A - Anthony Berton';
-		$this->editor_url = 'https://www.bb2a.fr';
-		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
-		$this->version = '1.0.1';
-		// Url to the file with your last numberversion of this module
-		//$this->url_last_version = 'http://127.0.0.1/versionmodule.txt';
-		//$this->needUpdate = '1.0.1';
+        // Id for module (must be unique).
+        // Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
+        $this->numero = 183004; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
+        // Key text used to identify module (for permissions, menus, etc...)
+        $this->rights_class = 'funding';
+        // Family can be 'base' (core modules),'crm','financial','hr','projects','products','ecm','technic' (transverse modules),'interface' (link with external tools),'other','...'
+        // It is used to group modules by family in module setup page
+        $this->family = "financial";
+        // Module position in the family on 2 digits ('01', '10', '20', ...)
+        $this->module_position = '90';
+        // Gives the possibility for the module, to provide his own family info and position of this family (Overwrite $this->family and $this->module_position. Avoid this)
+        //$this->familyinfo = array('myownfamily' => array('position' => '01', 'label' => $langs->trans("MyOwnFamily")));
+        // Module label (no space allowed), used if translation string 'ModuleFundingName' not found (Funding is name of module).
+        $this->name = preg_replace('/^mod/i', '', get_class($this));
+        // Module description, used if translation string 'ModuleFundingDesc' not found (Funding is name of module).
+        $this->description = "Gestion des financements client";
+        // Used only if file README.md and README-LL.md not found.
+        $this->descriptionlong = "Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.";
+        $this->editor_name = 'BB2A - Anthony Berton';
+        $this->editor_url = 'https://www.bb2a.fr';
+        // Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
+        $this->version = '1.0.1';
+        // Url to the file with your last numberversion of this module
+        //$this->url_last_version = 'http://127.0.0.1/versionmodule.txt';
+        //$this->needUpdate = '1.0.1';
 
-		// Key used in llx_const table to save module status enabled/disabled (where FUNDING is value of property name of module in uppercase)
-		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
-		// Name of image file used for this module.
-		// If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
-		// If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
-		$this->picto = 'fundingicon@funding';
-		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
-		$this->module_parts = array(
-			// Set this to 1 if module has its own trigger directory (core/triggers)
-			'triggers' => 1,
-			// Set this to 1 if module has its own login method file (core/login)
-			'login' => 0,
-			// Set this to 1 if module has its own substitution function file (core/substitutions)
-			'substitutions' => 1,
-			// Set this to 1 if module has its own menus handler directory (core/menus)
-			'menus' => 0,
-			// Set this to 1 if module overwrite template dir (core/tpl)
-			'tpl' => 0,
-			// Set this to 1 if module has its own barcode directory (core/modules/barcode)
-			'barcode' => 0,
-			// Set this to 1 if module has its own models directory (core/modules/xxx)
-			'models' => 1,
-			// Set this to 1 if module has its own theme directory (theme)
-			'theme' => 0,
-			// Set this to relative path of css file if module has its own css file
-			'css' => array(
-				//    '/funding/css/funding.css.php',
-			),
-			// Set this to relative path of js file if module must load a js on all pages
-			'js' => array(
-				//   '/funding/js/funding.js.php',
-			),
-			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
-			'hooks' => array(
-				  'data' => array(
-				      'emailtemplates',
-					  'globalcard',
-					  'formmail',
-				  ),
-				 // 'entity' => '0',
-			),
-			// Set this to 1 if features of module are opened to external users
-			'moduleforexternal' => 0,
-		);
-		// Data directories to create when module is enabled.
-		// Example: this->dirs = array("/funding/temp","/funding/subdir");
-		$this->dirs = array("/funding/temp");
-		// Config pages. Put here list of php page, stored into funding/admin directory, to use to setup module.
-		$this->config_page_url = array("setup.php@funding");
-		// Dependencies
-		// A condition to hide module
-		$this->hidden = false;
-		// List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
-		$this->depends = array();
-		$this->requiredby = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
-		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
-		$this->langfiles = array("funding@funding");
-		$this->phpmin = array(5, 5); // Minimum version of PHP required by module
-		$this->need_dolibarr_version = array(11, -3); // Minimum version of Dolibarr required by module
-		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
-		$this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
-		//$this->automatic_activation = array('FR'=>'FundingWasAutomaticallyActivatedBecauseOfYourCountryChoice');
-		//$this->always_enabled = true;								// If true, can't be disabled
+        // Key used in llx_const table to save module status enabled/disabled (where FUNDING is value of property name of module in uppercase)
+        $this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
+        // Name of image file used for this module.
+        // If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
+        // If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
+        $this->picto = 'fundingicon@funding';
+        // Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
+        $this->module_parts = array(
+            // Set this to 1 if module has its own trigger directory (core/triggers)
+            'triggers' => 1,
+            // Set this to 1 if module has its own login method file (core/login)
+            'login' => 0,
+            // Set this to 1 if module has its own substitution function file (core/substitutions)
+            'substitutions' => 1,
+            // Set this to 1 if module has its own menus handler directory (core/menus)
+            'menus' => 0,
+            // Set this to 1 if module overwrite template dir (core/tpl)
+            'tpl' => 0,
+            // Set this to 1 if module has its own barcode directory (core/modules/barcode)
+            'barcode' => 0,
+            // Set this to 1 if module has its own models directory (core/modules/xxx)
+            'models' => 1,
+            // Set this to 1 if module has its own theme directory (theme)
+            'theme' => 0,
+            // Set this to relative path of css file if module has its own css file
+            'css' => array(
+                //    '/funding/css/funding.css.php',
+            ),
+            // Set this to relative path of js file if module must load a js on all pages
+            'js' => array(
+                //   '/funding/js/funding.js.php',
+            ),
+            // Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
+            'hooks' => array(
+                  'data' => array(
+                      'emailtemplates',
+                      'globalcard',
+                      'formmail',
+                  ),
+                 // 'entity' => '0',
+            ),
+            // Set this to 1 if features of module are opened to external users
+            'moduleforexternal' => 0,
+        );
+        // Data directories to create when module is enabled.
+        // Example: this->dirs = array("/funding/temp","/funding/subdir");
+        $this->dirs = array("/funding/temp");
+        // Config pages. Put here list of php page, stored into funding/admin directory, to use to setup module.
+        $this->config_page_url = array("setup.php@funding");
+        // Dependencies
+        // A condition to hide module
+        $this->hidden = false;
+        // List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
+        $this->depends = array();
+        $this->requiredby = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
+        $this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
+        $this->langfiles = array("funding@funding");
+        $this->phpmin = array(5, 5); // Minimum version of PHP required by module
+        $this->need_dolibarr_version = array(11, -3); // Minimum version of Dolibarr required by module
+        $this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
+        $this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
+        //$this->automatic_activation = array('FR'=>'FundingWasAutomaticallyActivatedBecauseOfYourCountryChoice');
+        //$this->always_enabled = true;                             // If true, can't be disabled
 
-		// Constants
-		// List of particular constants to add when module is enabled (key, 'chaine', value, desc, visible, 'current' or 'allentities', deleteonunactive)
-		// Example: $this->const=array(1 => array('FUNDING_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
-		//                             2 => array('FUNDING_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
-		// );
-		$this->const = array(
-			//1 => array('FUNDING_FUND_PREFIX', 'chaine', 'FUND', '', 0, 1, 0),
-			//2 => array('FUNDING_COEF_PREFIX', 'chaine', 'COEF', '', 0, 1, 0),
-		);
+        // Constants
+        // List of particular constants to add when module is enabled (key, 'chaine', value, desc, visible, 'current' or 'allentities', deleteonunactive)
+        // Example: $this->const=array(1 => array('FUNDING_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
+        //                             2 => array('FUNDING_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
+        // );
+        $this->const = array(
+            //1 => array('FUNDING_FUND_PREFIX', 'chaine', 'FUND', '', 0, 1, 0),
+            //2 => array('FUNDING_COEF_PREFIX', 'chaine', 'COEF', '', 0, 1, 0),
+        );
 
-		// Some keys to add into the overwriting translation tables
-		/*$this->overwrite_translation = array(
-			'en_US:ParentCompany'=>'Parent company or reseller',
-			'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
-		)*/
+        // Some keys to add into the overwriting translation tables
+        /*$this->overwrite_translation = array(
+            'en_US:ParentCompany'=>'Parent company or reseller',
+            'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
+        )*/
 
-		if (!isset($conf->funding) || !isset($conf->funding->enabled)) {
-			$conf->funding = new stdClass();
-			$conf->funding->enabled = 0;
-		}
+        if (!isset($conf->funding) || !isset($conf->funding->enabled)) {
+            $conf->funding = new stdClass();
+            $conf->funding->enabled = 0;
+        }
 
-		// Array to add new pages in new tabs
-		$this->tabs = array();
-		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_list.php?socid=__ID__');
-		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
-		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
+        // Array to add new pages in new tabs
+        $this->tabs = array();
+        $this->tabs[0] = array('data'=>'thirdparty:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_list.php?socid=__ID__');
+        $this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
+        $this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
        
-		// Example:
-		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@funding:$user->rights->funding->read:/funding/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@funding:$user->rights->othermodule->read:/funding/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
-		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
-		//
-		// Where objecttype can be
-		// 'categories_x'	  to add a tab in category view (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
-		// 'contact'          to add a tab in contact view
-		// 'contract'         to add a tab in contract view
-		// 'group'            to add a tab in group view
-		// 'intervention'     to add a tab in intervention view
-		// 'invoice'          to add a tab in customer invoice view
-		// 'invoice_supplier' to add a tab in supplier invoice view
-		// 'member'           to add a tab in fundation member view
-		// 'opensurveypoll'	  to add a tab in opensurvey poll view
-		// 'order'            to add a tab in customer order view
-		// 'order_supplier'   to add a tab in supplier order view
-		// 'payment'		  to add a tab in payment view
-		// 'payment_supplier' to add a tab in supplier payment view
-		// 'product'          to add a tab in product view
-		// 'propal'           to add a tab in propal view
-		// 'project'          to add a tab in project view
-		// 'stock'            to add a tab in stock view
-		// 'thirdparty'       to add a tab in third party view
-		// 'user'             to add a tab in user view
+        // Example:
+        // $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@funding:$user->rights->funding->read:/funding/mynewtab1.php?id=__ID__');                   // To add a new tab identified by code tabname1
+        // $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@funding:$user->rights->othermodule->read:/funding/mynewtab2.php?id=__ID__',   // To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
+        // $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                                                           // To remove an existing tab identified by code tabname
+        //
+        // Where objecttype can be
+        // 'categories_x'     to add a tab in category view (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
+        // 'contact'          to add a tab in contact view
+        // 'contract'         to add a tab in contract view
+        // 'group'            to add a tab in group view
+        // 'intervention'     to add a tab in intervention view
+        // 'invoice'          to add a tab in customer invoice view
+        // 'invoice_supplier' to add a tab in supplier invoice view
+        // 'member'           to add a tab in fundation member view
+        // 'opensurveypoll'   to add a tab in opensurvey poll view
+        // 'order'            to add a tab in customer order view
+        // 'order_supplier'   to add a tab in supplier order view
+        // 'payment'          to add a tab in payment view
+        // 'payment_supplier' to add a tab in supplier payment view
+        // 'product'          to add a tab in product view
+        // 'propal'           to add a tab in propal view
+        // 'project'          to add a tab in project view
+        // 'stock'            to add a tab in stock view
+        // 'thirdparty'       to add a tab in third party view
+        // 'user'             to add a tab in user view
 
-		// Dictionaries
-		$this->dictionaries=array(
-			'langs'=>'funding@funding',
-			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale",MAIN_DB_PREFIX."c_type_funding"),
-			// Label of tables
-			'tablib'=>array("Funding_duration","Funding_scale","Funding_type"),
-			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_type as f'),
-			// Sort order
-			'tabsqlsort'=>array("label ASC","label ASC","label ASC"),
-			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("code,label","code,label","code,label"),
-			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("code,label","code,label","code,label"),
-			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("code,label","code,label","code,label"),
-			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid","rowid","rowid"),
-			// Condition to show each dictionary
-			'tabcond'=>array($conf->funding->enabled,$conf->funding->enabled,$conf->funding->enabled)
-		);
+        // Dictionaries
+        $this->dictionaries=array(
+            'langs'=>'funding@funding',
+            // List of tables we want to see into dictonnary editor
+            'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale",MAIN_DB_PREFIX."c_type_funding"),
+            // Label of tables
+            'tablib'=>array("Funding_duration","Funding_scale","Funding_type"),
+            // Request to select fields
+            'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_duration as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_scale as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_funding_type as f'),
+            // Sort order
+            'tabsqlsort'=>array("label ASC","label ASC","label ASC"),
+            // List of fields (result of select to show dictionary)
+            'tabfield'=>array("code,label","code,label","code,label"),
+            // List of fields (list of fields to edit a record)
+            'tabfieldvalue'=>array("code,label","code,label","code,label"),
+            // List of fields (list of fields for insert)
+            'tabfieldinsert'=>array("code,label","code,label","code,label"),
+            // Name of columns with primary key (try to always name it 'rowid')
+            'tabrowid'=>array("rowid","rowid","rowid"),
+            // Condition to show each dictionary
+            'tabcond'=>array($conf->funding->enabled,$conf->funding->enabled,$conf->funding->enabled)
+        );
 
-		// Boxes/Widgets
-		// Add here list of php file(s) stored in funding/core/boxes that contains a class to show a widget.
-		$this->boxes = array(
-			//  0 => array(
-			//      'file' => 'fundingwidget1.php@funding',
-			//      'note' => 'Widget provided by Funding',
-			//      'enabledbydefaulton' => 'Home',
-			//  ),
-			//  ...
-		);
+        // Boxes/Widgets
+        // Add here list of php file(s) stored in funding/core/boxes that contains a class to show a widget.
+        $this->boxes = array(
+            //  0 => array(
+            //      'file' => 'fundingwidget1.php@funding',
+            //      'note' => 'Widget provided by Funding',
+            //      'enabledbydefaulton' => 'Home',
+            //  ),
+            //  ...
+        );
 
-		// Cronjobs (List of cron jobs entries to add when module is enabled)
-		// unit_frequency must be 60 for minute, 3600 for hour, 86400 for day, 604800 for week
-		$this->cronjobs = array(
-			//  0 => array(
-			//      'label' => 'MyJob label',
-			//      'jobtype' => 'method',
-			//      'class' => '/funding/class/funding.class.php',
-			//      'objectname' => 'Funding',
-			//      'method' => 'doScheduledJob',
-			//      'parameters' => '',
-			//      'comment' => 'Comment',
-			//      'frequency' => 2,
-			//      'unitfrequency' => 3600,
-			//      'status' => 0,
-			//      'test' => '$conf->funding->enabled',
-			//      'priority' => 50,
-			//  ),
-		);
-		// Example: $this->cronjobs=array(
-		//    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->funding->enabled', 'priority'=>50),
-		//    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'$conf->funding->enabled', 'priority'=>50)
-		// );
+        // Cronjobs (List of cron jobs entries to add when module is enabled)
+        // unit_frequency must be 60 for minute, 3600 for hour, 86400 for day, 604800 for week
+        $this->cronjobs = array(
+            //  0 => array(
+            //      'label' => 'MyJob label',
+            //      'jobtype' => 'method',
+            //      'class' => '/funding/class/funding.class.php',
+            //      'objectname' => 'Funding',
+            //      'method' => 'doScheduledJob',
+            //      'parameters' => '',
+            //      'comment' => 'Comment',
+            //      'frequency' => 2,
+            //      'unitfrequency' => 3600,
+            //      'status' => 0,
+            //      'test' => '$conf->funding->enabled',
+            //      'priority' => 50,
+            //  ),
+        );
+        // Example: $this->cronjobs=array(
+        //    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->funding->enabled', 'priority'=>50),
+        //    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'$conf->funding->enabled', 'priority'=>50)
+        // );
 
-		// Permissions provided by this module
-		$this->rights = array();
-		$r = 183004;
-		// Add here entries to declare new permissions
-		/* BEGIN MODULEBUILDER PERMISSIONS */
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ManageFunding'; // Permission label
-		$this->rights[$r][4] = 'funding'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		//Permission for coefficient
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
-		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateCoefficient'; // Permission label
-		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
-		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		//Permission for retention
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadRetention'; // Permission label
-		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateRetention'; // Permission label
-		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteRetention'; // Permission label
-		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
-		$r++;
-		/* END MODULEBUILDER PERMISSIONS */
+        // Permissions provided by this module
+        $this->rights = array();
+        $r = 183004;
+        // Add here entries to declare new permissions
+        /* BEGIN MODULEBUILDER PERMISSIONS */
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'ReadFunding'; // Permission label
+        $this->rights[$r][4] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'CreateUpdateFunding'; // Permission label
+        $this->rights[$r][4] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'DeleteFunding'; // Permission label
+        $this->rights[$r][4] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'ManageFunding'; // Permission label
+        $this->rights[$r][4] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        //Permission for coefficient
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'ReadCoefficient'; // Permission label
+        $this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'CreateUpdateCoefficient'; // Permission label
+        $this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
+        $this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        //Permission for retention
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'ReadRetention'; // Permission label
+        $this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'CreateUpdateRetention'; // Permission label
+        $this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        $this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+        $this->rights[$r][1] = 'DeleteRetention'; // Permission label
+        $this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+        $r++;
+        /* END MODULEBUILDER PERMISSIONS */
 
-		// Main menu entries to add
-		$this->menu = array();
-		$r = 0;
-		$this->menu[$r++]=array(
+        // Main menu entries to add
+        $this->menu = array();
+        $r = 0;
+        $this->menu[$r++]=array(
             'fk_menu'=>'',                          // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'type'=>'top',                          // This is a Top menu entry
             'titre'=>'ModuleFundingName',
             'mainmenu'=>'funding',
             'url'=>'/funding/fundingindex.php',
-            'langs'=>'funding@funding',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'langs'=>'funding@funding',         // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>50,
             'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.
-            'perms'=>'$user->rights->funding->funding->read',			                // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
+            'perms'=>'$user->rights->funding->read',                            // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
             'target'=>'',
-            'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+            'user'=>2,                              // 0=Menu for internal users, 1=external users, 2=both
         );
-		// Add here entries to declare new menus
-		$this->menu[$r++] = array(
-			'fk_menu'=>'fk_mainmenu=funding', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left', // This is a Top menu entry
-			'titre'=>'ModuleFundingName',
-			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth"'),
-			'mainmenu'=>'funding',
-			'leftmenu'=>'funding',
-			'url'=>'/funding/fundingindex.php',
-			'langs'=>'funding@funding', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->funding->enabled', // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->funding->funding->read', // Use 'perms'=>'$user->rights->funding->funding->read' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
-		);
+        // Add here entries to declare new menus
+        $this->menu[$r++] = array(
+            'fk_menu'=>'fk_mainmenu=funding', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'type'=>'left', // This is a Top menu entry
+            'titre'=>'ModuleFundingName',
+            'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth"'),
+            'mainmenu'=>'funding',
+            'leftmenu'=>'funding',
+            'url'=>'/funding/fundingindex.php',
+            'langs'=>'funding@funding', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'position'=>1000+$r,
+            'enabled'=>'$conf->funding->enabled', // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled.
+            'perms'=>'$user->rights->funding->read', // Use 'perms'=>'$user->rights->funding->read' if you want your menu with a permission rules
+            'target'=>'',
+            'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
+        );
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
@@ -349,7 +345,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -369,7 +365,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -389,7 +385,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -409,7 +405,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -429,7 +425,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -449,7 +445,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -469,7 +465,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -489,7 +485,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -509,7 +505,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -529,7 +525,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -549,7 +545,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -569,7 +565,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -589,7 +585,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -609,7 +605,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,
@@ -629,7 +625,7 @@ class modFunding extends DolibarrModules
             // Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
             'enabled'=>'$conf->funding->enabled',
             // Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
-            'perms'=>'$user->rights->funding->funding->read',
+            'perms'=>'$user->rights->funding->read',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>0,

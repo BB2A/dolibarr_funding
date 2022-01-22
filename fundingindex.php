@@ -64,10 +64,10 @@ if (isset($user->socid) && $user->socid > 0)
 $max = 5;
 $now = dol_now();
 
-$permissiontoread = $user->rights->funding->funding->read;
-$permissiontoadd = $user->rights->funding->funding->write;
-$permissiontodelete = $user->rights->funding->funding->delete;
-$permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
+$permissiontoread = $user->rights->funding->read;
+$permissiontoadd = $user->rights->funding->write;
+$permissiontodelete = $user->rights->funding->delete;
+$permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
 
 /*
  * Actions
@@ -97,75 +97,65 @@ print '<br>';
 
 // BEGIN MODULEBUILDER DRAFT MYOBJECT
 // Draft MyObject
-if (!empty($conf->funding->enabled) && $permissiontoread)
-{
-	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
-	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-	$sql.= " WHERE f.status = 1";
-	$sql.= " AND f.origin = 'order'";
-	$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
-		$sql .= " AND f.fk_user_comm = ". $user->id;
-	}
+if (!empty($conf->funding->enabled) && $permissiontoread) {
+    $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+    $sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+    $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+    $sql .= ", ".MAIN_DB_PREFIX."societe as s";
+    $sql.= " WHERE f.status = 1";
+    $sql.= " AND f.origin = 'order'";
+    $sql .= " AND f.fk_soc = s.rowid";
+    if (!$permissionmanage) {
+        $sql .= " AND f.fk_user_comm = ". $user->id;
+    }
+    $sql .= " ORDER BY f.ref DESC";
 
-	$resql = $db->query($sql);
-	if ($resql)
-	{
-		$total = 0;
-		$num = $db->num_rows($resql);
+    $resql = $db->query($sql);
+    if ($resql) {
+        $total = 0;
+        $num = $db->num_rows($resql);
 
-		print '<table class="noborder centpercent">';
-		print '<tr class="liste_titre">';
-		print '<th colspan="4">'.$langs->trans("FundindValidate").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+        print '<table class="noborder centpercent">';
+        print '<tr class="liste_titre">';
+        print '<th colspan="4">'.$langs->trans("FundindBoxValidate").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
 
-		$var = true;
-		if ($num > 0)
-		{
-			$i = 0;
-			while ($i < $num)
-			{
-
-				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
-				$funding->id=$obj->rowid;
-				$funding->ref=$obj->ref;
-				$funding->status=$obj->status;
-				print $funding->getNomUrl(1);
-				print '</td>';
-				$companystatic->id=$obj->fk_soc;
-				$companystatic->id = $obj->socid;
-				$companystatic->name = $obj->name;
-				$companystatic->client = $obj->client;
-				$companystatic->code_client = $obj->code_client;
-				$companystatic->code_fournisseur = $obj->code_fournisseur;
-				$companystatic->canvas = $obj->canvas;
-				$companystatic->entity = $obj->entity;
-				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
-				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
-				$i++;
-				$total += $obj->amount_rent_edit;//$obj->total_ttc;
-			}
-			if ($total>0)
-			{
-				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
-			}
-		}
-		else
-		{
-
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
-		}
-		print "</table><br>";
-		$db->free($resql);
-	}
-	else
-	{
-		dol_print_error($db);
-	}
+        $var = true;
+        if ($num > 0) {
+            $i = 0;
+            while ($i < $num and $i <> 10) {
+                $obj = $db->fetch_object($resql);
+                print '<tr class="oddeven"><td class="nowrap">';
+                $funding->id=$obj->rowid;
+                $funding->ref=$obj->ref;
+                $funding->status=$obj->status;
+                print $funding->getNomUrl(1);
+                print '</td>';
+                $companystatic->id=$obj->fk_soc;
+                $companystatic->id = $obj->socid;
+                $companystatic->name = $obj->name;
+                $companystatic->client = $obj->client;
+                $companystatic->code_client = $obj->code_client;
+                $companystatic->code_fournisseur = $obj->code_fournisseur;
+                $companystatic->canvas = $obj->canvas;
+                $companystatic->entity = $obj->entity;
+                $companystatic->email = $obj->email;
+                print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+                print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
+                print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+                $i++;
+                $total += $obj->amount_rent_edit;//$obj->total_ttc;
+            }
+            if ($total>0) {
+                print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
+            }
+        } else {
+            print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+        }
+        print "</table><br>";
+        $db->free($resql);
+    } else {
+        dol_print_error($db);
+    }
 }
 //END MODULEBUILDER DRAFT MYOBJECT
 
@@ -179,77 +169,210 @@ $max = 3;
 print getCustomerFundingPieChart2($socid);
 print '<br>';
 
-if (! empty($conf->funding->enabled) && $permissiontoread)
-{
-		// Tableau bis
-		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm, f.pre_study";
-		$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-		$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-		$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-		$sql.= " WHERE f.status = 1";
-		$sql.= " AND f.origin = 'propal'";
-		$sql.= " AND f.pre_study = 1";
-		$sql .= " AND f.fk_soc = s.rowid";
-		if (!$permissionmanage) {
-			$sql .= " AND f.fk_user_comm = ". $user->id;
-		}
-	
-		$resql = $db->query($sql);
-		if ($resql)
-		{
-			$total = 0;
-			$num = $db->num_rows($resql);
-	
-			print '<table class="noborder centpercent">';
-			print '<tr class="liste_titre">';
-			print '<th colspan="4">'.$langs->trans("FundingPreStudy").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
-	
-			$var = true;
-			if ($num > 0)
-			{
-				$i = 0;
-				while ($i < $num)
-				{
-	
-					$obj = $db->fetch_object($resql);
-					print '<tr class="oddeven"><td class="nowrap">';
-					$funding->id=$obj->rowid;
-					$funding->ref=$obj->ref;
-					$funding->status=$obj->status;
-					print $funding->getNomUrl(1);
-					print '</td>';
-					$companystatic->id=$obj->fk_soc;
-					$companystatic->id = $obj->socid;
-					$companystatic->name = $obj->name;
-					$companystatic->client = $obj->client;
-					$companystatic->code_client = $obj->code_client;
-					$companystatic->code_fournisseur = $obj->code_fournisseur;
-					$companystatic->canvas = $obj->canvas;
-					$companystatic->entity = $obj->entity;
-					$companystatic->email = $obj->email;
-					print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
-					print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-					print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
-					$i++;
-					$total += $obj->amount_rent_edit;//$obj->total_ttc;
-				}
-				if ($total>0)
-				{
-					print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
-				}
-			}
-			else
-			{
-	
-				print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
-			}
-			print "</table><br>";
-			$db->free($resql);
-		}
-		else
-		{
-			dol_print_error($db);
-		}
+if (! empty($conf->funding->enabled) && $permissiontoread) {
+        // Tableau bis
+        $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+        $sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+        $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+        $sql .= ", ".MAIN_DB_PREFIX."societe as s";
+        $sql.= " WHERE f.status = 1";
+        $sql.= " AND f.origin = 'propal'";
+        $sql .= " AND f.fk_soc = s.rowid";
+    if (!$permissionmanage) {
+        $sql .= " AND f.fk_user_comm = ". $user->id;
+    }
+        $sql .= " ORDER BY f.ref DESC";
+    
+        $resql = $db->query($sql);
+    if ($resql) {
+        $total = 0;
+        $num = $db->num_rows($resql);
+    
+        print '<table class="noborder centpercent">';
+        print '<tr class="liste_titre">';
+        print '<th colspan="4">'.$langs->trans("FundindBoxValidatePropal").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+    
+        $var = true;
+        if ($num > 0) {
+            $i = 0;
+            while ($i < $num and $i <> 10) {
+                $obj = $db->fetch_object($resql);
+                print '<tr class="oddeven"><td class="nowrap">';
+                $funding->id=$obj->rowid;
+                $funding->ref=$obj->ref;
+                $funding->status=$obj->status;
+                print $funding->getNomUrl(1);
+                print '</td>';
+                $companystatic->id=$obj->fk_soc;
+                $companystatic->id = $obj->socid;
+                $companystatic->name = $obj->name;
+                $companystatic->client = $obj->client;
+                $companystatic->code_client = $obj->code_client;
+                $companystatic->code_fournisseur = $obj->code_fournisseur;
+                $companystatic->canvas = $obj->canvas;
+                $companystatic->entity = $obj->entity;
+                $companystatic->email = $obj->email;
+                print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+                print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
+                print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+                $i++;
+                $total += $obj->amount_rent_edit;//$obj->total_ttc;
+            }
+            if ($total>0) {
+                print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
+            }
+        } else {
+            print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+        }
+        print "</table><br>";
+        $db->free($resql);
+    } else {
+        dol_print_error($db);
+    }
+}
+
+print '</div></div></div>';
+
+print '<div class="fichecenter"><div class="fichethirdleft">';
+
+print getCustomerFundingPieChart($socid);
+print '<br>';
+
+
+// BEGIN MODULEBUILDER DRAFT MYOBJECT
+// Draft MyObject
+if (!empty($conf->funding->enabled) && $permissiontoread) {
+    $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+    $sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+    $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+    $sql .= ", ".MAIN_DB_PREFIX."societe as s";
+    $sql.= " WHERE f.status = 1";
+    $sql.= " AND f.origin = 'order'";
+    $sql .= " AND f.fk_soc = s.rowid";
+    if (!$permissionmanage) {
+        $sql .= " AND f.fk_user_comm = ". $user->id;
+    }
+    $sql .= " ORDER BY f.ref DESC";
+
+    $resql = $db->query($sql);
+    if ($resql) {
+        $total = 0;
+        $num = $db->num_rows($resql);
+
+        print '<table class="noborder centpercent">';
+        print '<tr class="liste_titre">';
+        print '<th colspan="4">'.$langs->trans("FundindBoxValidate").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+
+        $var = true;
+        if ($num > 0) {
+            $i = 0;
+            while ($i < $num and $i <> 10) {
+                $obj = $db->fetch_object($resql);
+                print '<tr class="oddeven"><td class="nowrap">';
+                $funding->id=$obj->rowid;
+                $funding->ref=$obj->ref;
+                $funding->status=$obj->status;
+                print $funding->getNomUrl(1);
+                print '</td>';
+                $companystatic->id=$obj->fk_soc;
+                $companystatic->id = $obj->socid;
+                $companystatic->name = $obj->name;
+                $companystatic->client = $obj->client;
+                $companystatic->code_client = $obj->code_client;
+                $companystatic->code_fournisseur = $obj->code_fournisseur;
+                $companystatic->canvas = $obj->canvas;
+                $companystatic->entity = $obj->entity;
+                $companystatic->email = $obj->email;
+                print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+                print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
+                print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+                $i++;
+                $total += $obj->amount_rent_edit;//$obj->total_ttc;
+            }
+            if ($total>0) {
+                print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
+            }
+        } else {
+            print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+        }
+        print "</table><br>";
+        $db->free($resql);
+    } else {
+        dol_print_error($db);
+    }
+}
+//END MODULEBUILDER DRAFT MYOBJECT
+
+
+print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
+
+
+$NBMAX = 3;
+$max = 3;
+
+print getCustomerFundingPieChart2($socid);
+print '<br>';
+
+if (! empty($conf->funding->enabled) && $permissiontoread) {
+        // Tableau bis
+        $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+        $sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+        $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+        $sql .= ", ".MAIN_DB_PREFIX."societe as s";
+        $sql.= " WHERE f.status = 1";
+        $sql.= " AND f.origin = 'propal'";
+        $sql .= " AND f.fk_soc = s.rowid";
+    if (!$permissionmanage) {
+        $sql .= " AND f.fk_user_comm = ". $user->id;
+    }
+        $sql .= " ORDER BY f.ref DESC";
+    
+        $resql = $db->query($sql);
+    if ($resql) {
+        $total = 0;
+        $num = $db->num_rows($resql);
+    
+        print '<table class="noborder centpercent">';
+        print '<tr class="liste_titre">';
+        print '<th colspan="4">'.$langs->trans("FundindBoxValidatePropal").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+    
+        $var = true;
+        if ($num > 0) {
+            $i = 0;
+            while ($i < $num and $i <> 10) {
+                $obj = $db->fetch_object($resql);
+                print '<tr class="oddeven"><td class="nowrap">';
+                $funding->id=$obj->rowid;
+                $funding->ref=$obj->ref;
+                $funding->status=$obj->status;
+                print $funding->getNomUrl(1);
+                print '</td>';
+                $companystatic->id=$obj->fk_soc;
+                $companystatic->id = $obj->socid;
+                $companystatic->name = $obj->name;
+                $companystatic->client = $obj->client;
+                $companystatic->code_client = $obj->code_client;
+                $companystatic->code_fournisseur = $obj->code_fournisseur;
+                $companystatic->canvas = $obj->canvas;
+                $companystatic->entity = $obj->entity;
+                $companystatic->email = $obj->email;
+                print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+                print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
+                print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+                $i++;
+                $total += $obj->amount_rent_edit;//$obj->total_ttc;
+            }
+            if ($total>0) {
+                print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
+            }
+        } else {
+            print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+        }
+        print "</table><br>";
+        $db->free($resql);
+    } else {
+        dol_print_error($db);
+    }
 }
 
 print '</div></div></div>';

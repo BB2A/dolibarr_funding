@@ -49,8 +49,18 @@ MyPageName=Nom de ma page
 #
 # Box d'exemple
 #
-FundindValidate=Financement validé
-MyWidgetDescription=Description de mon widget
+FundindBoxValidate=Les 10 derniers financements validé
+FundindBoxValidatePropal=Les 10 dernières propositions financieres validé
+FundindBoxUpdate=Les 10 derniers financements mise à jour
+FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
+FundindBoxAccept=Les 10 derniers financements accepté
+FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
+FundindBoxDenied=Les 10 derniers financements refusé
+FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
+FundindBoxRunning=Les 10 derniers financements actif
+FundindBoxDeniedPropal=Les 10 dernières propositions financieres actif
+FundindBoxEnd=Les 10 derniers financements terminé
+FundindBoxEndPropal=Les 10 dernières propositions financieres terminé
 
 Funding=Financement
 Fundings=Financements
@@ -86,8 +96,6 @@ FundingFolder=Dossier de financement
 ConfirmDeleteFunding=Êtes-vous sûr de vouloir supprimer ce financement ?
 RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
-pre_study=Pré étude
-no_pre_study=No pré etude
 Extension=Prolongation
 SendOrg=Envoyer à l'organisme
 ConfirmSendOrg=Confirmer l'envoi à l'organisme
@@ -97,7 +105,6 @@ CloseAs=Positionner le statut à
 DateSignature=Date signature P.V.
 closefinich=Cloturer
 NoFunding=Pas de financement
-FundingPreStudy=Financement Pré étude
 
 
 #MENU
