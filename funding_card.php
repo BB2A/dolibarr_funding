@@ -80,19 +80,19 @@ require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 $langs->loadLangs(array("funding@funding", "Propal", "Orders", "other"));
 
 // Get parameters
-$id 					= GETPOST('id', 'int');
-$ref        			= GETPOST('ref', 'alpha');
-$action 				= GETPOST('action', 'aZ09');
-$confirm    			= GETPOST('confirm', 'alpha');
-$cancel     			= GETPOST('cancel', 'aZ09');
-$contextpage 			= GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
-$backtopage 			= GETPOST('backtopage', 'alpha');
-$backtopageforcancel 	= GETPOST('backtopageforcancel', 'alpha');
+$id                     = GETPOST('id', 'int');
+$ref                    = GETPOST('ref', 'alpha');
+$action                 = GETPOST('action', 'aZ09');
+$confirm                = GETPOST('confirm', 'alpha');
+$cancel                 = GETPOST('cancel', 'aZ09');
+$contextpage            = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
+$backtopage             = GETPOST('backtopage', 'alpha');
+$backtopageforcancel    = GETPOST('backtopageforcancel', 'alpha');
 //$lineid   = GETPOST('lineid', 'int');
 
-$typedoc				= GETPOST('typedoc', 'alpha');
-$iddoc					= GETPOST('iddoc', 'int');
-$crea					= GETPOST('crea', 'int');
+$typedoc                = GETPOST('typedoc', 'alpha');
+$iddoc                  = GETPOST('iddoc', 'int');
+$crea                   = GETPOST('crea', 'int');
 
 // Initialize technical objects
 $object = new Funding($db);
