@@ -91,19 +91,16 @@ class mod_funding_standard extends ModeleNumRefFunding
 		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
-		}
-		elseif ($object->ismultientitymanaged == 2) {
+		} elseif ($object->ismultientitymanaged == 2) {
 			// TODO
 		}
 
 		$resql = $db->query($sql);
-		if ($resql)
-		{
+		if ($resql) {
 			$row = $db->fetch_row($resql);
 			if ($row) { $coyymm = substr($row[0], 0, 6); $max = $row[0]; }
 		}
-		if ($coyymm && !preg_match('/'.$this->prefix.'[0-9][0-9][0-9][0-9]/i', $coyymm))
-		{
+		if ($coyymm && !preg_match('/'.$this->prefix.'[0-9][0-9][0-9][0-9]/i', $coyymm)) {
 			$langs->load("errors");
 			$this->error = $langs->trans('ErrorNumRefModel', $max);
 			return false;
@@ -129,27 +126,23 @@ class mod_funding_standard extends ModeleNumRefFunding
 		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
-		}
-		elseif ($object->ismultientitymanaged == 2) {
+		} elseif ($object->ismultientitymanaged == 2) {
 			// TODO
 		}
 
 		$resql = $db->query($sql);
-		if ($resql)
-		{
+		if ($resql) {
 			$obj = $db->fetch_object($resql);
 			if ($obj) $max = intval($obj->max);
 			else $max = 0;
-		}
-		else
-		{
+		} else {
 			dol_syslog("mod_funding_standard::getNextValue", LOG_DEBUG);
 			return -1;
 		}
 
-		if (empty($object->date_creation)){
+		if (empty($object->date_creation)) {
 			$date = dol_now();
-		}else{
+		} else {
 			$date = $object->date_creation;
 		}
 
