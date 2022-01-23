@@ -58,9 +58,7 @@ FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
 FundindBoxDenied=Les 10 derniers financements refusé
 FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
 FundindBoxRunning=Les 10 derniers financements actif
-FundindBoxDeniedPropal=Les 10 dernières propositions financieres actif
 FundindBoxEnd=Les 10 derniers financements terminé
-FundindBoxEndPropal=Les 10 dernières propositions financieres terminé
 
 Funding=Financement
 Fundings=Financements
