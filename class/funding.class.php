@@ -382,11 +382,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére les commerciaux du tier
 	 *
-	 * @param  id thirdparty
-	 * @param
-	 * @return $idcomm = ok or -1 = nok
+	 * @param  int      $socid          id thirdparty
+	 * @return                          $idcomm = ok or -1 = nok
 	 */
-	public function comm_tiers($socid)
+	public function commtiers($socid)
 	{
 		global $conf, $db;
 
@@ -408,11 +407,11 @@ class Funding extends CommonObject
 	/**
 	 * Récupére les info document
 	 *
-	 * @param  id document
-	 * @param  type document PROPAL ORDER
-	 * @return $document = ok or -1 = nok
+	 * @param  int      $iddoc              id du document
+	 * @param  string   $typedoc            Type de document PROPAL ORDER
+	 * @return                              $document = ok or -1 = nok
 	 */
-	public function info_doc($iddoc, $typedoc)
+	public function infodoc($iddoc, $typedoc)
 	{
 		global $conf, $db;
 
@@ -439,20 +438,20 @@ class Funding extends CommonObject
 	/**
 	 * Récupére le coef corespondant
 	 *
-	 * @param  Total à fiancer
-	 * @param  La durée du fiancement
-	 * @param  Le béreme
-	 * @param  Organisme de financement
-	 * @return $coef = ok or -1 = nok
+	 * @param  real     $total          Total à fiancer
+	 * @param  real     $duration       La durée du fiancement
+	 * @param  real     $scale          Le béreme
+	 * @param  int      $org            Organisme de financement
+	 * @return                          $coef = ok or -1 = nok
 	 */
 	public function coef($total, $duration, $scale, $org)
 	{
 		global $conf, $db;
 
 		//Récupére la durée
-		//$duration = $this->fetch_duration($duration);
+		//$duration = $this->fetchDuration($duration);
 		//Récupére scale
-		//$scale = $this->fetch_scale($scale);
+		//$scale = $this->fetchScale($scale);
 		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_coefficient as c';
 		$sql.= ' WHERE c.status = 1';
 		$sql.= ' AND c.fk_org = '.$org;
@@ -475,10 +474,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére le taux retenue de grantie
 	 *
-	 * @param  organisme de financement
-	 * @return $rate = ok or -1 = nok
+	 * @param   int     $org            Organisme de financement
+	 * @return                          $rate = ok or -1 = nok
 	 */
-	public function retention_rate($org)
+	public function retentionrate($org)
 	{
 		global $conf, $db;
 
@@ -502,8 +501,6 @@ class Funding extends CommonObject
 	 *
 	 * @param  User $user      User that creates
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
-	 * @param  int id du document
-	 * @param  alpha type de document
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
 	public function create(User $user, $notrigger = false)
@@ -525,12 +522,12 @@ class Funding extends CommonObject
 		if ($iddoc && $typedoc) {
 			$this->origin = $typedoc;
 			$this->origin_id = $iddoc;
-			$document = $this->info_doc($iddoc, $typedoc);
+			$document = $this->infodoc($iddoc, $typedoc);
 			if ($document > 0) {
 				//Récupére si une adresse facturation différente
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
-					$socinvoice         = $this->fetch_socinvoice($socpeopleinvoice[0]);
+					$socinvoice         = $this->fetchSocinvoice($socpeopleinvoice[0]);
 					if ($socinvoice > -1) {
 						$this->fk_soc_invoice = $socinvoice;
 					} else {
@@ -544,7 +541,7 @@ class Funding extends CommonObject
 				$this->amount       = $document->total_ht;
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
-					$this->retention_rate = $this->retention_rate($this->fk_org);
+					$this->retention_rate = $this->retentionrate($this->fk_org);
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 				}
 				$coef               = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
@@ -564,7 +561,7 @@ class Funding extends CommonObject
 						$this->fk_order    = $iddoc;
 					}
 					// Commercial
-					$idcomm             = $this->comm_tiers($document->socid);
+					$idcomm             = $this->commtiers($document->socid);
 					if ($idcomm > 0) {
 						$this->fk_user_comm = $idcomm;
 						$this->status = self::STATUS_DRAFT;
@@ -603,8 +600,10 @@ class Funding extends CommonObject
 	 *
 	 * @param   User    $user       User that creates
 	 * @param   int     $fromid     Id of object to clone
+	 * @param   int     $origin     Id of object to clone
+	 * @param   int     $origin_id  Id of object to clone
 	 * @return  mixed               New object created, <0 if KO
-	 */
+	 *//*
 	public function createFromClone(User $user, $fromid, $origin, $origin_id)
 	{
 		global $conf, $db, $langs, $extrafields;
@@ -752,8 +751,6 @@ class Funding extends CommonObject
 				}
 			}
 		}
-
-
 		// End
 		if (!$error) {
 			$this->db->commit();
@@ -762,7 +759,9 @@ class Funding extends CommonObject
 			$this->db->rollback();
 			return -1;
 		}
-	}
+	}*/
+
+
 	/**
 	 * Load object in memory from the database
 	 *
@@ -873,11 +872,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére la durée
 	 *
-	 * @param  id durée
-	 * @param
+	 * @param   int   $duration       id de la du financement
 	 * @return $duration = ok or -1 = nok
 	 */
-	public function fetch_duration($duration)
+	public function fetchDuration($duration)
 	{
 		global $conf, $db;
 
@@ -896,11 +894,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére scale
 	 *
-	 * @param  id scale
-	 * @param
-	 * @return $scale = ok or -1 = nok
+	 * @param   ind     $scale       scale id de la retenu de garentie
+	 * @return                      $scale = ok or -1 = nok
 	 */
-	public function fetch_scale($scale)
+	public function fetchScale($scale)
 	{
 		global $conf, $db;
 
@@ -919,10 +916,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére type funding
 	 *
-	 * @param  id type
-	 * @return $idsocinvoic = ok or -1 = nok
+	 * @param  int  $type           id type
+	 * @return                      $idsocinvoic = ok or -1 = nok
 	 */
-	public function fetch_type($type)
+	public function fetchType($type)
 	{
 		global $conf, $db;
 
@@ -941,11 +938,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére soc invoice
 	 *
-	 * @param  id contact invoice
-	 * @param
-	 * @return $idsocinvoic = ok or -1 = nok
+	 * @param  int $socpeopleinvoice        id contact invoice
+	 * @return                              $idsocinvoic = ok or -1 = nok
 	 */
-	public function fetch_socinvoice($socpeopleinvoice)
+	public function fetchSocinvoice($socpeopleinvoice)
 	{
 		global $conf, $db;
 
@@ -966,11 +962,10 @@ class Funding extends CommonObject
 	/**
 	 * Récupére org
 	 *
-	 * @param  id contact invoice
-	 * @param
-	 * @return $idsocinvoic = ok or -1 = nok
+	 * @param   int     $soc            id contact invoice
+	 * @return                          $idsocinvoic = ok or -1 = nok
 	*/
-	public function fetch_soc($soc)
+	public function fetchSoc($soc)
 	{
 		global $conf, $db;
 
@@ -1006,13 +1001,13 @@ class Funding extends CommonObject
 
 		//Document
 		if ($iddoc && $typedoc) {
-			$document = $this->info_doc($iddoc, $typedoc);
+			$document = $this->infodoc($iddoc, $typedoc);
 
 			if (is_object($document) && $document->statut > 0) {
 				//Récupére si une adresse facturation différente
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
-					$socinvoice         = $this->fetch_socinvoice($socpeopleinvoice[0]);
+					$socinvoice         = $this->fetchSocinvoice($socpeopleinvoice[0]);
 					if ($socinvoice > -1) {
 						$this->fk_soc_invoice = $socinvoice;
 					} else {
@@ -1025,7 +1020,7 @@ class Funding extends CommonObject
 				$this->amount       = $document->total_ht;
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
-					$this->retention_rate = $this->retention_rate($this->fk_org);
+					$this->retention_rate = $this->retentionrate($this->fk_org);
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 				}
 				$coef = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
@@ -1049,7 +1044,7 @@ class Funding extends CommonObject
 					// Si date de signature calcul date de fin
 					if ($this->date_signature) {
 						//Ajoute la durée à la date de livraison pour avoir la date de fin
-						$duration = $this->fetch_duration($this->fk_duration);
+						$duration = $this->fetchDuration($this->fk_duration);
 						if ($duration->code > 0) {
 							$this->date_end = date('Y-m-d', strtotime('+'.$duration->code.' month', strtotime(date('Y-m-d', $this->date_signature))));
 						}
@@ -1211,7 +1206,7 @@ class Funding extends CommonObject
 		//Document
 		$typedoc = $this->origin;
 		$iddoc = $this->origin_id;
-		$document = $this->info_doc($iddoc, $typedoc);
+		$document = $this->infodoc($iddoc, $typedoc);
 
 		// Protection
 		if ($this->status == self::STATUS_VALIDATED) {
@@ -1386,7 +1381,7 @@ class Funding extends CommonObject
 	 *  @param  int     $notrigger      1=Does not execute triggers, 0=Execute triggers
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function Set_AcceptedRefused($user, $status, $note = '', $notrigger = 0)
+	public function setAcceptedRefused($user, $status, $note = '', $notrigger = 0)
 	{
 		// Protection
 		if ($this->status == self::STATUS_CANCELED) {
@@ -1405,11 +1400,12 @@ class Funding extends CommonObject
 	/**
 	 * Update object into database
 	 *
-	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
-	 * @return int             <0 if KO, >0 if OK
+	 * @param  User     $user               User that modifies
+	 * @param  string   $study_number       Numéro d'etude
+	 * @param  bool     $notrigger          false=launch triggers after, true=disable triggers
+	 * @return int                          <0 if KO, >0 if OK
 	 */
-	public function set_study_number($user, $study_number, $notrigger = 0)
+	public function setStudyNumber($user, $study_number, $notrigger = 0)
 	{
 			$error = 0;
 
@@ -1457,11 +1453,12 @@ class Funding extends CommonObject
 	/**
 	 * Update object into database
 	 *
-	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
-	 * @return int             <0 if KO, >0 if OK
+	 * @param  User     $user               User that modifies
+	 * @param  string   $folder_number      Numéro de dossier
+	 * @param  bool     $notrigger          false=launch triggers after, true=disable triggers
+	 * @return int                          <0 if KO, >0 if OK
 	 */
-	public function set_folder_number($user, $folder_number, $notrigger = 0)
+	public function setFolderNumber($user, $folder_number, $notrigger = 0)
 	{
 			$error = 0;
 
@@ -1510,10 +1507,9 @@ class Funding extends CommonObject
 	 * Update object into database
 	 *
 	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function set_Extension($user)
+	public function setExtension($user)
 	{
 			$error = 0;
 
@@ -1574,7 +1570,7 @@ class Funding extends CommonObject
 		$label .= '<br><b>'.$langs->trans('Ref').':</b> '.$this->ref;
 		$label .= '<br><b>'.$langs->trans('Amount').':</b> '.price($this->amount_total, 0, $langs, 0, -1, -1, $conf->currency);
 		$label .= '<br><b>'.$langs->trans('Rent').':</b> '.price($this->amount_rent, 0, $langs, 0, -1, -1, $conf->currency);
-		$label .= '<br><b>'.$langs->trans('Duration').':</b> '.$this->fetch_duration($this->fk_duration)->label;
+		$label .= '<br><b>'.$langs->trans('Duration').':</b> '.$this->fetchDuration($this->fk_duration)->label;
 		if (isset($this->status)) {
 			$label .= '<br><b>'.$langs->trans("Status").":</b> ".$this->getLibStatut(5);
 		}

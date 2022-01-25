@@ -147,10 +147,10 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 
 // Fetch organisme Erreur???
 if (!empty($object->fk_org)) {
-	$org = $object->fetch_soc($object->fk_org);
+	$org = $object->fetchSoc($object->fk_org);
 }
 if (!empty($object->fk_soc_invoice)) {
-	$soc_invoice =  $object->fetch_soc($object->fk_soc_invoice);
+	$soc_invoice =  $object->fetchSoc($object->fk_soc_invoice);
 }
 
 $permissiontoread = $user->rights->funding->read;
@@ -198,14 +198,14 @@ if (empty($reshook)) {
 
 	// Positionne study number
 	if ($action == 'setstudy_number' && $permissiontoadd) {
-		$result = $object->set_study_number($user, GETPOST('study_number'));
+		$result = $object->setStudyNumber($user, GETPOST('study_number'));
 		if ($result < 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
 	// Positionne folder number
 	if ($action == 'setfolder_number' && $permissiontoadd) {
-		$result = $object->set_folder_number($user, GETPOST('folder_number'));
+		$result = $object->setFolderNumber($user, GETPOST('folder_number'));
 		if ($result < 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
@@ -254,7 +254,7 @@ if (empty($reshook)) {
 			if ($object->status >= $object::STATUS_VALIDATED) {
 				$db->begin();
 
-				$result = $object->Set_AcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('note', 'none'));
+				$result = $object->setAcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('note', 'none'));
 				if ($result <= 0) {
 					setEventMessages($object->error, $object->errors, 'errors');
 					$error++;
