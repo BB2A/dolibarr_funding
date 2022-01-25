@@ -179,16 +179,31 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'ORDER_CREATE':
 			case 'ORDER_MODIFY':
 				if (!empty($fudid)) {
-					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount = $object->total_ht) {
-						$result = $fundingobject->update($user);
-					} else {
-						$result = -1;
+					if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+						$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingcancel"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
+					} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+						$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingvalidated"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
 					}
-					if ($result > 0) {
-						setEventMessages($langs->trans("updateok"), null);
-					} else {
-						setEventMessages($langs->trans("updatenok"), null, 'errors');
-						$result -1;
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount != $object->total_ht) {
+						$result = $fundingobject->update($user);
+						if ($result > 0) {
+							setEventMessages($langs->trans("updateok"), null);
+						} else {
+							setEventMessages($langs->trans("updatenok"), null, 'errors');
+							$result -1;
+						}
 					}
 					return $result;
 				}
@@ -196,16 +211,31 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			case 'ORDER_VALIDATE':
 				//Update si financement existe déja
 				if (!empty($fudid)) {
-					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount = $object->total_ht) {
-						$result = $fundingobject->update($user);
-					} else {
-						$result = -1;
+					if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+						$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingcancel"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
+					} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+						$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingvalidated"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
 					}
-					if ($result > 0) {
-						setEventMessages($langs->trans("updateok"), null);
-					} else {
-						setEventMessages($langs->trans("updatenok"), null, 'errors');
-						$result -1;
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount != $object->total_ht) {
+						$result = $fundingobject->update($user);
+						if ($result > 0) {
+							setEventMessages($langs->trans("updateok"), null);
+						} else {
+							setEventMessages($langs->trans("updatenok"), null, 'errors');
+							$result -1;
+						}
 					}
 					//Regarde si il existe un lien sur une proposition
 				} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
@@ -307,8 +337,14 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 					setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');
 					return -1;
 				} elseif (!empty($fudid) && $object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
-					setEventMessages($langs->trans("fundingexist"), null, 'errors');
-					return -1;
+					$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+					if ($result > 0) {
+						setEventMessages($langs->trans("fundingcancel"), null);
+						return $result;
+					} else {
+						setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+						return -1;
+					}
 				}
 				return 0;
 
@@ -335,27 +371,65 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'PROPAL_CREATE':
 			case 'PROPAL_MODIFY':
 				if (!empty($fudid)) {
-					$result = $fundingobject->update($user);
-					if ($result > 0) {
-						setEventMessages($langs->trans("updateok"), null);
-					} else {
-						setEventMessages($langs->trans("updatenok"), null, 'errors');
-						$result -1;
+					if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+						$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingcancel"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
+					} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+						$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_DRAFT, $notrigger, 'FUNDING_DRAFT');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingdraft"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
 					}
-					return $result;
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount != $object->total_ht) {
+						$result = $fundingobject->update($user);
+						if ($result > 0) {
+							setEventMessages($langs->trans("updateok"), null);
+						} else {
+							setEventMessages($langs->trans("updatenok"), null, 'errors');
+							$result -1;
+						}
+						return $result;
+					}
 				}
 				return 0;
 
 			case 'PROPAL_VALIDATE':
 				if (!empty($fudid)) {
-					$result = $fundingobject->update($user);
-					if ($result > 0) {
-						setEventMessages($langs->trans("updateok"), null);
-					} else {
-						setEventMessages($langs->trans("updatenok"), null, 'errors');
-						$result -1;
+					if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+						$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingcancel"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
+					} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+						$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_DRAFT, $notrigger, 'FUNDING_DRAFT');
+						if ($result > 0) {
+							setEventMessages($langs->trans("fundingdraft"), null);
+						} else {
+							setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+							return -1;
+						}
 					}
-					return $result;
+					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount != $object->total_ht) {
+						$result = $fundingobject->update($user);
+						if ($result > 0) {
+							setEventMessages($langs->trans("updateok"), null);
+						} else {
+							setEventMessages($langs->trans("updatenok"), null, 'errors');
+							$result -1;
+						}
+						return $result;
+					}
 				}
 				return 0;
 

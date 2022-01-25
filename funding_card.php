@@ -232,14 +232,10 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'reopen' && $permissiontoadd) {
-		$result = $object->setStatusCommon($user, $object::STATUS_ACCEPT, $notrigger, 'STATUS_ACCEPT');
+		$result = $object->setStatusCommon($user, $object::STATUS_ACCEPT, $notrigger, 'FUNDING_REOPEN');
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
-	}
-
-	if ($action == 'send_org' && $confirm == 'yes' && $permissiontoadd) {
-		$res = $object->send_org($user);
 	}
 
 	if ($action == 'set_thirdparty' && $permissiontoadd) {
