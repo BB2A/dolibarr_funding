@@ -1356,19 +1356,19 @@ class Funding extends CommonObject
 	 */
 	public function cancel($user, $notrigger = 0)
 	{
+        global $conf, $langs;
 		// Protection
-		if ($this->status != self::STATUS_VALIDATED) {
+		/*if ($this->status != self::STATUS_VALIDATED) {
 			return 0;
-		}
+		}*/
+		$result = $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->funding->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->funding->funding_advance->validate))))
-		 {
-		 $this->error='Permission denied';
-		 return -1;
-		 }*/
-
-		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+        if ($result > 0) {
+            setEventMessages($langs->trans("fundingcancel"), null);
+        } else {
+            setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+        }
+		return $result;
 	}
 
 
