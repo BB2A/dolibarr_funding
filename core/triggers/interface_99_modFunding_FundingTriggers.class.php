@@ -396,7 +396,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							setEventMessages($langs->trans("updatenok"), null, 'errors');
 						}
 					}
-					return $result;	
+					return $result;
 				}
 				return 0;
 
