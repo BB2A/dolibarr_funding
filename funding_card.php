@@ -268,6 +268,10 @@ if (empty($reshook)) {
 		}
 	}
 
+	if ($action == 'closefinich' && $permissionmanage) {
+		$object->end($user, $notrigger);
+	}
+
 	// Documents
 	if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 
@@ -649,14 +653,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
 
 	print '</table>';
-
-	// Documents
+	print '<div class="div-table-responsive-no-min">';
+	// Documents client
 	print '<table class="noborder tableforfield centpercent margintable">';
 	print '<tr class="liste_titre">';
 		print '<td colspan="3">'.$langs->trans("DocumentsForFunding").'</td>';
 		print '</tr>';
 		// Document 1
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->fundoc1)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -673,7 +677,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// Document 2
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('fundoc2', 'fundoc2', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->fundoc2)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -690,7 +694,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// Document 3
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('fundoc3', 'fundoc3', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->fundoc3)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -707,7 +711,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// Document 4
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('fundoc4', 'fundoc4', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->fundoc4)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -724,7 +728,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// Document 5
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('fundoc5', 'fundoc5', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->fundoc5)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -740,13 +744,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		($object->fundoc5)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletdoc&doc=fundoc5&filedelet='.$object->fundoc5.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
 		print '</tr>';
+		//print '</table">';
 
+		// Document du financement
+
+		//print '<table class="noborder tableforfield centpercent margintable">';
 		print '<tr class="liste_titre">';
 		print '<td td colspan="2">'.$langs->trans("FundingFolder").'</td>';
 		print '<td></td>';
 		print '</tr>';
+
 		// FundingFolderDoc 1
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->funfoldoc1)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -768,7 +777,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// FundingFolderDoc 2
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->funfoldoc2)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -785,7 +794,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// FundingFolderDoc 3
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('funfoldoc3', 'funfoldoc3', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->funfoldoc3)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -802,7 +811,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 		print '</tr>';
 		// FundingFolderDoc 4
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('funfoldoc4', 'funfoldoc4', '', $object, 0).'</td>';
 	if ($permissiontoadd == 1 && empty($object->funfoldoc4)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -820,7 +829,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</tr>';
 		// FundingFolderDoc 5
 	if ($object->redemption == 1) {
-		print '<tr class="hideonsmartphone">';
+		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('funfoldoc5', 'funfoldoc5', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->funfoldoc5)) {
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
@@ -838,6 +847,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</tr>';
 	}
 	print '</table>';
+	print '</div>';
 	print '<div class="center">';
 	print '</div>';
 	print '</form>';
@@ -928,10 +938,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Send
-			if (empty($user->socid)) {
+			if (empty($user->socid) && $permissiontoadd ) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
-			//$triggersendname
 
 			// closefinich
 			if (empty($user->socid) && $permissionmanage && $object->status == $object::STATUS_RUNNING) {
@@ -941,45 +950,35 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// Modify
 			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_RUNNING) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Modify").'</a>'."\n";
-			}
-			/*else
-			{
+			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
 			}
 
-			// Back to draft
-			if ($object->status == $object::STATUS_VALIDATED)
-			{
-				if ($permissiontoadd)
-				{
-					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes">'.$langs->trans("SetToDraft").'</a>';
-				}
-			}*/
+			//Back to draft
+			if (empty($user->socid) && $permissionmanage && $object->status >= $object::STATUS_VALIDATED) {
+				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("SetToDraft").'</a>';
+			}
 
 			// Validate
 			if (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_DRAFT) {
 				if (empty($object->table_element_line) || (is_array($object->lines) && count($object->lines) > 0)) {
-					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes">'.$langs->trans("Validate").'</a>';
+					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Validate").'</a>';
 				} else {
 					$langs->load("errors");
 					print '<a class="butActionRefused" href="" title="'.$langs->trans("ErrorAddAtLeastOneLineFirst").'">'.$langs->trans("Validate").'</a>';
 				}
 			}
-
-			/*
-			if ($permissiontoadd)
-			{
-				if ($object->status == $object::STATUS_ENABLED)
-				{
-					print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=disable">'.$langs->trans("Disable").'</a>'."\n";
-				}
-				else
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=enable">'.$langs->trans("Enable").'</a>'."\n";
+/*
+			if (empty($user->socid) && $permissionmanage) {
+				if ($object->status > $object::STATUS_ENABLED) {
+					print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=disable">'.$langs->trans("Disable").'</a>';
+				} else {
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=enable">'.$langs->trans("Enable").'</a>';
 				}
 			}
-			*/
-			if (empty($user->socid) && $permissiontoadd) {
+*/
+			// Runing funding
+			if (empty($user->socid) && $permissiontoadd && $object->origin <> 'propal') {
 				if ($object->status == $object::STATUS_ACCEPT) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("FundingStatusRunningShort").'</a>'."\n";
 				} elseif ($object->status >= $object::STATUS_RUNNING) {
@@ -987,6 +986,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				}
 			}
 
+			// Canceled
+			if ((empty($user->socid) && $permissiontodelete && $object->status < $object::STATUS_CANCELED) || ($object->status < $object::STATUS_RUNNING && $permissiontoadd && $object->status < $object::STATUS_CANCELED )) {
+				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=cancel&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Cancel').'</a>'."\n";
+			} else {
+				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Cancel').'</a>'."\n";
+			}
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			if (empty($user->socid) && $permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
