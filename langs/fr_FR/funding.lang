@@ -214,19 +214,19 @@ fundingcancel=Financement annulé
 #Status
 #
 
-FundingStatusDraft=Brouillon
-FundingStatusValidated=Nouveau
-FundingStatusUpdate=Mise à jour
-FundingStatusLack=Manque
-FundingStatusAccept=Accepté
-FundingStatusDenied=Refusé
-FundingStatusRunning=Actif
-FundingStatusEnd=Terminé
-FundingStatusDisabled=Annulé
+FundingStatusDraft=Financement brouillon
+FundingStatusValidated=Financement nouveau
+FundingStatusUpdate=Financement mise à jour
+FundingStatusLack=Financement envoyé à l'organisme
+FundingStatusAccept=Financement accepté
+FundingStatusDenied=Financement refusé
+FundingStatusRunning=Financement actif
+FundingStatusEnd=Financement terminé
+FundingStatusDisabled=Financement annulé
 FundingStatusDraftShort=Brouillon
 FundingStatusEnabledShort=Nouveau
 FundingStatusUpdateShort=Mise à jour
-FundingStatusLackShort=Manque
+FundingStatusLackShort=Envoyer
 FundingStatusAcceptShort=Accepté
 FundingStatusDeniedShort=Refusé
 FundingStatusRunningShort=Actif

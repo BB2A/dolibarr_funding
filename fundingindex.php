@@ -94,8 +94,7 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 print '<br>';
 
 
-// BEGIN MODULEBUILDER DRAFT MYOBJECT
-// Draft MyObject
+// New Funding
 if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
@@ -123,7 +122,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -138,9 +137,9 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -148,7 +147,8 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -156,7 +156,6 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 		dol_print_error($db);
 	}
 }
-//END MODULEBUILDER DRAFT MYOBJECT
 
 
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
@@ -196,7 +195,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -211,9 +210,9 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -221,7 +220,8 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -232,15 +232,11 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 
 print '</div></div></div>';
 
-// Financement mise à jour
-
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
 print '<br>';
 
-
-// BEGIN MODULEBUILDER DRAFT MYOBJECT
-// Draft MyObject
+// Financement mise à jour
 if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
@@ -268,7 +264,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -283,9 +279,9 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -293,7 +289,8 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -301,7 +298,6 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 		dol_print_error($db);
 	}
 }
-//END MODULEBUILDER DRAFT MYOBJECT
 
 
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
@@ -341,7 +337,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -356,9 +352,9 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -366,7 +362,8 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -377,15 +374,11 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 
 print '</div></div></div>';
 
-// Financements accepté
-
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
 print '<br>';
 
-
-// BEGIN MODULEBUILDER DRAFT MYOBJECT
-// Draft MyObject
+// Financements accepté
 if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
@@ -413,7 +406,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -428,9 +421,9 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -438,7 +431,8 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -446,8 +440,6 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 		dol_print_error($db);
 	}
 }
-//END MODULEBUILDER DRAFT MYOBJECT
-
 
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
@@ -486,7 +478,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -501,9 +493,9 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -511,7 +503,8 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -522,15 +515,11 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 
 print '</div></div></div>';
 
-// Financement refusé
-
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
 print '<br>';
 
-
-// BEGIN MODULEBUILDER DRAFT MYOBJECT
-// Draft MyObject
+// Financement refusé
 if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
@@ -558,7 +547,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -573,9 +562,9 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -583,7 +572,8 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -591,8 +581,6 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 		dol_print_error($db);
 	}
 }
-//END MODULEBUILDER DRAFT MYOBJECT
-
 
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
@@ -631,7 +619,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -646,9 +634,9 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -656,7 +644,8 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -667,15 +656,11 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 
 print '</div></div></div>';
 
-// Financement Running
-
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
 print '<br>';
 
-
-// BEGIN MODULEBUILDER DRAFT MYOBJECT
-// Draft MyObject
+// Financement Running
 if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
@@ -703,7 +688,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -718,9 +703,9 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -728,7 +713,8 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
@@ -736,12 +722,9 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 		dol_print_error($db);
 	}
 }
-//END MODULEBUILDER DRAFT MYOBJECT
-
 
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
-// Financement Rend
 
 $NBMAX = 3;
 $max = 3;
@@ -749,6 +732,7 @@ $max = 3;
 
 print '<br>';
 
+// Financement Rend
 if (! empty($conf->funding->enabled) && $permissiontoread) {
 		// Tableau bis
 		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
@@ -777,7 +761,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 			$i = 0;
 			while ($i < $num and $i <> 10) {
 				$obj = $db->fetch_object($resql);
-				print '<tr class="oddeven"><td class="nowrap">';
+				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id=$obj->rowid;
 				$funding->ref=$obj->ref;
 				$funding->status=$obj->status;
@@ -792,9 +776,9 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->canvas = $obj->canvas;
 				$companystatic->entity = $obj->entity;
 				$companystatic->email = $obj->email;
-				print '<td class="nowrap">'.$companystatic->getNomUrl(1).'</td>';
+				print '<td class="nowrap tdoverflowmax100">'.$companystatic->getNomUrl(1).'</td>';
 				print '<td class="right" class="nowrap"><span class="amount">'.price($obj->amount_rent_edit).'</span></td>';
-				print '<td class="right" class="nowrap">'.$funding->getLibStatut(5).'</td></tr>';
+				print '<td align="center" width="14">'.$funding->getLibStatut(3).'</td></tr>';
 				$i++;
 				$total += $obj->amount_rent_edit;//$obj->total_ttc;
 			}
@@ -802,7 +786,8 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price($total)."</td><td></td></tr>";
 			}
 		} else {
-			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td></tr>';
+			print '<tr class="oddeven"><td colspan="3" class="opacitymedium">'.$langs->trans("NoFunding").'</td><td></td></tr>';
+			print '<tr class="liste_total"><td>'.$langs->trans("Total").'</td><td colspan="2" class="right">'.price(0)."</td><td></td></tr>";
 		}
 		print "</table><br>";
 		$db->free($resql);
