@@ -246,7 +246,8 @@ funfoldoc1=Acceptation
 funfoldoc2=Dossier
 funfoldoc3=Dossier signé
 funfoldoc4=Facture
-funfoldoc5=Rachat
+funfoldoc5=Rachat demande
+funfoldoc6=Rachat signé
 
 #
 #Trigger

@@ -1,6 +1,6 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [1.0.2] - 01/2022
+## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
 - FIX - Désactiver envoie organisme pour plus de clarté car non foctionnel pour le moment
 - FIX - Menu Nouvelle proposition financiere ne filtré pas sur le bon statut. (Désactiver activer le module)
@@ -18,6 +18,8 @@
 - NEW - Le financement ne peut pas etre validé si le mode de réglement du document n'est pas celui en paramettre
 - NEW - Ajout d'un bouton annulé
 - NEW - Amélioration de la page d'index des financements
+- NEW - Le mail de l'organisme est renseigné lors de l'nvoie du mail
+- NEW - Ajout du document rachat signé
 
 
 ## [1.0.1] - 10/2021

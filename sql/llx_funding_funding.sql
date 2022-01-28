@@ -53,6 +53,7 @@ CREATE TABLE llx_funding_funding(
 	funfoldoc3 varchar(255), 
 	funfoldoc4 varchar(255), 
 	funfoldoc5 varchar(255), 
+	funfoldoc6 varchar(255), 
 	extension smallint DEFAULT 0, 
 	note_public text, 
 	note_private text, 
@@ -73,6 +74,7 @@ CREATE TABLE llx_funding_funding(
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
 ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc5 varchar(255) AFTER fundoc4;
-ALTER TABLE llx_funding_funding ADD COLUMN extension smallint AFTER funfoldoc5;
+ALTER TABLE llx_funding_funding ADD COLUMN funfoldoc6 varchar(255) AFTER funfoldoc5;
+ALTER TABLE llx_funding_funding ADD COLUMN extension smallint AFTER funfoldoc6;
 ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
 
