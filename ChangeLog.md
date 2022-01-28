@@ -8,7 +8,7 @@
 - FIX - Plus de contrainte si le document n'est pas vilidé ou déja livré
 - FIX - Correction des droits probléme contstaté lorsque l'on afficher l'apercu d'un document
 - FIX - Correction ffichage  liste des document sur mobile
-
+- FIX - Correction filtrage par date dans les listes
 
 - NEW - Ajout du changelog dans param du module
 - NEW - Modification de à propo dans param du module
