@@ -448,10 +448,6 @@ class Funding extends CommonObject
 	{
 		global $conf, $db;
 
-		//Récupére la durée
-		//$duration = $this->fetchDuration($duration);
-		//Récupére scale
-		//$scale = $this->fetchScale($scale);
 		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_coefficient as c';
 		$sql.= ' WHERE c.status = 1';
 		$sql.= ' AND c.fk_org = '.$org;
