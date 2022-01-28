@@ -25,23 +25,23 @@
  dol_include_once('/funding/class/funding.class.php');
 
  //$langs->loadLangs(array("funding@funding", "Propal", "Orders", "other"));
- 
- 
- 
- 
+
+
+
+
 /** 		Function called to complete substitution array (before generating on ODT, or a personalized email)
  * 		functions xxx_completesubstitutionarray are called by make_substitutions() if file
  * 		is inside directory htdocs/core/substitutions
- * 
+ *
  *		@param	array		$substitutionarray	Array with substitution key=>val
  *		@param	Translate	$langs			Output langs
  *		@param	Object		$object			Object to use to get values
  * 		@return	void					The entry parameter $substitutionarray is modified
  */
-function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
+function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 {
-   global $langs, $conf,$db;
-	if (is_object($object) && $object->element == 'funding'){
+	global $langs, $conf,$db;
+	if (is_object($object) && $object->element == 'funding') {
 		$substitutionarray['__FUNDING_STUDY_NIMBER__'] = isset($object->study_number) ? $object->study_number : '';
 		$substitutionarray['__FUNDING_FOLDER_NUMBER__'] = isset($object->folder_number) ? $object->folder_number : '';
 		$substitutionarray['__FUNDING_AMOUNT__'] = isset($object->amount) ? price($object->amount, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
@@ -52,7 +52,7 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$substitutionarray['__FUNDING_COEF__'] = isset($object->coef) ? $object->coef : '';
 		$scale = $object->fetchScale($object->fk_scale);
 		$substitutionarray['__FUNDING_SCALE__'] = isset($scale->label) ? $scale->label : '';
-	    $substitutionarray['__FUNDING_AMOUNT_RENT__'] = isset($object->amount_rent) ? price($object->amount_rent, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
+		$substitutionarray['__FUNDING_AMOUNT_RENT__'] = isset($object->amount_rent) ? price($object->amount_rent, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
 		$substitutionarray['__FUNDING_AMOUNT_RENT_EDIT__'] = isset($object->amount_rent_edit) ? price($object->amount_rent_edit, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
 		$substitutionarray['__FUNDING_DATE_DELIVERY__'] = isset($object->date_delivery) ? dol_print_date($object->date_delivery, 'day', 0, $outputlangs) : '';
 		$substitutionarray['__FUNDING_DATE_END__'] = isset($object->date_end) ? dol_print_date($object->date_end, 'day', 0, $outputlangs) : '';
@@ -61,14 +61,14 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$substitutionarray['__FUNDING_TYPE__'] = isset($type->label) ? $type->label : '';
 		$substitutionarray['__FUNDING_PRE_STUDY__'] = isset($object->pre_study) ? ($object->pre_study == 1 ? $langs->trans("Yes") : $langs->trans("No")) : '';
 		$substitutionarray['__FUNDING_USER_COMM_ID__'] = isset($object->fk_user_comm) ? $object->fk_user_comm : '';
-		if (!empty($object->fk_user_comm)){
+		if (!empty($object->fk_user_comm)) {
 			$user_comm = new User($db);
 			$result = $user_comm->fetch($object->fk_user_comm);
 			$substitutionarray['__FUNDING_USER_COMM__'] = isset($result) ? $user_comm->getFullName($outputlangs) : '';
 		}
 		$substitutionarray['__FUNDING_DESCRIPTION__'] = isset($object->description) ? $object->description : '';
 		$substitutionarray['__FUNDING_STATUS__'] = isset($object->status) ? $object->getLibStatut() : '';
-		
+
 		//Organisme
 		$org = $object->fetchSoc($object->fk_org);
 		$substitutionarray['__FUNDING_ORG_NAME__'] = isset($org->nom) ? $org->nom : '';
@@ -80,19 +80,19 @@ function funding_completesubstitutionarray(&$substitutionarray,$langs,$object)
 		$substitutionarray['__FUNDING_ORG_MAIL__'] = isset($org->email) ? $org->email : '';
 		$substitutionarray['__FUNDING_ORG_IDPROF1__'] = isset($org->siren) ? $org->siren : '';
 		$substitutionarray['__FUNDING_ORG_IDPROF2__'] = isset($org->siret) ? $org->siret : '';
-		
+
 		//Contact CUSTOMER propal
-		if($object->origin == 'propal')$doc = new Propal($db);
-		if($object->origin == 'order')$doc = new Commande($db);
-		if(isset($doc)){
+		if ($object->origin == 'propal')$doc = new Propal($db);
+		if ($object->origin == 'order')$doc = new Commande($db);
+		if (isset($doc)) {
 			$result = $doc->fetch($object->origin_id);
 			$contacid = $doc->getIdContact('external', 'CUSTOMER');
 		}
-		
-		
+
+
 		$contact = new Contact($db);
 		$obj_contact = $contact->fetch($contacid[0]);
-		$contactname = $contact->getFullName($langs,'1');
+		$contactname = $contact->getFullName($langs, '1');
 		$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
 
 		//Tiers de facturation
