@@ -190,6 +190,7 @@ class Funding extends CommonObject
 	public $funfoldoc3;
 	public $funfoldoc4;
 	public $funfoldoc5;
+	public $funfoldoc6;
 	public $extension;
 	public $note_public;
 	public $note_private;
