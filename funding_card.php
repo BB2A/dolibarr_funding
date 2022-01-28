@@ -954,7 +954,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
             // Send
             if (empty($user->socid) && $permissiontoadd) {
-                print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
+                print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&sendto='.$org->email.'&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
             }
 
             // closefinich
@@ -983,15 +983,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
                     print '<a class="butActionRefused" href="" title="'.$langs->trans("ErrorAddAtLeastOneLineFirst").'">'.$langs->trans("Validate").'</a>';
                 }
             }
-/*
-            if (empty($user->socid) && $permissionmanage) {
-                if ($object->status > $object::STATUS_ENABLED) {
-                    print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=disable">'.$langs->trans("Disable").'</a>';
-                } else {
-                    print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=enable">'.$langs->trans("Enable").'</a>';
-                }
-            }
-*/
+
             // Runing funding
             if (empty($user->socid) && $permissiontoadd && $object->origin <> 'propal') {
                 if ($object->status == $object::STATUS_ACCEPT) {
