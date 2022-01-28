@@ -683,7 +683,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc1">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="fundoc1input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -701,7 +701,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc2">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="fundoc2input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -719,7 +719,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc3">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -737,7 +737,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc4">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -755,8 +755,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc5">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-        //print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
 		$relativepath = $object->ref.'/'.$object->fundoc5;
@@ -788,7 +788,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		if ($object->funfoldoc1) {
 			print '<td>'.$object->funfoldoc1.'</td>';
 		}
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -806,7 +806,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc2">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc2input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -824,7 +824,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc3">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc3input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
@@ -842,8 +842,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc4">';
 		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc4input"></td>';
-        print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-        //print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
 	} else {
 		$relativepath = $object->ref.'/'.$object->funfoldoc4;
@@ -861,8 +861,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="doc" value="funfoldoc5">';
 			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc5input"></td>';
-            print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-            //print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
+			print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+			//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 		} else {
 			$relativepath = $object->ref.'/'.$object->funfoldoc5;
@@ -871,8 +871,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		print '</tr>';
 	}
-        // FundingFolderDoc 6
-    if ($object->redemption == 1) {
+		// FundingFolderDoc 6
+	if ($object->redemption == 1) {
 		print '<tr class="">';
 		print '<td>'.$form->editfieldkey('funfoldoc6', 'funfoldoc6', '', $object, 0).'</td>';
 		if ($permissiontoadd == 1 && empty($object->funfoldoc6)) {
@@ -883,7 +883,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc6input"></td>';
 			print '<td><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 			//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
-            print '</form>';
+			print '</form>';
 		} else {
 			$relativepath = $object->ref.'/'.$object->funfoldoc6;
 			($object->funfoldoc6)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).($param ? '&'.$param : '').'">'.$object->funfoldoc6.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
