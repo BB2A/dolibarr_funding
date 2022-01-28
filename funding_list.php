@@ -133,23 +133,19 @@ foreach ($object->fields as $key => $val) {
 
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
-foreach ($object->fields as $key => $val)
-{
+foreach ($object->fields as $key => $val) {
 	if ($val['searchall']) $fieldstosearchall['t.'.$key] = $val['label'];
 }
 
 // Definition of fields for list
 $arrayfields = array();
-foreach ($object->fields as $key => $val)
-{
+foreach ($object->fields as $key => $val) {
 	// If $val['visible']==0, then we never show the field
 	if (!empty($val['visible'])) $arrayfields['t.'.$key] = array('label'=>$val['label'], 'checked'=>(($val['visible'] < 0) ? 0 : 1), 'enabled'=>($val['enabled'] && ($val['visible'] != 3)), 'position'=>$val['position']);
 }
 // Extra fields
-if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label']) > 0)
-{
-	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val)
-	{
+if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label']) > 0) {
+	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
 		if (!empty($extrafields->attributes[$object->table_element]['list'][$key])) {
 			$arrayfields["ef.".$key] = array(
 				'label'=>$extrafields->attributes[$object->table_element]['label'][$key],
@@ -173,8 +169,7 @@ if (empty($conf->funding->enabled)) accessforbidden('Module not enabled');
 
 //BB2A
 //$socid = 0;
-if ($user->socid > 0)	// Protection if external user
-{
+if ($user->socid > 0) {	// Protection if external user
 	//$socid = $user->socid;
 	accessforbidden();
 }
@@ -240,8 +235,7 @@ $title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("Fundings"));
 // Build and execute select
 // --------------------------------------------------------------------
 $sql = 'SELECT ';
-foreach ($object->fields as $key => $val)
-{
+foreach ($object->fields as $key => $val) {
 	$sql .= 't.'.$key.', ';
 }
 // Add fields from extrafields
@@ -322,28 +316,22 @@ $sql .= $db->order($sortfield, $sortorder);
 
 // Count total nb of records
 $nbtotalofrecords = '';
-if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))
-{
+if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST)) {
 	$resql = $db->query($sql);
 	$nbtotalofrecords = $db->num_rows($resql);
-	if (($page * $limit) > $nbtotalofrecords)	// if total of record found is smaller than page * limit, goto and load page 0
-	{
+	if (($page * $limit) > $nbtotalofrecords) {	// if total of record found is smaller than page * limit, goto and load page 0
 		$page = 0;
 		$offset = 0;
 	}
 }
 // if total of record found is smaller than limit, no need to do paging and to restart another select with limits set.
-if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit)))
-{
+if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit))) {
 	$num = $nbtotalofrecords;
-}
-else
-{
+} else {
 	if ($limit) $sql .= $db->plimit($limit + 1, $offset);
 
 	$resql = $db->query($sql);
-	if (!$resql)
-	{
+	if (!$resql) {
 		dol_print_error($db);
 		exit;
 	}
@@ -352,8 +340,7 @@ else
 }
 
 // Direct jump if only one record found
-if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page)
-{
+if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page) {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->rowid;
 	header("Location: ".dol_buildpath('/funding/funding_card.php', 1).'?id='.$id);
@@ -366,59 +353,54 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 llxHeader('', $title, $help_url);
 
 //BB2A_Création des onglets tiers
-if(!empty($socid))
-{
-    //BB2A_Récupération table tiers
-    $soc = new Societe($db);
-    if ($socid > 0 || ! empty($ref))
-    {
+if (!empty($socid)) {
+	//BB2A_Récupération table tiers
+	$soc = new Societe($db);
+	if ($socid > 0 || ! empty($ref)) {
 		$result = $soc->fetch($socid);
-    }
+	}
 
-    $head = societe_prepare_head($soc);
-    dol_fiche_head($head, 'Funding', $langs->trans("ThirdParty"), 0, 'company');
-    
-    
-    //BB2A_Affichage encadrer tiers
-    
-    $linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
-	    
-    dol_banner_tab($soc, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
-    
-    $cssclass='titlefield';
-    
-    print '<div class="fichecenter">';
-    
-    print '<div class="underbanner clearboth"></div>';
-    print '<table class="border centpercent tableforfield">';
-    
-    if (! empty($conf->global->SOCIETE_USEPREFIX))  // Old not used prefix field
-    {
-    	print '<tr><td class="'.$cssclass.'">'.$langs->trans('Prefix').'</td><td colspan="3">'.$soc->prefix_comm.'</td></tr>';
-    }
-    
-    if ($soc->client)
-    {
-    	print '<tr><td class="'.$cssclass.'">';
-            print $langs->trans('CustomerCode').'</td><td colspan="3">';
-            print $soc->code_client;
-            if ($soc->check_codeclient() <> 0) print ' <font class="error">('.$langs->trans("WrongCustomerCode").')</font>';
-            print '</td></tr>';
-    }
-    
-    if ($soc->fournisseur)
-    {
-            print '<tr><td class="'.$cssclass.'">';
-            print $langs->trans('SupplierCode').'</td><td colspan="3">';
-            print $soc->code_fournisseur;
-            if ($soc->check_codefournisseur() <> 0) print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
-            print '</td></tr>';
-    }
-    
-    print '</table></div></div>';
+	$head = societe_prepare_head($soc);
+	dol_fiche_head($head, 'Funding', $langs->trans("ThirdParty"), 0, 'company');
+
+
+	//BB2A_Affichage encadrer tiers
+
+	$linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
+
+	dol_banner_tab($soc, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
+
+	$cssclass='titlefield';
+
+	print '<div class="fichecenter">';
+
+	print '<div class="underbanner clearboth"></div>';
+	print '<table class="border centpercent tableforfield">';
+
+	if (! empty($conf->global->SOCIETE_USEPREFIX)) {  // Old not used prefix field
+		print '<tr><td class="'.$cssclass.'">'.$langs->trans('Prefix').'</td><td colspan="3">'.$soc->prefix_comm.'</td></tr>';
+	}
+
+	if ($soc->client) {
+		print '<tr><td class="'.$cssclass.'">';
+			print $langs->trans('CustomerCode').'</td><td colspan="3">';
+			print $soc->code_client;
+			if ($soc->check_codeclient() <> 0) print ' <font class="error">('.$langs->trans("WrongCustomerCode").')</font>';
+			print '</td></tr>';
+	}
+
+	if ($soc->fournisseur) {
+			print '<tr><td class="'.$cssclass.'">';
+			print $langs->trans('SupplierCode').'</td><td colspan="3">';
+			print $soc->code_fournisseur;
+			if ($soc->check_codefournisseur() <> 0) print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
+			print '</td></tr>';
+	}
+
+	print '</table></div></div>';
 }
  //BB2A_Fin affichage encadrer tiers
- 
+
 // Example : Adding jquery code
 print '<script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
@@ -439,8 +421,7 @@ $arrayofselected = is_array($toselect) ? $toselect : array();
 $param = '';
 if (!empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) $param .= '&contextpage='.urlencode($contextpage);
 if ($limit > 0 && $limit != $conf->liste_limit) $param .= '&limit='.urlencode($limit);
-foreach ($search as $key => $val)
-{
+foreach ($search as $key => $val) {
 	if (is_array($search[$key]) && count($search[$key])) foreach ($search[$key] as $skey) $param .= '&search_'.$key.'[]='.urlencode($skey);
 	else $param .= '&search_'.$key.'='.urlencode($search[$key]);
 }
@@ -481,8 +462,7 @@ $objecttmp = new Funding($db);
 $trackid = 'xxxx'.$object->id;
 include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 
-if ($search_all)
-{
+if ($search_all) {
 	foreach ($fieldstosearchall as $key => $val) $fieldstosearchall[$key] = $langs->trans($val);
 	print '<div class="divsearchfieldfilter">'.$langs->trans("FilterOnInto", $search_all).join(', ', $fieldstosearchall).'</div>';
 }
@@ -497,8 +477,7 @@ $reshook = $hookmanager->executeHooks('printFieldPreListTitle', $parameters, $ob
 if (empty($reshook)) $moreforfilter .= $hookmanager->resPrint;
 else $moreforfilter = $hookmanager->resPrint;
 
-if (!empty($moreforfilter))
-{
+if (!empty($moreforfilter)) {
 	print '<div class="liste_titre liste_titre_bydiv centpercent">';
 	print $moreforfilter;
 	print '</div>';
@@ -695,8 +674,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 include DOL_DOCUMENT_ROOT.'/core/tpl/list_print_total.tpl.php';
 
 // If no record found
-if ($num == 0)
-{
+if ($num == 0) {
 	$colspan = 1;
 	foreach ($arrayfields as $key => $val) { if (!empty($val['checked'])) $colspan++; }
 	print '<tr><td colspan="'.$colspan.'" class="opacitymedium">'.$langs->trans("NoRecordFound").'</td></tr>';
@@ -714,8 +692,7 @@ print '</div>'."\n";
 
 print '</form>'."\n";
 
-if (in_array('builddoc', $arrayofmassactions) && ($nbtotalofrecords === '' || $nbtotalofrecords))
-{
+if (in_array('builddoc', $arrayofmassactions) && ($nbtotalofrecords === '' || $nbtotalofrecords)) {
 	$hidegeneratedfilelistifempty = 1;
 	if ($massaction == 'builddoc' || $action == 'remove_file' || $show_files) $hidegeneratedfilelistifempty = 0;
 
