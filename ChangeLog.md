@@ -18,7 +18,7 @@
 - NEW - Le financement ne peut pas etre validé si le mode de réglement du document n'est pas celui en paramettre
 - NEW - Ajout d'un bouton annulé
 - NEW - Amélioration de la page d'index des financements
-- NEW - Le mail de l'organisme est renseigné lors de l'nvoie du mail
+- NEW - Un mail par default est paramettrable
 - NEW - Ajout du document rachat signé
 
 

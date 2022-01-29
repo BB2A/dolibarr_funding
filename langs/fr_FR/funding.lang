@@ -25,8 +25,10 @@ ModuleFundingDesc=Description de Financement
 # Page d'administration
 #
 FundingSetup=Configuration du module Financement
-Settings=Réglages
 FundingSetupPage=Page de configuration du module Financement
+
+
+Setup=Param
 
 #
 # Page À propos
@@ -135,17 +137,19 @@ Funding_type=Financement - Type
 #Paramettres
 #
 
-FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
-MAIN_MAIL_AUTOCOPY_FUNDING_TO=Adresse mail de copie automatique
 FUNDING_CODE_REGLEMENT=Code mode de réglement pour financement
 FUNDING_DEFAULT_DURATION=Valeur par default pour la durée de financement
 FUNDING_DEFAULT_SCALE=Barème par default
 FUNDING_DEFAULT_REDEMPTION=Valeur par default pour le rachat
 FUNDING_DEFAULT_TYPE=Type de financement par default
-FUNDING_DEFAULT_ORGANIZATION=Organisme par default
+
 FUNDING_FILTRE_ORGANIZATION=Filtre organisme financement
+FUNDING_DEFAULT_ORGANIZATION=Organisme par default
+
+
 FUNDING_MAIL_DEFAULT=Adresse eail d'envoie par default
-FUNDING_MAIL_AUTOCOPY_TO=Adresse mail d'une copie
+FUNDING_MAIL_AUTOCOPY_TO=Adresse mail de copie automatique
+FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
 
 #
 #Aides

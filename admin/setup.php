@@ -41,6 +41,15 @@ global $langs, $user;
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/funding.lib.php';
+
+/*
+* Débu de réfléxion pour rendre les param plus convivial
+*/
+/*
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
+*/
+
 //require_once "../class/myclass.class.php";
 
 // Translations
@@ -57,20 +66,18 @@ $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
 
-	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
-
-
-
-	'MAIN_MAIL_AUTOCOPY_FUNDING_TO'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_CODE_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
+	
 	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
+
 	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -172,6 +179,13 @@ if ($action == 'updateMask') {
  */
 
 $form = new Form($db);
+/*
+* Débu de réfléxion pour rendre les param plus convivial
+*/
+/*
+$formfile = new FormFile($db);
+$formcompany = new FormCompany($db);
+*/
 
 $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 
@@ -203,6 +217,18 @@ if ($action == 'edit') {
 		print '<tr class="oddeven"><td>';
 		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
 		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+		/*
+		* Débu de réfléxion pour rendre les param plus convivial
+		*/
+		/*if ($key == 'FUNDING_CODE_REGLEMENT') {
+			print '</td><td>';
+			$form->select_types_paiements((GETPOSTISSET('mode_reglement_id') ? GETPOST('mode_reglement_id', 'int') : $conf->global->FUNDING_CODE_REGLEMENT), 'mode_reglement_id', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+			print '</td></tr>';
+		}elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+			print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
+		}else{
+			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+		}*/
 		print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 	}
 	print '</table>';
