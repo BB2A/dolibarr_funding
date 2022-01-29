@@ -71,7 +71,7 @@ $arrayofparameters = array(
 	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
-	
+
 	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
 
