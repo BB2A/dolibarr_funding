@@ -116,7 +116,7 @@ if ($action == 'updateMask') {
 			break;
 		}
 	}
-	
+
 	if ($filefound) {
 		require_once $file;
 
