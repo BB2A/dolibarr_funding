@@ -399,10 +399,10 @@ if (empty($reshook)) {
 	// BB2A marque send mail
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
-	$autocopy = $conf->global->MAIN_MAIL_AUTOCOPY_FUNDING_TO;
-	$sendto = '';
+	$autocopy = $conf->global->FUNDING_MAIL_AUTOCOPY_TO;
+	$sendto = $conf->global->FUNDING_MAIL_DEFAULT;
 	$sendtosocid = $object->fk_org;
-	//$parameters = array('notifcode'=>$notifcode, 'sendto'=>$sendto, 'replyto'=>$replyto, 'file'=>$filename_list, 'mimefile'=>$mimetype_list, 'filename'=>$mimefilename_list);
+	$parameters = array('notifcode'=>$notifcode, 'sendto'=>$sendto, 'replyto'=>$replyto, 'file'=>$filename_list, 'mimefile'=>$mimetype_list, 'filename'=>$mimefilename_list);
 	$trackid = 'funding'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
@@ -984,7 +984,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			// Send
 			if (empty($user->socid) && $permissiontoadd) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&sendto='.$org->email.'&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
+				$sendto = $conf->global->FUNDING_EMAIL_DEFAULT;
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
 
 			// closefinich

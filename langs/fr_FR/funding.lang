@@ -144,6 +144,8 @@ FUNDING_DEFAULT_REDEMPTION=Valeur par default pour le rachat
 FUNDING_DEFAULT_TYPE=Type de financement par default
 FUNDING_DEFAULT_ORGANIZATION=Organisme par default
 FUNDING_FILTRE_ORGANIZATION=Filtre organisme financement
+FUNDING_MAIL_DEFAULT=Adresse eail d'envoie par default
+FUNDING_MAIL_AUTOCOPY_TO=Adresse mail d'une copie
 
 #
 #Aides
