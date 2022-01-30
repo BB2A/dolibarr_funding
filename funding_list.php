@@ -189,10 +189,10 @@ if (is_array($extrafields->attributes[$object->table_element]['label']) && count
 $object->fields = dol_sort_array($object->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
-$permissiontoread = $user->rights->funding->funding->read;
-$permissiontoadd = $user->rights->funding->funding->write;
-$permissiontodelete = $user->rights->funding->funding->delete;
-$permissionmanage = $user->rights->funding->funding->manage; //User by the function send_mail_org
+$permissiontoread = $user->rights->funding->read;
+$permissiontoadd = $user->rights->funding->write;
+$permissiontodelete = $user->rights->funding->delete;
+$permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
 
 // Security check
 if (empty($conf->funding->enabled)) {
