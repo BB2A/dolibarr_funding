@@ -78,6 +78,8 @@ $arrayofparameters = array(
 	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
+
+	'FUNDING_LIST_TIRDPARTY_ONLY_ORDER'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -211,7 +213,7 @@ if ($action == 'edit') {
 	print '<input type="hidden" name="action" value="update">';
 
 	print '<table class="noborder centpercent">';
-	print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+	print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
 	foreach ($arrayofparameters as $key => $val) {
 		print '<tr class="oddeven"><td>';
@@ -242,7 +244,7 @@ if ($action == 'edit') {
 } else {
 	if (!empty($arrayofparameters)) {
 		print '<table class="noborder centpercent">';
-		print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+		print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
 		foreach ($arrayofparameters as $key => $val) {
 			$setupnotempty++;
