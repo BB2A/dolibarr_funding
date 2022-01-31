@@ -9,6 +9,7 @@
 - FIX - Correction des droits probléme contstaté lorsque l'on afficher l'apercu d'un document
 - FIX - Correction ffichage  liste des document sur mobile
 - FIX - Correction filtrage par date dans les listes
+- FIX - Le montant personnalisé ne peut plus etre à zero
 
 - NEW - Ajout du changelog dans param du module
 - NEW - Modification de à propo dans param du module
