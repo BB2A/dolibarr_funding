@@ -26,6 +26,7 @@
 - NEW - Possibilité d'ajouter des images dans les pièces jointes (Elles sont transformées en PDF.)
 - NEW - Liste déroulante pour sélectionner le paramètre du mode de règlement
 - NEW - Liste déroulante pour sélectionner le paramètre du filtre des organismes de financement
+- NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
 
 ## [1.0.1] - 10/2021
 

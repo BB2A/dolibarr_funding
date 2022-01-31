@@ -151,6 +151,8 @@ FUNDING_MAIL_DEFAULT=Adresse mail d'envoie par default
 FUNDING_MAIL_AUTOCOPY_TO=Adresse mail de copie automatique
 FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
 
+FUNDING_LIST_TIRDPARTY_ONLY_ORDER=Afficher uniquement les financements sur commande dans tiers
+
 #
 #Aides
 #
