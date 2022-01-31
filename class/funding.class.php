@@ -1026,7 +1026,7 @@ class Funding extends CommonObject
                     $this->coef         = $coef;
                     $this->amount_rent  = price2num($this->amount_total * $coef / 100, 'MT');
 
-                    if (!empty($this->amount_rent_edit) && $this->amount_rent_edit < $this->amount_rent) {
+                    if ($this->amount_rent_edit < $this->amount_rent) {
                         $this->amount_rent_edit = $this->amount_rent;
                         setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
                     }
