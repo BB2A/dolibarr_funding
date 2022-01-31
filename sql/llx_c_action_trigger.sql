@@ -10,4 +10,8 @@ INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `de
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_CANCEL', 'Funding cancel', 'A funding is cancel', '1830049');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_REOPEN', 'Funding reopen', 'A funding is reopen', '1830050');
 
+
+DELETE FROM `llx_c_action_trigger` WHERE `elementtype` = 'funding' AND `code` = 'FUNDING_SENDORG';
+DELETE FROM `llx_c_action_trigger` WHERE `elementtype` = 'funding' AND `code` = 'FUNDING_LACK';
+
 --ADD Call trigger IN TABLE
