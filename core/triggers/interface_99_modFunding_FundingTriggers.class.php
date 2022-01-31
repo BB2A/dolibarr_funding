@@ -238,7 +238,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result -1;
 						}
 					}
-				//Regarde si il existe un lien sur une proposition
+					//Regarde si il existe un lien sur une proposition
 				} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
 					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
 					$sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = ".$object->id;
@@ -350,7 +350,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				if (!empty($fudid) && $fundingobject->status == $fundingobject::STATUS_RUNNING) {
 					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
 					return -1;
-				}else{
+				} else {
 					$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
 				}
 				return 0;
