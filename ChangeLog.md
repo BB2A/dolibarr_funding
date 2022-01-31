@@ -20,6 +20,7 @@
 - NEW - Amélioration de la page d'index des financements
 - NEW - Un mail par default est paramettrable
 - NEW - Ajout du document rachat signé
+- NEW - Valide le financement sur une commande (Au transfert d'une propo ou la validation d'une nouvelle commade)
 
 
 ## [1.0.1] - 10/2021
