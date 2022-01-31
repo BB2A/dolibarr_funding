@@ -229,6 +229,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						}
 					}
 					if ($fundingobject->status < $fundingobject::STATUS_RUNNING || $fundingobject->amount != $object->total_ht) {
+						$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
 						$result = $fundingobject->update($user);
 						if ($result > 0) {
 							setEventMessages($langs->trans("updateok"), null);
@@ -237,7 +238,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result -1;
 						}
 					}
-					//Regarde si il existe un lien sur une proposition
+				//Regarde si il existe un lien sur une proposition
 				} elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
 					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
 					$sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = ".$object->id;
@@ -288,9 +289,10 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 								setEventMessages('2'.$errors, null, 'errors');
 								$result = -1;
 							}
+							$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
 							$result = $fundingobject->update($user, true);
 						}
-						if ($result > 0) setEventMessages($langs->trans("clonfudpropal"), null);
+						if ($result > 0)setEventMessages($langs->trans("clonfudpropal"), null);
 					} else {
 						$result = 0;
 					}
@@ -308,14 +310,48 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 					}
 				}
 				return 0;
-			//case 'ORDER_CANCEL':
+			case 'ORDER_CANCEL':
+				if (!empty($fudid)) {
+					return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
+				}
+				return 0;
 			//case 'ORDER_SENTBYMAIL':
-			//case 'ORDER_CLASSIFY_BILLED':
+			case 'ORDER_CLASSIFY_BILLED':
+				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+					if (!empty($object->date_livraison)) {
+						// Date de signature renseigné si commande livré
+						if (empty($obj->date_signature)) $obj->date_signature = $obj->date_delivery;
+						$result = $fundingobject->update($user);
+						if ($result <> -1) {
+							return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+						} else {
+							return $result;
+						}
+					} else {
+						setEventMessages($langs->trans("fundingnotdatedelivry"), null, 'errors');
+						return -1;
+					}
+				} elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+					setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');
+					return -1;
+				} elseif (!empty($fudid) && $object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+					$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
+					if ($result > 0) {
+						setEventMessages($langs->trans("fundingcancel"), null);
+						return $result;
+					} else {
+						setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
+						return -1;
+					}
+				}
+				return 0;
 			//case 'ORDER_SETDRAFT':
 			case 'ORDER_REOPEN':
 				if (!empty($fudid) && $fundingobject->status == $fundingobject::STATUS_RUNNING) {
 					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
 					return -1;
+				}else{
+					$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
 				}
 				return 0;
 			case 'ORDER_CLOSE':
@@ -435,7 +471,9 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'PROPAL_SENTBYMAIL':
 			case 'PROPAL_CLOSE_SIGNED':
 				if (!empty($fudid)) {
-					return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
+					if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+						return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
+					}
 				}
 				return 0;
 			case 'PROPAL_CLOSE_REFUSED':
@@ -444,7 +482,6 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				}
 				return 0;
 			case 'PROPAL_DELETE':
-
 				if (!empty($fudid)) {
 					if ($obj->status != $fundingobject::STATUS_CANCELED) {
 						setEventMessages($langs->trans("supppropalnok"), null, 'errors');

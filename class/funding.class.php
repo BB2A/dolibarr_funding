@@ -601,7 +601,7 @@ class Funding extends CommonObject
 	 * @param   int     $origin     Id of object to clone
 	 * @param   int     $origin_id  Id of object to clone
 	 * @return  mixed               New object created, <0 if KO
-	 *//*
+	 */
 	public function createFromClone(User $user, $fromid, $origin, $origin_id)
 	{
 		global $conf, $db, $langs, $extrafields;
@@ -757,7 +757,7 @@ class Funding extends CommonObject
 			$this->db->rollback();
 			return -1;
 		}
-	}*/
+	}
 
 
 	/**
@@ -1067,8 +1067,6 @@ class Funding extends CommonObject
 				} else {
 					setEventMessages($langs->trans("coefnok"), null, 'errors');
 				}
-			} else {
-				setEventMessages($langs->trans("docnotvalidate"), null, 'errors');
 			}
 		} else {
 			setEventMessages($langs->trans("paramnok"), null, 'errors');
@@ -1212,7 +1210,7 @@ class Funding extends CommonObject
 			return 0;
 		}
 		if ($document->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
-			setEventMessages($langs->trans("novalidreg".'-'.$socpeopleinvoice[0]), null, 'errors');
+			setEventMessages($langs->trans("novalidreg"), null, 'errors');
 			return -1;
 		}
 
