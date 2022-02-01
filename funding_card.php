@@ -306,8 +306,6 @@ if (empty($reshook)) {
 		$fileuploadnewname = str_replace($remove, '_', $fileuploadnewname);
 
 		if ($action == 'savedoc' && !empty($upload_dir)) {
-			
-			
 				//Fusion des PDF
 				// Libraries
 				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
@@ -316,32 +314,14 @@ if (empty($reshook)) {
 				$pdf->SetTitle($fileuploadnewname);
 				$pdf->SetAuthor(!empty($conf->global->MAIN_INFO_SOCIETE_NOM)?$conf->global->MAIN_INFO_SOCIETE_NOM:'');
 				$pdf->SetCreator($user->getfullname($langs));
-				if (class_exists('TCPDF')) {
-					$pdf->setPrintHeader(false);
-					$pdf->setPrintFooter(false);
-				}
+			if (class_exists('TCPDF')) {
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+			}
 				// Si selecteur de plusieur fichiers
-				if (is_countable($_FILES['userfile']['name'])) {
-					foreach ($fileupload as $file) {
-						$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
-						if (file_exists($infile) && is_readable($infile)) {
-							//var_dump($infile);
-							$pagecount = $pdf->setSourceFile($infile);
-							for ($i = 1; $i <= $pagecount; $i++) {
-								$tplIdx = $pdf->importPage($i);
-								if ($tplIdx !== false) {
-									$s = $pdf->getTemplatesize($tplIdx);
-									$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
-									$pdf->useTemplate($tplIdx);
-								} else {
-									setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
-								}
-							}
-						}
-					}
-				// Si un seul fichier
-				} else {
-					$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+			if (is_countable($_FILES['userfile']['name'])) {
+				foreach ($fileupload as $file) {
+					$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
 					if (file_exists($infile) && is_readable($infile)) {
 						//var_dump($infile);
 						$pagecount = $pdf->setSourceFile($infile);
@@ -357,32 +337,50 @@ if (empty($reshook)) {
 						}
 					}
 				}
+				// Si un seul fichier
+			} else {
+				$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+				if (file_exists($infile) && is_readable($infile)) {
+					//var_dump($infile);
+					$pagecount = $pdf->setSourceFile($infile);
+					for ($i = 1; $i <= $pagecount; $i++) {
+						$tplIdx = $pdf->importPage($i);
+						if ($tplIdx !== false) {
+							$s = $pdf->getTemplatesize($tplIdx);
+							$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
+							$pdf->useTemplate($tplIdx);
+						} else {
+							setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
+						}
+					}
+				}
+			}
 
 				// Output the new PDF
 				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
 
 				// Si selecteur de plusieur fichiers
-				if (is_countable($_FILES['userfile']['name'])) {
-					//Delete old files
-					foreach ($fileupload as $file) {
-						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
-						if (file_exists($file)) {
-							dol_delete_file($file);
-						}
-					}
-				}else{
-					$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+			if (is_countable($_FILES['userfile']['name'])) {
+				//Delete old files
+				foreach ($fileupload as $file) {
+					$file = $upload_dir.'/'.dol_sanitizeFileName($file);
 					if (file_exists($file)) {
 						dol_delete_file($file);
 					}
 				}
+			} else {
+				$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+				if (file_exists($file)) {
+					dol_delete_file($file);
+				}
+			}
 
 				//Vérifie si le fichier à bien ete créer pour inscription en db
-				if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
-					$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
-					$resql = $db->query($sql);
-					dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
-				}
+			if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
+				$resql = $db->query($sql);
+				dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
+			}
 		}
 		// Delete document
 		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet) {
