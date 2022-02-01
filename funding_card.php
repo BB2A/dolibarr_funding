@@ -290,26 +290,58 @@ if (empty($reshook)) {
 	}
 	$modulepart = 'funding';
 
+	$images = array("file1.jpg", "file2.jpg");
+
+
+
 	if ($action == 'savedoc' && $permissiontoadd || $action == 'deletdoc' && $permissiontoadd) {
 		$doc = GETPOST('doc');
 		$fileupload = $_FILES['userfile']['name'];
 		$filedelet = GETPOST('filedelet');
 
+		$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
+		$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
+		$fileuploadnewname = dol_string_nospecial($fileuploadnewname);
+		$remove = array('\'' , '&nbsp;', ' ');
+		$fileuploadnewname = str_replace($remove, '_', $fileuploadnewname);
+
 		if ($action == 'savedoc' && !empty($upload_dir)) {
-			if ($doc == 'fundoc3' || $doc == 'fundoc4' || $doc == 'fundoc5') {
+			
+			
 				//Fusion des PDF
 				// Libraries
 				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
 				$pdf = pdf_getInstance();
 				$pdf->SetMargins(0, 0, 0);
-				$pdf->SetAuthor("GEST-MAG");
+				$pdf->SetTitle($fileuploadnewname);
+				$pdf->SetAuthor(!empty($conf->global->MAIN_INFO_SOCIETE_NOM)?$conf->global->MAIN_INFO_SOCIETE_NOM:'');
+				$pdf->SetCreator($user->getfullname($langs));
 				if (class_exists('TCPDF')) {
 					$pdf->setPrintHeader(false);
 					$pdf->setPrintFooter(false);
 				}
-
-				foreach ($fileupload as $file) {
-					$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
+				// Si selecteur de plusieur fichiers
+				if (is_countable($_FILES['userfile']['name'])) {
+					foreach ($fileupload as $file) {
+						$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
+						if (file_exists($infile) && is_readable($infile)) {
+							//var_dump($infile);
+							$pagecount = $pdf->setSourceFile($infile);
+							for ($i = 1; $i <= $pagecount; $i++) {
+								$tplIdx = $pdf->importPage($i);
+								if ($tplIdx !== false) {
+									$s = $pdf->getTemplatesize($tplIdx);
+									$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
+									$pdf->useTemplate($tplIdx);
+								} else {
+									setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
+								}
+							}
+						}
+					}
+				// Si un seul fichier
+				} else {
+					$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
 					if (file_exists($infile) && is_readable($infile)) {
 						//var_dump($infile);
 						$pagecount = $pdf->setSourceFile($infile);
@@ -326,40 +358,31 @@ if (empty($reshook)) {
 					}
 				}
 
-				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
-				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
-				$remove = array('\'' , '&nbsp;', ' ');
-				$fileuploadnewname = str_replace($remove, '_', $fileuploadnewname);
-
 				// Output the new PDF
 				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
-				//Vérifie si le fichier à bien ete créer pour inscription en db
-				if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
-					$rename = 1;
-				}
-				//Delete old files
-				foreach ($fileupload as $file) {
-					$file = $upload_dir.'/'.dol_sanitizeFileName($file);
+
+				// Si selecteur de plusieur fichiers
+				if (is_countable($_FILES['userfile']['name'])) {
+					//Delete old files
+					foreach ($fileupload as $file) {
+						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
+						if (file_exists($file)) {
+							dol_delete_file($file);
+						}
+					}
+				}else{
+					$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
 					if (file_exists($file)) {
 						dol_delete_file($file);
 					}
 				}
-			} else {
-				$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
-				$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
-				$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
-				$fileuploadnewname = dol_string_nospecial($fileuploadnewname);
-				$remove = array('\'' , '&nbsp;', ' ');
-				$fileuploadnewname = str_replace($remove, '_', $fileuploadnewname);
-				if (file_exists($file)) {
-					$rename = dol_move($file, $upload_dir.'/'.$fileuploadnewname);//rename ($file, $upload_dir.'/'.$fileuploadnewname);
+
+				//Vérifie si le fichier à bien ete créer pour inscription en db
+				if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
+					$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
+					$resql = $db->query($sql);
+					dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
 				}
-			}
-			if ($rename) {
-				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
-				$resql = $db->query($sql);
-				dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
-			}
 		}
 		// Delete document
 		if ($action == 'deletdoc' && !empty($upload_dir) && $filedelet) {
@@ -682,7 +705,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc1">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="fundoc1input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="fundoc1input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
