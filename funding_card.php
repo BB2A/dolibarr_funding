@@ -290,10 +290,6 @@ if (empty($reshook)) {
 	}
 	$modulepart = 'funding';
 
-	$images = array("file1.jpg", "file2.jpg");
-
-
-
 	if ($action == 'savedoc' && $permissiontoadd || $action == 'deletdoc' && $permissiontoadd) {
 		$doc = GETPOST('doc');
 		$fileupload = $_FILES['userfile']['name'];
@@ -304,13 +300,21 @@ if (empty($reshook)) {
 		$fileuploadnewname = dol_string_nospecial($fileuploadnewname);
 		$remove = array('\'' , '&nbsp;', ' ');
 		$fileuploadnewname = str_replace($remove, '_', $fileuploadnewname);
-
 		if ($action == 'savedoc' && !empty($upload_dir)) {
 				//Fusion des PDF
 				// Libraries
 				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
-				$pdf = pdf_getInstance();
-				$pdf->SetMargins(0, 0, 0);
+				$formatarray = pdf_getFormat();
+				$page_largeur = $formatarray['width'];
+				$page_hauteur = $formatarray['height'];
+				$format = array($page_largeur, $page_hauteur);
+				$marge_gauche = isset($conf->global->MAIN_PDF_MARGIN_LEFT) ? $conf->global->MAIN_PDF_MARGIN_LEFT : 10;
+				$marge_droite = isset($conf->global->MAIN_PDF_MARGIN_RIGHT) ? $conf->global->MAIN_PDF_MARGIN_RIGHT : 10;
+				$marge_haute = isset($conf->global->MAIN_PDF_MARGIN_TOP) ? $conf->global->MAIN_PDF_MARGIN_TOP : 10;
+				$marge_basse = isset($conf->global->MAIN_PDF_MARGIN_BOTTOM) ? $conf->global->MAIN_PDF_MARGIN_BOTTOM : 10;
+
+				$pdf = pdf_getInstance($format);
+				$pdf->SetMargins($marge_gauche, $marge_haute, $marge_droite);
 				$pdf->SetTitle($fileuploadnewname);
 				$pdf->SetAuthor(!empty($conf->global->MAIN_INFO_SOCIETE_NOM)?$conf->global->MAIN_INFO_SOCIETE_NOM:'');
 				$pdf->SetCreator($user->getfullname($langs));
@@ -322,8 +326,37 @@ if (empty($reshook)) {
 			if (is_countable($_FILES['userfile']['name'])) {
 				foreach ($fileupload as $file) {
 					$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
-					if (file_exists($infile) && is_readable($infile)) {
-						//var_dump($infile);
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					$mtype = finfo_file($finfo, $infile);
+					if (strpos($mtype, 'image/') === 0) {
+						$pdf->AddPage();
+						$pdf->Image($infile, '', '', $page_largeur - $marge_gauche - $marge_droite);
+					}else{
+						if (file_exists($infile) && is_readable($infile)) {
+							//var_dump($infile);
+							$pagecount = $pdf->setSourceFile($infile);
+							for ($i = 1; $i <= $pagecount; $i++) {
+								$tplIdx = $pdf->importPage($i);
+								if ($tplIdx !== false) {
+									$s = $pdf->getTemplatesize($tplIdx);
+									$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
+									$pdf->useTemplate($tplIdx);
+								} else {
+									setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
+								}
+							}
+						}
+					}
+				}
+				// Si un seul fichier
+			} else {
+				$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+				if (file_exists($infile) && is_readable($infile)) {
+					// Le fichier est une image
+					if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
+						$pdf->AddPage();
+						$pdf->Image($infile, '', '', $page_largeur - $marge_gauche - $marge_droite);
+					}else{
 						$pagecount = $pdf->setSourceFile($infile);
 						for ($i = 1; $i <= $pagecount; $i++) {
 							$tplIdx = $pdf->importPage($i);
@@ -334,23 +367,6 @@ if (empty($reshook)) {
 							} else {
 								setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
 							}
-						}
-					}
-				}
-				// Si un seul fichier
-			} else {
-				$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
-				if (file_exists($infile) && is_readable($infile)) {
-					//var_dump($infile);
-					$pagecount = $pdf->setSourceFile($infile);
-					for ($i = 1; $i <= $pagecount; $i++) {
-						$tplIdx = $pdf->importPage($i);
-						if ($tplIdx !== false) {
-							$s = $pdf->getTemplatesize($tplIdx);
-							$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
-							$pdf->useTemplate($tplIdx);
-						} else {
-							setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
 						}
 					}
 				}
@@ -375,7 +391,7 @@ if (empty($reshook)) {
 				}
 			}
 
-				//Vérifie si le fichier à bien ete créer pour inscription en db
+			// Vérifie si le fichier à bien ete créer pour inscription en db
 			if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."' WHERE rowid = ".$object->id;
 				$resql = $db->query($sql);
@@ -721,7 +737,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc2">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="fundoc2input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="fundoc2input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -739,7 +755,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc3">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -757,7 +773,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc4">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -775,7 +791,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc5">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -804,7 +820,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc1">';
 		if (empty($object->funfoldoc1)) {
-			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc1input"></td>';
+			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc1input"></td>';
 		}
 		if ($object->funfoldoc1) {
 			print '<td>'.$object->funfoldoc1.'</td>';
@@ -826,7 +842,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc2">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc2input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc2input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -844,7 +860,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc3">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc3input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc3input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -862,7 +878,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc4">';
-		print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc4input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc4input"></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 		print '</form>';
@@ -881,7 +897,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print '<input type="hidden" name="token" value="'.newToken().'">';
 			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="doc" value="funfoldoc5">';
-			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc5input"></td>';
+			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc5input"></td>';
 			print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 			//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
@@ -901,7 +917,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print '<input type="hidden" name="token" value="'.newToken().'">';
 			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="doc" value="funfoldoc6">';
-			print '<td><input type="file" accept=".pdf" class="flat"  name="userfile" id="funfoldoc6input"></td>';
+			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc6input"></td>';
 			print '<td><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 			//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
