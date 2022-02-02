@@ -1024,7 +1024,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			// Send
 			if (empty($user->socid) && $permissiontoadd) {
-				$sendto = $conf->global->FUNDING_EMAIL_DEFAULT;
+				$sendto = $conf->global->FUNDING_MAIL_DEFAULT;
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
 
