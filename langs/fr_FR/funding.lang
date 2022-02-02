@@ -147,7 +147,7 @@ FUNDING_FILTRE_ORGANIZATION=Filtre organisme financement
 FUNDING_DEFAULT_ORGANIZATION=Organisme par default
 
 
-FUNDING_MAIL_DEFAULT=Adresse eail d'envoie par default
+FUNDING_MAIL_DEFAULT=Adresse mail d'envoie par default
 FUNDING_MAIL_AUTOCOPY_TO=Adresse mail de copie automatique
 FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
 

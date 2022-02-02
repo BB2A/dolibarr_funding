@@ -42,13 +42,8 @@ global $langs, $user;
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/funding.lib.php';
 
-/*
-* Débu de réfléxion pour rendre les param plus convivial
-*/
-/*
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-*/
 
 //require_once "../class/myclass.class.php";
 
@@ -181,13 +176,9 @@ if ($action == 'updateMask') {
  */
 
 $form = new Form($db);
-/*
-* Débu de réfléxion pour rendre les param plus convivial
-*/
-/*
 $formfile = new FormFile($db);
 $formcompany = new FormCompany($db);
-*/
+
 
 $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 
@@ -223,15 +214,15 @@ if ($action == 'edit') {
             print '</td><td>';
             $form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
             print '</td></tr>';
+        } elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+            print '</td><td>'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1) . info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1).'</td></tr>';
         } else {
             print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
         }
         /*
         * Début de réfléxion pour rendre les param plus convivial
         */
-        /*elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-            print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
-        } */
+        /* */
     }
     print '</table>';
 
@@ -257,11 +248,14 @@ if ($action == 'edit') {
                 print '</td><td>';
                 $form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
                 print '</td></tr>';
-            } else {
+            } elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+				print '</td><td>';
+				$formcompany->formThirdpartyType($conf->global->FUNDING_FILTRE_ORGANIZATION, $conf->global->FUNDING_FILTRE_ORGANIZATION, 'none', '');
+				print '</td></tr>';
+			} else {
                 print '</td><td>'.$conf->global->$key.'</td></tr>';
             }
         }
-
         print '</table>';
 
         print '<div class="tabsAction">';
