@@ -244,7 +244,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                             $result -1;
                         }
                     }
-                    //Regarde si il existe un lien sur une proposition
+                //Regarde si il existe un lien sur une proposition
                 } elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
                     $sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
                     $sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = ".$object->id;

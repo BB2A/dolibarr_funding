@@ -10,7 +10,7 @@
 - FIX - Correction ffichage  liste des document sur mobile
 - FIX - Correction filtrage par date dans les listes
 - FIX - Le montant personnalisé ne peut plus etre à zero
-- FIX - Erreur à la suppression d'un documment sur propal supprime le financement sur order uniquement si inférrieur à actif 
+- FIX - Erreur à la suppression d'un documment sur propal supprime le financement sur order uniquement si inférrieur à actif
 
 - NEW - Ajout du changelog dans param du module
 - NEW - Modification de à propo dans param du module
@@ -22,7 +22,7 @@
 - NEW - Amélioration de la page d'index des financements
 - NEW - Un mail par default est paramettrable
 - NEW - Ajout du document rachat signé
-- NEW - Valide le financement sur une commande (Au transfert d'une propo ou la validation d'une nouvelle commade)
+- NEW - Valide le financement sur une commande (Au transfert d'une propo ou la validation d'une nouvelle commade ou création d'un financement dirrectement sur la commande)
 - NEW - Possibilitée d'ajouter des images dans les piéces jointe elles sont transformer en PDF
 
 

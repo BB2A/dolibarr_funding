@@ -503,7 +503,7 @@ class Funding extends CommonObject
      */
     public function create(User $user, $notrigger = false)
     {
-        global $langs;
+        global $langs, $conf;
         $now        = dol_now();
         $typedoc    = GETPOST('typedoc', 'alpha');
         $iddoc      = GETPOST('iddoc', 'int');
@@ -552,17 +552,21 @@ class Funding extends CommonObject
                     $this->date_delivery = $document->date_livraison;
 
                     // Voir si delete
-                    if ($typedoc == 'propal') {
+                    /*if ($typedoc == 'propal') {
                         $this->fk_propal  = $iddoc;
                     }
                     if ($typedoc == 'order') {
                         $this->fk_order    = $iddoc;
-                    }
+                    }*/
                     // Commercial
-                    $idcomm             = $this->commtiers($document->socid);
+                    $idcomm = $this->commtiers($document->socid);
                     if ($idcomm > 0) {
                         $this->fk_user_comm = $idcomm;
                         $this->status = self::STATUS_DRAFT;
+						// Crétion financement sur commande passe directement en vilider
+						if ($document->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $this->origin = 'order') {
+							$this->status = self::STATUS_VALIDATED;
+						}
                         $create = $this->createCommon($user, $notrigger);
                         if ($create > 0) {
                             // Add object linked
