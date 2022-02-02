@@ -10,6 +10,7 @@
 - FIX - Correction ffichage  liste des document sur mobile
 - FIX - Correction filtrage par date dans les listes
 - FIX - Le montant personnalisé ne peut plus etre à zero
+- FIX - Erreur à la suppression d'un documment sur propal supprime le financement sur order uniquement si inférrieur à actif 
 
 - NEW - Ajout du changelog dans param du module
 - NEW - Modification de à propo dans param du module
