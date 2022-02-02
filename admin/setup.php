@@ -241,6 +241,7 @@ if ($action == 'edit') {
 
     print '</form>';
     print '<br>';
+
 } else {
     if (!empty($arrayofparameters)) {
         print '<table class="noborder centpercent">';
@@ -270,7 +271,6 @@ if ($action == 'edit') {
         print '<br>'.$langs->trans("NothingToSetup");
     }
 }
-
 
 $moduledir = 'funding';
 $myTmpObjects = array();

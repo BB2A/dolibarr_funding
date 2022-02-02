@@ -185,7 +185,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
             //case 'ORDER_CREATE':
             case 'ORDER_MODIFY':
                 if (!empty($fudid)) {
-                    if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
+                    if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
                         $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingcancel"), null);
@@ -193,7 +193,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                             setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
                             return -1;
                         }
-                    } elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+                    } elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
                         $result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingvalidated"), null);
@@ -217,7 +217,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
             case 'ORDER_VALIDATE':
                 //Update si financement existe déja
                 if (!empty($fudid)) {
-                    if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
+                    if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
                         $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingcancel"), null);
@@ -225,7 +225,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                             setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
                             return -1;
                         }
-                    } elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+                    } elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
                         $result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingvalidated"), null);
@@ -245,7 +245,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                         }
                     }
                     //Regarde si il existe un lien sur une proposition
-                } elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+                } elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
                     $sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
                     $sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = ".$object->id;
                     $resql = $db->query($sql);
@@ -316,7 +316,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                 return 0;
             //case 'ORDER_SENTBYMAIL':
             case 'ORDER_CLASSIFY_BILLED':
-                if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+                if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
                     if (!empty($object->date_livraison)) {
                         // Date de signature renseigné si commande livré
                         if (empty($obj->date_signature)) {
@@ -332,10 +332,10 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                         setEventMessages($langs->trans("fundingnotdatedelivry"), null, 'errors');
                         return -1;
                     }
-                } elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+                } elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
                     setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');
                     return -1;
-                } elseif (!empty($fudid) && $object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+                } elseif (!empty($fudid) && $object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT) {
                     $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
                     if ($result > 0) {
                         setEventMessages($langs->trans("fundingcancel"), null);
@@ -356,7 +356,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                 }
                 return 0;
             case 'ORDER_CLOSE':
-                if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+                if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
                     if (!empty($object->date_livraison)) {
                         // Date de signature renseigné si commande livré
                         if (empty($obj->date_signature)) {
@@ -372,10 +372,10 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                         setEventMessages($langs->trans("fundingnotdatedelivry"), null, 'errors');
                         return -1;
                     }
-                } elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT) {
+                } elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
                     setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');
                     return -1;
-                } elseif (!empty($fudid) && $object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+                } elseif (!empty($fudid) && $object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT) {
                     $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
                     if ($result > 0) {
                         setEventMessages($langs->trans("fundingcancel"), null);
@@ -419,7 +419,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
             //case 'PROPAL_CREATE':
             case 'PROPAL_MODIFY':
                 if (!empty($fudid)) {
-                    if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
+                    if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
                         $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingcancel"), null);
@@ -427,7 +427,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                             setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
                             return -1;
                         }
-                    } elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+                    } elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
                         $result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_DRAFT, $notrigger, 'FUNDING_DRAFT');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingdraft"), null);
@@ -450,7 +450,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
             case 'PROPAL_VALIDATE':
                 if (!empty($fudid)) {
-                    if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
+                    if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
                         $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingcancel"), null);
@@ -458,7 +458,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                             setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
                             return -1;
                         }
-                    } elseif ($object->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
+                    } elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status == $fundingobject::STATUS_CANCELED) {
                         $result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_DRAFT, $notrigger, 'FUNDING_DRAFT');
                         if ($result > 0) {
                             setEventMessages($langs->trans("fundingdraft"), null);
@@ -483,7 +483,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
             //case 'PROPAL_SENTBYMAIL':
             case 'PROPAL_CLOSE_SIGNED':
                 if (!empty($fudid)) {
-                    if ($object->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+                    if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT) {
                         return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
                     }
                 }

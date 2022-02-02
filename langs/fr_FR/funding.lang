@@ -137,7 +137,7 @@ Funding_type=Financement - Type
 #Paramettres
 #
 
-FUNDING_CODE_REGLEMENT=Code mode de réglement pour financement
+FUNDING_ID_REGLEMENT=Mode de réglement pour financement
 FUNDING_DEFAULT_DURATION=Valeur par default pour la durée de financement
 FUNDING_DEFAULT_SCALE=Barème par default
 FUNDING_DEFAULT_REDEMPTION=Valeur par default pour le rachat
