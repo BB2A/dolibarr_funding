@@ -17,7 +17,6 @@
 - NEW - L'osque le mode de règlement change sur le document
         - De financement à autre règlement -> clôture le financement
         - D'un autre règlement à financement -> Réouvre le financement à valider pour les commandes et à brouillon pour les propositions
-
 - NEW - Le financement ne peut pas être validé si le mode de règlement du document n'est pas celui en paramètre (financement)
 - NEW - Ajout d'un bouton annulé
 - NEW - Amélioration de la page d'index des financements
