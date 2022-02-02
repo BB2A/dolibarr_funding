@@ -24,6 +24,7 @@
 - NEW - Ajout du document rachat signé
 - NEW - Valide le financement sur une commande (Au transfert d'une propo ou la validation d'une nouvelle commade ou création d'un financement dirrectement sur la commande)
 - NEW - Possibilitée d'ajouter des images dans les piéces jointe elles sont transformer en PDF
+- NEW - Liste déroulante pour séléctionner le paramettre du mode de réglement
 
 
 ## [1.0.1] - 10/2021

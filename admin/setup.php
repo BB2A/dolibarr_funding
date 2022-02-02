@@ -56,7 +56,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 $langs->loadLangs(array("admin", "funding@funding"));
 
 // Access control
-if (!$user->admin) accessforbidden();
+if (!$user->admin) {
+    accessforbidden();
+}
 
 // Parameters
 $action = GETPOST('action', 'alpha');
@@ -206,63 +208,69 @@ echo '<span class="opacitymedium">'.$langs->trans("FundingSetupPage").'</span><b
 
 
 if ($action == 'edit') {
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="action" value="update">';
+    print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+    print '<input type="hidden" name="token" value="'.newToken().'">';
+    print '<input type="hidden" name="action" value="update">';
 
-	print '<table class="noborder centpercent">';
-	print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+    print '<table class="noborder centpercent">';
+    print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
-	foreach ($arrayofparameters as $key => $val) {
-		print '<tr class="oddeven"><td>';
-		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-		/*
-		* Débu de réfléxion pour rendre les param plus convivial
-		*/
-		/*if ($key == 'FUNDING_ID_REGLEMENT') {
-			print '</td><td>';
-			$form->select_types_paiements((GETPOSTISSET('mode_reglement_id') ? GETPOST('mode_reglement_id', 'int') : $conf->global->FUNDING_ID_REGLEMENT), 'mode_reglement_id', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
-			print '</td></tr>';
-		}elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-			print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
-		}else{
-			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
-		}*/
-		print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
-	}
-	print '</table>';
+    foreach ($arrayofparameters as $key => $val) {
+        print '<tr class="oddeven"><td>';
+        $tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+        print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+        if ($key == 'FUNDING_ID_REGLEMENT') {
+            print '</td><td>';
+            $form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+            print '</td></tr>';
+        } else {
+            print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+        }
+        /*
+        * Début de réfléxion pour rendre les param plus convivial
+        */
+        /*elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+            print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
+        } */
+    }
+    print '</table>';
 
-	print '<br><div class="center">';
-	print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
-	print '</div>';
+    print '<br><div class="center">';
+    print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
+    print '</div>';
 
-	print '</form>';
-	print '<br>';
+    print '</form>';
+    print '<br>';
+
 } else {
-	if (!empty($arrayofparameters)) {
-		print '<table class="noborder centpercent">';
-		print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+    if (!empty($arrayofparameters)) {
+        print '<table class="noborder centpercent">';
+        print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
-		foreach ($arrayofparameters as $key => $val) {
-			$setupnotempty++;
+        foreach ($arrayofparameters as $key => $val) {
+            $setupnotempty++;
 
-			print '<tr class="oddeven"><td>';
-			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-			print '</td><td>'.$conf->global->$key.'</td></tr>';
-		}
+            print '<tr class="oddeven"><td>';
+            $tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+            print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+            if ($key == 'FUNDING_ID_REGLEMENT') {
+                print '</td><td>';
+                $form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
+                print '</td></tr>';
+            } else {
+                print '</td><td>'.$conf->global->$key.'</td></tr>';
+            }
+        }
 
-		print '</table>';
+        print '</table>';
 
-		print '<div class="tabsAction">';
-		print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
-		print '</div>';
-	} else {
-		print '<br>'.$langs->trans("NothingToSetup");
-	}
+        print '<div class="tabsAction">';
+        print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
+        print '</div>';
+    } else {
+        print '<br>'.$langs->trans("NothingToSetup");
+    }
 }
-
 
 $moduledir = 'funding';
 $myTmpObjects = array();
