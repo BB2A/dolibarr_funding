@@ -88,6 +88,7 @@ $cancel                 = GETPOST('cancel', 'aZ09');
 $contextpage            = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
 $backtopage             = GETPOST('backtopage', 'alpha');
 $backtopageforcancel    = GETPOST('backtopageforcancel', 'alpha');
+
 //$lineid   = GETPOST('lineid', 'int');
 
 $typedoc                = GETPOST('typedoc', 'alpha');
@@ -626,9 +627,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
     }
 
     // Confirmation to delete line
+    /*
     if ($action == 'deleteline') {
         $formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
     }
+    */
 
     // Confirmation of action xxxx
     if ($action == 'xxx') {

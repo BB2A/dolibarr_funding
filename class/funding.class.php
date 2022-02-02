@@ -564,7 +564,7 @@ class Funding extends CommonObject
 						$this->fk_user_comm = $idcomm;
 						$this->status = self::STATUS_DRAFT;
 						// Crétion financement sur commande passe directement en vilider
-						if ($document->mode_reglement_code == $conf->global->FUNDING_CODE_REGLEMENT && $this->origin = 'order') {
+						if ($document->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $this->origin == 'order') {
 							$this->status = self::STATUS_VALIDATED;
 						}
 						$create = $this->createCommon($user, $notrigger);
@@ -1211,7 +1211,7 @@ class Funding extends CommonObject
 			dol_syslog(get_class($this)."::validate action abandonned: already validated", LOG_WARNING);
 			return 0;
 		}
-		if ($document->mode_reglement_code != $conf->global->FUNDING_CODE_REGLEMENT) {
+		if ($document->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT) {
 			setEventMessages($langs->trans("novalidreg"), null, 'errors');
 			return -1;
 		}
