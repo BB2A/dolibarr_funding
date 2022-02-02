@@ -250,9 +250,9 @@ if (empty($reshook)) {
     }
 
     // Mass actions
-    $objectclass = 'Call';
-    $objectlabel = 'Call';
-    $uploaddir = $conf->call->dir_output;
+    $objectclass = 'Funding';
+    $objectlabel = 'Funding';
+    $uploaddir = $conf->funding->dir_output;
     include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
