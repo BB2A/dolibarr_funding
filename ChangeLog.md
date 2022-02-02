@@ -2,30 +2,31 @@
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
-- FIX - Désactiver envoie organisme pour plus de clarté car non foctionnel pour le moment
-- FIX - Menu Nouvelle proposition financiere ne filtré pas sur le bon statut. (Désactiver activer le module)
-- FIX - Correction sur l'historique de certain evénements
-- FIX - Plus de contrainte si le document n'est pas vilidé ou déja livré
-- FIX - Correction des droits probléme contstaté lorsque l'on afficher l'apercu d'un document
-- FIX - Correction ffichage  liste des document sur mobile
+- FIX - Désactiver le boutton d'envoie à l'organisme pour plus de clarté car non foctionnel pour le moment
+- FIX - Menu nouvelle proposition financière ne filtré pas sur le bon statut. (désactiver activer le module)
+- FIX - Correction sur l'historique de certains événements
+- FIX - Plus de contrainte si le document n'est pas validé ou déjà livré
+- FIX - Correction des droits (problèmes constaté lorsque l'on afficher l'apercu d'un document)
+- FIX - Correction affichage liste des documents sur mobile
 - FIX - Correction filtrage par date dans les listes
-- FIX - Le montant personnalisé ne peut plus etre à zero
-- FIX - Erreur à la suppression d'un documment sur propal supprime le financement sur order uniquement si inférrieur à actif
+- FIX - Le montant personnalisé ne peut plus être à zéro
+- FIX - Erreur à la suppression d'un document sur proposition. La suppression sur une commande est possible uniquement si le statut est inférrieur à actif
 
-- NEW - Ajout du changelog dans param du module
-- NEW - Modification de à propo dans param du module
-- NEW - Losque le mode de réglement change sur le document
-    - Financement à autre réglement -> Cloture le financement
-    - Réglement autre à financement -> Réouvre le financement à valider pour les commandes et à brouillon pour les propositions
-- NEW - Le financement ne peut pas etre validé si le mode de réglement du document n'est pas celui en paramettre
+- NEW - Ajout du changelog dans les paramètres du module
+- NEW - Modification de "à propos" dans les paramettres du module
+- NEW - L'osque le mode de règlement change sur le document
+        - De financement à autre règlement -> clôture le financement
+        - D'un autre règlement à financement -> Réouvre le financement à valider pour les commandes et à brouillon pour les propositions
+
+- NEW - Le financement ne peut pas être validé si le mode de règlement du document n'est pas celui en paramètre (financement)
 - NEW - Ajout d'un bouton annulé
 - NEW - Amélioration de la page d'index des financements
-- NEW - Un mail par default est paramettrable
-- NEW - Ajout du document rachat signé
-- NEW - Valide le financement sur une commande (Au transfert d'une propo ou la validation d'une nouvelle commade ou création d'un financement dirrectement sur la commande)
-- NEW - Possibilitée d'ajouter des images dans les piéces jointe elles sont transformer en PDF
-- NEW - Liste déroulante pour séléctionner le paramettre du mode de réglement
-- NEW - Liste déroulante pour le filtre des organismes de financement
+- NEW - Un mail par défaut est paramétrable
+- NEW - Ajout du document rachat signé (seulement si "rachat" est à oui)
+- NEW - Validation automatique du financement sur une commande 
+- NEW - Possibilité d'ajouter des images dans les pièces jointes (Elles sont transformées en PDF.)
+- NEW - Liste déroulante pour sélectionner le paramètre du mode de règlement
+- NEW - Liste déroulante pour sélectionner le paramètre du filtre des organismes de financement
 
 ## [1.0.1] - 10/2021
 
