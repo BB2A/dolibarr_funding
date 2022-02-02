@@ -66,7 +66,7 @@ $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
 
-	'FUNDING_CODE_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
@@ -220,16 +220,16 @@ if ($action == 'edit') {
 		/*
 		* Débu de réfléxion pour rendre les param plus convivial
 		*/
-		/*if ($key == 'FUNDING_CODE_REGLEMENT') {
+		if ($key == 'FUNDING_ID_REGLEMENT') {
 			print '</td><td>';
-			$form->select_types_paiements((GETPOSTISSET('mode_reglement_id') ? GETPOST('mode_reglement_id', 'int') : $conf->global->FUNDING_CODE_REGLEMENT), 'mode_reglement_id', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
 			print '</td></tr>';
-		}elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+		}/*elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 			print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
-		}else{
+		}*/else{
 			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
-		}*/
-		print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+		}
+		// print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 	}
 	print '</table>';
 
@@ -250,7 +250,13 @@ if ($action == 'edit') {
 			print '<tr class="oddeven"><td>';
 			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
 			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-			print '</td><td>'.$conf->global->$key.'</td></tr>';
+			if ($key == 'FUNDING_ID_REGLEMENT') {
+				print '</td><td>';
+				$form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
+				print '</td></tr>';
+			}else{
+				print '</td><td>'.$conf->global->$key.'</td></tr>';
+			}
 		}
 
 		print '</table>';
