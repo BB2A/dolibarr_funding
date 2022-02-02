@@ -52,7 +52,7 @@ $langs->loadLangs(array("admin", "funding@funding"));
 
 // Access control
 if (!$user->admin) {
-    accessforbidden();
+	accessforbidden();
 }
 
 // Parameters
@@ -63,18 +63,18 @@ $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
 
-    'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
 
-    'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
+	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
 
-    'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -199,71 +199,70 @@ echo '<span class="opacitymedium">'.$langs->trans("FundingSetupPage").'</span><b
 
 
 if ($action == 'edit') {
-    print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-    print '<input type="hidden" name="token" value="'.newToken().'">';
-    print '<input type="hidden" name="action" value="update">';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="action" value="update">';
 
-    print '<table class="noborder centpercent">';
-    print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+	print '<table class="noborder centpercent">';
+	print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
-    foreach ($arrayofparameters as $key => $val) {
-        print '<tr class="oddeven"><td>';
-        $tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-        print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-        if ($key == 'FUNDING_ID_REGLEMENT') {
-            print '</td><td>';
-            $form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
-            print '</td></tr>';
-        } elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-            print '</td><td>'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1) . info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1).'</td></tr>';
-        } else {
-            print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
-        }
-        /*
-        * Début de réfléxion pour rendre les param plus convivial
-        */
-        /* */
-    }
-    print '</table>';
+	foreach ($arrayofparameters as $key => $val) {
+		print '<tr class="oddeven"><td>';
+		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+		if ($key == 'FUNDING_ID_REGLEMENT') {
+			print '</td><td>';
+			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+			print '</td></tr>';
+		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+			print '</td><td>'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1) . info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1).'</td></tr>';
+		} else {
+			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+		}
+		/*
+		* Début de réfléxion pour rendre les param plus convivial
+		*/
+		/* */
+	}
+	print '</table>';
 
-    print '<br><div class="center">';
-    print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
-    print '</div>';
+	print '<br><div class="center">';
+	print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
+	print '</div>';
 
-    print '</form>';
-    print '<br>';
-
+	print '</form>';
+	print '<br>';
 } else {
-    if (!empty($arrayofparameters)) {
-        print '<table class="noborder centpercent">';
-        print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+	if (!empty($arrayofparameters)) {
+		print '<table class="noborder centpercent">';
+		print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
-        foreach ($arrayofparameters as $key => $val) {
-            $setupnotempty++;
+		foreach ($arrayofparameters as $key => $val) {
+			$setupnotempty++;
 
-            print '<tr class="oddeven"><td>';
-            $tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-            print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-            if ($key == 'FUNDING_ID_REGLEMENT') {
-                print '</td><td>';
-                $form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
-                print '</td></tr>';
-            } elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+			print '<tr class="oddeven"><td>';
+			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+			if ($key == 'FUNDING_ID_REGLEMENT') {
+				print '</td><td>';
+				$form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
+				print '</td></tr>';
+			} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 				print '</td><td>';
 				$formcompany->formThirdpartyType($conf->global->FUNDING_FILTRE_ORGANIZATION, $conf->global->FUNDING_FILTRE_ORGANIZATION, 'none', '');
 				print '</td></tr>';
 			} else {
-                print '</td><td>'.$conf->global->$key.'</td></tr>';
-            }
-        }
-        print '</table>';
+				print '</td><td>'.$conf->global->$key.'</td></tr>';
+			}
+		}
+		print '</table>';
 
-        print '<div class="tabsAction">';
-        print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
-        print '</div>';
-    } else {
-        print '<br>'.$langs->trans("NothingToSetup");
-    }
+		print '<div class="tabsAction">';
+		print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
+		print '</div>';
+	} else {
+		print '<br>'.$langs->trans("NothingToSetup");
+	}
 }
 
 $moduledir = 'funding';
