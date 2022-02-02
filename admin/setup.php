@@ -66,18 +66,18 @@ $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
 
-	'FUNDING_CODE_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
 
-	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
+    'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
 
-	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
+    'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -220,9 +220,9 @@ if ($action == 'edit') {
 		/*
 		* Débu de réfléxion pour rendre les param plus convivial
 		*/
-		/*if ($key == 'FUNDING_CODE_REGLEMENT') {
+		/*if ($key == 'FUNDING_ID_REGLEMENT') {
 			print '</td><td>';
-			$form->select_types_paiements((GETPOSTISSET('mode_reglement_id') ? GETPOST('mode_reglement_id', 'int') : $conf->global->FUNDING_CODE_REGLEMENT), 'mode_reglement_id', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+			$form->select_types_paiements((GETPOSTISSET('mode_reglement_id') ? GETPOST('mode_reglement_id', 'int') : $conf->global->FUNDING_ID_REGLEMENT), 'mode_reglement_id', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
 			print '</td></tr>';
 		}elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 			print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
