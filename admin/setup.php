@@ -56,7 +56,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 $langs->loadLangs(array("admin", "funding@funding"));
 
 // Access control
-if (!$user->admin) accessforbidden();
+if (!$user->admin) {
+    accessforbidden();
+}
 
 // Parameters
 $action = GETPOST('action', 'alpha');
