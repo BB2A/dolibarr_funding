@@ -308,16 +308,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
                 return $result;
 
-            case 'ORDER_DELETE':
-                if (!empty($fudid)) {
-                    if ($obj->status >= $fundingobject::STATUS_END) {
-                        setEventMessages($langs->trans("supppropalnok"), null, 'errors');
-                        return -1;
-                    } else {
-                        return $fundingobject->delete($user);
-                    }
-                }
-                return 0;
+
             case 'ORDER_CANCEL':
                 if (!empty($fudid)) {
                     return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCELED');
@@ -395,7 +386,16 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                     }
                 }
                 return 0;
-
+            case 'ORDER_DELETE':
+                if (!empty($fudid)) {
+                    if ($obj->status >= $fundingobject::STATUS_RUNNING) {
+                        setEventMessages($langs->trans("supppropalnok"), null, 'errors');
+                        return -1;
+                    } else {
+                        return  $fundingobject->delete($user);
+                    }
+                }
+                return 0;
             //case 'LINEORDER_INSERT':
             //case 'LINEORDER_UPDATE':
             //case 'LINEORDER_DELETE':
@@ -495,12 +495,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                 return 0;
             case 'PROPAL_DELETE':
                 if (!empty($fudid)) {
-                    if ($obj->status != $fundingobject::STATUS_CANCELED) {
-                        setEventMessages($langs->trans("supppropalnok"), null, 'errors');
-                        return -1;
-                    } else {
-                        return  $fundingobject->delete($user);
-                    }
+                    return  $fundingobject->delete($user);
                 }
                 return 0;
 
