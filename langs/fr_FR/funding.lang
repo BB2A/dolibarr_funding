@@ -52,7 +52,7 @@ MyPageName=Nom de ma page
 # Box d'exemple
 #
 FundindBoxValidate=Les 10 derniers nouveaux financements
-FundindBoxValidatePropal=Les 10 dernières nouvelles propositions financieres
+FundindBoxValidatePropal=Les 10 dernières nouvelles propositions financières
 FundindBoxUpdate=Les 10 derniers financements mise à jour
 FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
 FundindBoxAccept=Les 10 derniers financements accepté

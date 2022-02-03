@@ -921,7 +921,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print '<input type="hidden" name="action" value="savedoc">';
 			print '<input type="hidden" name="doc" value="funfoldoc6">';
 			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc6input"></td>';
-			print '<td><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+			print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 			//print '<td><input type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'"></td>';
 			print '</form>';
 		} else {
