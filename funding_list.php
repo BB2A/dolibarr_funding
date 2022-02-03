@@ -301,8 +301,8 @@ if ($object->ismultientitymanaged == 1) {
 if ($socid > 0) {
 	$sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
 	// Paramettre voir uniquement les financement sur commande
-	if (!empty($conf->global->FUNDING_LIST_TIRDPARTY_ONLY_ORDER)) {
-		$sql.= " AND t.origin = 'order'";
+	if (!empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL)) {
+		$sql.= " AND t.origin <> 'propal'";
 	}
 }
 // Filtre l'autorisation de voir certain financement - BB2A

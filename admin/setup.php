@@ -79,7 +79,7 @@ $arrayofparameters = array(
 	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
 
-	'FUNDING_LIST_TIRDPARTY_ONLY_ORDER'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -219,18 +219,6 @@ if ($action == 'edit') {
 		print '<tr class="oddeven"><td>';
 		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
 		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-		/*
-		* Débu de réfléxion pour rendre les param plus convivial
-		*/
-		/*if ($key == 'FUNDING_CODE_REGLEMENT') {
-			print '</td><td>';
-			$form->select_types_paiements((GETPOSTISSET('mode_reglement_id') ? GETPOST('mode_reglement_id', 'int') : $conf->global->FUNDING_CODE_REGLEMENT), 'mode_reglement_id', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
-			print '</td></tr>';
-		}elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-			print '</td><td>'.$form->selectarray("typent_id", $conf->global->FUNDING_FILTRE_ORGANIZATION = $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1).'</td></tr>';
-		}else{
-			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
-		}*/
 		print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 	}
 	print '</table>';
