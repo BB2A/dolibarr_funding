@@ -250,15 +250,9 @@ if (empty($reshook)) {
 	}
 
 	// Mass actions
-<<<<<<< HEAD
 	$objectclass = 'Funding';
 	$objectlabel = 'Funding';
 	$uploaddir = $conf->funding->dir_output;
-=======
-	$objectclass = 'Call';
-	$objectlabel = 'Call';
-	$uploaddir = $conf->call->dir_output;
->>>>>>> 377db355a050c8f930fbf42a8543c1d260990cdf
 	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -313,7 +307,7 @@ if ($socid > 0) {
 }
 // Filtre l'autorisation de voir certain financement - BB2A
 if (empty($user->rights->societe->client->voir) && empty($socid)) {
-    $sql.= " AND (t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id.")";
+	$sql.= " AND (t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id.")";
 }
 
 foreach ($search as $key => $val) {
