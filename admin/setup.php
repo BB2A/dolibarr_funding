@@ -224,7 +224,9 @@ dol_fiche_head($head, 'settings', '', -1, "funding@funding");
 echo '<span class="opacitymedium">'.$langs->trans("FundingSetupPage").'</span><br><br>';
 
 
-if ($action == 'edit') {
+// if ($action == 'edit') {
+if (1 == 1) {
+
     print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
     print '<input type="hidden" name="token" value="'.newToken().'">';
     print '<input type="hidden" name="action" value="update">';
