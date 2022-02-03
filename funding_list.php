@@ -290,54 +290,54 @@ $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
-	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
+    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
 if ($object->ismultientitymanaged == 1) {
-	$sql .= " WHERE t.entity IN (".getEntity($object->element).")";
+    $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 } else {
-	$sql .= " WHERE 1 = 1";
+    $sql .= " WHERE 1 = 1";
 }
 // Filtre si dans une societe - BB2A
 if ($socid > 0) {
-	$sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
+    $sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
 }
 // Filtre l'autorisation de voir certain financement - BB2A
 if (empty($user->rights->societe->client->voir) && empty($socid)) {
-	$sql.= " AND (t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id.")";
+    $sql.= " AND (t.fk_user_comm = ".$user->id." OR t.fk_user_creat = ".$user->id." OR t.fk_user_modif = ".$user->id.")";
 }
 
 foreach ($search as $key => $val) {
-	if (array_key_exists($key, $object->fields)) {
-		if ($key == 'status' && $search[$key] == -1) {
-			continue;
-		}
-		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
-		if ((strpos($object->fields[$key]['type'], 'integer:') === 0) || (strpos($object->fields[$key]['type'], 'sellist:') === 0) || !empty($object->fields[$key]['arrayofkeyval'])) {
-			if ($search[$key] == '-1' || ($search[$key] === '0' && (empty($object->fields[$key]['arrayofkeyval']) || !array_key_exists('0', $object->fields[$key]['arrayofkeyval'])))) {
-				$search[$key] = '';
-			}
-			$mode_search = 2;
-		}
-		if ($search[$key] != '') {
-			$sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
-		}
-	} else {
-		if (preg_match('/(_dtstart|_dtend)$/', $key) && $search[$key] != '') {
-			$columnName = preg_replace('/(_dtstart|_dtend)$/', '', $key);
-			if (preg_match('/^(date|timestamp|datetime)/', $object->fields[$columnName]['type'])) {
-				if (preg_match('/_dtstart$/', $key)) {
-					$sql .= " AND t.".$columnName." >= '".$db->idate($search[$key])."'";
-				}
-				if (preg_match('/_dtend$/', $key)) {
-					$sql .= " AND t." . $columnName . " <= '" . $db->idate($search[$key]) . "'";
-				}
-			}
-		}
-	}
+    if (array_key_exists($key, $object->fields)) {
+        if ($key == 'status' && $search[$key] == -1) {
+            continue;
+        }
+        $mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
+        if ((strpos($object->fields[$key]['type'], 'integer:') === 0) || (strpos($object->fields[$key]['type'], 'sellist:') === 0) || !empty($object->fields[$key]['arrayofkeyval'])) {
+            if ($search[$key] == '-1' || ($search[$key] === '0' && (empty($object->fields[$key]['arrayofkeyval']) || !array_key_exists('0', $object->fields[$key]['arrayofkeyval'])))) {
+                $search[$key] = '';
+            }
+            $mode_search = 2;
+        }
+        if ($search[$key] != '') {
+            $sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
+        }
+    } else {
+        if (preg_match('/(_dtstart|_dtend)$/', $key) && $search[$key] != '') {
+            $columnName = preg_replace('/(_dtstart|_dtend)$/', '', $key);
+            if (preg_match('/^(date|timestamp|datetime)/', $object->fields[$columnName]['type'])) {
+                if (preg_match('/_dtstart$/', $key)) {
+                    $sql .= " AND t.".$columnName." >= '".$db->idate($search[$key])."'";
+                }
+                if (preg_match('/_dtend$/', $key)) {
+                    $sql .= " AND t." . $columnName . " <= '" . $db->idate($search[$key]) . "'";
+                }
+            }
+        }
+    }
 }
 
 if ($search_all) {
-	$sql .= natural_search(array_keys($fieldstosearchall), $search_all);
+    $sql .= natural_search(array_keys($fieldstosearchall), $search_all);
 }
 //$sql.= dolSqlDateFilter("t.field", $search_xxxday, $search_xxxmonth, $search_xxxyear);
 // Add where from extra fields
