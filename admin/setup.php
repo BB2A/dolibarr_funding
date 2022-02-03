@@ -94,7 +94,7 @@ $arrayofparameters = array(
 	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
 
-	'FUNDING_LIST_TIRDPARTY_ONLY_ORDER'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -248,10 +248,6 @@ if (1 == 1) {
 		} else {
 			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 		}
-		/*
-		* Début de réfléxion pour rendre les param plus convivial
-		*/
-		/* */
 	}
 	print '</table>';
 
