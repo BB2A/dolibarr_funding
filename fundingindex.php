@@ -96,19 +96,21 @@ print '<br>';
 
 // New Funding
 if (!empty($conf->funding->enabled) && $permissiontoread) {
-	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 1";
 	$sql.= " AND f.origin = 'order'";
-	$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
-		$sql .= " AND f.fk_user_comm = ". $user->id;
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
+		$sql .= " AND f.fk_user_comm = ".$user->id;
 	}
 	$sql .= " ORDER BY f.ref DESC";
-
 	$resql = $db->query($sql);
+
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -168,20 +170,22 @@ $max = 3;
 print '<br>';
 
 if (! empty($conf->funding->enabled) && $permissiontoread) {
-		// Tableau bis
-		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
-		$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-		$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-		$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-		$sql.= " WHERE f.status = 1";
-		$sql.= " AND f.origin = 'propal'";
-		$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	// Tableau bis
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
+	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
+	$sql.= " WHERE f.status = 1";
+	$sql.= " AND f.origin = 'propal'";
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
-		$sql .= " ORDER BY f.ref DESC";
+	$sql .= " ORDER BY f.ref DESC";
+	$resql = $db->query($sql);
 
-		$resql = $db->query($sql);
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -238,19 +242,21 @@ print '<br>';
 
 // Financement mise à jour
 if (!empty($conf->funding->enabled) && $permissiontoread) {
-	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 2";
 	$sql.= " AND f.origin = 'order'";
-	$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
 	$sql .= " ORDER BY f.ref DESC";
-
 	$resql = $db->query($sql);
+
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -310,20 +316,22 @@ $max = 3;
 print '<br>';
 
 if (! empty($conf->funding->enabled) && $permissiontoread) {
-		// Tableau bis
-		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
-		$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-		$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-		$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-		$sql.= " WHERE f.status = 2";
-		$sql.= " AND f.origin = 'propal'";
-		$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	// Tableau bis
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
+	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
+	$sql.= " WHERE f.status = 2";
+	$sql.= " AND f.origin = 'propal'";
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
-		$sql .= " ORDER BY f.ref DESC";
+	$sql .= " ORDER BY f.ref DESC";
+	$resql = $db->query($sql);
 
-		$resql = $db->query($sql);
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -380,19 +388,21 @@ print '<br>';
 
 // Financements accepté
 if (!empty($conf->funding->enabled) && $permissiontoread) {
-	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 4";
 	$sql.= " AND f.origin = 'order'";
-	$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
 	$sql .= " ORDER BY f.ref DESC";
-
 	$resql = $db->query($sql);
+	
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -451,20 +461,22 @@ $max = 3;
 print '<br>';
 
 if (! empty($conf->funding->enabled) && $permissiontoread) {
-		// Tableau bis
-		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
-		$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-		$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-		$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-		$sql.= " WHERE f.status = 4";
-		$sql.= " AND f.origin = 'propal'";
-		$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	// Tableau bis
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
+	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
+	$sql.= " WHERE f.status = 4";
+	$sql.= " AND f.origin = 'propal'";
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
-		$sql .= " ORDER BY f.ref DESC";
+	$sql .= " ORDER BY f.ref DESC";
+	$resql = $db->query($sql);
 
-		$resql = $db->query($sql);
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -521,19 +533,21 @@ print '<br>';
 
 // Financement refusé
 if (!empty($conf->funding->enabled) && $permissiontoread) {
-	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 5";
 	$sql.= " AND f.origin = 'order'";
-	$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
 	$sql .= " ORDER BY f.ref DESC";
-
 	$resql = $db->query($sql);
+
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -592,20 +606,22 @@ $max = 3;
 print '<br>';
 
 if (! empty($conf->funding->enabled) && $permissiontoread) {
-		// Tableau bis
-		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
-		$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-		$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-		$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-		$sql.= " WHERE f.status = 5";
-		$sql.= " AND f.origin = 'propal'";
-		$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	// Tableau bis
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
+	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
+	$sql.= " WHERE f.status = 5";
+	$sql.= " AND f.origin = 'propal'";
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
-		$sql .= " ORDER BY f.ref DESC";
+	$sql .= " ORDER BY f.ref DESC";
+	$resql = $db->query($sql);
 
-		$resql = $db->query($sql);
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -662,19 +678,21 @@ print '<br>';
 
 // Financement Running
 if (!empty($conf->funding->enabled) && $permissiontoread) {
-	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
 	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 6";
 	$sql.= " AND f.origin = 'order'";
-	$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
 	$sql .= " ORDER BY f.ref DESC";
-
 	$resql = $db->query($sql);
+
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
@@ -734,20 +752,22 @@ print '<br>';
 
 // Financement Rend
 if (! empty($conf->funding->enabled) && $permissiontoread) {
-		// Tableau bis
-		$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm";
-		$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
-		$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-		$sql .= ", ".MAIN_DB_PREFIX."societe as s";
-		$sql.= " WHERE f.status = 7";
-		$sql.= " AND f.origin = 'order'";
-		$sql .= " AND f.fk_soc = s.rowid";
-	if (!$permissionmanage) {
+	// Tableau bis
+	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_soc_invoice, f.fk_org, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
+	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
+	$sql.= " WHERE f.status = 7";
+	$sql.= " AND f.origin = 'order'";
+	if ($socid > 0) {
+		$sql.= " AND f.fk_soc = ".$socid." OR f.fk_soc_invoice = ".$socid." OR f.fk_org = ".$socid;
+	}
+	if (!$permissionmanage || empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}
-		$sql .= " ORDER BY f.ref DESC";
+	$sql .= " ORDER BY f.ref DESC";
+	$resql = $db->query($sql);
 
-		$resql = $db->query($sql);
 	if ($resql) {
 		$total = 0;
 		$num = $db->num_rows($resql);
