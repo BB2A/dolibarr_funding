@@ -26,7 +26,7 @@
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
 if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
-    $res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
+	$res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
 }
 // Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
 $tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME'];
@@ -34,24 +34,24 @@ $tmp2 = realpath(__FILE__);
 $i = strlen($tmp) - 1;
 $j = strlen($tmp2) - 1;
 while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
-    $i--;
-    $j--;
+	$i--;
+	$j--;
 }
 if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) {
-    $res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
+	$res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
 }
 if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) {
-    $res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
+	$res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
 }
 // Try main.inc.php using relative path
 if (!$res && file_exists("../../main.inc.php")) {
-    $res = @include "../../main.inc.php";
+	$res = @include "../../main.inc.php";
 }
 if (!$res && file_exists("../../../main.inc.php")) {
-    $res = @include "../../../main.inc.php";
+	$res = @include "../../../main.inc.php";
 }
 if (!$res) {
-    die("Include of main fails");
+	die("Include of main fails");
 }
 
 global $langs, $user;
@@ -70,7 +70,7 @@ $langs->loadLangs(array("admin", "funding@funding"));
 
 // Access control
 if (!$user->admin) {
-    accessforbidden();
+	accessforbidden();
 }
 
 // Parameters
@@ -81,18 +81,18 @@ $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
 
-    'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
 
-    'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
+	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
 
-    'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
-    'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
 );
 
 $error = 0;
@@ -104,95 +104,95 @@ $setupnotempty = 0;
  */
 
 if ((float) DOL_VERSION >= 6) {
-    include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
+	include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
 }
 
 if ($action == 'updateMask') {
-    $maskconstorder = GETPOST('maskconstorder', 'alpha');
-    $maskorder = GETPOST('maskorder', 'alpha');
+	$maskconstorder = GETPOST('maskconstorder', 'alpha');
+	$maskorder = GETPOST('maskorder', 'alpha');
 
-    if ($maskconstorder) {
-        $res = dolibarr_set_const($db, $maskconstorder, $maskorder, 'chaine', 0, '', $conf->entity);
-    }
+	if ($maskconstorder) {
+		$res = dolibarr_set_const($db, $maskconstorder, $maskorder, 'chaine', 0, '', $conf->entity);
+	}
 
-    if (!$res > 0) {
-        $error++;
-    }
+	if (!$res > 0) {
+		$error++;
+	}
 
-    if (!$error) {
-        setEventMessages($langs->trans("SetupSaved"), null, 'mesgs');
-    } else {
-        setEventMessages($langs->trans("Error"), null, 'errors');
-    }
+	if (!$error) {
+		setEventMessages($langs->trans("SetupSaved"), null, 'mesgs');
+	} else {
+		setEventMessages($langs->trans("Error"), null, 'errors');
+	}
 } elseif ($action == 'specimen') {
-    $modele = GETPOST('module', 'alpha');
-    $tmpobjectkey = GETPOST('object');
+	$modele = GETPOST('module', 'alpha');
+	$tmpobjectkey = GETPOST('object');
 
-    $tmpobject = new $tmpobjectkey($db);
-    $tmpobject->initAsSpecimen();
+	$tmpobject = new $tmpobjectkey($db);
+	$tmpobject->initAsSpecimen();
 
-    // Search template files
-    $file = '';
-    $classname = '';
-    $filefound = 0;
-    $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
-    foreach ($dirmodels as $reldir) {
-        $file = dol_buildpath($reldir."core/modules/funding/doc/pdf_".$modele."_".strtolower($tmpobjectkey).".modules.php", 0);
-        if (file_exists($file)) {
-            $filefound = 1;
-            $classname = "pdf_".$modele;
-            break;
-        }
-    }
+	// Search template files
+	$file = '';
+	$classname = '';
+	$filefound = 0;
+	$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
+	foreach ($dirmodels as $reldir) {
+		$file = dol_buildpath($reldir."core/modules/funding/doc/pdf_".$modele."_".strtolower($tmpobjectkey).".modules.php", 0);
+		if (file_exists($file)) {
+			$filefound = 1;
+			$classname = "pdf_".$modele;
+			break;
+		}
+	}
 
-    if ($filefound) {
-        require_once $file;
+	if ($filefound) {
+		require_once $file;
 
-        $module = new $classname($db);
+		$module = new $classname($db);
 
-        if ($module->write_file($tmpobject, $langs) > 0) {
-            header("Location: ".DOL_URL_ROOT."/document.php?modulepart=".strtolower($tmpobjectkey)."&file=SPECIMEN.pdf");
-            return;
-        } else {
-            setEventMessages($module->error, null, 'errors');
-            dol_syslog($module->error, LOG_ERR);
-        }
-    } else {
-        setEventMessages($langs->trans("ErrorModuleNotFound"), null, 'errors');
-        dol_syslog($langs->trans("ErrorModuleNotFound"), LOG_ERR);
-    }
+		if ($module->write_file($tmpobject, $langs) > 0) {
+			header("Location: ".DOL_URL_ROOT."/document.php?modulepart=".strtolower($tmpobjectkey)."&file=SPECIMEN.pdf");
+			return;
+		} else {
+			setEventMessages($module->error, null, 'errors');
+			dol_syslog($module->error, LOG_ERR);
+		}
+	} else {
+		setEventMessages($langs->trans("ErrorModuleNotFound"), null, 'errors');
+		dol_syslog($langs->trans("ErrorModuleNotFound"), LOG_ERR);
+	}
 } elseif ($action == 'set') { // Activate a model
-    $ret = addDocumentModel($value, $type, $label, $scandir);
+	$ret = addDocumentModel($value, $type, $label, $scandir);
 } elseif ($action == 'del') {
-    $tmpobjectkey = GETPOST('object');
+	$tmpobjectkey = GETPOST('object');
 
-    $ret = delDocumentModel($value, $type);
-    if ($ret > 0) {
-        $constforval = strtoupper($tmpobjectkey).'_ADDON_PDF';
-        if ($conf->global->$constforval == "$value") {
-            dolibarr_del_const($db, $constforval, $conf->entity);
-        }
-    }
+	$ret = delDocumentModel($value, $type);
+	if ($ret > 0) {
+		$constforval = strtoupper($tmpobjectkey).'_ADDON_PDF';
+		if ($conf->global->$constforval == "$value") {
+			dolibarr_del_const($db, $constforval, $conf->entity);
+		}
+	}
 } elseif ($action == 'setdoc') { // Set default model
-    $tmpobjectkey = GETPOST('object');
-    $constforval = strtoupper($tmpobjectkey).'_ADDON_PDF';
-    if (dolibarr_set_const($db, $constforval, $value, 'chaine', 0, '', $conf->entity)) {
-        // The constant that was read before the new set
-        // We therefore requires a variable to have a coherent view
-        $conf->global->$constforval = $value;
-    }
+	$tmpobjectkey = GETPOST('object');
+	$constforval = strtoupper($tmpobjectkey).'_ADDON_PDF';
+	if (dolibarr_set_const($db, $constforval, $value, 'chaine', 0, '', $conf->entity)) {
+		// The constant that was read before the new set
+		// We therefore requires a variable to have a coherent view
+		$conf->global->$constforval = $value;
+	}
 
-    // On active le modele
-    $ret = delDocumentModel($value, $type);
-    if ($ret > 0) {
-        $ret = addDocumentModel($value, $type, $label, $scandir);
-    }
+	// On active le modele
+	$ret = delDocumentModel($value, $type);
+	if ($ret > 0) {
+		$ret = addDocumentModel($value, $type, $label, $scandir);
+	}
 } elseif ($action == 'setmod') {
-    // TODO Check if numbering module chosen can be activated
-    // by calling method canBeActivated
-    $tmpobjectkey = GETPOST('object');
-    $constforval = 'FUNDING_'.strtoupper($tmpobjectkey)."_ADDON";
-    dolibarr_set_const($db, $constforval, $value, 'chaine', 0, '', $conf->entity);
+	// TODO Check if numbering module chosen can be activated
+	// by calling method canBeActivated
+	$tmpobjectkey = GETPOST('object');
+	$constforval = 'FUNDING_'.strtoupper($tmpobjectkey)."_ADDON";
+	dolibarr_set_const($db, $constforval, $value, 'chaine', 0, '', $conf->entity);
 }
 
 
@@ -226,71 +226,70 @@ echo '<span class="opacitymedium">'.$langs->trans("FundingSetupPage").'</span><b
 
 // if ($action == 'edit') {
 if (1 == 1) {
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="action" value="update">';
 
-    print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-    print '<input type="hidden" name="token" value="'.newToken().'">';
-    print '<input type="hidden" name="action" value="update">';
+	print '<table class="noborder centpercent">';
+	print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
-    print '<table class="noborder centpercent">';
-    print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+	foreach ($arrayofparameters as $key => $val) {
+		print '<tr class="oddeven"><td>';
+		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+		if ($key == 'FUNDING_ID_REGLEMENT') {
+			print '</td><td>';
+			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+			print '</td></tr>';
+		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+			print '</td><td>'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1) . info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1).'</td></tr>';
+		} else {
+			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+		}
+		/*
+		* Début de réfléxion pour rendre les param plus convivial
+		*/
+		/* */
+	}
+	print '</table>';
 
-    foreach ($arrayofparameters as $key => $val) {
-        print '<tr class="oddeven"><td>';
-        $tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-        print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-        if ($key == 'FUNDING_ID_REGLEMENT') {
-            print '</td><td>';
-            $form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
-            print '</td></tr>';
-        } elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-            print '</td><td>'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1) . info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1).'</td></tr>';
-        } else {
-            print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
-        }
-        /*
-        * Début de réfléxion pour rendre les param plus convivial
-        */
-        /* */
-    }
-    print '</table>';
+	print '<br><div class="center">';
+	print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
+	print '</div>';
 
-    print '<br><div class="center">';
-    print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
-    print '</div>';
-
-    print '</form>';
-    print '<br>';
+	print '</form>';
+	print '<br>';
 } else {
-    if (!empty($arrayofparameters)) {
-        print '<table class="noborder centpercent">';
-        print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+	if (!empty($arrayofparameters)) {
+		print '<table class="noborder centpercent">';
+		print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 
-        foreach ($arrayofparameters as $key => $val) {
-            $setupnotempty++;
+		foreach ($arrayofparameters as $key => $val) {
+			$setupnotempty++;
 
-            print '<tr class="oddeven"><td>';
-            $tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-            print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-            if ($key == 'FUNDING_ID_REGLEMENT') {
-                print '</td><td>';
-                $form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
-                print '</td></tr>';
-            } elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-                print '</td><td>';
-                $formcompany->formThirdpartyType($conf->global->FUNDING_FILTRE_ORGANIZATION, $conf->global->FUNDING_FILTRE_ORGANIZATION, 'none', '');
-                print '</td></tr>';
-            } else {
-                print '</td><td>'.$conf->global->$key.'</td></tr>';
-            }
-        }
-        print '</table>';
+			print '<tr class="oddeven"><td>';
+			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+			if ($key == 'FUNDING_ID_REGLEMENT') {
+				print '</td><td>';
+				$form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
+				print '</td></tr>';
+			} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+				print '</td><td>';
+				$formcompany->formThirdpartyType($conf->global->FUNDING_FILTRE_ORGANIZATION, $conf->global->FUNDING_FILTRE_ORGANIZATION, 'none', '');
+				print '</td></tr>';
+			} else {
+				print '</td><td>'.$conf->global->$key.'</td></tr>';
+			}
+		}
+		print '</table>';
 
-        print '<div class="tabsAction">';
-        print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
-        print '</div>';
-    } else {
-        print '<br>'.$langs->trans("NothingToSetup");
-    }
+		print '<div class="tabsAction">';
+		print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
+		print '</div>';
+	} else {
+		print '<br>'.$langs->trans("NothingToSetup");
+	}
 }
 
 $moduledir = 'funding';
