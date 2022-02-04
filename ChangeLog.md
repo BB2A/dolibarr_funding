@@ -1,5 +1,11 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.0.3] - 02/2022
+
+- FIX - 
+
+- NEW - Posibilité de sésactiver les proposition de financement dans l'onglet financement du tiers
+
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
 - FIX - Désactiver le boutton d'envoie à l'organisme pour plus de clarté car non foctionnel pour le moment

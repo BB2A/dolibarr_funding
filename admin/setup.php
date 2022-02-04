@@ -233,20 +233,29 @@ if (1 == 1) {
 	print '<input type="hidden" name="action" value="update">';
 
 	print '<table class="noborder centpercent">';
-	print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
+	print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td align="center">'.$langs->trans("Value").'</td></tr>';
 
 	foreach ($arrayofparameters as $key => $val) {
 		print '<tr class="oddeven"><td>';
 		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
 		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
 		if ($key == 'FUNDING_ID_REGLEMENT') {
-			print '</td><td>';
-			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 0, 0, 1, 'maxwidth200 widthcentpercentminusx');
+			print '</td><td align="right" width="230">';
+			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 1, 0, 1);
 			print '</td></tr>';
 		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-			print '</td><td>'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1) . info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1).'</td></tr>';
+			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
+		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL') {
+			print '</td>';
+			print '<td align="right" width="230">';
+			if ($conf->use_javascript_ajax) {
+				print ajax_constantonoff('FUNDING_LISTE_THIRDPARTY_PROPAL');
+			} else {
+				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL);
+			}
 		} else {
-			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+			print '</td><td align="right" width="230"><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 		}
 	}
 	print '</table>';
