@@ -355,7 +355,27 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingValidated',
+			'titre'=>'Draft',
+			'mainmenu'=>'funding',
+			'leftmenu'=>'',
+			'url'=>'/funding/funding_list.php?search_status=0&search_origin=order',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'=>'funding@funding',
+			'position'=>1100+$r,
+			// Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->funding->enabled',
+			// Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+			'perms'=>'$user->rights->funding->read',
+			'target'=>'',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'=>0,
+		);
+		$this->menu[$r++]=array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			// This is a Left menu entry
+			'type'=>'left',
+			'titre'=>'New',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=1&search_origin=order',
@@ -415,7 +435,7 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingDenied',
+			'titre'=>'Denied',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=5&search_origin=order',
@@ -495,7 +515,7 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingCanceled',
+			'titre'=>'Canceled',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=8&search_origin=order',
@@ -535,7 +555,27 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingPropalNew',
+			'titre'=>'Draft',
+			'mainmenu'=>'funding',
+			'leftmenu'=>'',
+			'url'=>'/funding/funding_list.php?search_status=0&search_origin=propal',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'=>'funding@funding',
+			'position'=>1200+$r,
+			// Define condition to show or hide menu entry. Use '$conf->funding->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->funding->enabled',
+			// Use 'perms'=>'$user->rights->funding->level1->level2' if you want your menu with a permission rules
+			'perms'=>'$user->rights->funding->read',
+			'target'=>'',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'=>0,
+		);
+		$this->menu[$r++]=array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+			// This is a Left menu entry
+			'type'=>'left',
+			'titre'=>'New',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=1&search_origin=propal',
@@ -555,7 +595,7 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingPropalAccept',
+			'titre'=>'ListFundingAccept',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=4&search_origin=propal',
@@ -575,7 +615,7 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingPropalDenied',
+			'titre'=>'Denied',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=5&search_origin=propal',
@@ -595,7 +635,7 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
-			'titre'=>'ListFundingPropalCanceled',
+			'titre'=>'Canceled',
 			'mainmenu'=>'funding',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=8&search_origin=propal',

@@ -2,9 +2,10 @@
 
 ## [1.0.3] - 02/2022
 
-- FIX - 
+- FIX - Désactivation visibilité origin and origin_id
 
 - NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
+- NEW - Ajout des listes brouillon
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
