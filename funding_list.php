@@ -299,7 +299,11 @@ if ($object->ismultientitymanaged == 1) {
 }
 // Filtre si dans une societe - BB2A
 if ($socid > 0) {
-    $sql.= " AND t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid;
+    $sql.= " AND (t.fk_soc = ".$socid." OR t.fk_soc_invoice = ".$socid." OR t.fk_org = ".$socid.")";
+    // Paramettre voir uniquement les financement sur commande
+    if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL)) {
+        $sql.= " AND t.origin <> 'propal'";
+    }
 }
 // Filtre l'autorisation de voir certain financement - BB2A
 if (empty($user->rights->societe->client->voir) && empty($socid)) {
