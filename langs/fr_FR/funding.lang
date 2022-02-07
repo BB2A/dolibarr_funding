@@ -49,18 +49,8 @@ FundingChangelog = Changelog de financement
 MyPageName=Nom de ma page
 
 #
-# Box d'exemple
+#Others
 #
-FundindBoxValidate=Les nouveaux financements
-FundindBoxValidatePropal=Les nouvelles propositions financières
-FundindBoxUpdate=Les 10 derniers financements mise à jour
-FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
-FundindBoxAccept=Les 10 derniers financements accepté
-FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
-FundindBoxDenied=Les 10 derniers financements refusé
-FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
-FundindBoxRunning=Les 10 derniers financements actif
-FundindBoxEnd=Les 10 derniers financements terminé
 
 Funding=Financement
 Fundings=Financements
@@ -96,13 +86,26 @@ FundingFolder=Dossier de financement
 ConfirmDeleteFunding=Êtes-vous sûr de vouloir supprimer ce financement ?
 RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
-Extension=Prolongation
-Lack=Manque
+
 SetAcceptedRefused=Accepter/Refuser
 CloseAs=Positionner le statut à
 DateSignature=Date signature P.V.
 closefinich=Cloturer
 NoFunding=Pas de financement
+
+#
+# Box d'exemple
+#
+FundindBoxValidate=Les nouveaux financements
+FundindBoxValidatePropal=Les nouvelles propositions financières
+FundindBoxUpdate=Les 10 derniers financements mise à jour
+FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
+FundindBoxAccept=Les 10 derniers financements accepté
+FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
+FundindBoxDenied=Les 10 derniers financements refusé
+FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
+FundindBoxRunning=Les 10 derniers financements actif
+FundindBoxEnd=Les 10 derniers financements terminé
 
 #
 #Menu
@@ -222,6 +225,7 @@ FundingStatusDenied=Financement refusé
 FundingStatusRunning=Financement actif
 FundingStatusEnd=Financement terminé
 FundingStatusDisabled=Financement annulé
+
 FundingStatusDraftShort=Brouillon
 FundingStatusEnabledShort=Nouveau
 FundingStatusUpdateShort=Mise à jour
@@ -231,6 +235,18 @@ FundingStatusDeniedShort=Refusé
 FundingStatusRunningShort=Actif
 FundingStatusEndShort=Terminé
 FundingStatusDisabledShort=Annulé
+
+#
+#Status
+#
+
+FundingStatusFolderSendOrg=Envoyé à l'organisme
+FundingStatusFolderLack=Manque des pieces complementaires
+FundingStatusFolderExtension=Prolongation du financement
+
+FundingStatusFolderSendOrgShort=Envoyé
+FundingStatusFolderLackShort=Manque
+FundingStatusFolderExtensionShort=Prolongation
 
 #
 #Documents
@@ -261,3 +277,12 @@ RUNNINGInDolibarr=%s En cours
 ENDInDolibarr=%s Fini
 CANCELInDolibarr=Annulé
 REOPENInDolibarr=Rouvert
+
+#
+#Buttun action
+#
+
+BtnSendorg=Envoyé à l'organisme
+BtnLack=Manque documments
+BtnRunning=Actif
+BtnExtension=Prolongation

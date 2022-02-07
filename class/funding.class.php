@@ -70,6 +70,10 @@ class Funding extends CommonObject
 	const STATUS_END = 7;
 	const STATUS_CANCELED = 8;
 
+	const STATUS_FOLDER_SENDORG = 1;
+	const STATUS_FOLDER_LACK = 2;
+	const STATUS_FOLDER_EXTENSION = 3;
+
 	/**
 	 *  'type' if the field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
 	 *         Note: Filter can be a string like "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.nature:is:NULL)"
@@ -137,7 +141,7 @@ class Funding extends CommonObject
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>113, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
-		'funfoldoc6' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
+		'funfoldoc6' => array('type'=>'varchar(255)', 'label'=>'funfoldoc6', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
 		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
@@ -150,7 +154,7 @@ class Funding extends CommonObject
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>0, 'index'=>1,),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => '', '1' => 'FundingStatusFolderSendOrg', '2' => 'FundingStatusFolderLack', '3' => 'FundingStatusFolderxtension'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraft', '1' => 'FundingStatusValidated', '2' => 'FundingStatusUpdate',/* '3' => 'FundingStatusSendOrg', */'4' => 'FundingStatusAccept', '5' => 'FundingStatusDenied', '6' => 'FundingStatusRunning', '7' => 'FundingStatusEnd', '8' => 'FundingStatusDisabled'),),
 	);
 	public $rowid;
@@ -1502,29 +1506,24 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Update object into database
+	 * Update staus folder object
 	 *
 	 * @param  User $user      User that modifies
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function setExtension($user)
+	public function setStatusFolder($user, $status)
 	{
-			$error = 0;
+		$error = 0;
 
-			$this->db->begin();
+		$this->db->begin();
 
-			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
-		if (empty($this->extension)) {
-			$sql .= " SET extension = 1";
-		} else {
-			$sql .= " SET extension = 0";
-		}
+		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+		$sql .= " SET status_folder = ".$status;
+		$sql .= " WHERE rowid = ".$this->id;
 
-			$sql .= " WHERE rowid = ".$this->id;
+		dol_syslog(__METHOD__.' $this->id='.$this->id.', extension', LOG_DEBUG);
 
-			dol_syslog(__METHOD__.' $this->id='.$this->id.', extension', LOG_DEBUG);
-
-			$resql = $this->db->query($sql);
+		$resql = $this->db->query($sql);
 		if (!$resql) {
 			$this->errors[] = $this->db->error();
 			$error++;
@@ -1704,6 +1703,50 @@ class Funding extends CommonObject
 		}
 
 		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
+	}
+
+	/**
+	 *  Return label of the status folder
+	 *
+	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 *  @return string                 Label of status folder
+	 */
+	public function getLibStatutFolder($mode = 0)
+	{
+		return $this->LibStatutFolder($this->status_folder, $mode);
+	}
+
+	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
+	/**
+	 *  Return the status folder
+	 *
+	 *  @param  int     $status        Id status
+	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 *  @return string                 Label of status folder
+	 */
+	public function LibStatutFolder($status, $mode = 0)
+	{
+		// phpcs:enable
+		if (empty($this->labelStatusFolder) || empty($this->labelStatusFolderShort)) {
+			global $langs;
+			//$langs->load("funding");
+			$this->labelStatusFolder[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrg');
+			$this->labelStatusFolder[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLack');
+			$this->labelStatusFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtension');
+			$this->labelStatusShortFolder[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrgShort');
+			$this->labelStatusShortFolder[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLackShort');
+			$this->labelStatusShortFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
+		}
+
+		// BB2A Status Correspodanse avec les format d'affichage
+		$statusType = 'status'.$status;
+		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
+		/*
+		if ($status == self::STATUS_CANCELED) {
+			$statusType = 'status6';
+		}*/
+
+		return dolGetStatus($this->labelStatusFolder[$status], $this->labelStatusFolderShort[$status], '', $statusType, $mode);
 	}
 
 	/**

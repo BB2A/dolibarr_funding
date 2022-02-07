@@ -95,7 +95,7 @@ class modFunding extends DolibarrModules
 			'theme' => 0,
 			// Set this to relative path of css file if module has its own css file
 			'css' => array(
-				//    '/funding/css/funding.css.php',
+				    '/funding/css/funding.css.php',
 			),
 			// Set this to relative path of js file if module must load a js on all pages
 			'js' => array(

@@ -216,9 +216,20 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-
-	if ($action == 'extension' && $permissiontoadd) {
-		$result = $object->Set_Extension($user);
+	if ($action == 'sendorg' && $permissiontoadd) {
+		$result = $object->setStatusFolder($user, 1);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	if ($action == 'lack' && $permissionmanage) {
+		$result = $object->setStatusFolder($user, 2);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	if ($action == 'extension' && $permissionmanage) {
+		$result = $object->setStatusFolder($user, 3);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
@@ -256,7 +267,7 @@ if (empty($reshook)) {
 			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("CloseAs")), null, 'errors');
 			$action = 'statut';
 		} else {
-			// prevent browser refresh from closing proposal several times
+			// prevent browser refresh from closing funding several times
 			if ($object->status >= $object::STATUS_VALIDATED) {
 				$db->begin();
 
@@ -603,7 +614,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if ($action == 'AcceptedRefused') {
 		//Form to (signed or not)
 		$formquestion = array(
-			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED))),
+			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT,1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED,1))),
 			// BB2A Saisie d'un text
 			// array('type' => 'text', 'name' => 'note', 'label' => $langs->trans("Note"), 'value' => '')
 		);
@@ -681,17 +692,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//if ($object->origin == 'order' && is_object($ord)){$morehtmlref .= '<br>'.$langs->trans('Order').' : '.$ord->getNomUrl(1);}
 	$morehtmlref .= '</div>';
 	if ($object->origin == 'propal') {
-		$morehtmlstatus .= '<div><h3>'.$langs->trans('fundingpropal').'</h3></div>';
-		if (!empty($object->pre_study)) {
-			$morehtmlstatus .= '<div><p>'.$langs->trans('pre_study').'</p></div>';
-		}
+		$tabBartitle = $langs->trans('fundingpropal');
+	} elseif ($object->origin == 'order') {
+		$tabBartitle = $langs->trans('Funding');
 	}
-	if ($object->origin == 'order') {
-		$morehtmlstatus .= '<div><h3>'.$langs->trans('Funding').'</h3></div>';
-		if (!empty($object->extension)) {
-			$morehtmlstatus .= '<div><p>'.$langs->trans('Extension').'</p></div>';
-		}
+	$morehtmlstatus .= '<h3>'.$tabBartitle .'</h3>';
+	
+	if (!empty($object->status_folder)) {
+		$morehtmlstatus .= '<div>'.$object->getLibStatutFolder(4).'</div><br/>';
 	}
+
 	dol_banner_tab($object, 'ref', $morehtml, 0, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
@@ -1010,10 +1020,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 
 		if (empty($reshook)) {
-			// Request extension
-			if (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin == 'order') {
-				if (empty($object->extension)) {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('Extension').'</a>'."\n";
+			// Folder status
+			if (empty($user->socid) && $permissionmanage && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
+				if (empty($object->status_folder)) {
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=sendorg">'.$langs->trans('BtnSendorg').'</a>'."\n";
+				} elseif ($object->status >= $object::STATUS_VALIDATED && $object->status <= $object::STATUS_ACCEPT && $object->status_folder != 2) {
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lack">'.$langs->trans('BtnLack').'</a>'."\n";
+				}
+			} elseif (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin == 'order' && $object->status_folder != 3) {
+				if (empty($object->status_folder)) {
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('BtnExtension').'</a>'."\n";
 				}
 			}
 
@@ -1058,7 +1074,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// Runing funding
 			if (empty($user->socid) && $permissiontoadd && $object->origin <> 'propal') {
 				if ($object->status == $object::STATUS_ACCEPT) {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("FundingStatusRunningShort").'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("BtnRunning").'</a>'."\n";
 				} elseif ($object->status >= $object::STATUS_RUNNING) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("ReOpen").'</a>'."\n";
 				}

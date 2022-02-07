@@ -509,8 +509,20 @@ $arrayofmassactions = array(
 	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),
 );
+if ($permissionmanage) {
+	$arrayofmassactions['preasedorg'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnSendorg");
+	$arrayofmassactions['prealack'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnLack");
+
+	$arrayofmassactions['preaccepted'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("accepted");
+	$arrayofmassactions['prerefused'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("refused");
+	$arrayofmassactions['preextension'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnExtension");
+	$arrayofmassactions['prerunning'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnRunning");
+}
+if ($permissiontoadd) {
+	$arrayofmassactions['prevalidate'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("validate");
+}
 if ($permissiontodelete) {
-	$arrayofmassactions['predelete'] = img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("Delete");
+	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
 }
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete'))) {
 	$arrayofmassactions = array();
