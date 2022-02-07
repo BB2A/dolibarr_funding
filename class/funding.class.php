@@ -1508,8 +1508,9 @@ class Funding extends CommonObject
 	/**
 	 * Update staus folder object
 	 *
-	 * @param  User $user      User that modifies
-	 * @return int             <0 if KO, >0 if OK
+	 * @param  User $user      	User that modifies
+	 * @param  $status			New status folder
+	 * @return int             	<0 if KO, >0 if OK
 	 */
 	public function setStatusFolder($user, $status)
 	{

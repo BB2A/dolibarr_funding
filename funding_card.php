@@ -614,7 +614,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if ($action == 'AcceptedRefused') {
 		//Form to (signed or not)
 		$formquestion = array(
-			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT,1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED,1))),
+			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT, 1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED, 1))),
 			// BB2A Saisie d'un text
 			// array('type' => 'text', 'name' => 'note', 'label' => $langs->trans("Note"), 'value' => '')
 		);
@@ -697,7 +697,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$tabBartitle = $langs->trans('Funding');
 	}
 	$morehtmlstatus .= '<h3>'.$tabBartitle .'</h3>';
-	
+
 	if (!empty($object->status_folder)) {
 		$morehtmlstatus .= '<div>'.$object->getLibStatutFolder(4).'</div><br/>';
 	}
