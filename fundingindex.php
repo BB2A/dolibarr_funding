@@ -97,7 +97,7 @@ print '<br>';
 // New Funding
 if (!empty($conf->funding->enabled) && $permissiontoread) {
     $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
-    $sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+    $sql .= ", s.rowid as socid, s.nom as name, s.name_alias as name_alias, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
     $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
     $sql .= ", ".MAIN_DB_PREFIX."societe as s";
     $sql.= " WHERE f.status = 1";
@@ -135,6 +135,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
                 $companystatic->id=$obj->fk_soc;
                 $companystatic->id = $obj->socid;
                 $companystatic->name = $obj->name;
+                $companystatic->name_alias = $obj->name_alias;
                 $companystatic->client = $obj->client;
                 $companystatic->code_client = $obj->code_client;
                 $companystatic->code_fournisseur = $obj->code_fournisseur;
@@ -174,6 +175,7 @@ print '<br>';
     // Tableau bis
 if (!empty($conf->funding->enabled) && $permissiontoread) {
     $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
+    $sql .= ", s.rowid as socid, s.nom as name, s.name_alias as name_alias, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
     $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
     $sql .= ", ".MAIN_DB_PREFIX."societe as s";
     $sql.= " WHERE f.status = 1";
@@ -208,6 +210,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
                 $companystatic->id=$obj->fk_soc;
                 $companystatic->id = $obj->socid;
                 $companystatic->name = $obj->name;
+                $companystatic->name_alias = $obj->name_alias;
                 $companystatic->client = $obj->client;
                 $companystatic->code_client = $obj->code_client;
                 $companystatic->code_fournisseur = $obj->code_fournisseur;
@@ -243,7 +246,7 @@ print '<br>';
 // Financement mise à jour
 if (!empty($conf->funding->enabled) && $permissiontoread) {
     $sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
-    $sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+    $sql .= ", s.rowid as socid, s.nom as name, s.name_alias as name_alias, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
     $sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
     $sql .= ", ".MAIN_DB_PREFIX."societe as s";
     $sql.= " WHERE f.status = 2";
@@ -278,6 +281,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
                 $companystatic->id=$obj->fk_soc;
                 $companystatic->id = $obj->socid;
                 $companystatic->name = $obj->name;
+                $companystatic->name_alias = $obj->name_alias;
                 $companystatic->client = $obj->client;
                 $companystatic->code_client = $obj->code_client;
                 $companystatic->code_fournisseur = $obj->code_fournisseur;
@@ -317,7 +321,7 @@ print '<br>';
 if (! empty($conf->funding->enabled) && $permissiontoread) {
 	// Tableau bis
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent_edit, f.fk_soc, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
-	$sql .= ", s.rowid as socid, s.nom as name, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
+    $sql .= ", s.rowid as socid, s.nom as name, s.name_alias as name_alias, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 2";
@@ -352,6 +356,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 				$companystatic->id=$obj->fk_soc;
 				$companystatic->id = $obj->socid;
 				$companystatic->name = $obj->name;
+                $companystatic->name_alias = $obj->name_alias;
 				$companystatic->client = $obj->client;
 				$companystatic->code_client = $obj->code_client;
 				$companystatic->code_fournisseur = $obj->code_fournisseur;
