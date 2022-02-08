@@ -543,7 +543,7 @@ if (empty($user->rights->societe->client->voir) && empty($socid)) {
 
 foreach ($search as $key => $val) {
 	if (array_key_exists($key, $object->fields)) {
-		if ($key == 'status'  || $key == 'status_folder' && $search[$key] == -1) {
+		if ($key == 'status' && $search[$key] == -1) {
 			continue;
 		}
 		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
@@ -555,7 +555,6 @@ foreach ($search as $key => $val) {
 		}
 		if ($search[$key] != '') {
 			$sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
-			$sql .= natural_search($key, $search[$key], (($key == 'status_folder') ? 2 : $mode_search));
 		}
 	} else {
 		if (preg_match('/(_dtstart|_dtend)$/', $key) && $search[$key] != '') {
