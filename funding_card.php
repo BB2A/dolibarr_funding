@@ -236,15 +236,9 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'run' && $permissiontoadd) {
-		if (!empty($object->date_signature)) {
-			$object->status = $object::STATUS_RUNNING;
-			// Passage par update et non setStatut pour verifier si le document est validé.
-			$result = $object->update($user);
-			if ($result <= 0) {
-				setEventMessages($object->error, $object->errors, 'errors');
-			}
-		} else {
-			setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
+		$result = $object->setRun($user);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
 
@@ -1027,7 +1021,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				} elseif ($object->status >= $object::STATUS_VALIDATED && $object->status <= $object::STATUS_ACCEPT && $object->status_folder != 2) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lack">'.$langs->trans('BtnLack').'</a>'."\n";
 				}
-			} elseif (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin == 'order' && $object->status_folder != 3) {
+			} elseif (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin <> 'propal' && $object->status_folder != 3) {
 				if (empty($object->status_folder)) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('BtnExtension').'</a>'."\n";
 				}

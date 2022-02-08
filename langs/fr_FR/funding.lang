@@ -88,6 +88,8 @@ RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
 
 SetAcceptedRefused=Accepter/Refuser
+Accepted=Accepté
+Refused=Refusé
 CloseAs=Positionner le statut à
 DateSignature=Date signature P.V.
 closefinich=Cloturer
@@ -96,6 +98,7 @@ NoFunding=Pas de financement
 #
 # Box d'exemple
 #
+
 FundindBoxValidate=Les nouveaux financements
 FundindBoxValidatePropal=Les nouvelles propositions financières
 FundindBoxUpdate=Les 10 derniers financements mise à jour
@@ -211,6 +214,22 @@ statusfundingnok=Financement changement du statut impossible
 fundingdraft=Financement mis en brouillon
 fundingvalidated=Financement mis en nouveau
 fundingcancel=Financement annulé
+CantBeValidated=Financement non validé
+
+hasBeenSendOrg=Finacements envoyés aux organismes
+CantBeSendOrg=Finacements non envoyés aux organismes
+
+hasBeenLack=Financements pièces manquantent
+CantBeLack=Financements pas de pièces manquantent
+ErrorIsNotValidateOrAccepted=Financements non validé ou déjà accepté
+
+hasBeenRun=Financements actif
+CantBeRun=Financements non actif
+ErrorIsNotAccept=Financements non accepté
+
+hasBeenExtension=Financements prolongé
+CantBeExtension=Financements non prolongé
+ErrorIsNoRunningNoOrder=Financements non actif
 
 #
 #Status
@@ -227,7 +246,7 @@ FundingStatusEnd=Financement terminé
 FundingStatusDisabled=Financement annulé
 
 FundingStatusDraftShort=Brouillon
-FundingStatusEnabledShort=Nouveau
+FundingStatusValidatedShort=Nouveau
 FundingStatusUpdateShort=Mise à jour
 FundingStatusLackShort=Envoyer
 FundingStatusAcceptShort=Accepté
@@ -237,7 +256,7 @@ FundingStatusEndShort=Terminé
 FundingStatusDisabledShort=Annulé
 
 #
-#Status
+#Status folder
 #
 
 FundingStatusFolderSendOrg=Envoyé à l'organisme
@@ -286,3 +305,22 @@ BtnSendorg=Envoyé à l'organisme
 BtnLack=Manque documments
 BtnRunning=Actif
 BtnExtension=Prolongation
+
+#
+#Mass actions
+#
+
+ConfirmMassValidation=Validation des financements
+ConfirmMassValidationQuestion=Voulez vous valider les financements?
+ConfirmMassSendOrg=Financements envoyés aux organismes
+ConfirmMassSendOrgQuestion=Voulez vous mettre les financements en envoyés
+ConfirmMassLAck=Passer les financements en pièces manquantent
+ConfirmMassLackQuestion=Voulez vous mettre les financements en pièces manquantent?
+ConfirmMassAccepted=Passer les financements en accépté
+ConfirmMassAcceptedQuestion=Voulez vous mettre les financements en accépté?
+ConfirmMassRefused=Passer les financements en refusé
+ConfirmMassRefusedQuestion=Voulez vous mettre les financements en refusé?
+ConfirmMassRunning=Passer les financements en actif
+ConfirmMassRunningQuestion=Voulez vous mettre les financements en actif?
+ConfirmMassExtension=Passer les financements en extension
+ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?

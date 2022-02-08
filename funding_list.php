@@ -222,6 +222,237 @@ if (!GETPOST('confirmmassaction', 'alpha') && $massaction != 'presend' && $massa
 	$massaction = '';
 }
 
+if ($action == 'validate' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status == 0) {
+					if ($tmpfunding->validate($user) > 0) {
+						$validateok .= $langs->trans('hasBeenValidated', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeValidated'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNotADraft', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
+if ($action == 'sendorg' && $permissionmanage) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status == $tmpfunding::STATUS_VALIDATED  && $tmpfunding->status < $tmpfunding::STATUS_ACCEPT) {
+					if ($tmpfunding->setStatusFolder($user, 1) > 0) {
+						$validateok .= $langs->trans('hasBeenSendOrg', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeSendOrg'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNotValidateOrAccepted', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
+if ($action == 'lack' && $permissionmanage) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status >= $tmpfunding::STATUS_VALIDATED && $tmpfunding->status <= $tmpfunding::STATUS_ACCEPT ) {
+					if ($tmpfunding->setStatusFolder($user, 2) > 0) {
+						$validateok .= $langs->trans('hasBeenLack', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeLack'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNotValidateOrAccepted', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
+if ($action == 'accepted' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status == 0) {
+					if ($tmpfunding->validate($user) > 0) {
+						$validateok .= $langs->trans('hasBeenValidated', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeValidated'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNotADraft', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
+if ($action == 'refused' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status == 0) {
+					if ($tmpfunding->validate($user) > 0) {
+						$validateok .= $langs->trans('hasBeenValidated', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeValidated'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNotADraft', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
+if ($action == 'running' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status == $object::STATUS_ACCEPT && $tmpfunding->origin <> 'propal') {
+					if ($tmpfunding->setRun($user) > 0) {
+						$validateok .= $langs->trans('hasBeenRun', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeRun'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNotAccept', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
+if ($action == 'extension' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->status == $tmpfunding::STATUS_RUNNING && $tmpfunding->origin == 'order') {
+					if ($tmpfunding->SetStatusFolder($user, 3) > 0) {
+						$validateok .= $langs->trans('hasBeenExtension', $tmpfunding->ref)."<br/>";
+					} else {
+						setEventMessage($langs->trans('CantBeExtension'), 'errors');
+						$error++;
+					}
+				} else {
+					$langs->load("errors");
+					setEventMessage($langs->trans('ErrorIsNoRunning', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) {
@@ -312,7 +543,7 @@ if (empty($user->rights->societe->client->voir) && empty($socid)) {
 
 foreach ($search as $key => $val) {
 	if (array_key_exists($key, $object->fields)) {
-		if ($key == 'status' && $search[$key] == -1) {
+		if ($key == 'status'  || $key == 'status_folder' && $search[$key] == -1) {
 			continue;
 		}
 		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
@@ -324,6 +555,7 @@ foreach ($search as $key => $val) {
 		}
 		if ($search[$key] != '') {
 			$sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
+			$sql .= natural_search($key, $search[$key], (($key == 'status_folder') ? 2 : $mode_search));
 		}
 	} else {
 		if (preg_match('/(_dtstart|_dtend)$/', $key) && $search[$key] != '') {
@@ -509,17 +741,18 @@ $arrayofmassactions = array(
 	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),
 );
+if ($permissiontoadd) {
+	$arrayofmassactions['prevalidate'] = img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("Validate");
+}
 if ($permissionmanage) {
-	$arrayofmassactions['preasedorg'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnSendorg");
-	$arrayofmassactions['prealack'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnLack");
-
-	$arrayofmassactions['preaccepted'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("accepted");
-	$arrayofmassactions['prerefused'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("refused");
-	$arrayofmassactions['preextension'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnExtension");
-	$arrayofmassactions['prerunning'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("BtnRunning");
+	$arrayofmassactions['presedorg'] = img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("BtnSendorg");
+	$arrayofmassactions['prelack'] = img_picto('', 'folder', 'class="pictofixedwidth"').$langs->trans("BtnLack");
+	$arrayofmassactions['preaccepted'] = img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("Accepted");
+	$arrayofmassactions['prerefused'] = img_picto('', 'error', 'class="pictofixedwidth"').$langs->trans("Refused");
 }
 if ($permissiontoadd) {
-	$arrayofmassactions['prevalidate'] = img_picto('', 'validate', 'class="pictofixedwidth"').$langs->trans("validate");
+	$arrayofmassactions['prerunning'] = img_picto('', 'clock', 'class="pictofixedwidth"').$langs->trans("BtnRunning");
+	$arrayofmassactions['preextension'] = img_picto('', 'movement', 'class="pictofixedwidth"').$langs->trans("BtnExtension");
 }
 if ($permissiontodelete) {
 	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
@@ -554,6 +787,29 @@ $modelmail = "funding";
 $objecttmp = new Funding($db);
 $trackid = 'xxxx'.$object->id;
 include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
+
+
+if ($massaction == 'prevalidate') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassValidation"), $langs->trans("ConfirmMassValidationQuestion"), "validate", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'presedorg') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassSendOrg"), $langs->trans("ConfirmMassSendOrgQuestion"), "sendorg", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'prelack') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassLAck"), $langs->trans("ConfirmMassLackQuestion"), "lack", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'preaccepted') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassAccepted"), $langs->trans("ConfirmMassAcceptedQuestion"), "accepted", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'prerefused') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassRefused"), $langs->trans("ConfirmMassRefusedQuestion"), "refused", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'prerunning') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassRunning"), $langs->trans("ConfirmMassRunningQuestion"), "running", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'preextension') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassExtension"), $langs->trans("ConfirmMassExtensionQuestion"), "extension", null, '', 0, 200, 500, 1);
+}
 
 if ($search_all) {
 	foreach ($fieldstosearchall as $key => $val) $fieldstosearchall[$key] = $langs->trans($val);
@@ -592,7 +848,7 @@ print '<table class="tagtable nobottomiftotal liste'.($moreforfilter ? " listwit
 print '<tr class="liste_titre">';
 foreach ($object->fields as $key => $val) {
 	$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
-	if ($key == 'status') {
+	if ($key == 'status' || $key == 'status_folder') {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
 	} elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
@@ -644,7 +900,7 @@ print '</tr>'."\n";
 print '<tr class="liste_titre">';
 foreach ($object->fields as $key => $val) {
 	$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
-	if ($key == 'status') {
+	if ($key == 'status' || $key == 'status_folder') {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
 	} elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
@@ -699,7 +955,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
 		if (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
-		} elseif ($key == 'status') {
+		} elseif ($key == 'status' || $key == 'status_folder') {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
 		}
 
@@ -718,7 +974,9 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
 			if ($key == 'status') {
 				print $object->getLibStatut(5);
-			} elseif ($key == 'rowid') {
+			}elseif ($key == 'status_folder') {
+				print $object->getLibStatutFolder(5);
+			}elseif ($key == 'rowid') {
 				print $object->showOutputField($val, $key, $object->id, '');
 			} else {
 				print $object->showOutputField($val, $key, $object->$key, '');

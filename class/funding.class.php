@@ -154,8 +154,8 @@ class Funding extends CommonObject
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => '', '1' => 'FundingStatusFolderSendOrg', '2' => 'FundingStatusFolderLack', '3' => 'FundingStatusFolderxtension'),),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraft', '1' => 'FundingStatusValidated', '2' => 'FundingStatusUpdate',/* '3' => 'FundingStatusSendOrg', */'4' => 'FundingStatusAccept', '5' => 'FundingStatusDenied', '6' => 'FundingStatusRunning', '7' => 'FundingStatusEnd', '8' => 'FundingStatusDisabled'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>-1, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => '', '1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '3' => 'FundingStatusFolderExtensionShort'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraftShort', '1' => 'FundingStatusValidatedShort', '2' => 'FundingStatusUpdateShort',/* '3' => 'FundingStatusSendOrgShort', */'4' => 'FundingStatusAcceptShort', '5' => 'FundingStatusDeniedShort', '6' => 'FundingStatusRunningShort', '7' => 'FundingStatusEndShort', '8' => 'FundingStatusDisabledShort'),),
 	);
 	public $rowid;
 	public $ref;
@@ -1400,6 +1400,25 @@ class Funding extends CommonObject
 	}
 
 	/**
+	 *  Set Run  status
+	 *
+	 *  @param  User    $user           Object user that modify
+	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
+	 */
+	public function setRun($user)
+	{
+		if (!empty($this->date_signature)) {
+			$this->status = $this::STATUS_RUNNING;
+			// Passage par update et non setStatut pour verifier si le document est validé.
+			return $this->update($user);
+		} else {
+			setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
+			return -1;
+		}
+		return 0;
+	}
+
+	/**
 	 * Update object into database
 	 *
 	 * @param  User     $user               User that modifies
@@ -1687,7 +1706,7 @@ class Funding extends CommonObject
 			$this->labelStatus[self::STATUS_END] = $langs->trans('FundingStatusEnd');
 			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusEnabledShort');
+			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidatedShort');
 			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
 			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
 			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
@@ -1734,9 +1753,9 @@ class Funding extends CommonObject
 			$this->labelStatusFolder[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrg');
 			$this->labelStatusFolder[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLack');
 			$this->labelStatusFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtension');
-			$this->labelStatusShortFolder[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrgShort');
-			$this->labelStatusShortFolder[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLackShort');
-			$this->labelStatusShortFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrgShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLackShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
 		}
 
 		// BB2A Status Correspodanse avec les format d'affichage
