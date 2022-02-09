@@ -8,7 +8,8 @@
 - NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
 - NEW - Ajout des listes brouillon
 - NEW - Ajout bouton pour indiquer l'envoie du dossier et ajout dans les mass actions
-- NEW - Ajout bouton pour indiquer qu'il manque des piéces au dossier et ajout dans les mass actions
+- NEW - Ajout bouton pour indiquer qu'il manque des piéces au dossier
+- NEW - Ajout des mass actions
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
