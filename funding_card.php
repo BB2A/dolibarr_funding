@@ -378,12 +378,12 @@ if (empty($reshook)) {
 				}
 			}
 
-				// Output the new PDF
-				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
+			// Output the new PDF
+			$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
 
-				// Si selecteur de plusieur fichiers
+			// Si selecteur de plusieur fichiers
 			if (is_countable($_FILES['userfile']['name'])) {
-				//Delete old files
+				// Delete old files
 				foreach ($fileupload as $file) {
 					$file = $upload_dir.'/'.dol_sanitizeFileName($file);
 					if (file_exists($file)) {
