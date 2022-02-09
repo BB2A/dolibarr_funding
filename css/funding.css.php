@@ -16,8 +16,8 @@
  */
 
 /**
- *		\file       htdocs/theme/eldy/style.css.php
- *		\brief      File for CSS style module funding
+ *      \file       htdocs/theme/eldy/style.css.php
+ *      \brief      File for CSS style module funding
  */
 
 ?>
@@ -25,5 +25,5 @@
 /* <style type="text/css" > */
 
  h3.tabBar_title_funding{
-	padding: 5px;
+    padding: 5px;
  }
