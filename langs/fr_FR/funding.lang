@@ -49,18 +49,8 @@ FundingChangelog = Changelog de financement
 MyPageName=Nom de ma page
 
 #
-# Box d'exemple
+#Others
 #
-FundindBoxValidate=Les nouveaux financements
-FundindBoxValidatePropal=Les nouvelles propositions financières
-FundindBoxUpdate=Les 10 derniers financements mise à jour
-FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
-FundindBoxAccept=Les 10 derniers financements accepté
-FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
-FundindBoxDenied=Les 10 derniers financements refusé
-FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
-FundindBoxRunning=Les 10 derniers financements actif
-FundindBoxEnd=Les 10 derniers financements terminé
 
 Funding=Financement
 Fundings=Financements
@@ -96,13 +86,29 @@ FundingFolder=Dossier de financement
 ConfirmDeleteFunding=Êtes-vous sûr de vouloir supprimer ce financement ?
 RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
-Extension=Prolongation
-Lack=Manque
+
 SetAcceptedRefused=Accepter/Refuser
+Accepted=Accepté
+Refused=Refusé
 CloseAs=Positionner le statut à
 DateSignature=Date signature P.V.
 closefinich=Cloturer
 NoFunding=Pas de financement
+
+#
+# Box d'exemple
+#
+
+FundindBoxValidate=Les nouveaux financements
+FundindBoxValidatePropal=Les nouvelles propositions financières
+FundindBoxUpdate=Les 10 derniers financements mise à jour
+FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
+FundindBoxAccept=Les 10 derniers financements accepté
+FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
+FundindBoxDenied=Les 10 derniers financements refusé
+FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
+FundindBoxRunning=Les 10 derniers financements actif
+FundindBoxEnd=Les 10 derniers financements terminé
 
 #
 #Menu
@@ -208,6 +214,22 @@ statusfundingnok=Financement changement du statut impossible
 fundingdraft=Financement mis en brouillon
 fundingvalidated=Financement mis en nouveau
 fundingcancel=Financement annulé
+CantBeValidated=Financement non validé
+
+hasBeenSendOrg=Finacements envoyés aux organismes
+CantBeSendOrg=Finacements non envoyés aux organismes
+
+hasBeenLack=Financements pièces manquantent
+CantBeLack=Financements pas de pièces manquantent
+ErrorIsNotValidateOrAccepted=Financements non validé ou déjà accepté
+
+hasBeenRun=Financements actif
+CantBeRun=Financements non actif
+ErrorIsNotAccept=Financements non accepté
+
+hasBeenExtension=Financements prolongé
+CantBeExtension=Financements non prolongé
+ErrorIsNoRunningNoOrder=Financements non actif
 
 #
 #Status
@@ -222,8 +244,9 @@ FundingStatusDenied=Financement refusé
 FundingStatusRunning=Financement actif
 FundingStatusEnd=Financement terminé
 FundingStatusDisabled=Financement annulé
+
 FundingStatusDraftShort=Brouillon
-FundingStatusEnabledShort=Nouveau
+FundingStatusValidatedShort=Nouveau
 FundingStatusUpdateShort=Mise à jour
 FundingStatusLackShort=Envoyer
 FundingStatusAcceptShort=Accepté
@@ -231,6 +254,18 @@ FundingStatusDeniedShort=Refusé
 FundingStatusRunningShort=Actif
 FundingStatusEndShort=Terminé
 FundingStatusDisabledShort=Annulé
+
+#
+#Status folder
+#
+
+FundingStatusFolderSendOrg=Envoyé à l'organisme
+FundingStatusFolderLack=Manque des pieces complementaires
+FundingStatusFolderExtension=Prolongation du financement
+
+FundingStatusFolderSendOrgShort=Envoyé
+FundingStatusFolderLackShort=Manque
+FundingStatusFolderExtensionShort=Prolongation
 
 #
 #Documents
@@ -261,3 +296,31 @@ RUNNINGInDolibarr=%s En cours
 ENDInDolibarr=%s Fini
 CANCELInDolibarr=Annulé
 REOPENInDolibarr=Rouvert
+
+#
+#Buttun action
+#
+
+BtnSendorg=Envoyé à l'organisme
+BtnLack=Manque documments
+BtnRunning=Actif
+BtnExtension=Prolongation
+
+#
+#Mass actions
+#
+
+ConfirmMassValidation=Validation des financements
+ConfirmMassValidationQuestion=Voulez vous valider les financements?
+ConfirmMassSendOrg=Financements envoyés aux organismes
+ConfirmMassSendOrgQuestion=Voulez vous mettre les financements en envoyés
+ConfirmMassLAck=Passer les financements en pièces manquantent
+ConfirmMassLackQuestion=Voulez vous mettre les financements en pièces manquantent?
+ConfirmMassAccepted=Passer les financements en accépté
+ConfirmMassAcceptedQuestion=Voulez vous mettre les financements en accépté?
+ConfirmMassRefused=Passer les financements en refusé
+ConfirmMassRefusedQuestion=Voulez vous mettre les financements en refusé?
+ConfirmMassRunning=Passer les financements en actif
+ConfirmMassRunningQuestion=Voulez vous mettre les financements en actif?
+ConfirmMassExtension=Passer les financements en extension
+ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?
