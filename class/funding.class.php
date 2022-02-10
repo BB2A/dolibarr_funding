@@ -149,8 +149,8 @@ class Funding extends CommonObject
         'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
         'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid', 'showoncombobox'=>'1',),
         'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2, 'showoncombobox'=>'1',),
-        'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
-        'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+        'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+        'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
         'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
         'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
         'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
@@ -1391,9 +1391,12 @@ class Funding extends CommonObject
         }
         if ($status == self::STATUS_ACCEPT) {
             $triger = 'FUNDING_ACCEPT';
+			$this->setStatusFolder($user, '');
+
         }
         if ($status == self::STATUS_DENIED) {
             $triger = 'FUNDING_DENIED';
+			$this->setStatusFolder($user, '');
         }
 
         return $this->setStatusCommon($user, $status, $notrigger, $triger);
@@ -1403,19 +1406,48 @@ class Funding extends CommonObject
      *  Set Run  status
      *
      *  @param  User    $user           Object user that modify
+	 *  @param  bool    $notrigger      false=launch triggers after, true=disable triggers
      *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
      */
-    public function setRun($user)
+    public function setRun($user, $notrigger=0)
     {
-        if (!empty($this->date_signature)) {
-            $this->status = $this::STATUS_RUNNING;
-            // Passage par update et non setStatut pour verifier si le document est validé.
-            return $this->update($user);
+		global $conf, $langs;
+
+		$this->origin = $typedoc;
+        $this->origin_id = $iddoc;
+var_dump($this->origin);
+		if (!empty($typedoc) && !empty($iddoc)){
+			$document = $this->infodoc($iddoc, $typedoc);
+			if (!empty($this->date_signature) && $this->status = self::STATUS_ACCEPT && $document->status > 0) {
+				$status = 'STATUS_RUNNING';
+				return $this->setStatusCommon($user, $status, $notrigger, $triger);
+			} else {
+				setEventMessages($langs->trans("Financement non validé changer le mode de réglement"), $langs->trans("fundingnotdatesign") . $langs->trans("fundingnotdatedelivry"), 'errors');
+				return -1;
+			}
+		} else {
+			setEventMessages($langs->trans("paramnok"), null, 'errors');
+			return -1;
+		}
+    }
+
+	/**
+     *  Set End  status
+     *
+     *  @param  User    $user           Object user that modify
+	 *  @param  bool    $notrigger      false=launch triggers after, true=disable triggers
+     *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
+     */
+    public function setEnd($user, $notrigger=0)
+    {
+        if ($this->status = self::STATUS_RUNNING) {
+            $status = $this::STATUS_END;
+			$triger = 'FUNDING_END';
+            return $this->setStatusCommon($user, $status, $notrigger, $triger);
         } else {
             setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
             return -1;
         }
-        return 0;
     }
 
     /**
@@ -1449,17 +1481,16 @@ class Funding extends CommonObject
             $this->study_number = $study_number;
         }
 
-        if (!$notrigger && empty($error)) {
-            // Call trigger
-            $result = $this->call_trigger('FUNDING_MODIFY', $user);
-            if ($result < 0) {
-                $error++;
-            }
-            // End call triggers
-        }
-
         if (!$error) {
             $this->db->commit();
+			if (!$notrigger && empty($error)) {
+				// Call trigger
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
+				if ($result < 0) {
+					$error++;
+				}
+				// End call triggers
+			}
             return 1;
         } else {
             foreach ($this->errors as $errmsg) {
@@ -1502,17 +1533,17 @@ class Funding extends CommonObject
             $this->folder_number = $folder_number;
         }
 
-        if (!$notrigger && empty($error)) {
-            // Call trigger
-            $result = $this->call_trigger('FUNDING_MODIFY', $user);
-            if ($result < 0) {
-                $error++;
-            }
-            // End call triggers
-        }
-
         if (!$error) {
             $this->db->commit();
+
+			if (!$notrigger && empty($error)) {
+				// Call trigger
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
+				if ($result < 0) {
+					$error++;
+				}
+				// End call triggers
+			}
             return 1;
         } else {
             foreach ($this->errors as $errmsg) {
@@ -1529,9 +1560,10 @@ class Funding extends CommonObject
      *
      * @param  User $user       User that modifies
      * @param  $status          New status folder
+	 * @param  bool $notrigger  false=launch triggers after, true=disable triggers
      * @return int              <0 if KO, >0 if OK
      */
-    public function setStatusFolder($user, $status)
+    public function setStatusFolder($user, $status, $notrigger = 0)
     {
         $error = 0;
 
@@ -1549,8 +1581,25 @@ class Funding extends CommonObject
             $error++;
         }
 
+		if ($status == 1) {
+			$triger = 'FUNDING_SENDORG';
+		} elseif ($status == 2) {
+			$triger = 'FUNDING_LACK';
+		} elseif ($status == 3) {
+			$triger = 'FUNDING_EXTENSION';
+		} else {
+			$triger = 'FUNDING_MODIFY';
+		}
         if (!$error) {
             $this->db->commit();
+			if (!$notrigger && empty($error)) {
+				// Call trigger
+				$result = $this->call_trigger($triger, $user);
+				if ($result < 0) {
+					$error++;
+				}
+				// End call triggers
+			}
             return 1;
         } else {
             foreach ($this->errors as $errmsg) {

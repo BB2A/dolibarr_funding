@@ -290,12 +290,17 @@ funfoldoc6=Rachat signé
 CREATEInDolibarr=Financement %s Creer
 VALIDATEInDolibarr=Financement %s validé
 UPDATEInDolibarr=Financement %s mis à jour
-ACCEPTInDolibarr=%s Accépté
-DENIEDInDolibarr=%s Refusé
-RUNNINGInDolibarr=%s En cours
-ENDInDolibarr=%s Fini
-CANCELInDolibarr=Annulé
-REOPENInDolibarr=Rouvert
+ACCEPTInDolibarr=Financement %s Accépté
+DENIEDInDolibarr=Financement %s Refusé
+RUNNINGInDolibarr=Financement %s En cours
+ENDInDolibarr=Financement %s Fini
+CANCELInDolibarr=Financement %s Annulé
+REOPENInDolibarr=Financement %s Rouvert
+UNVALIDATEInDolibarr=Financement %s Retour en brouillon
+SENDORGInDolibarr=Financement %s Envoyé à l'organisme
+LACKInDolibarr=Financement %s Manque des documents
+EXTENSIONInDolibarr=Financement %s Prolongation
+
 
 #
 #Buttun action

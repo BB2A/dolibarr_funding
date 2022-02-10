@@ -280,7 +280,7 @@ if (empty($reshook)) {
     }
 
     if ($action == 'closefinich' && $permissionmanage) {
-        $object->end($user, $notrigger);
+        $object->setEnd($user, $notrigger);
     }
 
     // Documents
