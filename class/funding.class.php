@@ -1412,13 +1412,15 @@ class Funding extends CommonObject
 	{
 		global $conf, $langs;
 
-		$this->origin = $typedoc;
-		$this->origin_id = $iddoc;
-		var_dump($this->origin);
+		$typedoc = $this->origin;
+		$iddoc = $this->origin_id;
+
 		if (!empty($typedoc) && !empty($iddoc)) {
 			$document = $this->infodoc($iddoc, $typedoc);
-			if (!empty($this->date_signature) && $this->status = self::STATUS_ACCEPT && $document->status > 0) {
-				$status = 'STATUS_RUNNING';
+			if (!empty($this->date_signature) && $this->status == self::STATUS_ACCEPT && $document->status > 0) {
+				$status = self::STATUS_RUNNING;
+				$triger = 'FUNDING_RUNNING';
+				var_dump($status);
 				return $this->setStatusCommon($user, $status, $notrigger, $triger);
 			} else {
 				setEventMessages($langs->trans("Financement non validé changer le mode de réglement"), $langs->trans("fundingnotdatesign") . $langs->trans("fundingnotdatedelivry"), 'errors');
