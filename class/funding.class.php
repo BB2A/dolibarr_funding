@@ -149,8 +149,8 @@ class Funding extends CommonObject
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid', 'showoncombobox'=>'1',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2, 'showoncombobox'=>'1',),
-		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
-		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
@@ -1734,68 +1734,68 @@ class Funding extends CommonObject
 	}
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
-	/**
-	 *  Return the status
-	 *
-	 *  @param  int     $status        Id status
-	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 *  @return string                 Label of status
-	 */
-	public function LibStatut($status, $mode = 0)
-	{
+    /**
+     *  Return the status
+     *
+     *  @param  int     $status        Id status
+     *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+     *  @return string                 Label of status
+     */
+    public function LibStatut($status, $mode = 0)
+    {
 		// phpcs:enable
-		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
-			global $langs;
-			//$langs->load("funding");
-			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
-			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
-			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
-			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
-			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
-			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
-			$this->labelStatus[self::STATUS_END] = $langs->trans('FundingStatusEnd');
-			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
-			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidatedShort');
-			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
-			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
-			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
-			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
-			$this->labelStatusShort[self::STATUS_END] = $langs->trans('FundingStatusEndShort');
-			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabledShort');
-		}
+        if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
+            global $langs;
+            //$langs->load("funding");
+            $this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
+            $this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
+            $this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
+            $this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
+            $this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
+            $this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
+            $this->labelStatus[self::STATUS_END] = $langs->trans('FundingStatusEnd');
+            $this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
+            $this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
+            $this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidatedShort');
+            $this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
+            $this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
+            $this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
+            $this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
+            $this->labelStatusShort[self::STATUS_END] = $langs->trans('FundingStatusEndShort');
+            $this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabledShort');
+        }
 
-		// BB2A Status Correspodanse avec les format d'affichage
-		$statusType = 'status'.$status;
-		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-		if ($status == self::STATUS_CANCELED) {
-			$statusType = 'status6';
-		}
+        // BB2A Status Correspodanse avec les format d'affichage
+        $statusType = 'status'.$status;
+        //if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
+        if ($status == self::STATUS_CANCELED) {
+            $statusType = 'status6';
+        }
 
-		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
-	}
+        return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
+    }
 
-	/**
-	 *  Return label of the status folder
-	 *
-	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 *  @return string                 Label of status folder
-	 */
-	public function getLibStatutFolder($mode = 0)
-	{
-		return $this->LibStatutFolder($this->status_folder, $mode);
-	}
+    /**
+     *  Return label of the status folder
+     *
+     *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+     *  @return string                 Label of status folder
+     */
+    public function getLibStatutFolder($mode = 0)
+    {
+        return $this->LibStatutFolder($this->status_folder, $mode);
+    }
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
-	/**
-	 *  Return the status folder
-	 *
-	 *  @param  int     $status        Id status
-	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 *  @return string                 Label of status folder
-	 */
-	public function LibStatutFolder($status, $mode = 0)
-	{
+    /**
+     *  Return the status folder
+     *
+     *  @param  int     $status        Id status
+     *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+     *  @return string                 Label of status folder
+     */
+    public function LibStatutFolder($status, $mode = 0)
+    {
 		// phpcs:enable
 		if (empty($this->labelStatusFolder) || empty($this->labelStatusFolderShort)) {
 			global $langs;
@@ -2021,6 +2021,39 @@ class Funding extends CommonObject
 
 		return $error;
 	}
+
+	/**
+	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
+	*/
+	public function cronFundingEnd()
+	{
+		$date = dol_now();
+
+		$sql = 'SELECT rowid, date_sign, status_folder, status';
+		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
+		$sql .= ' WHERE f.date_sign < '.$date;
+		$sql .= ' AND f.status_folder <>'.self::STATUS_FOLDER_EXTENSION;
+		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
+		$result = $this->db->query($sql);
+		if ($result) {
+			if ($this->db->num_rows($result)) {
+				foreach ($result as $fund){
+					$obj = $this->db->fetch_object($fund);
+					var_dump($obj->rowid);
+					//$error = $this->setEnd($user);
+				}
+			}
+			$this->db->free($result);
+		} else {
+			$error = $this->db;
+		}
+
+		dol_syslog(__METHOD__, LOG_DEBUG);
+
+
+		return $error;
+	}
+
 }
 
 /**
