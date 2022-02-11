@@ -1734,68 +1734,68 @@ class Funding extends CommonObject
 	}
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
-    /**
-     *  Return the status
-     *
-     *  @param  int     $status        Id status
-     *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-     *  @return string                 Label of status
-     */
-    public function LibStatut($status, $mode = 0)
-    {
+	/**
+	 *  Return the status
+	 *
+	 *  @param  int     $status        Id status
+	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 *  @return string                 Label of status
+	 */
+	public function LibStatut($status, $mode = 0)
+	{
 		// phpcs:enable
-        if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
-            global $langs;
-            //$langs->load("funding");
-            $this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
-            $this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
-            $this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
-            $this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
-            $this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
-            $this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
-            $this->labelStatus[self::STATUS_END] = $langs->trans('FundingStatusEnd');
-            $this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
-            $this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
-            $this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidatedShort');
-            $this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
-            $this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
-            $this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
-            $this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
-            $this->labelStatusShort[self::STATUS_END] = $langs->trans('FundingStatusEndShort');
-            $this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabledShort');
-        }
+		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
+			global $langs;
+			//$langs->load("funding");
+			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraft');
+			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidated');
+			$this->labelStatus[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdate');
+			$this->labelStatus[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAccept');
+			$this->labelStatus[self::STATUS_DENIED] = $langs->trans('FundingStatusDenied');
+			$this->labelStatus[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunning');
+			$this->labelStatus[self::STATUS_END] = $langs->trans('FundingStatusEnd');
+			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabled');
+			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('FundingStatusDraftShort');
+			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('FundingStatusValidatedShort');
+			$this->labelStatusShort[self::STATUS_UPDATE] = $langs->trans('FundingStatusUpdateShort');
+			$this->labelStatusShort[self::STATUS_ACCEPT] = $langs->trans('FundingStatusAcceptShort');
+			$this->labelStatusShort[self::STATUS_DENIED] = $langs->trans('FundingStatusDeniedShort');
+			$this->labelStatusShort[self::STATUS_RUNNING] = $langs->trans('FundingStatusRunningShort');
+			$this->labelStatusShort[self::STATUS_END] = $langs->trans('FundingStatusEndShort');
+			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabledShort');
+		}
 
-        // BB2A Status Correspodanse avec les format d'affichage
-        $statusType = 'status'.$status;
-        //if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-        if ($status == self::STATUS_CANCELED) {
-            $statusType = 'status6';
-        }
+		// BB2A Status Correspodanse avec les format d'affichage
+		$statusType = 'status'.$status;
+		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
+		if ($status == self::STATUS_CANCELED) {
+			$statusType = 'status6';
+		}
 
-        return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
-    }
+		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
+	}
 
-    /**
-     *  Return label of the status folder
-     *
-     *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-     *  @return string                 Label of status folder
-     */
-    public function getLibStatutFolder($mode = 0)
-    {
-        return $this->LibStatutFolder($this->status_folder, $mode);
-    }
+	/**
+	 *  Return label of the status folder
+	 *
+	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 *  @return string                 Label of status folder
+	 */
+	public function getLibStatutFolder($mode = 0)
+	{
+		return $this->LibStatutFolder($this->status_folder, $mode);
+	}
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
-    /**
-     *  Return the status folder
-     *
-     *  @param  int     $status        Id status
-     *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-     *  @return string                 Label of status folder
-     */
-    public function LibStatutFolder($status, $mode = 0)
-    {
+	/**
+	 *  Return the status folder
+	 *
+	 *  @param  int     $status        Id status
+	 *  @param  int     $mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 *  @return string                 Label of status folder
+	 */
+	public function LibStatutFolder($status, $mode = 0)
+	{
 		// phpcs:enable
 		if (empty($this->labelStatusFolder) || empty($this->labelStatusFolderShort)) {
 			global $langs;
@@ -2037,7 +2037,7 @@ class Funding extends CommonObject
 		$result = $this->db->query($sql);
 		if ($result) {
 			if ($this->db->num_rows($result)) {
-				foreach ($result as $fund){
+				foreach ($result as $fund) {
 					$obj = $this->db->fetch_object($fund);
 					var_dump($obj->rowid);
 					//$error = $this->setEnd($user);
@@ -2053,7 +2053,6 @@ class Funding extends CommonObject
 
 		return $error;
 	}
-
 }
 
 /**
