@@ -217,19 +217,19 @@ if (empty($reshook)) {
 		}
 	}
 	if ($action == 'sendorg' && $permissiontoadd) {
-		$result = $object->setStatusFolder($user, 1);
+		$result = $object->setStatusFolder($user, $object::STATUS_FOLDER_SENDORG);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
 	if ($action == 'lack' && $permissionmanage) {
-		$result = $object->setStatusFolder($user, 2);
+		$result = $object->setStatusFolder($user, $object::STATUS_FOLDER_LACK);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
 	if ($action == 'extension' && $permissionmanage) {
-		$result = $object->setStatusFolder($user, 3);
+		$result = $object->setStatusFolder($user, $object::STATUS_FOLDER_EXTENSION);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
@@ -1013,50 +1013,50 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 		}
 
-		if (empty($reshook)) {
+		if (empty($reshook) && empty($user->socid)) {
 			// Folder status
-			if (empty($user->socid) && $permissionmanage && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
+			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
 				if (empty($object->status_folder)) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=sendorg">'.$langs->trans('BtnSendorg').'</a>'."\n";
-				} elseif ($object->status >= $object::STATUS_VALIDATED && $object->status <= $object::STATUS_ACCEPT && $object->status_folder != 2) {
+				} elseif ($object->status >= $object::STATUS_VALIDATED && $object->status <= $object::STATUS_ACCEPT && $object->status_folder != $object::STATUS_FOLDER_LACK) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lack">'.$langs->trans('BtnLack').'</a>'."\n";
 				}
-			} elseif (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin <> 'propal' && $object->status_folder != 3) {
+			} elseif ($permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin <> 'propal' && $object->status_folder != $object::STATUS_FOLDER_EXTENSION) {
 				if (empty($object->status_folder)) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('BtnExtension').'</a>'."\n";
 				}
 			}
 
 			// Set status accepted/refused
-			if (empty($user->socid) && $object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) {
+			if ($object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
 			}
 
 			// Send
-			if (empty($user->socid) && $permissiontoadd) {
+			if ($permissiontoadd) {
 				$sendto = $conf->global->FUNDING_MAIL_DEFAULT;
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
 
 			// closefinich
-			if (empty($user->socid) && $permissionmanage && $object->status == $object::STATUS_RUNNING) {
+			if ($permissionmanage && $object->status == $object::STATUS_RUNNING) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=closefinich&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('closefinich').'</a>'."\n";
 			}
 
 			// Modify
-			if (empty($user->socid) && $permissiontoadd && $object->status < $object::STATUS_RUNNING) {
+			if ($permissiontoadd && $object->status < $object::STATUS_RUNNING) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Modify").'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
 			}
 
 			//Back to draft
-			if (empty($user->socid) && $permissionmanage && $object->status >= $object::STATUS_VALIDATED) {
+			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED) {
 				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("SetToDraft").'</a>';
 			}
 
 			// Validate
-			if (empty($user->socid) && $permissiontoadd && $object->status == $object::STATUS_DRAFT) {
+			if ($permissiontoadd && $object->status == $object::STATUS_DRAFT) {
 				if (empty($object->table_element_line) || (is_array($object->lines) && count($object->lines) > 0)) {
 					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Validate").'</a>';
 				} else {
@@ -1066,7 +1066,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Runing funding
-			if (empty($user->socid) && $permissiontoadd && $object->origin <> 'propal') {
+			if ($permissiontoadd && $object->origin <> 'propal') {
 				if ($object->status == $object::STATUS_ACCEPT) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("BtnRunning").'</a>'."\n";
 				} elseif ($object->status >= $object::STATUS_RUNNING) {
@@ -1075,14 +1075,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Canceled
-			if ((empty($user->socid) && $permissiontodelete && $object->status < $object::STATUS_CANCELED) || ($object->status < $object::STATUS_RUNNING && $permissiontoadd && $object->status < $object::STATUS_CANCELED )) {
+			if (($permissiontodelete && $object->status < $object::STATUS_CANCELED) || ($object->status < $object::STATUS_RUNNING && $permissiontoadd && $object->status < $object::STATUS_CANCELED )) {
 				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=cancel&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Cancel').'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Cancel').'</a>'."\n";
 			}
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
-			if (empty($user->socid) && $permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
+			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
 				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Delete').'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Delete').'</a>'."\n";

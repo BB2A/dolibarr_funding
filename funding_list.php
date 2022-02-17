@@ -386,7 +386,7 @@ if ($action == 'refused' && $permissiontoadd) {
 		}
 	}
 }
-$object->cronFundingEnd();
+
 if ($action == 'running' && $permissiontoadd) {
 	if (GETPOST('confirm') == 'yes') {
 		$tmpfunding = new Funding($db);

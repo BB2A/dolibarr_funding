@@ -329,3 +329,17 @@ ConfirmMassRunning=Passer les financements en actif
 ConfirmMassRunningQuestion=Voulez vous mettre les financements en actif?
 ConfirmMassExtension=Passer les financements en extension
 ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?
+
+
+#
+#Cron
+#
+
+CronFundingEnd = Financement terminé
+CommentCronFundingEnd = Met à jour le statut des financements actif, qui ne sont pas en prolongation et dont la date de fin est dépassé.
+OutputCronFundingEnd = Financement mis à jour: 
+OutputNoSetStatusCronFundingEnd = Des mises à jour de statut non pas ete effectué.
+
+CronFundingSoonFinished = Financement bientôt terminé
+CommentCronFundingSoonFinished = Envoie des notifications aux commerciaux pour leur indiquer la fin des financement.
+OutputCronFundingSoonFinished = Financement bientot a terme

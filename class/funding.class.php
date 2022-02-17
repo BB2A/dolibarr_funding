@@ -72,7 +72,7 @@ class Funding extends CommonObject
 
 	const STATUS_FOLDER_SENDORG = 1;
 	const STATUS_FOLDER_LACK = 2;
-	const STATUS_FOLDER_EXTENSION = 3;
+	const STATUS_FOLDER_EXTENSION = 9;
 
 	/**
 	 *  'type' if the field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
@@ -154,7 +154,7 @@ class Funding extends CommonObject
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>-1, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '3' => 'FundingStatusFolderExtensionShort'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '9' => 'FundingStatusFolderExtensionShort'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraftShort', '1' => 'FundingStatusValidatedShort', '2' => 'FundingStatusUpdateShort',/* '3' => 'FundingStatusSendOrgShort', */'4' => 'FundingStatusAcceptShort', '5' => 'FundingStatusDeniedShort', '6' => 'FundingStatusRunningShort', '7' => 'FundingStatusEndShort', '8' => 'FundingStatusDisabledShort'),),
 	);
 	public $rowid;
@@ -1442,8 +1442,9 @@ class Funding extends CommonObject
 	public function setEnd($user, $notrigger = 0)
 	{
 		if ($this->status = self::STATUS_RUNNING) {
-			$status = $this::STATUS_END;
+			$status = self::STATUS_END;
 			$triger = 'FUNDING_END';
+			var_dump($triger);
 			return $this->setStatusCommon($user, $status, $notrigger, $triger);
 		} else {
 			setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
@@ -1586,7 +1587,7 @@ class Funding extends CommonObject
 			$triger = 'FUNDING_SENDORG';
 		} elseif ($status == 2) {
 			$triger = 'FUNDING_LACK';
-		} elseif ($status == 3) {
+		} elseif ($status == 9) {
 			$triger = 'FUNDING_EXTENSION';
 		} else {
 			$triger = 'FUNDING_MODIFY';
@@ -2027,31 +2028,172 @@ class Funding extends CommonObject
 	*/
 	public function cronFundingEnd()
 	{
-		$date = dol_now();
+		global $conf, $langs, $db;
+		$date = dol_now('tzserver');
 
-		$sql = 'SELECT rowid, date_sign, status_folder, status';
+		$sql = 'SELECT rowid, ref, date_end, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
-		$sql .= ' WHERE f.date_sign < '.$date;
-		$sql .= ' AND f.status_folder <>'.self::STATUS_FOLDER_EXTENSION;
+		$sql .= ' WHERE f.date_end < "'.dol_print_date($date, 'dayrfc').'"';
+		$sql .= ' AND (f.status_folder <> '.self::STATUS_FOLDER_EXTENSION.' OR f.status_folder IS NULL)';
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
-		$result = $this->db->query($sql);
-		if ($result) {
-			if ($this->db->num_rows($result)) {
-				foreach ($result as $fund) {
-					$obj = $this->db->fetch_object($fund);
-					var_dump($obj->rowid);
-					//$error = $this->setEnd($user);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			if ($num = $this->db->num_rows($resql)) {
+				$i = 1;
+				$funding = new Funding($db);
+				while ($i <= $num) {
+					$obj = $this->db->fetch_object($resql);
+					$funding->fetch($obj->rowid);
+					if (empty($obj)) {
+						break; // Should not happen
+					}
+					$status = self::STATUS_END;
+					$triger = 'FUNDING_END';
+					if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
+						if ($i == $num) {
+							$output .= $obj->ref;
+						} else {
+							$output .= $obj->ref." - ";
+						}
+					}
+					$i++;
 				}
 			}
-			$this->db->free($result);
+			$this->db->free($resql);
 		} else {
 			$error = $this->db;
 		}
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
+		$this->error = '';
 
-		return $error;
+		if (!empty($output)) {
+			$this->output = $langs->trans("OutputCronFundingEnd").$output;
+		}
+
+		if (!empty($error)) {
+			return $error;
+		} elseif ($result == -1) {
+			$result = $langs->trans("OutputNoSetStatusCronFundingEnd");
+			return $result;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	* @param   int          $duration    delais de comparaison
+	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
+	*/
+	public function cronFundingSoonFinished($duration = 6)
+	{
+		global $conf, $langs, $db;
+		$date = dol_now('tzserver');
+		$dateEnd = date('Y-m-d', strtotime('+'.$duration.' month', $date));
+
+		$sql = 'SELECT rowid, ref, fk_soc, fk_user_comm, date_end, status_folder, status';
+		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
+		$sql .= ' WHERE f.date_end > "'.dol_print_date($date, 'dayrfc').'"';
+		$sql .= ' AND f.date_end < "'.$dateEnd.'"';
+		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
+		$sql .= ' ORDER BY f.date_end ASC'; //DESC
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			if ($num = $this->db->num_rows($resql)) {
+				$i = 1;
+				$soc = new Societe($db);
+				$comm = new User($db);
+				$funding = new Funding($db);
+				while ($i <= $num) {
+					$obj = $this->db->fetch_object($resql);
+					$soc->fetch($obj->fk_soc);
+					$comm->fetch($obj->fk_user_comm);
+					if (empty($obj)) {
+						break; // Should not happen
+					}
+					$message = $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end));
+					$message .= '<br/><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">Lien</a>';
+					$result = $funding->sendMail($comm->email, $comm->email, $langs->trans("OutputCronFundingSoonFinished"), $message);
+					if ($i == $num) {
+						$output .= $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end));
+					} else {
+						$output .= $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end))." _ ";
+					}
+					$i++;
+				}
+			}
+			$this->db->free($resql);
+		} else {
+			$error = $this->db;
+		}
+
+		dol_syslog(__METHOD__, LOG_DEBUG);
+
+		$this->error = '';
+
+		if (!empty($output)) {
+			$this->output = $langs->trans("OutputCronFundingSoonFinished").$output;
+		}
+
+		if (!empty($error)) {
+			return $error;
+		} else {
+			return 0;
+		}
+
+		//return $error;
+	}
+
+	/**
+	* @param   int          $from   	from
+	* @param   int          $sendto    	sender
+	* @param   int          $subject    subject
+	* @param   int          $message    message
+	* @param   int          $filename   file
+	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
+	*/
+	public function sendMail($from = '', $sendto = '', $subject = '', $message = '', $filename = '')
+	{
+		global $conf, $lang;
+
+		// Send email to assigned user
+
+		if (empty($from)) {
+			$from = dol_escape_htmltag($conf->global->MAIN_INFO_SOCIETE_MAIL);
+		} else {
+			$from = dol_escape_htmltag($from);
+		}
+
+		if (empty($sendto)) {
+			$sendto = dol_escape_htmltag($conf->global->MAIN_INFO_SOCIETE_MAIL);
+		} else {
+			$sendto = dol_escape_htmltag($sendto);
+		}
+
+		if (empty($subject)) {
+			$subject = dol_escape_htmltag($langs->trans("OutputCronFundingSoonFinished"));
+		} else {
+			$subject = dol_escape_htmltag($subject);
+		}
+
+		if (empty($message)) {
+			$message = $langs->trans("Funding");
+		}
+
+		if (empty($filename)) {
+			$filename = $filename;
+		}
+
+		include_once DOL_DOCUMENT_ROOT . '/core/class/CMailFile.class.php';
+		$mailfile = new CMailFile($subject, $sendto, $from, $message, $filepath, $mimetype, $filename, '', '', 0, -1);
+		if ($mailfile->error) {
+			setEventMessages($mailfile->error, $mailfile->errors, 'errors');
+		} else {
+			$result = $mailfile->sendfile();
+		}
+
+		return $result;
 	}
 }
 
