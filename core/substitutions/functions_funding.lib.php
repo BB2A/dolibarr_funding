@@ -57,7 +57,9 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		$substitutionarray['__FUNDING_DATE_DELIVERY__'] = isset($object->date_delivery) ? dol_print_date($object->date_delivery, 'day', 0, $outputlangs) : '';
 		$substitutionarray['__FUNDING_DATE_END__'] = isset($object->date_end) ? dol_print_date($object->date_end, 'day', 0, $outputlangs) : '';
 		$substitutionarray['__FUNDING_REDEMPTION__'] = isset($object->redemption) ? ($object->redemption == 1 ? $langs->trans("Yes") : $langs->trans("No")) : '';
-		$type = $object->fetchType($object->fk_funding_type);
+		$substitutionarray['__FUNDING_REDEMPTION_NUMBER__'] = isset($object->redemption_number) ? $object->redemption_number : '';
+		$substitutionarray['__FUNDING_RETENTION__'] = isset($object->retention) ? ($object->retention == 1 ? $langs->trans("Yes") : $langs->trans("No")) : '';
+		$substitutionarray['__FUNDING_RETENTION_RATE__'] = isset($object->retention_rate) ? $object->retention_rate : '';
 		$substitutionarray['__FUNDING_TYPE__'] = isset($type->label) ? $type->label : '';
 		$substitutionarray['__FUNDING_PRE_STUDY__'] = isset($object->pre_study) ? ($object->pre_study == 1 ? $langs->trans("Yes") : $langs->trans("No")) : '';
 		$substitutionarray['__FUNDING_USER_COMM_ID__'] = isset($object->fk_user_comm) ? $object->fk_user_comm : '';
@@ -68,6 +70,7 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		}
 		$substitutionarray['__FUNDING_DESCRIPTION__'] = isset($object->description) ? $object->description : '';
 		$substitutionarray['__FUNDING_STATUS__'] = isset($object->status) ? $object->getLibStatut() : '';
+		$substitutionarray['__FUNDING_STATUS_FOLDER__'] = isset($object->status_folder) ? $object->getLibStatutFolder() : '';
 
 		//Organisme
 		$org = $object->fetchSoc($object->fk_org);
