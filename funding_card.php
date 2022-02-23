@@ -264,8 +264,7 @@ if (empty($reshook)) {
 			// prevent browser refresh from closing funding several times
 			if ($object->status >= $object::STATUS_VALIDATED) {
 				$db->begin();
-
-				$result = $object->setAcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('note', 'none'));
+				$result = $object->setAcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('retention', 'alpha'));
 				if ($result <= 0) {
 					setEventMessages($object->error, $object->errors, 'errors');
 					$error++;
@@ -609,8 +608,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		//Form to (signed or not)
 		$formquestion = array(
 			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT, 1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED, 1))),
-			// BB2A Saisie d'un text
-			// array('type' => 'text', 'name' => 'note', 'label' => $langs->trans("Note"), 'value' => '')
+			array('type' => 'checkbox', 'name' => 'retention', 'label' => $langs->trans("Retention"), 'value' => '0')
 		);
 
 		// BB2A Notification voir pour aline changement de statut

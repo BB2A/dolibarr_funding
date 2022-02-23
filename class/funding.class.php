@@ -63,7 +63,6 @@ class Funding extends CommonObject
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_UPDATE = 2;
-	//const STATUS_SENDORG = 3;
 	const STATUS_ACCEPT = 4;
 	const STATUS_DENIED = 5;
 	const STATUS_RUNNING = 6;
@@ -72,6 +71,9 @@ class Funding extends CommonObject
 
 	const STATUS_FOLDER_SENDORG = 1;
 	const STATUS_FOLDER_LACK = 2;
+	const STATUS_FOLDER_ACCEPT_RETENTION = 5;
+	const STATUS_FOLDER_DENOUNCED = 7;
+	const STATUS_FOLDER_REDEEMED = 8;
 	const STATUS_FOLDER_EXTENSION = 9;
 
 	/**
@@ -154,7 +156,7 @@ class Funding extends CommonObject
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '9' => 'FundingStatusFolderExtensionShort'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraftShort', '1' => 'FundingStatusValidatedShort', '2' => 'FundingStatusUpdateShort',/* '3' => 'FundingStatusSendOrgShort', */'4' => 'FundingStatusAcceptShort', '5' => 'FundingStatusDeniedShort', '6' => 'FundingStatusRunningShort', '7' => 'FundingStatusEndShort', '8' => 'FundingStatusDisabledShort'),),
 	);
 	public $rowid;
@@ -1379,11 +1381,11 @@ class Funding extends CommonObject
 	 *
 	 *  @param  User    $user           Object user that modify
 	 *  @param  int     $status         value status
-	 *  @param  alpha   $note           note de validation
+	 *  @param  alpha   $retention      Accept them retention
 	 *  @param  int     $notrigger      1=Does not execute triggers, 0=Execute triggers
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function setAcceptedRefused($user, $status, $note = '', $notrigger = 0)
+	public function setAcceptedRefused($user, $status, $retention = 0, $notrigger = 0)
 	{
 		// Protection
 		if ($this->status == self::STATUS_CANCELED) {
@@ -1391,11 +1393,14 @@ class Funding extends CommonObject
 		}
 		if ($status == self::STATUS_ACCEPT) {
 			$triger = 'FUNDING_ACCEPT';
-			$this->setStatusFolder($user, '');
 		}
 		if ($status == self::STATUS_DENIED) {
 			$triger = 'FUNDING_DENIED';
-			$this->setStatusFolder($user, '');
+		}
+		if ($retention == 'on') {
+			$this->setStatusFolder($user, $this::STATUS_FOLDER_ACCEPT_RETENTION);
+		} else {
+			$this->setStatusFolder($user, 0);
 		}
 
 		return $this->setStatusCommon($user, $status, $notrigger, $triger);
@@ -1803,9 +1808,15 @@ class Funding extends CommonObject
 			//$langs->load("funding");
 			$this->labelStatusFolder[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrg');
 			$this->labelStatusFolder[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLack');
+			$this->labelStatusFolder[self::STATUS_FOLDER_ACCEPT_RETENTION] = $langs->trans('FundingStatusFolderAcceptRetention');
+			$this->labelStatusFolder[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenounced');
+			$this->labelStatusFolder[self::STATUS_FOLDER_REDEEMED] = $langs->trans('FundingStatusFolderRedeemed');
 			$this->labelStatusFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtension');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrgShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLackShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_ACCEPT_RETENTION] = $langs->trans('FundingStatusFolderAcceptRetentionShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenouncedShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_REDEEMED] = $langs->trans('FundingStatusFolderRedeemedShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
 		}
 

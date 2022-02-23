@@ -260,11 +260,17 @@ FundingStatusDisabledShort=Annulé
 #
 
 FundingStatusFolderSendOrg=Envoyé à l'organisme
+
+FundingStatusFolderAcceptRetention=Accépté avec retenue de garantie
+FundingStatusFolderDenounced=Financement dénoncé
+FundingStatusFolderRedeemed=Financement racheté
 FundingStatusFolderLack=Manque des pieces complementaires
 FundingStatusFolderExtension=Prolongation du financement
-
 FundingStatusFolderSendOrgShort=Envoyé
 FundingStatusFolderLackShort=Manque
+FundingStatusFolderAcceptRetentionShort=Accépté retenue
+FundingStatusFolderDenouncedShort=Dénoncé
+FundingStatusFolderRedeemedShort=Racheté
 FundingStatusFolderExtensionShort=Prolongation
 
 #
