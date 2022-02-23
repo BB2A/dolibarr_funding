@@ -2150,12 +2150,11 @@ class Funding extends CommonObject
 	* @param   int          $sendto    	sender
 	* @param   int          $subject    subject
 	* @param   int          $message    message
-	* @param   int          $filename   file
 	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
 	*/
-	public function sendMail($from = '', $sendto = '', $subject = '', $message = '', $filename = '')
+	public function sendMail($from = '', $sendto = '', $subject = '', $message = '')
 	{
-		global $conf, $lang;
+		global $conf, $langs;
 
 		// Send email to assigned user
 
@@ -2166,7 +2165,7 @@ class Funding extends CommonObject
 		}
 
 		if (empty($sendto)) {
-			$sendto = dol_escape_htmltag($conf->global->MAIN_INFO_SOCIETE_MAIL);
+			$sendto = dol_escape_htmltag($conf->global->FUNDING_MAIL_DEFAULT);
 		} else {
 			$sendto = dol_escape_htmltag($sendto);
 		}
@@ -2186,12 +2185,8 @@ class Funding extends CommonObject
 		}
 
 		include_once DOL_DOCUMENT_ROOT . '/core/class/CMailFile.class.php';
-		$mailfile = new CMailFile($subject, $sendto, $from, $message, $filepath, $mimetype, $filename, '', '', 0, -1);
-		if ($mailfile->error) {
-			setEventMessages($mailfile->error, $mailfile->errors, 'errors');
-		} else {
-			$result = $mailfile->sendfile();
-		}
+		$mailfile = new CMailFile($subject, $sendto, $from, $message, '', '', '', '', '', 0, -1);
+		$result = $mailfile->sendfile();
 
 		return $result;
 	}
