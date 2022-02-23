@@ -223,20 +223,34 @@ class modFunding extends DolibarrModules
         // Cronjobs (List of cron jobs entries to add when module is enabled)
         // unit_frequency must be 60 for minute, 3600 for hour, 86400 for day, 604800 for week
         $this->cronjobs = array(
-            //  0 => array(
-            //      'label' => 'MyJob label',
-            //      'jobtype' => 'method',
-            //      'class' => '/funding/class/funding.class.php',
-            //      'objectname' => 'Funding',
-            //      'method' => 'doScheduledJob',
-            //      'parameters' => '',
-            //      'comment' => 'Comment',
-            //      'frequency' => 2,
-            //      'unitfrequency' => 3600,
-            //      'status' => 0,
-            //      'test' => '$conf->funding->enabled',
-            //      'priority' => 50,
-            //  ),
+            0 => array(
+                'label' => 'CronFundingEnd',
+                'jobtype' => 'method',
+                'class' => '/funding/class/funding.class.php',
+                'objectname' => 'Funding',
+                'method' => 'cronFundingEnd',
+                'parameters' => '',
+                'comment' => 'CommentCronFundingEnd',
+                'frequency' => 1,
+                'unitfrequency' => 86400,
+                'status' => 0,
+                'test' => '$conf->funding->enabled',
+                'priority' => 50,
+             ),
+             1 => array(
+                'label' => 'CronFundingSoonFinished',
+                'jobtype' => 'method',
+                'class' => '/funding/class/funding.class.php',
+                'objectname' => 'Funding',
+                'method' => 'cronFundingSoonFinished',
+                'parameters' => '',
+                'comment' => 'CommentCronFundingSoonFinished',
+                'frequency' => 4,
+                'unitfrequency' => 604800,
+                'status' => 0,
+                'test' => '$conf->funding->enabled',
+                'priority' => 50,
+             ),
         );
         // Example: $this->cronjobs=array(
         //    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->funding->enabled', 'priority'=>50),

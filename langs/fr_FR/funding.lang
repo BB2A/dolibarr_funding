@@ -260,11 +260,17 @@ FundingStatusDisabledShort=Annulé
 #
 
 FundingStatusFolderSendOrg=Envoyé à l'organisme
+
+FundingStatusFolderAcceptRetention=Accépté avec retenue de garantie
+FundingStatusFolderDenounced=Financement dénoncé
+FundingStatusFolderRedeemed=Financement racheté
 FundingStatusFolderLack=Manque des pieces complementaires
 FundingStatusFolderExtension=Prolongation du financement
-
 FundingStatusFolderSendOrgShort=Envoyé
 FundingStatusFolderLackShort=Manque
+FundingStatusFolderAcceptRetentionShort=Accépté retenue
+FundingStatusFolderDenouncedShort=Dénoncé
+FundingStatusFolderRedeemedShort=Racheté
 FundingStatusFolderExtensionShort=Prolongation
 
 #
@@ -290,12 +296,17 @@ funfoldoc6=Rachat signé
 CREATEInDolibarr=Financement %s Creer
 VALIDATEInDolibarr=Financement %s validé
 UPDATEInDolibarr=Financement %s mis à jour
-ACCEPTInDolibarr=%s Accépté
-DENIEDInDolibarr=%s Refusé
-RUNNINGInDolibarr=%s En cours
-ENDInDolibarr=%s Fini
-CANCELInDolibarr=Annulé
-REOPENInDolibarr=Rouvert
+ACCEPTInDolibarr=Financement %s Accépté
+DENIEDInDolibarr=Financement %s Refusé
+RUNNINGInDolibarr=Financement %s En cours
+ENDInDolibarr=Financement %s Fini
+CANCELInDolibarr=Financement %s Annulé
+REOPENInDolibarr=Financement %s Rouvert
+UNVALIDATEInDolibarr=Financement %s Retour en brouillon
+SENDORGInDolibarr=Financement %s Envoyé à l'organisme
+LACKInDolibarr=Financement %s Manque des documents
+EXTENSIONInDolibarr=Financement %s Prolongation
+
 
 #
 #Buttun action
@@ -324,3 +335,17 @@ ConfirmMassRunning=Passer les financements en actif
 ConfirmMassRunningQuestion=Voulez vous mettre les financements en actif?
 ConfirmMassExtension=Passer les financements en extension
 ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?
+
+
+#
+#Cron
+#
+
+CronFundingEnd = Financement terminé
+CommentCronFundingEnd = Met à jour le statut des financements actif, qui ne sont pas en prolongation et dont la date de fin est dépassé.
+OutputCronFundingEnd = Financement mis à jour: 
+OutputNoSetStatusCronFundingEnd = Des mises à jour de statut non pas ete effectué.
+
+CronFundingSoonFinished = Financement bientôt terminé
+CommentCronFundingSoonFinished = Envoie des notifications aux commerciaux pour leur indiquer la fin des financement. Param: $duration -> en mois par default 6 mois si vide (Prend les financement qui se termine dans les 6 prochains mois)
+OutputCronFundingSoonFinished = Financement bientot a terme

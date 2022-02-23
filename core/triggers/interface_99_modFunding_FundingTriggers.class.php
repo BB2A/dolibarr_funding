@@ -295,7 +295,9 @@ class InterfaceFundingTriggers extends DolibarrTriggers
                                 setEventMessages('2'.$errors, null, 'errors');
                                 $result = -1;
                             }
-                            $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
+                            if ($fundingobject->status < $fundingobject::STATUS_VALIDATED) {
+                                $result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
+                            }
                             $result = $fundingobject->update($user, true);
                         }
                         if ($result > 0) {
