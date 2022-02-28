@@ -62,6 +62,11 @@ require_once '../lib/funding.lib.php';
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
+require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+dol_include_once('/funding/class/funding.class.php');
+dol_include_once('/funding/lib/funding_funding.lib.php');
 
 //require_once "../class/myclass.class.php";
 
@@ -208,6 +213,7 @@ if ($action == 'updateMask') {
 $form = new Form($db);
 $formfile = new FormFile($db);
 $formcompany = new FormCompany($db);
+$object = new Funding($db);
 
 
 $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
@@ -245,8 +251,19 @@ if (1 == 1) {
 			print '</td><td align="right" width="230">';
 			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 1, 0, 1);
 			print '</td></tr>';
+		} elseif ($key == 'FUNDING_DEFAULT_DURATION') {
+			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_DURATION', $object->fields['fk_duration']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_DURATION);
+		} elseif ($key == 'FUNDING_DEFAULT_SCALE') {
+			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_SCALE', $object->fields['fk_scale']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_SCALE);
+		} elseif ($key == 'FUNDING_DEFAULT_REDEMPTION') {
+			$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_REDEMPTION', $arrval, $conf->global->FUNDING_DEFAULT_REDEMPTION);
+		} elseif ($key == 'FUNDING_DEFAULT_TYPE') {
+			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_TYPE', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_TYPE);
 		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
+		} elseif ($key == 'FUNDING_DEFAULT_ORGANIZATION') {
+			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_DEFAULT_ORGANIZATION", $object->fields['fk_org']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_ORGANIZATION).'</td></tr>';
 		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL') {
 			print '</td>';
 			print '<td align="right" width="230">';
@@ -256,12 +273,15 @@ if (1 == 1) {
 				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
 				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL);
 			}
+		} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
+			print '</td>';
+			print '<td align="right" width="230">'.$form->selectarray('FUNDING_NOCLOSEDFINISHAUTO_EXTENSION', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION);
 		} else {
 			print '</td><td align="right" width="230"><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 		}
 	}
 	print '</table>';
-
+	var_dump($object->fields['fk_org']['arrayofkeyval']);
 	print '<br><div class="center">';
 	print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
 	print '</div>';

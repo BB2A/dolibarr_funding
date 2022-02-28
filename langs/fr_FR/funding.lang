@@ -148,6 +148,8 @@ FUNDING_MAIL_DEFAULT=Adresse mail d'envoie par default
 FUNDING_MAIL_AUTOCOPY_TO=Adresse mail de copie automatique
 FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
 
+FUNDING_NOCLOSEDFINISHAUTO_EXTENSION=Type de financement mis en extenssion à la date de fin
+
 FUNDING_LISTE_THIRDPARTY_PROPAL=Afficher les propositions de financement dans tier
 
 #

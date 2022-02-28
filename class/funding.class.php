@@ -268,21 +268,8 @@ class Funding extends CommonObject
 			$this->fields['entity']['enabled'] = 0;
 		}
 
-		if (!empty($conf->global->FUNDING_DEFAULT_DURATION) && isset($this->fields['fk_duration'])) {
-			$this->fields['fk_duration']['default'] = $conf->global->FUNDING_DEFAULT_DURATION;
-		}
-		if (!empty($conf->global->FUNDING_DEFAULT_SCALE) && isset($this->fields['fk_scale'])) {
-			$this->fields['fk_scale']['default'] = $conf->global->FUNDING_DEFAULT_SCALE;
-		}
-		if (!empty($conf->global->FUNDING_DEFAULT_REDEMPTION) && isset($this->fields['redemption'])) {
-			$this->fields['redemption']['default'] = $conf->global->FUNDING_DEFAULT_REDEMPTION;
-		}
-
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) {
 			$this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
-		}
-		if (!empty($conf->global->FUNDING_DEFAULT_ORGANIZATION) && isset($this->fields['fk_org'])) {
-			$this->fields['fk_org']['default'] = $this->fields['fk_org']['default'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
 		}
 
 		if (GETPOST('action', 'alpha') == 'edit') {

@@ -549,7 +549,11 @@ if ($action == 'create') {
 	dol_fiche_head(array(), '');
 
 	// Set some default values
-	//if (! GETPOSTISSET('fieldname')) $_POST['fieldname'] = 'myvalue';
+	if (! GETPOSTISSET('fk_duration')) $_POST['fk_duration'] = $conf->global->FUNDING_DEFAULT_DURATION;
+	if (! GETPOSTISSET('fk_scale')) $_POST['fk_scale'] = $conf->global->FUNDING_DEFAULT_SCALE;
+	if (! GETPOSTISSET('fk_funding_type')) $_POST['fk_funding_type'] = $conf->global->FUNDING_DEFAULT_TYPE;
+	if (! GETPOSTISSET('redemption')) $_POST['redemption'] = $conf->global->FUNDING_DEFAULT_REDEMPTION;
+	if (! GETPOSTISSET('fk_org')) $_POST['fk_org'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
 
 	print '<table class="border centpercent tableforfieldcreate">'."\n";
 
