@@ -13,6 +13,7 @@
 - NEW - Ajout du statut accépté avec retenu de garantie
 - NEW - Ajout du statut dossier racheté ou dénoncé lors de la clôture d'un financement manuelement.
 - NEW - Ajout de taches planifiés
+- NEW - Ajout de substitutions
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
