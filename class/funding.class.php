@@ -2101,11 +2101,12 @@ class Funding extends CommonObject
 
 		$sql = 'SELECT rowid, ref, fk_soc, fk_user_comm, date_end, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
-		$sql .= ' WHERE f.date_end > "'.dol_print_date($date, 'dayrfc').'"';
-		$sql .= ' AND f.date_end < "'.$dateEnd.'"';
+		$sql .= ' WHERE f.date_end >= "'.dol_print_date($date, 'dayrfc').'"';
+		$sql .= ' AND f.date_end <= "'.$dateEnd.'"';
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
 		$sql .= ' ORDER BY f.date_end ASC'; //DESC
 		$resql = $this->db->query($sql);
+		var_dump($sql);
 		if ($resql) {
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;
