@@ -1425,7 +1425,6 @@ class Funding extends CommonObject
 			if (!empty($this->date_signature) && $this->status == self::STATUS_ACCEPT && $document->status > 0) {
 				$status = self::STATUS_RUNNING;
 				$triger = 'FUNDING_RUNNING';
-				var_dump($status);
 				return $this->setStatusCommon($user, $status, $notrigger, $triger);
 			} else {
 				setEventMessages($langs->trans("Financement non validé changer le mode de réglement"), $langs->trans("fundingnotdatesign") . $langs->trans("fundingnotdatedelivry"), 'errors');
@@ -1449,7 +1448,6 @@ class Funding extends CommonObject
 		if ($this->status = self::STATUS_RUNNING) {
 			$status = self::STATUS_END;
 			$triger = 'FUNDING_END';
-			var_dump($triger);
 			return $this->setStatusCommon($user, $status, $notrigger, $triger);
 		} else {
 			setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
@@ -1588,14 +1586,14 @@ class Funding extends CommonObject
 			$error++;
 		}
 
-		if ($status == 1) {
+		if ($status == self::STATUS_FOLDER_SENDORG) {
 			$triger = 'FUNDING_SENDORG';
-		} elseif ($status == 2) {
+		} elseif ($status == self::STATUS_FOLDER_LACK) {
 			$triger = 'FUNDING_LACK';
-		} elseif ($status == 9) {
+		} elseif ($status == self::STATUS_FOLDER_EXTENSION) {
 			$triger = 'FUNDING_EXTENSION';
 		} else {
-			$triger = 'FUNDING_MODIFY';
+			$notriger = 1;
 		}
 		if (!$error) {
 			$this->db->commit();
@@ -2058,13 +2056,24 @@ class Funding extends CommonObject
 					if (empty($obj)) {
 						break; // Should not happen
 					}
-					$status = self::STATUS_END;
-					$triger = 'FUNDING_END';
-					if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
-						if ($i == $num) {
-							$output .= $obj->ref;
-						} else {
-							$output .= $obj->ref." - ";
+					if ($this->fk_funding_type <> $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) {
+						$status = self::STATUS_END;
+						$triger = 'FUNDING_END';
+						if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
+							if ($i == $num) {
+								$output .= $obj->ref;
+							} else {
+								$output .= $obj->ref." - ";
+							}
+						}
+					} else {
+						$status = self::STATUS_FOLDER_EXTENSION;
+						if ($result = setStatusFolder($user, $status, $notrigger = 0)) {
+							if ($i == $num) {
+								$output .= $obj->ref;
+							} else {
+								$output .= $obj->ref." - ";
+							}
 						}
 					}
 					$i++;
