@@ -115,12 +115,21 @@ FundindBoxEnd=Les 10 derniers financements terminé
 #
 
 ListFunding=Liste de financements
+ListFundingDraft=Brouillon
+ListFundingValidated=Nouveaux
 ListFundingUpdate=Mise à jour
+ListFundingLack=Document manquant
 ListFundingAccept=Accepté
+ListFundingDenied=Refusé
 ListFundingRunning=Actif
 ListFundingEnd=Terminé
 ListFundingExtension=Prolongation
+ListFundingCanceled=Annulé
 ListFundingPropal=Liste propositions de financements
+ListFundingPropalNew=Nouveaux
+ListFundingPropalAccept=Accepté
+ListFundingPropalDenied=Refusé
+ListFundingPropalCanceled=Annulé
 
 #
 #Dictionnaires
