@@ -62,9 +62,6 @@ require_once '../lib/funding.lib.php';
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 dol_include_once('/funding/class/funding.class.php');
 dol_include_once('/funding/lib/funding_funding.lib.php');
 
@@ -93,7 +90,7 @@ $arrayofparameters = array(
 	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
 
 	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_ORGANIZATION'=>array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)','css'=>'minwidth200','enabled'=>1),
+	'FUNDING_DEFAULT_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
 
 	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
 	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
@@ -262,8 +259,6 @@ if (1 == 1) {
 			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_TYPE', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_TYPE);
 		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
-		} elseif ($key == 'FUNDING_DEFAULT_ORGANIZATION') {
-			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_DEFAULT_ORGANIZATION", $object->fields['fk_org']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_ORGANIZATION).'</td></tr>';
 		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL') {
 			print '</td>';
 			print '<td align="right" width="230">';
@@ -281,7 +276,7 @@ if (1 == 1) {
 		}
 	}
 	print '</table>';
-	var_dump($object->fields['fk_org']['arrayofkeyval']);
+
 	print '<br><div class="center">';
 	print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
 	print '</div>';
