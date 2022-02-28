@@ -278,8 +278,28 @@ if (empty($reshook)) {
 		}
 	}
 
-	if ($action == 'closefinich' && $permissionmanage) {
-		$object->setEnd($user, $notrigger);
+	if ($action == 'setCloseFinich' && $permissiontoadd) {
+		// prevent browser refresh from closing funding several times
+		if ($object->status == $object::STATUS_RUNNING) {
+			$db->begin();
+			$result = $object->setEnd($user, $notrigger);
+			//$result = $object->setAcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('retention', 'alpha'));
+			if ($result > 0 && !empty(GETPOST('statutfolder', 'int'))) {
+				$result = $object->setStatusFolder($user, GETPOST('statutfolder', 'int'));
+				if ($result <= 0) {
+					setEventMessages($object->error, $object->errors, 'errors');
+					$error++;
+				}
+			} elseif ($result <= 0) {
+				setEventMessages($object->error, $object->errors, 'errors');
+				$error++;
+			}
+			if (!$error) {
+				$db->commit();
+			} else {
+				$db->rollback();
+			}
+		}
 	}
 
 	// Documents
@@ -622,6 +642,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}*/
 
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SetAcceptedRefused'), $text, 'setAcceptedRefused', $formquestion, '', 1, 200);
+	}
+
+	// Selec close end
+	if ($action == 'closefinich') {
+		//Form to (signed or not)
+		$formquestion = array(
+			array('type' => 'select', 'name' => 'statutfolder', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_FOLDER_DENOUNCED=>$object->LibStatutFolder($object::STATUS_FOLDER_DENOUNCED, 1), $object::STATUS_FOLDER_REDEEMED=>$object->LibStatutFolder($object::STATUS_FOLDER_REDEEMED, 1))),
+		);
+
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('closefinich'), $text, 'setCloseFinich', $formquestion, '', 1, 200);
 	}
 
 	// Confirmation to delete

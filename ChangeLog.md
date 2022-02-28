@@ -10,6 +10,9 @@
 - NEW - Ajout bouton pour indiquer l'envoie du dossier et ajout dans les mass actions
 - NEW - Ajout bouton pour indiquer qu'il manque des piéces au dossier
 - NEW - Ajout des mass actions
+- NEW - Ajout du statut accépté avec retenu de garantie
+- NEW - Ajout du statut dossier racheté ou dénoncé lors de la clôture d'un financement manuelement.
+- NEW - Ajout de taches planifiés
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
