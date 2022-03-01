@@ -2024,13 +2024,12 @@ class Funding extends CommonObject
 		global $conf, $langs, $db;
 		$date = dol_now('tzserver');
 
-		$sql = 'SELECT rowid, ref, date_end, status_folder, status';
+		$sql = 'SELECT rowid, ref, date_end, fk_funding_type, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
 		$sql .= ' WHERE f.date_end < "'.dol_print_date($date, 'dayrfc').'"';
 		$sql .= ' AND (f.status_folder <> '.self::STATUS_FOLDER_EXTENSION.' OR f.status_folder IS NULL)';
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
 		$resql = $this->db->query($sql);
-		var_dump(!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION));
 		if ($resql) {
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;
@@ -2041,24 +2040,23 @@ class Funding extends CommonObject
 					if (empty($obj)) {
 						break; // Should not happen
 					}
-
 					if (!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) && $obj->fk_funding_type != $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) {
 						$status = self::STATUS_END;
 						$triger = 'FUNDING_END';
 						if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
 							if ($i == $num) {
-								$output .= $obj->ref;
+								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>';
 							} else {
-								$output .= $obj->ref." - ";
+								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>'." - ";
 							}
 						}
 					} else {
 						$status = self::STATUS_FOLDER_EXTENSION;
-						if ($result = setStatusFolder($user, $status, $notrigger = 0)) {
+						if ($result = $funding->setStatusFolder($user, $status, $notrigger = 0)) {
 							if ($i == $num) {
-								$output .= $obj->ref;
+								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>';
 							} else {
-								$output .= $obj->ref." - ";
+								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>'." - ";
 							}
 						}
 					}
@@ -2084,6 +2082,9 @@ class Funding extends CommonObject
 			$result = $langs->trans("OutputNoSetStatusCronFundingEnd");
 			return $result;
 		} else {
+			if (!empty($output)) {
+				$this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $langs->trans("OutputCronFundingEnd"), $this->output);
+			}
 			return 0;
 		}
 	}
@@ -2118,8 +2119,7 @@ class Funding extends CommonObject
 					if (empty($obj)) {
 						break; // Should not happen
 					}
-					$message = $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end));
-					$message .= '<br/><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">Lien</a>';
+					$message = '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a> - '.$soc->nom.'('.$soc->name_alias.') - '.date('d-m-Y', strtotime($obj->date_end));
 					$result = $funding->sendMail($comm->email, $comm->email, $langs->trans("OutputCronFundingSoonFinished"), $message);
 					if ($i == $num) {
 						$output .= $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end));
@@ -2139,7 +2139,7 @@ class Funding extends CommonObject
 		$this->error = '';
 
 		if (!empty($output)) {
-			$this->output = $langs->trans("OutputCronFundingSoonFinished").$output;
+			$this->output = $langs->trans("OutputCronFundingSoonFinished").' '.$output;
 		}
 
 		if (!empty($error)) {
@@ -2177,9 +2177,9 @@ class Funding extends CommonObject
 		}
 
 		if (empty($subject)) {
-			$subject = dol_escape_htmltag($langs->trans("OutputCronFundingSoonFinished"));
+			$subject = dol_escape_htmltag($langs->convToOutputCharset($langs->trans("OutputCronFundingSoonFinished")));
 		} else {
-			$subject = dol_escape_htmltag($subject);
+			$subject = dol_escape_htmltag($langs->convToOutputCharset($subject));
 		}
 
 		if (empty($message)) {

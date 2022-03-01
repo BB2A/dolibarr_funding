@@ -354,8 +354,8 @@ ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?
 
 CronFundingEnd = Financement terminé
 CommentCronFundingEnd = Met à jour le statut des financements actif, qui ne sont pas en prolongation et dont la date de fin est dépassé.
-OutputCronFundingEnd = Financement mis à jour: 
-OutputNoSetStatusCronFundingEnd = Des mises à jour de statut non pas ete effectué.
+OutputCronFundingEnd = Financement mis a jour automatiquement: 
+OutputNoSetStatusCronFundingEnd = Des mises a jour de statut non pas été effectué.
 
 CronFundingSoonFinished = Financement bientôt terminé
 CommentCronFundingSoonFinished = Envoie des notifications aux commerciaux pour leur indiquer la fin des financements. Param: $duration -> en mois par default 6 mois si vide (Prend les financements qui se termine dans les 6 prochains mois)
