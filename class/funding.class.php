@@ -715,7 +715,8 @@ class Funding extends CommonObject
 			'funfoldoc2'=>$object->funfoldoc2,
 			'funfoldoc3'=>$object->funfoldoc3,
 			'funfoldoc4'=>$object->funfoldoc4,
-			'funfoldoc5'=>$object->funfoldoc5
+			'funfoldoc5'=>$object->funfoldoc5,
+			'funfoldoc6'=>$object->funfoldoc6
 			);
 
 			if (!(is_dir($dirdest))) {

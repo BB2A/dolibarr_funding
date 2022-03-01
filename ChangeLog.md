@@ -5,6 +5,8 @@
 - FIX - Désactivation visibilité origin and origin_id
 - FIX - Erreur sur fonction prolonguation
 - FIX - Erreur massaction accept denied
+- FIX - Substitution funding type
+- FIX - Passage en commande reprend si le financment est accepté
 
 - NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
 - NEW - Ajout des listes brouillon
