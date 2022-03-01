@@ -2177,7 +2177,7 @@ class Funding extends CommonObject
 		}
 
 		if (empty($subject)) {
-			$subject = dol_escape_htmltag($langs->convToOutputCharset($langs->trans("OutputCronFundingSoonFinished")));
+			$subject = dol_escape_htmltag($langs->convToOutputCharset($langs->trans("Funding")));
 		} else {
 			$subject = dol_escape_htmltag($langs->convToOutputCharset($subject));
 		}
