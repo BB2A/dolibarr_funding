@@ -637,9 +637,6 @@ class Funding extends CommonObject
 		if (property_exists($object, 'origin_id')) {
 			$object->origin_id = $origin_id;
 		}
-		if (property_exists($object, 'fk_order')) {
-			$object->fk_order = $origin_id;
-		}
 		if (property_exists($object, 'status')) {
 			$object->status = self::STATUS_DRAFT;
 		}
