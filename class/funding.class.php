@@ -709,7 +709,6 @@ class Funding extends CommonObject
 
 			$dirsource = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($oldref).'/';
 			$dirdest = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($newref).'/';
-
 			$filesmove = array(
 			'fundoc1'=>$object->fundoc1,
 			'fundoc2'=>$object->fundoc2,
@@ -2033,6 +2032,7 @@ class Funding extends CommonObject
 		$sql .= ' AND (f.status_folder <> '.self::STATUS_FOLDER_EXTENSION.' OR f.status_folder IS NULL)';
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
 		$resql = $this->db->query($sql);
+		var_dump(!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION));
 		if ($resql) {
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;
@@ -2043,7 +2043,8 @@ class Funding extends CommonObject
 					if (empty($obj)) {
 						break; // Should not happen
 					}
-					if ($this->fk_funding_type <> $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) {
+
+					if (!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) && $obj->fk_funding_type != $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) {
 						$status = self::STATUS_END;
 						$triger = 'FUNDING_END';
 						if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
@@ -2106,7 +2107,6 @@ class Funding extends CommonObject
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
 		$sql .= ' ORDER BY f.date_end ASC'; //DESC
 		$resql = $this->db->query($sql);
-		var_dump($sql);
 		if ($resql) {
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;

@@ -531,9 +531,6 @@ if ($typedoc == 'propal') {
 
 // Part to create
 if ($action == 'create') {
-	if (!empty($conf->global->FUNDING_DEFAULT_TYPE)) {
-		$fk_funding_type =  $conf->global->FUNDING_DEFAULT_TYPE;
-	}
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
@@ -725,7 +722,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$morehtmlstatus .= '<div>'.$object->getLibStatutFolder(4).'</div><br/>';
 	}
 
-	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
+	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';
@@ -1101,13 +1098,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				} elseif ($object->status >= $object::STATUS_RUNNING) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("ReOpen").'</a>'."\n";
 				}
-			}
-
-			// Canceled
-			if (($permissiontodelete && $object->status < $object::STATUS_CANCELED) || ($object->status < $object::STATUS_RUNNING && $permissiontoadd && $object->status < $object::STATUS_CANCELED )) {
-				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=cancel&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Cancel').'</a>'."\n";
-			} else {
-				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Cancel').'</a>'."\n";
 			}
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)

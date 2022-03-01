@@ -16,6 +16,7 @@
 - NEW - Ajout de taches planifiés
 - NEW - Ajout de substitutions
 - NEW - Prise en compte des réglages par defaut
+- NEW - Ajout retour liste sur les fiches
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
