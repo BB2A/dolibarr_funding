@@ -65,7 +65,7 @@ Organization=Organisme
 ThirdPartyInvoice=Tiers facturation
 DateEnd=Date de fin
 Redemption=Rachat
-Retention=Retenue de garantie
+Retention=Calcul RG
 RetentionOfGuarantee=Retenue de garantie
 RetentionRate=Taux de retenue
 DateDelivery=Date de livraison
@@ -247,7 +247,7 @@ ErrorIsNoRunningNoOrder=Financements non actif
 #
 
 FundingStatusDraft=Financement brouillon
-FundingStatusValidated=Financement nouveau
+FundingStatusValidated=Nouveau financement
 FundingStatusUpdate=Financement mise à jour
 FundingStatusLack=Financement envoyé à l'organisme
 FundingStatusAccept=Financement accepté
@@ -272,10 +272,10 @@ FundingStatusDisabledShort=Annulé
 
 FundingStatusFolderSendOrg=Envoyé à l'organisme
 
-FundingStatusFolderAcceptRetention=Accépté avec retenue de garantie
+FundingStatusFolderAcceptRetention=Dossier avec RG
 FundingStatusFolderDenounced=Financement dénoncé
 FundingStatusFolderRedeemed=Financement racheté
-FundingStatusFolderLack=Manque des pieces complementaires
+FundingStatusFolderLack=Pièces à fournir pour étude
 FundingStatusFolderExtension=Prolongation du financement
 FundingStatusFolderSendOrgShort=Envoyé
 FundingStatusFolderLackShort=Manque
@@ -324,7 +324,7 @@ EXTENSIONInDolibarr=Financement %s Prolongation
 #
 
 BtnSendorg=Envoyé à l'organisme
-BtnLack=Manque documments
+BtnLack=Pièces demandées
 BtnRunning=Actif
 BtnExtension=Prolongation
 
