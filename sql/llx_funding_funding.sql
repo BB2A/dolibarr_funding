@@ -36,11 +36,10 @@ CREATE TABLE llx_funding_funding(
 	redemption_number varchar(128), 
 	retention smallint NOT NULL, 
 	retention_rate real, 
+	retention_mount double DEFAULT NULL,
 	fk_org integer NOT NULL, 
 	fk_soc integer NOT NULL, 
 	fk_soc_invoice integer, 
-	fk_propal integer, 
-	fk_order integer, 
 	fk_user_comm integer, 
 	description text, 
 	fundoc1 varchar(255), 
@@ -72,9 +71,12 @@ CREATE TABLE llx_funding_funding(
 ) ENGINE=innodb;
 
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
+ALTER TABLE llx_funding_funding ADD COLUMN retention_mount double AFTER retention_rate;
 ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc5 varchar(255) AFTER fundoc4;
 ALTER TABLE llx_funding_funding ADD COLUMN funfoldoc6 varchar(255) AFTER funfoldoc5;
 ALTER TABLE llx_funding_funding ADD COLUMN extension smallint AFTER funfoldoc6;
 ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
+ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
+ALTER TABLE llx_funding_funding DROP COLUMN fk_order;
 

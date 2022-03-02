@@ -66,8 +66,9 @@ ThirdPartyInvoice=Tiers facturation
 DateEnd=Date de fin
 Redemption=Rachat
 Retention=Calcul RG
-RetentionOfGuarantee=Retenue de garantie
+RetentionOfGuarantee=Calcul RG
 RetentionRate=Taux de retenue
+RetentionMount=Montant de la retenue
 DateDelivery=Date de livraison
 CoefListe=Liste coef
 NewFunding=Nouveau financement
@@ -270,19 +271,18 @@ FundingStatusDisabledShort=Annulé
 #Status folder
 #
 
-FundingStatusFolderSendOrg=Envoyé à l'organisme
-
+FundingStatusFolderSendOrg=étude en cours
+FundingStatusFolderLack=Pièces à fournir pour étude
 FundingStatusFolderAcceptRetention=Dossier avec RG
 FundingStatusFolderDenounced=Financement dénoncé
 FundingStatusFolderRedeemed=Financement racheté
-FundingStatusFolderLack=Pièces à fournir pour étude
 FundingStatusFolderExtension=Prolongation du financement
-FundingStatusFolderSendOrgShort=Envoyé
-FundingStatusFolderLackShort=Manque
-FundingStatusFolderAcceptRetentionShort=Accépté retenue
-FundingStatusFolderDenouncedShort=Dénoncé
-FundingStatusFolderRedeemedShort=Racheté
-FundingStatusFolderExtensionShort=Prolongation
+FundingStatusFolderSendOrgShort=étude en cours
+FundingStatusFolderLackShort=pièces pour étude
+FundingStatusFolderAcceptRetentionShort=dossier avec RG
+FundingStatusFolderDenouncedShort=dénonciation au terme
+FundingStatusFolderRedeemedShort=contrat racheté
+FundingStatusFolderExtensionShort=prolongation en cours
 
 #
 #Documents

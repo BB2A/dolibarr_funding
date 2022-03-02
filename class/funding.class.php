@@ -126,11 +126,10 @@ class Funding extends CommonObject
 		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemption_number", 'showoncombobox'=>'1',),
 		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>21, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retention_rate",),
+		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>21, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount_rent",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>22, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'showoncombobox'=>'1', 'help'=>"LinkToOrganization",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>23, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"LinkToThirparty",),
 		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>24, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"LinkToThirpartyInvoice",),
-		'fk_propal' => array('type'=>'integer:Propal:comm/propal/class/propal.class.php:', 'label'=>'Proposal', 'enabled'=>'1', 'position'=>25, 'notnull'=>3, 'visible'=>0, 'noteditable'=>'1',),
-		'fk_order' => array('type'=>'integer:Commande:commande/class/commande.class.php:', 'label'=>'Order', 'enabled'=>'1', 'position'=>26, 'notnull'=>3, 'visible'=>0, 'noteditable'=>'1',),
 		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>27, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
 		'fundoc1' => array('type'=>'varchar(255)', 'label'=>'fundoc1', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>0,),
@@ -179,11 +178,10 @@ class Funding extends CommonObject
 	public $redemption_number;
 	public $retention;
 	public $retention_rate;
+	public $retention_mount;
 	public $fk_org;
 	public $fk_soc;
 	public $fk_soc_invoice;
-	public $fk_propal;
-	public $fk_order;
 	public $fk_user_comm;
 	public $description;
 	public $fundoc1;
@@ -533,7 +531,11 @@ class Funding extends CommonObject
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
 					$this->retention_rate = $this->retentionrate($this->fk_org);
+					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
+				} else {
+					$this->retention_rate = '';
+					$this->retention_mount = '';
 				}
 				$coef               = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0) {
@@ -544,13 +546,6 @@ class Funding extends CommonObject
 					// Information sur date de livraison date de fin
 					$this->date_delivery = $document->date_livraison;
 
-					// Voir si delete
-					/*if ($typedoc == 'propal') {
-						$this->fk_propal  = $iddoc;
-					}
-					if ($typedoc == 'order') {
-						$this->fk_order    = $iddoc;
-					}*/
 					// Commercial
 					$idcomm = $this->commtiers($document->socid);
 					if ($idcomm > 0) {
@@ -1013,7 +1008,11 @@ class Funding extends CommonObject
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
 					$this->retention_rate = $this->retentionrate($this->fk_org);
+					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
+				} else {
+					$this->retention_rate = '';
+					$this->retention_mount = '';
 				}
 				$coef = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0) {
