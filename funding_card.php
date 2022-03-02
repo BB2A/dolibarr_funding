@@ -252,6 +252,7 @@ if (empty($reshook)) {
 	if ($action == 'set_thirdparty' && $permissiontoadd) {
 		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'FUNDING_MODIFY');
 	}
+
 	if ($action == 'classin' && $permissiontoadd) {
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
@@ -276,6 +277,10 @@ if (empty($reshook)) {
 				}
 			}
 		}
+	}
+
+	if ($action == 'confirm_setdraft' && $permissionmanage) {
+		$object->setStatusFolder($user, 'NULL');
 	}
 
 	if ($action == 'setCloseFinich' && $permissiontoadd) {
@@ -347,7 +352,7 @@ if (empty($reshook)) {
 				$pdf->setPrintHeader(false);
 				$pdf->setPrintFooter(false);
 			}
-				// Si selecteur de plusieur fichiers
+			// Si selecteur de plusieur fichiers
 			if (is_countable($_FILES['userfile']['name'])) {
 				foreach ($fileupload as $file) {
 					$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
