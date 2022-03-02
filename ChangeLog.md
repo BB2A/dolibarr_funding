@@ -7,6 +7,7 @@
 - FIX - Erreur massaction accept denied
 - FIX - Substitution funding type
 - FIX - Passage en commande reprend si le financment est accepté
+- FIX - Retour brouillon init statut dossier
 
 - NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
 - NEW - Ajout des listes brouillon
