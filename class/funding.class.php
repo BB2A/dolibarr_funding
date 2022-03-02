@@ -155,7 +155,7 @@ class Funding extends CommonObject
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraftShort', '1' => 'FundingStatusValidatedShort', '2' => 'FundingStatusUpdateShort',/* '3' => 'FundingStatusSendOrgShort', */'4' => 'FundingStatusAcceptShort', '5' => 'FundingStatusDeniedShort', '6' => 'FundingStatusRunningShort', '7' => 'FundingStatusEndShort', '8' => 'FundingStatusDisabledShort'),),
 	);
 	public $rowid;
@@ -1382,8 +1382,6 @@ class Funding extends CommonObject
 		}
 		if ($retention == 'on') {
 			$this->setStatusFolder($user, $this::STATUS_FOLDER_ACCEPT_RETENTION);
-		} else {
-			$this->setStatusFolder($user, 0);
 		}
 
 		return $this->setStatusCommon($user, $status, $notrigger, $triger);
