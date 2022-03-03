@@ -512,7 +512,7 @@ class Funding extends CommonObject
 			$this->origin = $typedoc;
 			$this->origin_id = $iddoc;
 			$document = $this->infodoc($iddoc, $typedoc);
-			if ($document > 0) {
+			if (is_object($document) && $document->statut > self::STATUS_DRAFT) {
 				// Récupére si une adresse facturation différente
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
@@ -578,7 +578,7 @@ class Funding extends CommonObject
 					setEventMessages($langs->trans("coefnok"), null, 'errors');
 				}
 			} else {
-				setEventMessages($langs->trans("nodoc"), null, 'errors');
+				setEventMessages($langs->trans("documentnotvalidated"), null, 'errors');
 			}
 		} else {
 			setEventMessages($langs->trans("paramnok"), null, 'errors');
@@ -990,7 +990,7 @@ class Funding extends CommonObject
 		if ($iddoc && $typedoc) {
 			$document = $this->infodoc($iddoc, $typedoc);
 
-			if (is_object($document) && $document->statut > 0) {
+			if (is_object($document) && $document->statut > self::STATUS_DRAFT) {
 				//Récupére si une adresse facturation différente
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
@@ -1060,6 +1060,8 @@ class Funding extends CommonObject
 				} else {
 					setEventMessages($langs->trans("coefnok"), null, 'errors');
 				}
+			} else {
+				setEventMessages($langs->trans("documentnotvalidated"), null, 'errors');
 			}
 		} else {
 			setEventMessages($langs->trans("paramnok"), null, 'errors');
