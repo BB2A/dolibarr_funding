@@ -8,6 +8,7 @@
 - FIX - Substitution funding type
 - FIX - Passage en commande reprend si le financment est accepté
 - FIX - Retour brouillon init statut dossier
+- FIX - Supprimer fk_propal et fk_order dans la base (non utile) remplacé par origin et orign_id
 
 - NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
 - NEW - Ajout des listes brouillon
@@ -16,11 +17,12 @@
 - NEW - Ajout des mass actions
 - NEW - Ajout du statut accépté avec retenu de garantie
 - NEW - Ajout du statut dossier racheté ou dénoncé lors de la clôture d'un financement manuelement.
-- NEW - Ajout de taches planifiés
+- NEW - Ajout des taches planifiés
 - NEW - Ajout de substitutions
 - NEW - Prise en compte des réglages par defaut
 - NEW - Ajout retour liste sur les fiches
 - NEW - Ajout du montant de retenue de garantie
+- NEW - Ajout commentaire financement terminé
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
