@@ -287,14 +287,8 @@ if (empty($reshook)) {
 		// prevent browser refresh from closing funding several times
 		if ($object->status == $object::STATUS_RUNNING) {
 			$db->begin();
-			$result = $object->setEnd($user, GETPOST('description', 'restricthtml'), $notrigger);
-			if ($result > 0 && !empty(GETPOST('statutfolder', 'int'))) {
-				$result = $object->setStatusFolder($user, GETPOST('statutfolder', 'int'));
-				if ($result <= 0) {
-					setEventMessages($object->error, $object->errors, 'errors');
-					$error++;
-				}
-			} elseif ($result <= 0) {
+			$result = $object->setEnd($user, GETPOST('statutfolder', 'int'), GETPOST('description', 'restricthtml'), $notrigger);
+			if ($result < 0) {
 				setEventMessages($object->error, $object->errors, 'errors');
 				$error++;
 			}

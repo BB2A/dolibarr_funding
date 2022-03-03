@@ -1423,11 +1423,12 @@ class Funding extends CommonObject
 	 *  Set End  status
 	 *
 	 *  @param  User    $user           Object user that modify
+	 *  @param  int     $statusfolder   Value status folder
 	 *  @param  alpha   $note           Note to closed
 	 *  @param  bool    $notrigger      false=launch triggers after, true=disable triggers
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function setEnd($user, $note = '', $notrigger = 0)
+	public function setEnd($user, $statusfolder, $note = '', $notrigger = 0)
 	{
 		global $langs;
 
@@ -1437,14 +1438,20 @@ class Funding extends CommonObject
 			$this->description = dol_concatdesc($this->description, $note);
 			$result = $this->updateCommon($user, 1);
 		}
-
-		if ($this->status == self::STATUS_RUNNING && $result >= 0) {
-			$status = self::STATUS_END;
-			$triger = 'FUNDING_END';
-			return $this->setStatusCommon($user, $status, $notrigger, $triger);
+		if ($result >= 0) {
+			$result = $this->setStatusFolder($user, $statusfolder);
+		}
+		$status = self::STATUS_END;
+		$triger = 'FUNDING_END';
+		if ($statusfolder != self::STATUS_FOLDER_DENOUNCED) {
+			if ($this->status == self::STATUS_RUNNING && $result >= 0) {
+				return $this->setStatusCommon($user, $status, $notrigger, $triger);
+			} else {
+				setEventMessages($langs->trans("updatenok"), 'errors');
+				return -1;
+			}
 		} else {
-			setEventMessages($langs->trans("updatenok"), $this->status == self::STATUS_RUNNING, 'errors');
-			return -1;
+			return 0;
 		}
 	}
 
@@ -2036,7 +2043,7 @@ class Funding extends CommonObject
 		$sql = 'SELECT rowid, ref, date_end, fk_funding_type, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
 		$sql .= ' WHERE f.date_end < "'.dol_print_date($date, 'dayrfc').'"';
-		$sql .= ' AND (f.status_folder <> '.self::STATUS_FOLDER_EXTENSION.' OR f.status_folder IS NULL)';
+		//$sql .= ' AND (f.status_folder <> '.self::STATUS_FOLDER_EXTENSION.' OR f.status_folder IS NULL)';
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
 		$resql = $this->db->query($sql);
 		if ($resql) {
@@ -2049,7 +2056,7 @@ class Funding extends CommonObject
 					if (empty($obj)) {
 						break; // Should not happen
 					}
-					if (!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) && $obj->fk_funding_type != $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) {
+					if (!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) && $obj->fk_funding_type != $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION || $obj->status_folder == self::STATUS_FOLDER_DENOUNCED) {
 						$status = self::STATUS_END;
 						$triger = 'FUNDING_END';
 						if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
