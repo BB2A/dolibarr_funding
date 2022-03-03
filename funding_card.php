@@ -634,7 +634,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		//Form to (signed or not)
 		$formquestion = array(
 			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT, 1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED, 1))),
-			array('type' => 'checkbox', 'name' => 'retention', 'label' => $langs->trans("Retention"), 'value' => '0')
+			array('type' => 'checkbox', 'name' => 'retention', 'label' => $langs->trans("QuestionRetention"), 'value' => '0')
 		);
 
 		// BB2A Notification voir pour aline changement de statut
