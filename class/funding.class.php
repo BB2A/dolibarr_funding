@@ -1423,17 +1423,27 @@ class Funding extends CommonObject
 	 *  Set End  status
 	 *
 	 *  @param  User    $user           Object user that modify
+	 *  @param  alpha   $note           Note to closed
 	 *  @param  bool    $notrigger      false=launch triggers after, true=disable triggers
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function setEnd($user, $notrigger = 0)
+	public function setEnd($user, $note = '', $notrigger = 0)
 	{
-		if ($this->status = self::STATUS_RUNNING) {
+		global $langs;
+
+		$result = 0;
+
+		if (!empty($note)) {
+			$this->description = dol_concatdesc($this->description, $note);
+			$result = $this->updateCommon($user, 1);
+		}
+
+		if ($this->status == self::STATUS_RUNNING && $result >= 0) {
 			$status = self::STATUS_END;
 			$triger = 'FUNDING_END';
 			return $this->setStatusCommon($user, $status, $notrigger, $triger);
 		} else {
-			setEventMessages($langs->trans("fundingnotdatedelivry"), $langs->trans("fundingnotdatesign"), 'errors');
+			setEventMessages($langs->trans("updatenok"), $this->status == self::STATUS_RUNNING, 'errors');
 			return -1;
 		}
 	}

@@ -202,12 +202,13 @@ CreateUpdateRetention=Creer modifier les retenues de garanties
 DeleteRetention=Supprimer les retenues de garanties
 
 #
-#Events massages
+#Events messages
 #
 
 commnok=Commercial introuvable
 coefnok=Coef introuvable
 novalidreg=Financement non validé changer le mode de réglement
+documentnotvalidated=Document non validé
 paramnok=Parametres manquants
 checknok=Tous les paramétres ne sont pas réunis
 creatrefnok=Création ref impossible
