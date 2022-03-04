@@ -783,10 +783,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc1">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat" name="userfile" id="fundoc1input"></td>';
-		if (empty($object->fundoc1check)) {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check"></td>';
+		if ($object->status < $object::STATUS_ACCEPT) {
+			if (empty($object->fundoc1check)) {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check"></td>';
+			} else {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check" checked></td>';
+			}
 		} else {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check" checked></td>';
+			print '<td></td>';
 		}
 		// if ($conf->use_javascript_ajax) {
 		// 	print '<td>'.ajax_object_onoff($object, 'fundoc1check', 'fundoc1check',$langs->trans('Help_documentRequired'),$langs->trans('Help_documentNotRequired')).'</td>';
@@ -815,10 +819,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc2">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="fundoc2input"></td>';
-		if (empty($object->fundoc2check)) {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check"></td>';
+		if ($object->status < $object::STATUS_ACCEPT) {
+			if (empty($object->fundoc2check)) {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check"></td>';
+			} else {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check" checked></td>';
+			}
 		} else {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check" checked></td>';
+			print '<td></td>';
 		}
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
@@ -838,10 +846,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc3">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
-		if (empty($object->fundoc3check)) {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check"></td>';
+		if ($object->status < $object::STATUS_ACCEPT) {
+			if (empty($object->fundoc3check)) {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check"></td>';
+			} else {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check" checked></td>';
+			}
 		} else {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check" checked></td>';
+			print '<td></td>';
 		}
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
@@ -861,10 +873,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc4">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
-		if (empty($object->fundoc4check)) {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check"></td>';
+		if ($object->status < $object::STATUS_ACCEPT) {
+			if (empty($object->fundoc4check)) {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check"></td>';
+			} else {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check" checked></td>';
+			}
 		} else {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check" checked></td>';
+			print '<td></td>';
 		}
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
@@ -884,10 +900,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc5">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
-		if (empty($object->fundoc5check)) {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check"></td>';
+		if ($object->status < $object::STATUS_ACCEPT) {
+			if (empty($object->fundoc5check)) {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check"></td>';
+			} else {
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check" checked></td>';
+			}
 		} else {
-			print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check" checked></td>';
+			print '<td></td>';
 		}
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
