@@ -1879,7 +1879,9 @@ class Funding extends CommonObject
 		}
 
 		// BB2A Status Correspodanse avec les format d'affichage
-		$statusType = 'status'.$status;
+		if (!empty($status)) {
+			$statusType = 'status'.$status;
+		}
 		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
 		/*
 		if ($status == self::STATUS_CANCELED) {
