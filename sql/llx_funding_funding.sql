@@ -70,6 +70,7 @@ CREATE TABLE llx_funding_funding(
 	last_main_doc varchar(255), 
 	import_key varchar(14), 
 	model_pdf varchar(255), 
+	funcheck smallint,
 	status_folder smallint, 
 	status smallint NOT NULL
 	-- END MODULEBUILDER FIELDS
@@ -86,6 +87,7 @@ ALTER TABLE llx_funding_funding ADD COLUMN fundoc2check smallint AFTER fundoc2;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc3check smallint AFTER fundoc3;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc4check smallint AFTER fundoc4;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc5check smallint AFTER fundoc5;
+ALTER TABLE llx_funding_funding ADD COLUMN funcheck smallint AFTER model_pdf;
 ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_order;

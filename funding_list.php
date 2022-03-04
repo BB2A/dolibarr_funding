@@ -330,7 +330,7 @@ if ($action == 'accepted' && $permissiontoadd) {
 			if ($tmpfunding->fetch($checked)) {
 				if ($tmpfunding->status == $object::STATUS_VALIDATED) {
 					if ($tmpfunding->setAcceptedRefused($user, $object::STATUS_ACCEPT) > 0) {
-						$validateok .= $langs->trans('Accepted', $tmpfunding->ref)."<br/>";
+						$validateok .= $langs->trans('fundingaccepted', $tmpfunding->ref)."<br/>";
 					} else {
 						setEventMessage($langs->trans('fundingnotaccepted'), 'errors');
 						$error++;
@@ -453,6 +453,32 @@ if ($action == 'extension' && $permissiontoadd) {
 	}
 }
 
+if ($action == 'check' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->setCheked($user, $tmpfunding->id)) {
+					$validateok .= $langs->trans('fundingcheked', $tmpfunding->ref)."<br/>";
+				} else {
+					setEventMessage($langs->trans('fundingnotcheked'), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) {
@@ -752,6 +778,7 @@ if ($permissionmanage) {
 if ($permissiontoadd) {
 	$arrayofmassactions['prerunning'] = img_picto('', 'clock', 'class="pictofixedwidth"').$langs->trans("BtnRunning");
 	$arrayofmassactions['preextension'] = img_picto('', 'movement', 'class="pictofixedwidth"').$langs->trans("BtnExtension");
+	$arrayofmassactions['precheck'] = img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("Check");
 }
 if ($permissiontodelete) {
 	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
@@ -808,6 +835,9 @@ if ($massaction == 'prerunning') {
 }
 if ($massaction == 'preextension') {
 	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassExtension"), $langs->trans("ConfirmMassExtensionQuestion"), "extension", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'precheck') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassExtension"), $langs->trans("ConfirmMassExtensionQuestion"), "check", null, '', 0, 200, 500, 1);
 }
 
 if ($search_all) {

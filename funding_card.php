@@ -741,15 +741,17 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	$morehtmlref .= '</div>';
 	if ($object->origin == 'propal') {
-		$tabBartitle = $langs->trans('fundingpropal');
+		$tabBartitle = $langs->trans('fundingpropal').' ';
 	} elseif ($object->origin == 'order') {
-		$tabBartitle = $langs->trans('Funding');
+		$tabBartitle = $langs->trans('Funding').' ';
 	}
-	$morehtmlstatus .= '<h3>'.$tabBartitle .'</h3>';
+	$checked = ($object->funcheck)?img_picto('', 'check', 'class="pictofixedwidth"'):img_picto('', 'uncheck', 'class="pictofixedwidth"');
+	$morehtmlstatus .= '<h3>'.$checked.$tabBartitle.'</h3>';
 
 	if (!empty($object->status_folder)) {
 		$morehtmlstatus .= '<div>'.$object->getLibStatutFolder(4).'</div><br/>';
 	}
+	$morehtmlref .= '';
 
 	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
 	print '<div class="fichecenter">';

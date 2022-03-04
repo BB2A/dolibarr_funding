@@ -161,7 +161,8 @@ class Funding extends CommonObject
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
+		'funcheck' => array('type'=>'smallint', 'label'=>'Checked', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>-2, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraftShort', '1' => 'FundingStatusValidatedShort', '2' => 'FundingStatusUpdateShort',/* '3' => 'FundingStatusSendOrgShort', */'4' => 'FundingStatusAcceptShort', '5' => 'FundingStatusDeniedShort', '6' => 'FundingStatusRunningShort', '7' => 'FundingStatusEndShort', '8' => 'FundingStatusDisabledShort'),),
 	);
 	public $rowid;
@@ -218,6 +219,7 @@ class Funding extends CommonObject
 	public $last_main_doc;
 	public $import_key;
 	public $model_pdf;
+	public $funcheck;
 	public $status_folder;
 	public $status;
 	// END MODULEBUILDER PROPERTIES
@@ -1467,6 +1469,46 @@ class Funding extends CommonObject
 			return 0;
 		}
 	}
+
+	/**
+	 *  Set Check
+	 *
+	 *  @param  User    $user           Object user that modify
+	 * 	@param  int    	$id           	id funding
+	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
+	 */
+	public function setCheked($user, $id)
+	{
+		global $db;
+
+		$error = 0;
+
+		$this->db->begin();
+
+		$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET funcheck = 1 WHERE rowid = ".$id;
+		$resql = $db->query($sql);
+
+		dol_syslog(__METHOD__.' $this->id='.$this->id.', folder_number='.$folder_number, LOG_DEBUG);
+
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->error();
+			$error++;
+		}
+
+		if (!$error) {
+			$this->db->commit();
+			return 1;
+		} else {
+			foreach ($this->errors as $errmsg) {
+				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
+				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
+			}
+			$this->db->rollback();
+			return -1 * $error;
+		}
+	}
+
 
 	/**
 	 * Update object into database
