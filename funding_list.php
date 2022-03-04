@@ -266,7 +266,7 @@ if ($action == 'sendorg' && $permissionmanage) {
 					if ($tmpfunding->setStatusFolder($user, 1) > 0) {
 						$validateok .= $langs->trans('hasBeenSendOrg', $tmpfunding->ref)."<br/>";
 					} else {
-						setEventMessage($langs->trans('CantBeSendOrg'), 'errors');
+						setEventMessage($langs->trans('CantBeSendOrg', $tmpfunding->ref), 'errors');
 						$error++;
 					}
 				} else {
@@ -299,7 +299,7 @@ if ($action == 'lack' && $permissionmanage) {
 					if ($tmpfunding->setStatusFolder($user, 2) > 0) {
 						$validateok .= $langs->trans('hasBeenLack', $tmpfunding->ref)."<br/>";
 					} else {
-						setEventMessage($langs->trans('CantBeLack'), 'errors');
+						setEventMessage($langs->trans('CantBeLack', $tmpfunding->ref), 'errors');
 						$error++;
 					}
 				} else {
@@ -332,7 +332,7 @@ if ($action == 'accepted' && $permissiontoadd) {
 					if ($tmpfunding->setAcceptedRefused($user, $object::STATUS_ACCEPT) > 0) {
 						$validateok .= $langs->trans('fundingaccepted', $tmpfunding->ref)."<br/>";
 					} else {
-						setEventMessage($langs->trans('fundingnotaccepted'), 'errors');
+						setEventMessage($langs->trans('fundingnotaccepted', $tmpfunding->ref), 'errors');
 						$error++;
 					}
 				} else {
@@ -365,7 +365,7 @@ if ($action == 'refused' && $permissiontoadd) {
 					if ($tmpfunding->setAcceptedRefused($user, $object::STATUS_DENIED) > 0) {
 						$validateok .= $langs->trans('Refused', $tmpfunding->ref)."<br/>";
 					} else {
-						setEventMessage($langs->trans('CantBeDenied'), 'errors');
+						setEventMessage($langs->trans('CantBeDenied', $tmpfunding->ref), 'errors');
 						$error++;
 					}
 				} else {
@@ -398,7 +398,7 @@ if ($action == 'running' && $permissiontoadd) {
 					if ($tmpfunding->setRun($user) > 0) {
 						$validateok .= $langs->trans('hasBeenRun', $tmpfunding->ref)."<br/>";
 					} else {
-						setEventMessage($langs->trans('CantBeRun'), 'errors');
+						setEventMessage($langs->trans('CantBeRun', $tmpfunding->ref), 'errors');
 						$error++;
 					}
 				} else {
@@ -431,7 +431,7 @@ if ($action == 'extension' && $permissiontoadd) {
 					if ($tmpfunding->SetStatusFolder($user, 3) > 0) {
 						$validateok .= $langs->trans('hasBeenExtension', $tmpfunding->ref)."<br/>";
 					} else {
-						setEventMessage($langs->trans('CantBeExtension'), 'errors');
+						setEventMessage($langs->trans('CantBeExtension', $tmpfunding->ref), 'errors');
 						$error++;
 					}
 				} else {
@@ -463,7 +463,7 @@ if ($action == 'check' && $permissiontoadd) {
 				if ($tmpfunding->setCheked($user, $tmpfunding->id)) {
 					$validateok .= $langs->trans('fundingcheked', $tmpfunding->ref)."<br/>";
 				} else {
-					setEventMessage($langs->trans('fundingnotcheked'), 'errors');
+					setEventMessage($langs->trans('fundingnotcheked', $tmpfunding->ref), 'errors');
 					$error++;
 				}
 			} else {
@@ -778,7 +778,7 @@ if ($permissionmanage) {
 if ($permissiontoadd) {
 	$arrayofmassactions['prerunning'] = img_picto('', 'clock', 'class="pictofixedwidth"').$langs->trans("BtnRunning");
 	$arrayofmassactions['preextension'] = img_picto('', 'movement', 'class="pictofixedwidth"').$langs->trans("BtnExtension");
-	$arrayofmassactions['precheck'] = img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("Check");
+	$arrayofmassactions['precheck'] = img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("FunCheck");
 }
 if ($permissiontodelete) {
 	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");

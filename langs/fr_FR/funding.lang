@@ -88,10 +88,11 @@ ConfirmDeleteFunding=Êtes-vous sûr de vouloir supprimer ce financement ?
 RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
 Checked=Pointé
+FunCheck=Pointer
 
 SetAcceptedRefused=Accepter/Refuser
 Accepted=Accepté
-Refused=Refusé
+Refused=Refusé %s
 CloseAs=Positionner le statut à
 DateSignature=Date signature P.V.
 closefinich=Cloturer
@@ -227,10 +228,10 @@ updatenok=Mise à jour du financement impossible
 orderreopennok=Réouverture impossible financement en cours
 clonfudpropal=Financement copier depuis la proposition
 deletnok=Suppresion impossible
-fundingaccepted=Financement accépté
-fundingnotaccepted=Financement non accépté
-fundingcheked=Financement pointé
-fundingnotcheked=Financement non pointé
+fundingaccepted=Financement accépté %s
+fundingnotaccepted=Financement non accépté %s
+fundingcheked=Financement pointé %s
+fundingnotcheked=Financement non pointé %s
 fundingnotdatedelivry=Pas de date de livraison
 fundingnotdatesign=Pas de date de signature
 statusfundingnok=Financement changement du statut impossible
@@ -239,19 +240,19 @@ fundingvalidated=Financement mis en nouveau
 fundingcancel=Financement annulé
 CantBeValidated=Financement non validé
 
-hasBeenSendOrg=Finacements envoyés aux organismes
-CantBeSendOrg=Finacements non envoyés aux organismes
+hasBeenSendOrg=Finacements envoyés aux organismes %s
+CantBeSendOrg=Finacements non envoyés aux organismes %s
 
-hasBeenLack=Financements pièces manquantent
-CantBeLack=Financements pas de pièces manquantent
+hasBeenLack=Financements pièces manquantent %s
+CantBeLack=Financements pas de pièces manquantent %s
 ErrorIsNotValidateOrAccepted=Financements non validé ou déjà accepté
 
-hasBeenRun=Financements actif
-CantBeRun=Financements non actif
-ErrorIsNotAccept=Financements non accepté
+hasBeenRun=Financements actif %s
+CantBeRun=Financements non actif %s
+ErrorIsNotAccept=Financements non accepté %s
 
-hasBeenExtension=Financements prolongé
-CantBeExtension=Financements non prolongé
+hasBeenExtension=Financements prolongé %s
+CantBeExtension=Financements non prolongé %s
 ErrorIsNoRunningNoOrder=Financements non actif
 
 
