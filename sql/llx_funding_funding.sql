@@ -43,10 +43,15 @@ CREATE TABLE llx_funding_funding(
 	fk_user_comm integer, 
 	description text, 
 	fundoc1 varchar(255), 
+	fundoc1check smallint,
 	fundoc2 varchar(255), 
+	fundoc2check smallint,
 	fundoc3 varchar(255), 
+	fundoc3check smallint,
 	fundoc4 varchar(255), 
+	fundoc4check smallint,
 	fundoc5 varchar(255), 
+	fundoc5check smallint, 
 	funfoldoc1 varchar(255), 
 	funfoldoc2 varchar(255), 
 	funfoldoc3 varchar(255), 
@@ -76,6 +81,11 @@ ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delive
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc5 varchar(255) AFTER fundoc4;
 ALTER TABLE llx_funding_funding ADD COLUMN funfoldoc6 varchar(255) AFTER funfoldoc5;
 ALTER TABLE llx_funding_funding ADD COLUMN extension smallint AFTER funfoldoc6;
+ALTER TABLE llx_funding_funding ADD COLUMN fundoc1check smallint AFTER fundoc1;
+ALTER TABLE llx_funding_funding ADD COLUMN fundoc2check smallint AFTER fundoc2;
+ALTER TABLE llx_funding_funding ADD COLUMN fundoc3check smallint AFTER fundoc3;
+ALTER TABLE llx_funding_funding ADD COLUMN fundoc4check smallint AFTER fundoc4;
+ALTER TABLE llx_funding_funding ADD COLUMN fundoc5check smallint AFTER fundoc5;
 ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_order;

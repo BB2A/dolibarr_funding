@@ -167,26 +167,28 @@ FUNDING_LISTE_THIRDPARTY_PROPAL=Afficher les propositions de financement dans ti
 #Aides
 #
 
-Help_study_number=Numéro d'etude délivré par l'organisme de financement
-Help_folder_number=Numéro de dossier délivré par l'organisme de financement
+Help_studyNumber=Numéro d'etude délivré par l'organisme de financement
+Help_folderNumber=Numéro de dossier délivré par l'organisme de financement
 Help_amount=Montant à financer
-Help_amount_maint=Montant de la maintenance
-Help_amount_total=Montant total du financement
+Help_amountMaint=Montant de la maintenance
+Help_amountTotal=Montant total du financement
 Help_duration=Durée du financement
 Help_coef=Coéficiant de calcul
 Help_redemption_number=Numéro de dossier racheté
 Help_retention=RG (Retenue de garantie)
 Help_retention_rate=Pourcentage de retenue de garantie
 Help_retention_mount=Valeur de la retenu de garantie
-Help_amount_rent=Montant des loyer
-Help_date_delivery=Date de livraison du matériel
-Help_date_signature=Date de signature du procès verbale de livraison
-Help_date_end=Date de fin du financement
-Help_Scale=Barème de financement
-Help_amount_rent_edit=Montant des loyers personalisé
-LinkToOrganization=Organisme de financement
-LinkToThirparty=Tiers concerné par le financement
-LinkToThirpartyInvoice=Tiers payeur défini sur la commande ou la proposition
+Help_amountRent=Montant des loyer
+Help_dateDelivery=Date de livraison du matériel
+Help_dateSignature=Date de signature du procès verbale de livraison
+Help_dateEnd=Date de fin du financement
+Help_scale=Barème de financement
+Help_amountRent_edit=Montant des loyers personalisé
+Help_linkToOrganization=Organisme de financement
+Help_linkToThirparty=Tiers concerné par le financement
+Help_linkToThirpartyInvoice=Tiers payeur défini sur la commande ou la proposition
+Help_documentRequired=Document requis
+Help_documentNotRequired=Document non requis
 
 #
 #Droits
@@ -247,6 +249,9 @@ hasBeenExtension=Financements prolongé
 CantBeExtension=Financements non prolongé
 ErrorIsNoRunningNoOrder=Financements non actif
 
+
+FilesChecked=Fichier demandé
+
 #
 #Status
 #
@@ -277,12 +282,15 @@ FundingStatusDisabledShort=Annulé
 
 FundingStatusFolderSendOrg=étude en cours
 FundingStatusFolderLack=Pièces à fournir pour étude
+FundingStatusFolderLackOk=Pièces ok
 FundingStatusFolderAcceptRetention=Dossier avec RG
 FundingStatusFolderDenounced=Financement dénoncé
 FundingStatusFolderRedeemed=Financement racheté
 FundingStatusFolderExtension=Prolongation du financement
+
 FundingStatusFolderSendOrgShort=étude en cours
 FundingStatusFolderLackShort=pièces pour étude
+FundingStatusFolderLackOkShort=Pièce ok
 FundingStatusFolderAcceptRetentionShort=dossier avec RG
 FundingStatusFolderDenouncedShort=dénonciation au terme
 FundingStatusFolderRedeemedShort=contrat racheté
@@ -320,6 +328,7 @@ REOPENInDolibarr=Financement %s Rouvert
 UNVALIDATEInDolibarr=Financement %s Retour en brouillon
 SENDORGInDolibarr=Financement %s Envoyé à l'organisme
 LACKInDolibarr=Financement %s Manque des documents
+LACKOKInDolibarr=Financement %s documents rajoutés
 EXTENSIONInDolibarr=Financement %s Prolongation
 
 

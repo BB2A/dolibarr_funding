@@ -12,6 +12,7 @@ INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `de
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_UNVALIDATE', 'Funding unvalidate', 'A funding is unvalidate', '1830051');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_SENDORG', 'Funding send organisme', 'A funding is send to organisme', '1830052');
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_LACK', 'Funding lack', 'A funding is lack', '1830053');
-INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_EXTENSION', 'Funding extension', 'A funding is extension', '1830053');
+INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_LACKOK', 'Funding lack ok', 'A funding is lack ok', '1830054');
+INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding', 'FUNDING_EXTENSION', 'Funding extension', 'A funding is extension', '1830055');
 
 --ADD Call trigger IN TABLE
