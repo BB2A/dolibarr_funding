@@ -1395,6 +1395,8 @@ class Funding extends CommonObject
 		}
 		if ($retention == 'on') {
 			$this->setStatusFolder($user, $this::STATUS_FOLDER_ACCEPT_RETENTION);
+		} else {
+			$this->setStatusFolder($user, 'NULL');
 		}
 
 		return $this->setStatusCommon($user, $status, $notrigger, $triger);
