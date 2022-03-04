@@ -71,7 +71,6 @@ RetentionRate=Taux de retenue
 RetentionMount=Montant de la retenue
 QuestionRetention=Dossier avec RG
 DateDelivery=Date de livraison
-CoefListe=Liste coef
 NewFunding=Nouveau financement
 NewCoef=Nouveau coef
 Amount_of=Montant de
@@ -132,6 +131,8 @@ ListFundingPropalNew=Nouveaux
 ListFundingPropalAccept=Accepté
 ListFundingPropalDenied=Refusé
 ListFundingPropalCanceled=Annulé
+ListFundingCoef=Liste des coefficients
+ListFundingRetention=Liste des retenues de garantie
 
 #
 #Dictionnaires
