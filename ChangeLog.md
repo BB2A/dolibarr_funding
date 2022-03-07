@@ -9,6 +9,7 @@
 - FIX - Passage en commande reprend si le financment est accepté
 - FIX - Retour brouillon init statut dossier
 - FIX - Supprimer fk_propal et fk_order dans la base (non utile) remplacé par origin et orign_id
+- FIX - Recherche sur une fiche tier renvoyer sur la liste compléte.
 
 - NEW - Paramettre pour ne pas afficher les propositions de financements dans l'onglet financements des tiers
 - NEW - Ajout des listes brouillon
