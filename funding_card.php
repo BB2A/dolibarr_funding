@@ -465,6 +465,16 @@ if (empty($reshook)) {
 			$object->setStatusFolder($user, $object::STATUS_FOLDER_LACK);
 			dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
 			setEventMessages($langs->trans('FilesChecked'), '');
+		} elseif (empty($filecheck) && empty($cherchfile)) {
+			$doccheck = $doc.'check';
+			if (isset($object->$doccheck)) {
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc."check = NULL WHERE rowid = ".$object->id;
+				$resql = $db->query($sql);
+				$object->db->free($resql);
+
+				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+				setEventMessages($langs->trans('FilesUnChecked'), '');
+			}
 		}
 	}
 
@@ -789,7 +799,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($object->fundoc1check)) {
 				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check"></td>';
 			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check" checked></td>';
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1checkchecked" checked></td>';
 			}
 		} else {
 			print '<td></td>';
@@ -825,7 +835,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($object->fundoc2check)) {
 				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check"></td>';
 			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check" checked></td>';
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2checkchecked" checked></td>';
 			}
 		} else {
 			print '<td></td>';
@@ -852,7 +862,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($object->fundoc3check)) {
 				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check"></td>';
 			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check" checked></td>';
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3checkchecked" checked></td>';
 			}
 		} else {
 			print '<td></td>';
@@ -879,7 +889,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($object->fundoc4check)) {
 				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check"></td>';
 			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check" checked></td>';
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4checkchecked" checked></td>';
 			}
 		} else {
 			print '<td></td>';
@@ -906,7 +916,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			if (empty($object->fundoc5check)) {
 				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check"></td>';
 			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check" checked></td>';
+				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5checkchecked" checked></td>';
 			}
 		} else {
 			print '<td></td>';
