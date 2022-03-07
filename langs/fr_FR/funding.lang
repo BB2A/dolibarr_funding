@@ -89,7 +89,7 @@ RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
 Checked=Pointé
 FunCheck=Pointer
-FunUnCheck= Non pointé
+FunUnCheck= Dépointer
 
 SetAcceptedRefused=Accepter/Refuser
 Accepted=Accepté
