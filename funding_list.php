@@ -817,11 +817,16 @@ if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'pr
 }
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
+$urlform = '?';
+
 if (!empty($socid)) {
-	$urlsocid = '?socid='.$socid;
+	$urlform .= 'socid='.$socid;
+}
+if (!empty($search['origin'])) {
+	$urlform .= 'search_origin='.$search['origin'];
 }
 
-print '<form method="POST" id="searchFormList" action="'.$_SERVER["PHP_SELF"].$urlsocid.'">'."\n";
+print '<form method="POST" id="searchFormList" action="'.$_SERVER["PHP_SELF"].$urlform.'">'."\n";
 if ($optioncss != '') {
 	print '<input type="hidden" name="optioncss" value="'.$optioncss.'">';
 }
