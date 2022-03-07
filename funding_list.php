@@ -460,7 +460,7 @@ if ($action == 'check' && $permissiontoadd) {
 		$error = 0;
 		foreach ($toselect as $checked) {
 			if ($tmpfunding->fetch($checked)) {
-				if ($tmpfunding->setCheked($user, $tmpfunding->id)) {
+				if ($tmpfunding->setChecked($user, $tmpfunding->id)) {
 					$validateok .= $langs->trans('fundingcheked', $tmpfunding->ref)."<br/>";
 				} else {
 					setEventMessage($langs->trans('fundingnotcheked', $tmpfunding->ref), 'errors');
@@ -479,6 +479,34 @@ if ($action == 'check' && $permissiontoadd) {
 		}
 	}
 }
+
+if ($action == 'uncheck' && $permissiontoadd) {
+	if (GETPOST('confirm') == 'yes') {
+		$tmpfunding = new Funding($db);
+		$db->begin();
+		$error = 0;
+		foreach ($toselect as $checked) {
+			if ($tmpfunding->fetch($checked)) {
+				if ($tmpfunding->setChecked($user, $tmpfunding->id, 0)) {
+					$validateok .= $langs->trans('fundinguncheked', $tmpfunding->ref)."<br/>";
+				} else {
+					setEventMessage($langs->trans('fundingnotuncheked', $tmpfunding->ref), 'errors');
+					$error++;
+				}
+			} else {
+				dol_print_error($db);
+				$error++;
+			}
+		}
+		if ($error) {
+			$db->rollback();
+		} else {
+			setEventMessage($validateok, 'mesgs');
+			$db->commit();
+		}
+	}
+}
+
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) {
@@ -779,6 +807,7 @@ if ($permissiontoadd) {
 	$arrayofmassactions['prerunning'] = img_picto('', 'clock', 'class="pictofixedwidth"').$langs->trans("BtnRunning");
 	$arrayofmassactions['preextension'] = img_picto('', 'movement', 'class="pictofixedwidth"').$langs->trans("BtnExtension");
 	$arrayofmassactions['precheck'] = img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("FunCheck");
+	$arrayofmassactions['preuncheck'] = img_picto('', 'uncheck', 'class="pictofixedwidth"').$langs->trans("FunUnCheck");
 }
 if ($permissiontodelete) {
 	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
@@ -842,6 +871,9 @@ if ($massaction == 'preextension') {
 }
 if ($massaction == 'precheck') {
 	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassExtension"), $langs->trans("ConfirmMassExtensionQuestion"), "check", null, '', 0, 200, 500, 1);
+}
+if ($massaction == 'preuncheck') {
+	print $form->formconfirm($_SERVER["PHP_SELF"], $langs->trans("ConfirmMassExtension"), $langs->trans("ConfirmMassExtensionQuestion"), "uncheck", null, '', 0, 200, 500, 1);
 }
 
 if ($search_all) {
@@ -935,7 +967,7 @@ print '</tr>'."\n";
 print '<tr class="liste_titre">';
 foreach ($object->fields as $key => $val) {
 	$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
-	if ($key == 'status' || $key == 'status_folder') {
+	if ($key == 'status' || $key == 'status_folder' || $key == 'funcheck') {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
 	} elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
@@ -990,7 +1022,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
 		if (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
-		} elseif ($key == 'status' || $key == 'status_folder') {
+		} elseif ($key == 'status' || $key == 'status_folder' || $key == 'funcheck') {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
 		}
 
@@ -1011,6 +1043,12 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 				print $object->getLibStatut(5);
 			} elseif ($key == 'status_folder') {
 				print $object->getLibStatutFolder(5);
+			} elseif ($key == 'funcheck') {
+				if ($obj->funcheck == 1) {
+					print img_picto('', 'check');
+				} else {
+					print img_picto('', 'uncheck');
+				}
 			} elseif ($key == 'rowid') {
 				print $object->showOutputField($val, $key, $object->id, '');
 			} else {

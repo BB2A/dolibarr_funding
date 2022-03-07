@@ -89,6 +89,7 @@ RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
 Checked=Pointé
 FunCheck=Pointer
+FunUnCheck= Non pointé
 
 SetAcceptedRefused=Accepter/Refuser
 Accepted=Accepté
@@ -232,6 +233,8 @@ fundingaccepted=Financement accépté %s
 fundingnotaccepted=Financement non accépté %s
 fundingcheked=Financement pointé %s
 fundingnotcheked=Financement non pointé %s
+fundinguncheked=Financement non pointé %s
+fundingnotuncheked=Financement non dépointé %s
 fundingnotdatedelivry=Pas de date de livraison
 fundingnotdatesign=Pas de date de signature
 statusfundingnok=Financement changement du statut impossible

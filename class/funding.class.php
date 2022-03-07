@@ -1475,9 +1475,10 @@ class Funding extends CommonObject
 	 *
 	 *  @param  User    $user           Object user that modify
 	 * 	@param  int    	$id           	id funding
+	 *  @param  int    	$check          	Check or no
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function setCheked($user, $id)
+	public function setChecked($user, $id, $check = 1)
 	{
 		global $db;
 
@@ -1485,7 +1486,7 @@ class Funding extends CommonObject
 
 		$this->db->begin();
 
-		$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET funcheck = 1 WHERE rowid = ".$id;
+		$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET funcheck = ".$check." WHERE rowid = ".$id;
 		$resql = $db->query($sql);
 
 		dol_syslog(__METHOD__.' $this->id='.$this->id.', folder_number='.$folder_number, LOG_DEBUG);

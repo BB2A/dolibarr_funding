@@ -25,6 +25,7 @@
 - NEW - Ajout du montant de retenue de garantie
 - NEW - Ajout commentaire financement terminé
 - NEW - Indiquer les documents demandé
+- NEW - Ajout du pointage des financements
 
 ## [1.0.2] - 01/2022 (Désactiver et activer le module)
 
