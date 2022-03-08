@@ -425,7 +425,12 @@ if (empty($reshook)) {
 
 				// Vérifie si le fichier à bien ete créer pour inscription en db
 				if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
-					$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."',".$doc."check = NULL WHERE rowid = ".$object->id;
+					$doccheck = $doc.'check';
+					if (isset($object->$doccheck)) {
+						$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."',".$doc."check = NULL WHERE rowid = ".$object->id;
+					} else {
+						$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."'WHERE rowid = ".$object->id;
+					}
 					$resql = $db->query($sql);
 					$object->db->free($resql);
 					$object->fetch($object->id);
