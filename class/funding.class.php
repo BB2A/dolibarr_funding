@@ -1972,6 +1972,37 @@ class Funding extends CommonObject
 	}
 
 	/**
+	 *  Create badge number label tab Tird-Party
+	 *
+	 * @param  int     $id       Id of object
+	 * @param  object  $obj      object
+	 *
+	 * @return $nbfunding      	Nb funding
+	 */
+	public function getcountForThird($id, $obj)
+	{
+		global $db;
+
+		$sql = "SELECT rowid, fk_soc, origin FROM ".MAIN_DB_PREFIX.$obj->table_element;
+		$sql .= " WHERE fk_soc = ".$id;
+		// Paramettre voir uniquement les financement sur commande
+		if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL)) {
+			$sql.= " AND origin <> 'propal'";
+		}
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			$nbfunding = $this->db->num_rows($resql);
+		} else {
+			dol_print_error($this->db);
+		}
+
+		if ($nbfunding > 0) {
+			return $nbfunding;
+		}
+		return '';
+	}
+
+	/**
 	 *  Returns the reference to the following non used object depending on the active numbering module.
 	 *
 	 *  @return string              Object free reference
