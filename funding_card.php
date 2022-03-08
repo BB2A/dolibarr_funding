@@ -499,8 +499,7 @@ if (empty($reshook)) {
 	// BB2A marque send mail
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
-	$autocopy = $conf->global->FUNDING_MAIL_AUTOCOPY_TO;
-	$sendto = $conf->global->FUNDING_MAIL_DEFAULT;
+	$autocopy = 'FUNDING_MAIL_AUTOCOPY_TO';
 	$sendtosocid = $object->fk_org;
 	$parameters = array('notifcode'=>$notifcode, 'sendto'=>$sendto, 'replyto'=>$replyto, 'file'=>$filename_list, 'mimefile'=>$mimetype_list, 'filename'=>$mimefilename_list);
 	$trackid = 'funding'.$object->id;
@@ -1157,7 +1156,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Send
-			if ($permissiontoadd) {
+			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED) {
 				$sendto = $conf->global->FUNDING_MAIL_DEFAULT;
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
 			}
