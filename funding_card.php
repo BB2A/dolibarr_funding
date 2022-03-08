@@ -185,22 +185,27 @@ if (empty($reshook)) {
 	$error = 0;
 
 	$backurlforlist = dol_buildpath('/funding/funding_list.php', 1);
-	if (!empty($typedoc) && !empty($iddoc)) {
-		$typedoc == 'propo' ? $backurl = '/comm/propal/card.php?id='.$iddoc : '';
-		$typedoc == 'order' ? $backurl = '/comm/propal/card.php?id='.$iddoc : '';
+
+	if (!empty($typedoc) && !empty($iddoc) && $typedoc == 'propal') {
+		$backurl = dol_buildpath('/comm/propal/card.php?id='.$iddoc, 1);
+	} elseif (!empty($typedoc) && !empty($iddoc) && $typedoc == 'order') {
+		$backurl = dol_buildpath('/commande/card.php?id='.$iddoc, 1);
 	} else {
-		$backurl = $backurlforlist;
+		$backurl = dol_buildpath('/funding/funding_list.php', 1);
 	}
+
+	//$backtopage = $backurl;
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
-				$backtopage = $backurl;
+				$backtopage = $backurlforlist;
 			} else {
 				$backtopage = dol_buildpath('/funding/funding_card.php', 1).'?id='.($id > 0 ? $id : '__ID__').'&typedoc='.$typedoc.'&iddoc='.$iddoc;
 			}
 		}
 	}
-	$triggermodname = 'FUNDING_FUNDING_MODIFY'; // Name of trigger action code to execute when we modify record
+
+	$triggermodname = 'FUNDING_UPDATE'; // Name of trigger action code to execute when we modify record
 
 	// Positionne study number
 	if ($action == 'setstudy_number' && $permissiontoadd) {
@@ -505,9 +510,11 @@ if (empty($reshook)) {
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
 	$autocopy = 'FUNDING_MAIL_AUTOCOPY_TO';
-	$sendtosocid = $object->fk_org;
-	$parameters = array('notifcode'=>$notifcode, 'sendto'=>$sendto, 'replyto'=>$replyto, 'file'=>$filename_list, 'mimefile'=>$mimetype_list, 'filename'=>$mimefilename_list);
 	$trackid = 'funding'.$object->id;
+
+	//$sendtosocid = $object->fk_org;
+	//$parameters = array('notifcode'=>$notifcode, 'sendto'=>$sendto, 'replyto'=>$replyto, 'file'=>$filename_list, 'mimefile'=>$mimetype_list, 'filename'=>$mimefilename_list);
+
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
 
@@ -617,9 +624,6 @@ if ($action == 'create') {
 	print '</form>';
 
 	//dol_set_focus('input[name="ref"]');
-
-	// if ($typedoc == 'propal') $backtopage = DOL_URL_ROOT.'/comm/propal/card.php?id='.$iddoc;
-	// if ($typedoc == 'order') $backtopage = DOL_URL_ROOT.'/commande/card.php?id='.$iddoc;
 }
 
 // Part to edit record
@@ -742,7 +746,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Object card
 	// ------------------------------------------------------------
 
-	$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	if (!empty($typedoc) && $typedoc == 'propal') {
+		$linkback = '<a href="'.dol_buildpath('/comm/propal/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=propals', 1).'">'.$langs->trans("BackToList").'</a>';
+	} elseif (!empty($typedoc) && $typedoc == 'order') {
+		$linkback = '<a href="'.dol_buildpath('/commande/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=orders', 1).'">'.$langs->trans("BackToList").'</a>';
+	} else {
+		$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php?restore_lastsearch_values=1&mainmenu=funding&leftmenu=', 1).'">'.$langs->trans("BackToList").'</a>';
+	}
 
 	$morehtmlref = '<div class="refidno">';
 	// Numbers
@@ -1204,7 +1214,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
-				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('Delete').'</a>'."\n";
+				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&backtopage='.$backtopage.'">'.$langs->trans('Delete').'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Delete').'</a>'."\n";
 			}
