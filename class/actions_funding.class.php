@@ -99,8 +99,7 @@ class ActionsFunding
 		$error = 0; // Error counter
 
 		/* print_r($parameters); print_r($object); echo "action: " . $action; */
-		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2')))	    // do something only for the context 'somecontext1' or 'somecontext2'
-		{
+		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2'))) {	    // do something only for the context 'somecontext1' or 'somecontext2'
 			// Do what you want here...
 			// You can for example call global vars like $fieldstosearchall to overwrite them, or update database depending on $action and $_POST values.
 		}
@@ -132,10 +131,8 @@ class ActionsFunding
 		$error = 0; // Error counter
 
 		/* print_r($parameters); print_r($object); echo "action: " . $action; */
-		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2')))		// do something only for the context 'somecontext1' or 'somecontext2'
-		{
-			foreach ($parameters['toselect'] as $objectid)
-			{
+		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2'))) {		// do something only for the context 'somecontext1' or 'somecontext2'
+			foreach ($parameters['toselect'] as $objectid) {
 				// Do action on each object id
 			}
 		}
@@ -168,8 +165,7 @@ class ActionsFunding
 		$disabled = 1;
 
 		/* print_r($parameters); print_r($object); echo "action: " . $action; */
-		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2')))		// do something only for the context 'somecontext1' or 'somecontext2'
-		{
+		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2'))) {		// do something only for the context 'somecontext1' or 'somecontext2'
 			$this->resprints = '<option value="0"'.($disabled ? ' disabled="disabled"' : '').'>'.$langs->trans("FundingMassAction").'</option>';
 		}
 
@@ -204,8 +200,7 @@ class ActionsFunding
 		dol_syslog(get_class($this).'::executeHooks action='.$action);
 
 		/* print_r($parameters); print_r($object); echo "action: " . $action; */
-		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2')))		// do something only for the context 'somecontext1' or 'somecontext2'
-		{
+		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2'))) {		// do something only for the context 'somecontext1' or 'somecontext2'
 		}
 
 		return $ret;
@@ -312,49 +307,42 @@ class ActionsFunding
 	 * Overloading the emailElementlist function : add email_template
 	 *
 	 * @param   array           $parameters     Hook metadatas (context, etc...)
-	 * @param   string          $action         Current action (if set). Generally create or edit or null
-	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int 		      			  	<0 if KO,
-	 *                          				=0 if OK but we want to process standard actions too,
-	 *  	                            		>0 if OK and we want to replace standard actions.
 	 */
-	// public function emailElementlist($parameters, &$object, &$action, $hookmanager)
 	public function emailElementlist($parameters)
 	{
 		global $langs, $conf;
-		$contexts = explode(':',$parameters['context']);
-		
+		$contexts = explode(':', $parameters['context']);
+
 		$myvalue= (DOL_VERSION >= '13.0.0') ? img_picto('', 'object_funding.png@funding', 'class="paddingright"').dol_escape_htmltag($langs->trans('Fundings')) : dol_escape_htmltag($langs->trans('Funding'));
 		$this->results = array('funding_send' => $myvalue);
 
 
 		return 0;
 	}
-	
+
 	/**
 	 * Overloading the initSendToSocid function : add email_template
 	 *
 	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
 	 * @param   string          $action         Current action (if set). Generally create or edit or null
-	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int 		      			  	<0 if KO,
-	 *                          				=0 if OK but we want to process standard actions too,
-	 *  	                            		>0 if OK and we want to replace standard actions.
+	 *
 	 */
 	public function initSendToSocid($parameters, &$object, &$action)
 	{
 		global $langs, $conf;
-		$contexts = explode(':',$parameters['context']);
-		var_dump($contexts);
-		
+		$contexts = explode(':', $parameters['context']);
+
 		$sendtosocid = $object->fk_org;
-			
+
 		//$myvalue = $sendtosocid = $object->fk_org;
 		//$object->results = $sendtosocid = $this->fk_org;
 		//$reshook = $hookmanager->executeHooks('getFormMail', $parameters, $this);
 
 		return 0;
 	}
-	
+
 	/* Add here any other hooked methods... */
 }
