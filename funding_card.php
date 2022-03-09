@@ -370,7 +370,6 @@ if (empty($reshook)) {
 							$pdf->Image($infile, '', '', $page_largeur - $marge_gauche - $marge_droite);
 						} else {
 							if (file_exists($infile) && is_readable($infile)) {
-								//var_dump($infile);
 								$pagecount = $pdf->setSourceFile($infile);
 								for ($i = 1; $i <= $pagecount; $i++) {
 									$tplIdx = $pdf->importPage($i);
