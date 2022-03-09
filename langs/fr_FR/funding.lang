@@ -328,6 +328,7 @@ funfoldoc6=Rachat signé
 
 CREATEInDolibarr=Financement %s Creer
 VALIDATEInDolibarr=Financement %s validé
+SENTBYMAILInDolibarr=Financement envoyé par mail
 UPDATEInDolibarr=Financement %s mis à jour
 ACCEPTInDolibarr=Financement %s Accépté
 DENIEDInDolibarr=Financement %s Refusé
@@ -390,3 +391,4 @@ OutputCronFundingSoonFinished = Financement bientot a terme
 #
 
 Notify_FUNDING_VALIDATE=Financement vilidé
+Notify_FUNDING_SENTBYMAIL=Financement envoyé par mail
