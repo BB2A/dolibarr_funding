@@ -525,7 +525,7 @@ class Funding extends CommonObject
 			$this->origin = $typedoc;
 			$this->origin_id = $iddoc;
 			$document = $this->infodoc($iddoc, $typedoc);
-			if (is_object($document) && $document->statut > self::STATUS_DRAFT) {
+			if (is_object($document)) {
 				// Récupére si une adresse facturation différente
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
@@ -1003,7 +1003,7 @@ class Funding extends CommonObject
 		if ($iddoc && $typedoc) {
 			$document = $this->infodoc($iddoc, $typedoc);
 
-			if (is_object($document) && $document->statut > self::STATUS_DRAFT) {
+			if (is_object($document)) {
 				//Récupére si une adresse facturation différente
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
