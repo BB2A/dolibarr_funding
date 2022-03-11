@@ -107,6 +107,7 @@ class modFunding extends DolibarrModules
 					  'emailtemplates',
 					  'globalcard',
 					  'formmail',
+					  'notification',
 				  ),
 				 // 'entity' => '0',
 			),

@@ -344,5 +344,29 @@ class ActionsFunding
 		return 0;
 	}
 
+	/**
+	 * Overloading the notifsupported function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function notifsupported($parameters)
+	{
+		global $langs, $conf;
+		$contexts = explode(':', $parameters['context']);
+
+
+
+		$this->results = array('arrayofnotifsupported' => array('FUNDING_SENTBYMAIL', 'PROPAL_SENTBYMAIL'));
+
+
+		//$myvalue = $sendtosocid = $object->fk_org;
+		//$object->results = $sendtosocid = $this->fk_org;
+		//$reshook = $hookmanager->executeHooks('getFormMail', $parameters, $this);
+
+		return 0;
+	}
+
 	/* Add here any other hooked methods... */
 }
