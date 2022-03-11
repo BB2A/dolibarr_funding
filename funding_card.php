@@ -309,8 +309,9 @@ if (empty($reshook)) {
 	if ($id > 0 || !empty($ref)) {
 		$upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 	}
+	$_POST['addfile'] = '';
 
-	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
+
 
 	$documenturl = DOL_URL_ROOT.'/document.php';
 	if (isset($conf->global->DOL_URL_ROOT_DOCUMENT_PHP)) {
@@ -328,6 +329,7 @@ if (empty($reshook)) {
 		} elseif (empty($fileupload)) {
 			$cherchfile = 0;
 		} else {
+			include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 			$cherchfile = 1;
 		}
 

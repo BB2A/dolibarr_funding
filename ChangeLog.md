@@ -2,6 +2,8 @@
 
 ## [1.0.4] - 03/2022
 
+- FIX - Enregistrement d'une piéce demandé plus de message d'erreur pas de fichier
+
 - NEW - Ajout hook notification
 
 ## [1.0.3] - 02/2022
