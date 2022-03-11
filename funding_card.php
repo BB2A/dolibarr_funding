@@ -332,6 +332,9 @@ if (empty($reshook)) {
 			include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 			$cherchfile = 1;
 		}
+		if ($filedelet) {
+			include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
+		}
 
 		if (!empty($cherchfile)) {
 			$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
