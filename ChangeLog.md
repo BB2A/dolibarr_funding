@@ -1,5 +1,9 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.0.4] - 03/2022
+
+- NEW - Ajout hook notification
+
 ## [1.0.3] - 02/2022
 
 - FIX - Désactivation visibilité origin and origin_id
