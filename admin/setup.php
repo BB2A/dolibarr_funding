@@ -99,6 +99,8 @@ $arrayofparameters = array(
 	'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION'=>array('css'=>'minwidth200','enabled'=>1),
 
 	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST'=>array('css'=>'minwidth200','enabled'=>1),
+
 );
 
 $error = 0;
@@ -267,6 +269,15 @@ if (1 == 1) {
 			} else {
 				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
 				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL);
+			}
+		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST') {
+			print '</td>';
+			print '<td align="right" width="230">';
+			if ($conf->use_javascript_ajax) {
+				print ajax_constantonoff('FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST');
+			} else {
+				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST);
 			}
 		} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
 			print '</td>';

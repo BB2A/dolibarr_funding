@@ -348,23 +348,115 @@ class ActionsFunding
 	 * Overloading the notifsupported function
 	 *
 	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
 	 * @return  int 		      			  	array,
 	 *
 	 */
-	public function notifsupported($parameters)
+	public function notifsupported($parameters, &$object, &$action)
 	{
 		global $langs, $conf;
 		$contexts = explode(':', $parameters['context']);
 
-
-
 		$this->results = array('arrayofnotifsupported' => array('FUNDING_SENTBYMAIL', 'PROPAL_SENTBYMAIL'));
 
+		return 0;
+	}
 
-		//$myvalue = $sendtosocid = $object->fk_org;
-		//$object->results = $sendtosocid = $this->fk_org;
-		//$reshook = $hookmanager->executeHooks('getFormMail', $parameters, $this);
+	/**
+	 * Overloading the last cli card
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function addMoreRecentObjects($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db, $user;
+		$contexts = explode(':', $parameters['context']);
 
+		$result = '';
+		$MAXLIST = $conf->global->MAIN_SIZE_SHORTLIST_LIMIT;
+
+		if (!empty($conf->funding->enabled) && $user->rights->funding->read) {
+			dol_include_once('/funding/class/funding.class.php');
+
+			$sql = 'SELECT rowid, ref, amount_total, amount_rent, fk_duration, date_end, origin, status';
+			$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+			$sql .= " WHERE f.fk_soc = ".((int) $object->id);
+			// Paramettre de ne pas afficher les propositions financiéres
+			if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST)) {
+				$sql.= " AND origin <> 'propal'";
+			}
+			$sql .= " ORDER BY f.date_creation DESC";
+
+			$resql = $db->query($sql);
+			if ($resql) {
+				$fundingstatic = new Funding($db);
+
+				$num = $db->num_rows($resql);
+				if ($num > 0) {
+					$result .= '<div class="div-table-responsive-no-min">';
+					$result .= '<table class="noborder centpercent lastrecordtable">';
+
+					$result .= '<tr class="liste_titre">';
+					$result .= '<td colspan="5"><table width="100%" class="nobordernopadding"><tr><td>'.$langs->trans("LastFunding", ($num <= $MAXLIST ? "" : $MAXLIST)).'</td><td class="right"><a class="notasortlink" href="'.DOL_URL_ROOT.'/custom/funding/funding_list.php?socid='.$object->id.'">'.$langs->trans("AllFunding").'<span class="badge marginleftonlyshort">'.$num.'</span></a></td>';
+					$result .= '<td width="20px" class="right"><a href="'.DOL_URL_ROOT.'/custom/funding/fundingindex.php">'.img_picto($langs->trans("Statistics"), 'stats').'</a></td>';
+					$result .= '</tr></table></td>';
+					$result .= '</tr>';
+				}
+
+				$i = 0;
+				while ($i < $num && $i < $MAXLIST) {
+					$objp = $db->fetch_object($resql);
+
+					$fundingstatic->id = $objp->rowid;
+					$fundingstatic->ref = $objp->ref;
+					$fundingstatic->amount_total = $objp->amount_total;
+					$fundingstatic->amount_rent = $objp->amount_rent;
+					$fundingstatic->fk_duration = $objp->fk_duration;
+					$fundingstatic->date_end = $objp->date_end;
+					$fundingstatic->statut = $objp->status;
+
+					$result .= '<tr class="oddeven">';
+					$result .= '<td class="nowraponall">';
+					$result .= $fundingstatic->getNomUrl(1);
+					$result .= '</td>';
+					if (!empty($objp->date_end)) {
+						$result .= '<td class="right" width="80px">'.dol_print_date($db->jdate($objp->date_end), 'day').'</td>';
+					} else {
+						$result .= '<td class="right"><b>!!!</b></td>';
+					}
+					$result .= '<td class="right" style="min-width: 60px">';
+					$result .= price($objp->amount_rent);
+					$result .= '</td>';
+
+					/*if (!empty($conf->global->MAIN_SHOW_PRICE_WITH_TAX_IN_SUMMARIES)) {
+						$result .= '<td class="right" style="min-width: 60px">';
+						$result .= price($objp->total_ttc);
+						$result .= '</td>';
+					}*/
+
+					$result .= '<td class="nowrap right" style="min-width: 60px">'.$fundingstatic->LibStatut($objp->status, 5).'</td>';
+					$result .= "</tr>\n";
+					$i++;
+				}
+				$db->free($resql);
+
+				if ($num > 0) {
+					$result .= "</table>";
+					$result .= '</div>';
+				}
+			} else {
+				dol_print_error($db);
+			}
+		}
+
+
+		$this->resprints = $result;
+		//$this->results = array();
 		return 0;
 	}
 

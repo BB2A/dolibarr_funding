@@ -115,6 +115,13 @@ FundindBoxRunning=Les 10 derniers financements actif
 FundindBoxEnd=Les 10 derniers financements terminé
 
 #
+# Last in comm card
+#
+
+LastFunding=Les derniès financements
+AllFunding=Tout les financements
+
+#
 #Menu
 #
 
