@@ -3,8 +3,10 @@
 ## [1.0.4] - 03/2022
 
 - FIX - Enregistrement d'une piéce demandé plus de message d'erreur pas de fichier
+- FIX - Permission pour la suppression de document
 
 - NEW - Ajout hook notification
+- NEW - Ajout hook dernier financement sur comm card du tiers
 
 ## [1.0.3] - 02/2022
 
