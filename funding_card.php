@@ -453,21 +453,16 @@ if (empty($reshook)) {
 		} elseif ($action == 'deletefile' && !empty($upload_dir) && $file) {
 			$file = $upload_dir.'/'.$file;
 			if (file_exists($file)) {
-				$delet = unlink($file);
+				$delet = dol_delete_file($file);
 			}
-			if ($delet) {
-				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
-				$resql = $db->query($sql);
-				$object->db->free($resql);
+			$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
+			$resql = $db->query($sql);
+			$object->db->free($resql);
 
-				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+			dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
+			if ($delet) {
 				setEventMessages($langs->trans('FilesDeleted'), '');
 			} else {
-				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
-				$resql = $db->query($sql);
-				$object->db->free($resql);
-
-				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
 				setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 			}
 		} elseif ($filecheck && empty($cherchfile)) {
