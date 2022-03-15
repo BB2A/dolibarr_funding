@@ -1420,12 +1420,12 @@ class Funding extends CommonObject
 
 		if (!empty($typedoc) && !empty($iddoc)) {
 			$document = $this->infodoc($iddoc, $typedoc);
-			if (!empty($this->date_signature) && !empty($document->date_livraison) && $this->status == self::STATUS_ACCEPT && $document->status > 0) {
+			if (!empty($this->date_signature) && !empty($this->date_delivery) && !empty($document->date_livraison) && $this->status == self::STATUS_ACCEPT && $document->status > 0) {
 				$status = self::STATUS_RUNNING;
 				$triger = 'FUNDING_RUNNING';
 				return $this->setStatusCommon($user, $status, $notrigger, $triger);
 			} else {
-				if (empty($document->date_livraison)) {
+				if (empty($document->date_livraison) || empty($this->date_delivery)) {
 					setEventMessages($langs->trans('fundingnotdatedelivry'), '', 'errors');
 				} elseif (empty($this->date_signature)) {
 					setEventMessages($langs->trans('fundingnotdatesign'), '', 'errors');
