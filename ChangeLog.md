@@ -4,6 +4,8 @@
 
 - FIX - Enregistrement d'une piéce demandé plus de message d'erreur pas de fichier
 - FIX - Permission pour la suppression de document
+- FIX - Finnancement pouvant etre actif sans date de livraison
+- FIX - Sécurité si utilisateur externe ne vois rien
 
 - NEW - Ajout hook notification
 - NEW - Ajout hook dernier financement sur comm card du tiers
