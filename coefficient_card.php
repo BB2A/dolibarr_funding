@@ -91,8 +91,7 @@ $search_array_options = $extrafields->getOptionalsFromPost($object->table_elemen
 // Initialize array of search criterias
 $search_all = trim(GETPOST("search_all", 'alpha'));
 $search = array();
-foreach ($object->fields as $key => $val)
-{
+foreach ($object->fields as $key => $val) {
 	if (GETPOST('search_'.$key, 'alpha')) $search[$key] = GETPOST('search_'.$key, 'alpha');
 }
 
@@ -110,7 +109,7 @@ $permissiondellink = $user->rights->funding->coefficient->write; // Used by the 
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 // Security check - Protection if external user
-//if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->statut == $object::STATUS_DRAFT) ? 1 : 0);
 //$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
@@ -126,8 +125,7 @@ $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 
-if (empty($reshook))
-{
+if (empty($reshook)) {
 	$error = 0;
 
 	$backurlforlist = dol_buildpath('/funding/coefficient_list.php', 1);
@@ -152,12 +150,10 @@ if (empty($reshook))
 	// Action to build doc
 	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
 
-	if ($action == 'set_thirdparty' && $permissiontoadd)
-	{
+	if ($action == 'set_thirdparty' && $permissiontoadd) {
 		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'COEFFICIENT_MODIFY');
 	}
-	if ($action == 'classin' && $permissiontoadd)
-	{
+	if ($action == 'classin' && $permissiontoadd) {
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
 }
@@ -196,8 +192,7 @@ jQuery(document).ready(function() {
 
 
 // Part to create
-if ($action == 'create')
-{
+if ($action == 'create') {
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Coefficient")), '', 'object_'.$object->picto);
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
@@ -235,8 +230,7 @@ if ($action == 'create')
 }
 
 // Part to edit record
-if (($id || $ref) && $action == 'edit')
-{
+if (($id || $ref) && $action == 'edit') {
 	print load_fiche_titre($langs->trans("Coefficient"), '', 'object_'.$object->picto);
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
@@ -268,8 +262,7 @@ if (($id || $ref) && $action == 'edit')
 }
 
 // Part to show record
-if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create')))
-{
+if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$res = $object->fetch_optionals();
 
 	$head = coefficientPrepareHead($object);
@@ -278,8 +271,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$formconfirm = '';
 
 	// Confirmation to delete
-	if ($action == 'delete')
-	{
+	if ($action == 'delete') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteCoefficient'), $langs->trans('ConfirmDeleteObject'), 'confirm_delete', '', 0, 1);
 	}
 
@@ -365,34 +357,25 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 		if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 
-		if (empty($reshook))
-		{
+		if (empty($reshook)) {
 			// Modify
-			if ($permissiontoadd)
-			{
+			if ($permissiontoadd) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit">'.$langs->trans("Modify").'</a>'."\n";
-			}
-			else
-			{
+			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
 			}
 
 			// Validate
-			if ($object->status == $object::STATUS_DRAFT)
-			{
-				if ($permissiontoadd)
-				{
+			if ($object->status == $object::STATUS_DRAFT) {
+				if ($permissiontoadd) {
 					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes">'.$langs->trans("Validate").'</a>';
 				}
 			}
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
-			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
-			{
+			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
 				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete">'.$langs->trans('Delete').'</a>'."\n";
-			}
-			else
-			{
+			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Delete').'</a>'."\n";
 			}
 		}

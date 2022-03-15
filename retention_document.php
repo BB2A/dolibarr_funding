@@ -101,7 +101,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/retention/".get_exdir(0, 0, 0, 1, $object);
 
 // Security check - Protection if external user
-//if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$result = restrictedArea($user, 'funding', $object->id);
 
@@ -127,8 +127,7 @@ $help_url = '';
 //$help_url='EN:Module_Third_Parties|FR:Module_Tiers|ES:Empresas';
 llxHeader('', $title, $help_url);
 
-if ($object->id)
-{
+if ($object->id) {
 	/*
 	 * Show tabs
 	 */
@@ -140,8 +139,7 @@ if ($object->id)
 	// Build file list
 	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
 	$totalsize = 0;
-	foreach ($filearray as $key => $file)
-	{
+	foreach ($filearray as $key => $file) {
 		$totalsize += $file['size'];
 	}
 

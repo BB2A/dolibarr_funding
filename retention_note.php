@@ -80,7 +80,7 @@ $hookmanager->initHooks(array('retentionnote', 'globalcard')); // Note that conf
 $extrafields->fetch_name_optionals_label($object->table_element);
 
 // Security check - Protection if external user
-//if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$result = restrictedArea($user, 'funding', $id);
 
@@ -110,8 +110,7 @@ $form = new Form($db);
 $help_url = '';
 llxHeader('', $langs->trans('Retention'), $help_url);
 
-if ($id > 0 || !empty($ref))
-{
+if ($id > 0 || !empty($ref)) {
 	$object->fetch_thirdparty();
 
 	$head = retentionPrepareHead($object);

@@ -107,7 +107,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity]."/".$object->id;
 
 // Security check - Protection if external user
-//if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$result = restrictedArea($user, 'funding', $object->id);
 
@@ -122,18 +122,15 @@ $parameters = array('id'=>$id);
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 
-if (empty($reshook))
-{
+if (empty($reshook)) {
 	// Cancel
-	if (GETPOST('cancel', 'alpha') && !empty($backtopage))
-	{
+	if (GETPOST('cancel', 'alpha') && !empty($backtopage)) {
 		header("Location: ".$backtopage);
 		exit;
 	}
 
 	// Purge search criteria
-	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) // All tests are required to be compatible with all browsers
-	{
+	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) { // All tests are required to be compatible with all browsers
 		$actioncode = '';
 		$search_agenda_label = '';
 	}
@@ -147,8 +144,7 @@ if (empty($reshook))
 
 $form = new Form($db);
 
-if ($object->id > 0)
-{
+if ($object->id > 0) {
 	$title = $langs->trans("Agenda");
 	//if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/thirdpartynameonly/',$conf->global->MAIN_HTML_TITLE) && $object->name) $title=$object->name." - ".$title;
 	$help_url = '';
@@ -228,8 +224,7 @@ if ($object->id > 0)
 	$urlbacktopage = $_SERVER['PHP_SELF'].'?id='.$object->id;
 	$out .= '&backtopage='.urlencode($urlbacktopage);
 	$permok = $user->rights->agenda->myactions->create;
-	if ((!empty($objthirdparty->id) || !empty($objcon->id)) && $permok)
-	{
+	if ((!empty($objthirdparty->id) || !empty($objcon->id)) && $permok) {
 		//$out.='<a href="'.DOL_URL_ROOT.'/comm/action/card.php?action=create';
 		if (get_class($objthirdparty) == 'Societe') $out .= '&socid='.urlencode($objthirdparty->id);
 		$out .= (!empty($objcon->id) ? '&contactid='.urlencode($objcon->id) : '').'&percentage=-1';
@@ -241,10 +236,8 @@ if ($object->id > 0)
 
 	print '<div class="tabsAction">';
 
-	if (!empty($conf->agenda->enabled))
-	{
-		if (!empty($user->rights->agenda->myactions->create) || !empty($user->rights->agenda->allactions->create))
-		{
+	if (!empty($conf->agenda->enabled)) {
+		if (!empty($user->rights->agenda->myactions->create) || !empty($user->rights->agenda->allactions->create)) {
 			print '<a class="butAction" href="'.DOL_URL_ROOT.'/comm/action/card.php?action=create'.$out.'">'.$langs->trans("AddAction").'</a>';
 		} else {
 			print '<a class="butActionRefused classfortooltip" href="#">'.$langs->trans("AddAction").'</a>';
@@ -253,8 +246,7 @@ if ($object->id > 0)
 
 	print '</div>';
 
-	if (!empty($conf->agenda->enabled) && (!empty($user->rights->agenda->myactions->read) || !empty($user->rights->agenda->allactions->read)))
-	{
+	if (!empty($conf->agenda->enabled) && (!empty($user->rights->agenda->myactions->read) || !empty($user->rights->agenda->allactions->read))) {
 		$param = '&id='.$object->id.'&socid='.$socid;
 		if (!empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) $param .= '&contextpage='.urlencode($contextpage);
 		if ($limit > 0 && $limit != $conf->liste_limit) $param .= '&limit='.urlencode($limit);

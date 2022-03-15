@@ -63,7 +63,7 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 
 // Security check - Protection if external user
-//if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$result = restrictedArea($user, 'funding', $object->id);
 
@@ -73,36 +73,30 @@ $permission = $user->rights->funding->retention->write;
  * Add a new contact
  */
 
-if ($action == 'addcontact' && $permission)
-{
+if ($action == 'addcontact' && $permission) {
 	$contactid = (GETPOST('userid') ? GETPOST('userid', 'int') : GETPOST('contactid', 'int'));
 	$typeid = (GETPOST('typecontact') ? GETPOST('typecontact') : GETPOST('type'));
 	$result = $object->add_contact($contactid, $typeid, GETPOST("source", 'aZ09'));
 
-	if ($result >= 0)
-	{
+	if ($result >= 0) {
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$object->id);
 		exit;
 	} else {
-		if ($object->error == 'DB_ERROR_RECORD_ALREADY_EXISTS')
-		{
+		if ($object->error == 'DB_ERROR_RECORD_ALREADY_EXISTS') {
 			$langs->load("errors");
 			setEventMessages($langs->trans("ErrorThisContactIsAlreadyDefinedAsThisType"), null, 'errors');
 		} else {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-} // Toggle the status of a contact
-elseif ($action == 'swapstatut' && $permission)
-{
+} elseif ($action == 'swapstatut' && $permission) {
+	// Toggle the status of a contact
 	$result = $object->swapContactStatus(GETPOST('ligne'));
-} // Deletes a contact
-elseif ($action == 'deletecontact' && $permission)
-{
+} elseif ($action == 'deletecontact' && $permission) {
+	// Deletes a contact
 	$result = $object->delete_contact($lineid);
 
-	if ($result >= 0)
-	{
+	if ($result >= 0) {
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$object->id);
 		exit;
 	} else {
@@ -132,8 +126,7 @@ $userstatic = new User($db);
 /*                                                                             */
 /* *************************************************************************** */
 
-if ($object->id)
-{
+if ($object->id) {
 	/*
 	 * Show tabs
 	 */
@@ -191,8 +184,7 @@ if ($object->id)
 
 	// Contacts lines (modules that overwrite templates must declare this into descriptor)
 	$dirtpls = array_merge($conf->modules_parts['tpl'], array('/core/tpl'));
-	foreach ($dirtpls as $reldir)
-	{
+	foreach ($dirtpls as $reldir) {
 		$res = @include dol_buildpath($reldir.'/contacts.tpl.php');
 		if ($res) break;
 	}
