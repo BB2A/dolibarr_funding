@@ -1034,7 +1034,7 @@ class Funding extends CommonObject
 
 					if ($this->amount_rent_edit < $this->amount_rent) {
 						$this->amount_rent_edit = $this->amount_rent;
-						setEventMessages($langs->trans("amount_rent_edit<amount_rent"), null, 'errors');
+						setEventMessages($langs->trans("amountRentEdit<amountRent"), null, 'errors');
 					}
 					$this->date_delivery = $document->date_livraison;
 
