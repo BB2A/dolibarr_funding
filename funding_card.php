@@ -795,7 +795,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Documents client
 	print '<table class="noborder tableforfield centpercent margintable">';
 	print '<tr class="liste_titre">';
-		print '<td colspan="3">'.$langs->trans("DocumentsForFunding").'</td>';
+		print '<td colspan="2">'.$langs->trans("DocumentsForFunding").'</td>';
+		print '<td align="center">'.$langs->trans("Lack").'</td>';
 		print '<td></td>';
 		print '</tr>';
 		// Document 1
@@ -807,15 +808,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc1">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat" name="userfile" id="fundoc1input"></td>';
-		if ($object->status < $object::STATUS_ACCEPT) {
-			if (empty($object->fundoc1check)) {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check"></td>';
-			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1checkchecked" checked></td>';
-			}
-		} else {
-			print '<td></td>';
-		}
+		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc1check" '.($object->fundoc1check ? 'value="fundoc1checkchecked" checked' : 'value="fundoc1check"').'></td>';
 		// if ($conf->use_javascript_ajax) {
 		// 	print '<td>'.ajax_object_onoff($object, 'fundoc1check', 'fundoc1check',$langs->trans('Help_documentRequired'),$langs->trans('Help_documentNotRequired')).'</td>';
 		// } else {
@@ -843,15 +836,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc2">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="fundoc2input"></td>';
-		if ($object->status < $object::STATUS_ACCEPT) {
-			if (empty($object->fundoc2check)) {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2check"></td>';
-			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc2check" value="fundoc2checkchecked" checked></td>';
-			}
-		} else {
-			print '<td></td>';
-		}
+		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc2check" '.($object->fundoc2check ? 'value="fundoc2checkchecked" checked' : 'value="fundoc2check"').'></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
 	} else {
@@ -870,15 +855,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc3">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
-		if ($object->status < $object::STATUS_ACCEPT) {
-			if (empty($object->fundoc3check)) {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3check"></td>';
-			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc3check" value="fundoc3checkchecked" checked></td>';
-			}
-		} else {
-			print '<td></td>';
-		}
+		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc3check" '.($object->fundoc3check ? 'value="fundoc3checkchecked" checked' : 'value="fundoc3check"').'></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
 	} else {
@@ -897,15 +874,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc4">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
-		if ($object->status < $object::STATUS_ACCEPT) {
-			if (empty($object->fundoc4check)) {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4check"></td>';
-			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc4check" value="fundoc4checkchecked" checked></td>';
-			}
-		} else {
-			print '<td></td>';
-		}
+		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc4check" '.($object->fundoc4check ? 'value="fundoc4checkchecked" checked' : 'value="fundoc4check"').'></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
 	} else {
@@ -924,15 +893,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="fundoc5">';
 		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
-		if ($object->status < $object::STATUS_ACCEPT) {
-			if (empty($object->fundoc5check)) {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5check"></td>';
-			} else {
-				print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc5check" value="fundoc5checkchecked" checked></td>';
-			}
-		} else {
-			print '<td></td>';
-		}
+		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc5check" '.($object->fundoc5check ? 'value="fundoc5checkchecked" checked' : 'value="fundoc5check"').'></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
 	} else {

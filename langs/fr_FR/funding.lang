@@ -98,6 +98,7 @@ CloseAs=Positionner le statut à
 DateSignature=Date signature P.V.
 closefinich=Cloturer
 NoFunding=Pas de financement
+Lack=Pièces demandées
 
 #
 # Box d'exemple
@@ -355,7 +356,6 @@ EXTENSIONInDolibarr=Financement %s Prolongation
 #
 
 BtnSendorg=Envoyé à l'organisme
-BtnLack=Pièces demandées
 BtnRunning=Actif
 BtnExtension=Prolongation
 
