@@ -367,6 +367,9 @@ if (empty($reshook)) {
 				if (is_countable($_FILES['userfile']['name'])) {
 					foreach ($fileupload as $file) {
 						$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
+						// Extenssion lowercase
+						$info = pathinfo($infile);
+						$infile = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 						$finfo = finfo_open(FILEINFO_MIME_TYPE);
 						$mtype = finfo_file($finfo, $infile);
 						if (strpos($mtype, 'image/') === 0) {
@@ -391,6 +394,10 @@ if (empty($reshook)) {
 					// Si un seul fichier
 				} else {
 					$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+					// Extenssion lowercase
+					$info = pathinfo($infile);
+					$infile = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
+
 					if (file_exists($infile) && is_readable($infile)) {
 						// Le fichier est une image
 						if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
@@ -420,12 +427,18 @@ if (empty($reshook)) {
 					// Delete old files
 					foreach ($fileupload as $file) {
 						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
+						// Extenssion lowercase
+						$info = pathinfo($file);
+						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 						if (file_exists($file)) {
 							dol_delete_file($file);
 						}
 					}
 				} else {
 					$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+					// Extenssion lowercase
+					$info = pathinfo($file);
+					$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 					if (file_exists($file)) {
 						dol_delete_file($file);
 					}
