@@ -55,6 +55,7 @@ MyPageName=Nom de ma page
 Funding=Financement
 Fundings=Financements
 fundingpropal=Proposition financiére
+NoFunding=Pas de financement
 Rent=Loyer
 RentEdit=Loyer personnalisé
 duration=Durée

@@ -426,82 +426,85 @@ class ActionsFunding
 	public function addMoreRecentObjects($parameters, &$object, &$action)
 	{
 		global $langs, $conf, $db, $user;
-		$contexts = explode(':', $parameters['context']);
 
-		$result = '';
-		$MAXLIST = $conf->global->MAIN_SIZE_SHORTLIST_LIMIT;
+		if ($user->rights->funding->lists) {
+			$contexts = explode(':', $parameters['context']);
 
-		if (!empty($conf->funding->enabled) && $user->rights->funding->read) {
-			dol_include_once('/funding/class/funding.class.php');
+			$result = '';
+			$MAXLIST = $conf->global->MAIN_SIZE_SHORTLIST_LIMIT;
 
-			$sql = 'SELECT rowid, ref, amount_total, amount_rent, fk_duration, date_end, origin, status';
-			$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
-			$sql .= " WHERE f.fk_soc = ".((int) $object->id);
-			// Paramettre de ne pas afficher les propositions financiéres
-			if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST)) {
-				$sql.= " AND origin <> 'propal'";
-			}
-			$sql .= " ORDER BY f.date_creation DESC";
+			if (!empty($conf->funding->enabled) && $user->rights->funding->read) {
+				dol_include_once('/funding/class/funding.class.php');
 
-			$resql = $db->query($sql);
-			if ($resql) {
-				$fundingstatic = new Funding($db);
-
-				$num = $db->num_rows($resql);
-				if ($num > 0) {
-					$result .= '<div class="div-table-responsive-no-min">';
-					$result .= '<table class="noborder centpercent lastrecordtable">';
-
-					$result .= '<tr class="liste_titre">';
-					$result .= '<td colspan="5"><table width="100%" class="nobordernopadding"><tr><td>'.$langs->trans("LastFunding", ($num <= $MAXLIST ? "" : $MAXLIST)).'</td><td class="right"><a class="notasortlink" href="'.DOL_URL_ROOT.'/custom/funding/funding_list.php?socid='.$object->id.'">'.$langs->trans("AllFunding").'<span class="badge marginleftonlyshort">'.$num.'</span></a></td>';
-					$result .= '<td width="20px" class="right"><a href="'.DOL_URL_ROOT.'/custom/funding/fundingindex.php">'.img_picto($langs->trans("Statistics"), 'stats').'</a></td>';
-					$result .= '</tr></table></td>';
-					$result .= '</tr>';
+				$sql = 'SELECT rowid, ref, amount_total, amount_rent, fk_duration, date_end, origin, status';
+				$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+				$sql .= " WHERE f.fk_soc = ".((int) $object->id);
+				// Paramettre de ne pas afficher les propositions financiéres
+				if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST)) {
+					$sql.= " AND origin <> 'propal'";
 				}
+				$sql .= " ORDER BY f.date_creation DESC";
 
-				$i = 0;
-				while ($i < $num && $i < $MAXLIST) {
-					$objp = $db->fetch_object($resql);
+				$resql = $db->query($sql);
+				if ($resql) {
+					$fundingstatic = new Funding($db);
 
-					$fundingstatic->id = $objp->rowid;
-					$fundingstatic->ref = $objp->ref;
-					$fundingstatic->amount_total = $objp->amount_total;
-					$fundingstatic->amount_rent = $objp->amount_rent;
-					$fundingstatic->fk_duration = $objp->fk_duration;
-					$fundingstatic->date_end = $objp->date_end;
-					$fundingstatic->statut = $objp->status;
+					$num = $db->num_rows($resql);
+					if ($num > 0) {
+						$result .= '<div class="div-table-responsive-no-min">';
+						$result .= '<table class="noborder centpercent lastrecordtable">';
 
-					$result .= '<tr class="oddeven">';
-					$result .= '<td class="nowraponall">';
-					$result .= $fundingstatic->getNomUrl(1);
-					$result .= '</td>';
-					if (!empty($objp->date_end)) {
-						$result .= '<td class="right" width="80px">'.dol_print_date($db->jdate($objp->date_end), 'day').'</td>';
-					} else {
-						$result .= '<td class="right"><b>!!!</b></td>';
+						$result .= '<tr class="liste_titre">';
+						$result .= '<td colspan="5"><table width="100%" class="nobordernopadding"><tr><td>'.$langs->trans("LastFunding", ($num <= $MAXLIST ? "" : $MAXLIST)).'</td><td class="right"><a class="notasortlink" href="'.DOL_URL_ROOT.'/custom/funding/funding_list.php?socid='.$object->id.'">'.$langs->trans("AllFunding").'<span class="badge marginleftonlyshort">'.$num.'</span></a></td>';
+						$result .= '<td width="20px" class="right"><a href="'.DOL_URL_ROOT.'/custom/funding/fundingindex.php">'.img_picto($langs->trans("Statistics"), 'stats').'</a></td>';
+						$result .= '</tr></table></td>';
+						$result .= '</tr>';
 					}
-					$result .= '<td class="right" style="min-width: 60px">';
-					$result .= price($objp->amount_rent);
-					$result .= '</td>';
 
-					/*if (!empty($conf->global->MAIN_SHOW_PRICE_WITH_TAX_IN_SUMMARIES)) {
-						$result .= '<td class="right" style="min-width: 60px">';
-						$result .= price($objp->total_ttc);
+					$i = 0;
+					while ($i < $num && $i < $MAXLIST) {
+						$objp = $db->fetch_object($resql);
+
+						$fundingstatic->id = $objp->rowid;
+						$fundingstatic->ref = $objp->ref;
+						$fundingstatic->amount_total = $objp->amount_total;
+						$fundingstatic->amount_rent = $objp->amount_rent;
+						$fundingstatic->fk_duration = $objp->fk_duration;
+						$fundingstatic->date_end = $objp->date_end;
+						$fundingstatic->statut = $objp->status;
+
+						$result .= '<tr class="oddeven">';
+						$result .= '<td class="nowraponall">';
+						$result .= $fundingstatic->getNomUrl(1);
 						$result .= '</td>';
-					}*/
+						if (!empty($objp->date_end)) {
+							$result .= '<td class="right" width="80px">'.dol_print_date($db->jdate($objp->date_end), 'day').'</td>';
+						} else {
+							$result .= '<td class="right"><b>!!!</b></td>';
+						}
+						$result .= '<td class="right" style="min-width: 60px">';
+						$result .= price($objp->amount_rent);
+						$result .= '</td>';
 
-					$result .= '<td class="nowrap right" style="min-width: 60px">'.$fundingstatic->LibStatut($objp->status, 5).'</td>';
-					$result .= "</tr>\n";
-					$i++;
-				}
-				$db->free($resql);
+						/*if (!empty($conf->global->MAIN_SHOW_PRICE_WITH_TAX_IN_SUMMARIES)) {
+							$result .= '<td class="right" style="min-width: 60px">';
+							$result .= price($objp->total_ttc);
+							$result .= '</td>';
+						}*/
 
-				if ($num > 0) {
-					$result .= "</table>";
-					$result .= '</div>';
+						$result .= '<td class="nowrap right" style="min-width: 60px">'.$fundingstatic->LibStatut($objp->status, 5).'</td>';
+						$result .= "</tr>\n";
+						$i++;
+					}
+					$db->free($resql);
+
+					if ($num > 0) {
+						$result .= "</table>";
+						$result .= '</div>';
+					}
+				} else {
+					dol_print_error($db);
 				}
-			} else {
-				dol_print_error($db);
 			}
 		}
 

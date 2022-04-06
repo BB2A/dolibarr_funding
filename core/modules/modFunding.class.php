@@ -158,7 +158,7 @@ class modFunding extends DolibarrModules
 		// Array to add new pages in new tabs
 		$this->tabs = array();
 		//$this->tabs[0] = array('data'=>'thirdparty:+Funding:Fundings,funding,/funding/class/funding.class.php,getcountForThird:mylangfile@funding:$user->rights->funding->read:/funding/funding_list.php?socid=__ID__');
-		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Fundings:mylangfile@funding:$user->rights->funding->read:/funding/funding_list.php?socid=__ID__');
+		$this->tabs[0] = array('data'=>'thirdparty:+Funding:Fundings:mylangfile@funding:$user->rights->funding->lists:/funding/funding_list.php?socid=__ID__');
 		$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
 		$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
 
@@ -280,6 +280,10 @@ class modFunding extends DolibarrModules
 		$this->rights[$r][1] = 'ManageFunding'; // Permission label
 		$this->rights[$r][4] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'ListsFunding'; // Permission label
+		$this->rights[$r][4] = 'lists'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
+		$r++;
 		//Permission for coefficient
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
@@ -326,7 +330,7 @@ class modFunding extends DolibarrModules
 			'langs'=>'funding@funding',         // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>50,
 			'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->funding->read',                            // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
+			'perms'=>'$user->rights->funding->lists',                            // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,                              // 0=Menu for internal users, 1=external users, 2=both
 		);

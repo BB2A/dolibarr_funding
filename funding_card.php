@@ -590,7 +590,7 @@ if ($typedoc == 'propal') {
 }
 
 // Part to create
-if ($action == 'create') {
+if ($action == 'create' && $permissiontoadd) {
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
@@ -635,10 +635,13 @@ if ($action == 'create') {
 	print '</form>';
 
 	//dol_set_focus('input[name="ref"]');
+} elseif (empty($object->id)) {
+	print load_fiche_titre($langs->trans('Funding'), '', 'object_'.$object->picto);
+	print '<h2 align="center">'.$langs->trans("NoFunding").'</h1>';
 }
 
 // Part to edit record
-if (($id || $ref) && $action == 'edit') {
+if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -673,7 +676,7 @@ if (($id || $ref) && $action == 'edit') {
 }
 
 // Part to show record
-if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
+if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$formconfirm = '';
 
 	// Confirmation of action refresh supprimer?
@@ -788,7 +791,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	$morehtmlref .= '';
 
-	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
+	if ($permissiontoadd || $permissionmanage) {
+		dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
+	} else {
+		dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
+	}
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';
@@ -1277,6 +1284,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
 }
+
 // End of page
 llxFooter();
 $db->close();
