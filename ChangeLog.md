@@ -9,6 +9,7 @@
 
 - NEW - Ajout hook notification
 - NEW - Ajout hook dernier financement sur comm card du tiers
+- NEW - Amélioration pour affichage technicien
 
 ## [1.0.3] - 02/2022
 
