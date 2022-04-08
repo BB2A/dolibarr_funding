@@ -51,7 +51,6 @@ MyPageName=Nom de ma page
 #
 #Others
 #
-
 Funding=Financement
 Fundings=Financements
 fundingpropal=Proposition financiére
@@ -90,7 +89,7 @@ RefreshFunding=Actiualiser le financement
 ConfirmRefreshFunding=Confirmer l'actualisation des informations?
 Checked=Pointé
 FunCheck=Pointer
-FunUnCheck= Dépointer
+FunUnCheck=Dépointer
 
 SetAcceptedRefused=Accepter/Refuser
 Accepted=Accepté
@@ -104,7 +103,6 @@ Lack=Pièces demandées
 #
 # Box d'exemple
 #
-
 FundindBoxValidate=Les nouveaux financements
 FundindBoxValidatePropal=Les nouvelles propositions financières
 FundindBoxUpdate=Les 10 derniers financements mise à jour
@@ -119,14 +117,12 @@ FundindBoxEnd=Les 10 derniers financements terminé
 #
 # Last in comm card
 #
-
 LastFunding=Les derniers financements
 AllFunding=Tout les financements
 
 #
 #Menu
 #
-
 ListFunding=Liste de financements
 ListFundingDraft=Brouillon
 ListFundingValidated=Nouveaux
@@ -149,7 +145,6 @@ ListFundingRetention=Liste des retenues de garantie
 #
 #Dictionnaires
 #
-
 Funding_duration=Financement - Durée
 Funding_scale=Financement - Baréme
 Funding_type=Financement - Type
@@ -157,7 +152,6 @@ Funding_type=Financement - Type
 #
 #Paramettres
 #
-
 FUNDING_ID_REGLEMENT=Mode de réglement pour financement
 FUNDING_DEFAULT_DURATION=Valeur par default pour la durée de financement
 FUNDING_DEFAULT_SCALE=Barème par default
@@ -179,7 +173,6 @@ FUNDING_LISTE_THIRDPARTY_PROPAL=Afficher les propositions de financement dans ti
 #
 #Aides
 #
-
 Help_studyNumber=Numéro d'etude délivré par l'organisme de financement
 Help_folderNumber=Numéro de dossier délivré par l'organisme de financement
 Help_amount=Montant à financer
@@ -206,7 +199,6 @@ Help_documentNotRequired=Document non requis
 #
 #Droits
 #
-
 ReadFunding=Lire
 CreateUpdateFunding=Créer modifier
 DeleteFunding=Supprimer
@@ -221,7 +213,6 @@ DeleteRetention=Supprimer les retenues de garanties
 #
 #Events messages
 #
-
 commnok=Commercial introuvable
 coefnok=Coef introuvable
 novalidreg=Financement non validé changer le mode de réglement
@@ -274,7 +265,6 @@ FilesUnChecked=Fichier retiré de la demande
 #
 #Status
 #
-
 FundingStatusDraft=Financement brouillon
 FundingStatusValidated=Nouveau financement
 FundingStatusUpdate=Financement mise à jour
@@ -284,7 +274,6 @@ FundingStatusDenied=Financement refusé
 FundingStatusRunning=Financement actif
 FundingStatusEnd=Financement terminé
 FundingStatusDisabled=Financement annulé
-
 FundingStatusDraftShort=Brouillon
 FundingStatusValidatedShort=Nouveau
 FundingStatusUpdateShort=Mise à jour
@@ -298,7 +287,6 @@ FundingStatusDisabledShort=Annulé
 #
 #Status folder
 #
-
 FundingStatusFolderSendOrg=étude en cours
 FundingStatusFolderLack=Pièces à fournir pour étude
 FundingStatusFolderLackOk=Pièces ok
@@ -306,7 +294,6 @@ FundingStatusFolderAcceptRetention=Dossier avec RG
 FundingStatusFolderDenounced=Financement dénoncé
 FundingStatusFolderRedeemed=Financement racheté
 FundingStatusFolderExtension=Prolongation du financement
-
 FundingStatusFolderSendOrgShort=étude en cours
 FundingStatusFolderLackShort=pièces pour étude
 FundingStatusFolderLackOkShort=Pièce ok
@@ -318,7 +305,6 @@ FundingStatusFolderExtensionShort=prolongation en cours
 #
 #Documents
 #
-
 fundoc1=RIB
 fundoc2=Kbis
 fundoc3=Bilan
@@ -334,7 +320,6 @@ funfoldoc6=Rachat signé
 #
 #Trigger
 #
-
 CREATEInDolibarr=Financement %s Creer
 VALIDATEInDolibarr=Financement %s validé
 SENTBYMAILInDolibarr=Financement envoyé par mail
@@ -355,7 +340,6 @@ EXTENSIONInDolibarr=Financement %s Prolongation
 #
 #Buttun action
 #
-
 BtnSendorg=Envoyé à l'organisme
 BtnRunning=Actif
 BtnExtension=Prolongation
@@ -363,7 +347,6 @@ BtnExtension=Prolongation
 #
 #Mass actions
 #
-
 ConfirmMassValidation=Validation des financements
 ConfirmMassValidationQuestion=Voulez vous valider les financements?
 ConfirmMassSendOrg=Financements envoyés aux organismes
@@ -383,7 +366,6 @@ ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?
 #
 #Cron
 #
-
 CronFundingEnd = Financement terminé
 CommentCronFundingEnd = Met à jour le statut des financements actif, qui ne sont pas en prolongation et dont la date de fin est dépassé.
 OutputCronFundingEnd = Financement mis a jour automatiquement: 
@@ -397,6 +379,5 @@ OutputCronFundingSoonFinished = Financement bientot a terme
 #
 #Notifications
 #
-
 Notify_FUNDING_VALIDATE=Financement vilidé
 Notify_FUNDING_SENTBYMAIL=Financement envoyé par mail
