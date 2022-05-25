@@ -186,23 +186,17 @@ class Coefficient extends CommonObject
 		}*/
 
 		// Unset fields that are disabled
-		foreach ($this->fields as $key => $val)
-		{
-			if (isset($val['enabled']) && empty($val['enabled']))
-			{
+		foreach ($this->fields as $key => $val) {
+			if (isset($val['enabled']) && empty($val['enabled'])) {
 				unset($this->fields[$key]);
 			}
 		}
 
 		// Translate some data of arrayofkeyval
-		if (is_object($langs))
-		{
-			foreach ($this->fields as $key => $val)
-			{
-				if (is_array($val['arrayofkeyval']))
-				{
-					foreach ($val['arrayofkeyval'] as $key2 => $val2)
-					{
+		if (is_object($langs)) {
+			foreach ($this->fields as $key => $val) {
+				if (isset($val['arrayofkeyval']) && is_array($val['arrayofkeyval'])) {
+					foreach ($val['arrayofkeyval'] as $key2 => $val2) {
 						$this->fields[$key]['arrayofkeyval'][$key2] = $langs->trans($val2);
 					}
 				}
@@ -210,64 +204,54 @@ class Coefficient extends CommonObject
 		}
 		//Chargement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
-        $sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
-        $sql.= ' WHERE c.active = 1';
-        $sql.= ' ORDER BY c.label ASC';
+		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
+		$sql.= ' WHERE c.active = 1';
+		$sql.= ' ORDER BY c.label ASC';
 
-        $resql = $db->query($sql);
-        if ($resql)
-        {
-            $num = $db->num_rows($resql);
-            if ($num > 0)
-            {
-                $arrayofkeyval = array();
-                $i = 0;
-                while ($i < $num)
-                {
-                    $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->rowid] = $obj->label;
-                    $i = $i +1;
-                }
-                $this->fields['fk_duration']['arrayofkeyval'] = $arrayofkeyval;
-            }
-            $db->free($resql);
-        }
-        else
-        {
-            dol_print_error($db);
-        }
-		
-		
+		$resql = $db->query($sql);
+		if ($resql) {
+			$num = $db->num_rows($resql);
+			if ($num > 0) {
+				$arrayofkeyval = array();
+				$i = 0;
+				while ($i < $num) {
+					$obj = $db->fetch_object($resql);
+					$arrayofkeyval[$obj->rowid] = $obj->label;
+					$i = $i +1;
+				}
+				$this->fields['fk_duration']['arrayofkeyval'] = $arrayofkeyval;
+			}
+			$db->free($resql);
+		} else {
+			dol_print_error($db);
+		}
+
+
 		//Chagement du dictionnaire scale
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
-        $sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
-        $sql.= ' WHERE c.active = 1';
-        $sql.= ' ORDER BY c.label ASC';
+		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
+		$sql.= ' WHERE c.active = 1';
+		$sql.= ' ORDER BY c.label ASC';
 
-        $resql = $db->query($sql);
-        if ($resql)
-        {
-            $num = $db->num_rows($resql);
-            if ($num > 0)
-            {
-                $arrayofkeyval = array();
-                $i = 0;
-                while ($i < $num)
-                {
-                    $obj = $db->fetch_object($resql);
-                    $arrayofkeyval[$obj->code] = $obj->label;
-                    $i = $i +1;
-                }
-                $this->fields['fk_scale']['arrayofkeyval'] = $arrayofkeyval;
-            }
-            $db->free($resql);
-        }
-        else
-        {
-            $this->errors[] = 'Error '.$this->db->lasterror();
+		$resql = $db->query($sql);
+		if ($resql) {
+			$num = $db->num_rows($resql);
+			if ($num > 0) {
+				$arrayofkeyval = array();
+				$i = 0;
+				while ($i < $num) {
+					$obj = $db->fetch_object($resql);
+					$arrayofkeyval[$obj->code] = $obj->label;
+					$i = $i +1;
+				}
+				$this->fields['fk_scale']['arrayofkeyval'] = $arrayofkeyval;
+			}
+			$db->free($resql);
+		} else {
+			$this->errors[] = 'Error '.$this->db->lasterror();
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
-        }
+		}
 	}
 
 	/**
@@ -281,8 +265,7 @@ class Coefficient extends CommonObject
 	{
 		$now 		= dol_now();
 		$create = $this->createCommon($user, $notrigger);
-		if ($create > 0)
-		{
+		if ($create > 0) {
 			// Créate ref
 			$this->ref = "(PROV".$this->id.")";
 			$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
@@ -351,14 +334,11 @@ class Coefficient extends CommonObject
 			foreach ($filter as $key => $value) {
 				if ($key == 't.rowid') {
 					$sqlwhere[] = $key.'='.$value;
-				}
-				elseif (strpos($key, 'date') !== false) {
+				} elseif (strpos($key, 'date') !== false) {
 					$sqlwhere[] = $key.' = \''.$this->db->idate($value).'\'';
-				}
-				elseif ($key == 'customsql') {
+				} elseif ($key == 'customsql') {
 					$sqlwhere[] = $value;
-				}
-				else {
+				} else {
 					$sqlwhere[] = $key.' LIKE \'%'.$this->db->escape($value).'%\'';
 				}
 			}
@@ -378,8 +358,7 @@ class Coefficient extends CommonObject
 		if ($resql) {
 			$num = $this->db->num_rows($resql);
 			$i = 0;
-			while ($i < ($limit ? min($limit, $num) : $num))
-			{
+			while ($i < ($limit ? min($limit, $num) : $num)) {
 				$obj = $this->db->fetch_object($resql);
 
 				$record = new self($this->db);
@@ -435,8 +414,7 @@ class Coefficient extends CommonObject
 	 */
 	public function deleteLine(User $user, $idline, $notrigger = false)
 	{
-		if ($this->status < 0)
-		{
+		if ($this->status < 0) {
 			$this->error = 'ErrorDeleteLineNotAllowedByObjectStatus';
 			return -2;
 		}
@@ -461,8 +439,7 @@ class Coefficient extends CommonObject
 		$error = 0;
 
 		// Protection
-		if ($this->status == self::STATUS_VALIDATED)
-		{
+		if ($this->status == self::STATUS_VALIDATED) {
 			dol_syslog(get_class($this)."::validate action abandonned: already validated", LOG_WARNING);
 			return 0;
 		}
@@ -480,12 +457,9 @@ class Coefficient extends CommonObject
 		$this->db->begin();
 
 		// Define new ref
-		if (!$error && (preg_match('/^[\(]?PROV/i', $this->ref) || empty($this->ref))) // empty should not happened, but when it occurs, the test save life
-		{
+		if (!$error && (preg_match('/^[\(]?PROV/i', $this->ref) || empty($this->ref))) { // empty should not happened, but when it occurs, the test save life
 			$num = $this->getNextNumRef();
-		}
-		else
-		{
+		} else {
 			$num = $this->ref;
 		}
 		$this->newref = $num;
@@ -501,15 +475,13 @@ class Coefficient extends CommonObject
 
 			dol_syslog(get_class($this)."::validate()", LOG_DEBUG);
 			$resql = $this->db->query($sql);
-			if (!$resql)
-			{
+			if (!$resql) {
 				dol_print_error($this->db);
 				$this->error = $this->db->lasterror();
 				$error++;
 			}
 
-			if (!$error && !$notrigger)
-			{
+			if (!$error && !$notrigger) {
 				// Call trigger
 				$result = $this->call_trigger('COEFFICIENT_VALIDATE', $user);
 				if ($result < 0) $error++;
@@ -517,13 +489,11 @@ class Coefficient extends CommonObject
 			}
 		}
 
-		if (!$error)
-		{
+		if (!$error) {
 			$this->oldref = $this->ref;
 
 			// Rename directory if dir was a temporary ref
-			if (preg_match('/^[\(]?PROV/i', $this->ref))
-			{
+			if (preg_match('/^[\(]?PROV/i', $this->ref)) {
 				// Now we rename also files into index
 				$sql = 'UPDATE '.MAIN_DB_PREFIX."ecm_files set filename = CONCAT('".$this->db->escape($this->newref)."', SUBSTR(filename, ".(strlen($this->ref) + 1).")), filepath = 'coefficient/".$this->db->escape($this->newref)."'";
 				$sql .= " WHERE filename LIKE '".$this->db->escape($this->ref)."%' AND filepath = 'coefficient/".$this->db->escape($this->ref)."' and entity = ".$conf->entity;
@@ -535,17 +505,14 @@ class Coefficient extends CommonObject
 				$newref = dol_sanitizeFileName($num);
 				$dirsource = $conf->funding->dir_output.'/coefficient/'.$oldref;
 				$dirdest = $conf->funding->dir_output.'/coefficient/'.$newref;
-				if (!$error && file_exists($dirsource))
-				{
+				if (!$error && file_exists($dirsource)) {
 					dol_syslog(get_class($this)."::validate() rename dir ".$dirsource." into ".$dirdest);
 
-					if (@rename($dirsource, $dirdest))
-					{
+					if (@rename($dirsource, $dirdest)) {
 						dol_syslog("Rename ok");
 						// Rename docs starting with $oldref with $newref
 						$listoffiles = dol_dir_list($conf->funding->dir_output.'/coefficient/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
-						foreach ($listoffiles as $fileentry)
-						{
+						foreach ($listoffiles as $fileentry) {
 							$dirsource = $fileentry['name'];
 							$dirdest = preg_replace('/^'.preg_quote($oldref, '/').'/', $newref, $dirsource);
 							$dirsource = $fileentry['path'].'/'.$dirsource;
@@ -558,19 +525,15 @@ class Coefficient extends CommonObject
 		}
 
 		// Set new ref and current status
-		if (!$error)
-		{
+		if (!$error) {
 			$this->ref = $num;
 			$this->status = self::STATUS_VALIDATED;
 		}
 
-		if (!$error)
-		{
+		if (!$error) {
 			$this->db->commit();
 			return 1;
-		}
-		else
-		{
+		} else {
 			$this->db->rollback();
 			return -1;
 		}
@@ -587,8 +550,7 @@ class Coefficient extends CommonObject
 	public function setDraft($user, $notrigger = 0)
 	{
 		// Protection
-		if ($this->status <= self::STATUS_DRAFT)
-		{
+		if ($this->status <= self::STATUS_DRAFT) {
 			return 0;
 		}
 
@@ -612,8 +574,7 @@ class Coefficient extends CommonObject
 	public function cancel($user, $notrigger = 0)
 	{
 		// Protection
-		if ($this->status != self::STATUS_VALIDATED)
-		{
+		if ($this->status != self::STATUS_VALIDATED) {
 			return 0;
 		}
 
@@ -637,8 +598,7 @@ class Coefficient extends CommonObject
 	public function reopen($user, $notrigger = 0)
 	{
 		// Protection
-		if ($this->status != self::STATUS_CANCELED)
-		{
+		if ($this->status != self::STATUS_CANCELED) {
 			return 0;
 		}
 
@@ -679,8 +639,7 @@ class Coefficient extends CommonObject
 
 		$url = dol_buildpath('/funding/coefficient_card.php', 1).'?id='.$this->id;
 
-		if ($option != 'nolink')
-		{
+		if ($option != 'nolink') {
 			// Add param to save lastsearch_values or not
 			$add_save_lastsearch_values = ($save_lastsearch_value == 1 ? 1 : 0);
 			if ($save_lastsearch_value == -1 && preg_match('/list\.php/', $_SERVER["PHP_SELF"])) $add_save_lastsearch_values = 1;
@@ -688,17 +647,14 @@ class Coefficient extends CommonObject
 		}
 
 		$linkclose = '';
-		if (empty($notooltip))
-		{
-			if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER))
-			{
+		if (empty($notooltip)) {
+			if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER)) {
 				$label = $langs->trans("ShowCoefficient");
 				$linkclose .= ' alt="'.dol_escape_htmltag($label, 1).'"';
 			}
 			$linkclose .= ' title="'.dol_escape_htmltag($label, 1).'"';
 			$linkclose .= ' class="classfortooltip'.($morecss ? ' '.$morecss : '').'"';
-		}
-		else $linkclose = ($morecss ? ' class="'.$morecss.'"' : '');
+		} else $linkclose = ($morecss ? ' class="'.$morecss.'"' : '');
 
 		$linkstart = '<a href="'.$url.'"';
 		$linkstart .= $linkclose.'>';
@@ -722,14 +678,12 @@ class Coefficient extends CommonObject
 					$pathtophoto = $class.'/'.$this->ref.'/thumbs/'.substr($filename, 0, $pospoint).'_mini'.substr($filename, $pospoint);
 					if (empty($conf->global->{strtoupper($module.'_'.$class).'_FORMATLISTPHOTOSASUSERS'})) {
 						$result .= '<div class="floatleft inline-block valignmiddle divphotoref"><div class="photoref"><img class="photo'.$module.'" alt="No photo" border="0" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart='.$module.'&entity='.$conf->entity.'&file='.urlencode($pathtophoto).'"></div></div>';
-					}
-					else {
+					} else {
 						$result .= '<div class="floatleft inline-block valignmiddle divphotoref"><img class="photouserphoto userphoto" alt="No photo" border="0" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart='.$module.'&entity='.$conf->entity.'&file='.urlencode($pathtophoto).'"></div>';
 					}
 
 					$result .= '</div>';
-				}
-				else {
+				} else {
 					$result .= img_object(($notooltip ? '' : $label), ($this->picto ? $this->picto : 'generic'), ($notooltip ? (($withpicto != 2) ? 'class="paddingright"' : '') : 'class="'.(($withpicto != 2) ? 'paddingright ' : '').'classfortooltip"'), 0, 0, $notooltip ? 0 : 1);
 				}
 			}
@@ -772,8 +726,7 @@ class Coefficient extends CommonObject
 	public function LibStatut($status, $mode = 0)
 	{
 		// phpcs:enable
-		if (empty($this->labelStatus) || empty($this->labelStatusShort))
-		{
+		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
 			global $langs;
 			//$langs->load("funding");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
@@ -804,28 +757,23 @@ class Coefficient extends CommonObject
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as t';
 		$sql .= ' WHERE t.rowid = '.$id;
 		$result = $this->db->query($sql);
-		if ($result)
-		{
-			if ($this->db->num_rows($result))
-			{
+		if ($result) {
+			if ($this->db->num_rows($result)) {
 				$obj = $this->db->fetch_object($result);
 				$this->id = $obj->rowid;
-				if ($obj->fk_user_author)
-				{
+				if ($obj->fk_user_author) {
 					$cuser = new User($this->db);
 					$cuser->fetch($obj->fk_user_author);
 					$this->user_creation = $cuser;
 				}
 
-				if ($obj->fk_user_valid)
-				{
+				if ($obj->fk_user_valid) {
 					$vuser = new User($this->db);
 					$vuser->fetch($obj->fk_user_valid);
 					$this->user_validation = $vuser;
 				}
 
-				if ($obj->fk_user_cloture)
-				{
+				if ($obj->fk_user_cloture) {
 					$cluser = new User($this->db);
 					$cluser->fetch($obj->fk_user_cloture);
 					$this->user_cloture = $cluser;
@@ -837,9 +785,7 @@ class Coefficient extends CommonObject
 			}
 
 			$this->db->free($result);
-		}
-		else
-		{
+		} else {
 			dol_print_error($this->db);
 		}
 	}
@@ -867,14 +813,11 @@ class Coefficient extends CommonObject
 		$objectline = new CoefficientLine($this->db);
 		$result = $objectline->fetchAll('ASC', 'position', 0, 0, array('customsql'=>'fk_coefficient = '.$this->id));
 
-		if (is_numeric($result))
-		{
+		if (is_numeric($result)) {
 			$this->error = $this->error;
 			$this->errors = $this->errors;
 			return $result;
-		}
-		else
-		{
+		} else {
 			$this->lines = $result;
 			return $this->lines;
 		}
@@ -894,8 +837,7 @@ class Coefficient extends CommonObject
 			$conf->global->FUNDING_COEFFICIENT_ADDON = 'mod_coefficient_standard';
 		}
 
-		if (!empty($conf->global->FUNDING_COEFFICIENT_ADDON))
-		{
+		if (!empty($conf->global->FUNDING_COEFFICIENT_ADDON)) {
 			$mybool = false;
 
 			$file = $conf->global->FUNDING_COEFFICIENT_ADDON.".php";
@@ -903,16 +845,14 @@ class Coefficient extends CommonObject
 
 			// Include file with class
 			$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
-			foreach ($dirmodels as $reldir)
-			{
+			foreach ($dirmodels as $reldir) {
 				$dir = dol_buildpath($reldir."core/modules/funding/");
 
 				// Load file with numbering class (if found)
 				$mybool |= @include_once $dir.$file;
 			}
 
-			if ($mybool === false)
-			{
+			if ($mybool === false) {
 				dol_print_error('', "Failed to include file ".$file);
 				return '';
 			}
@@ -921,12 +861,9 @@ class Coefficient extends CommonObject
 				$obj = new $classname();
 				$numref = $obj->getNextValue($this);
 
-				if ($numref != '' && $numref != '-1')
-				{
+				if ($numref != '' && $numref != '-1') {
 					return $numref;
-				}
-				else
-				{
+				} else {
 					$this->error = $obj->error;
 					//dol_print_error($this->db,get_class($this)."::getNextNumRef ".$obj->error);
 					return "";
@@ -935,9 +872,7 @@ class Coefficient extends CommonObject
 				print $langs->trans("Error")." ".$langs->trans("ClassNotFound").' '.$classname;
 				return "";
 			}
-		}
-		else
-		{
+		} else {
 			print $langs->trans("ErrorNumberingModuleNotSetup", $this->element);
 			return "";
 		}
