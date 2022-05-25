@@ -491,7 +491,12 @@ class Funding extends CommonObject
 
 		if ($resql) {
 			$obj = $db->fetch_object($resql);
-			return $obj->rate;
+
+			if (is_object($obj)) {
+				return $obj->rate;
+			} else {
+				return 0;
+			}
 		} else {
 			$this->errors[] = 'Error '.$this->db->lasterror();
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
@@ -993,6 +998,8 @@ class Funding extends CommonObject
 	{
 		global $langs;
 
+		$error = 0;
+
 		$coef = -1;
 		$document = '';
 		$idcomm = -1;
@@ -1092,6 +1099,8 @@ class Funding extends CommonObject
 	public function delete(User $user, $notrigger = false)
 	{
 		global $langs, $conf;
+
+		$error = 0;
 
 		if ($this->status == self::STATUS_RUNNING) {
 			setEventMessages($langs->trans("deletnok").' - '.$this->ref, null, 'errors');
@@ -1582,17 +1591,17 @@ class Funding extends CommonObject
 	 */
 	public function setFolderNumber($user, $folder_number, $notrigger = 0)
 	{
-			$error = 0;
+		$error = 0;
 
-			$this->db->begin();
+		$this->db->begin();
 
-			$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
-			$sql .= " SET folder_number = ".($folder_number != '' ? "'".$folder_number."'" : 'null');
-			$sql .= " WHERE rowid = ".$this->id;
+		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+		$sql .= " SET folder_number = ".($folder_number != '' ? "'".$folder_number."'" : 'null');
+		$sql .= " WHERE rowid = ".$this->id;
 
-			dol_syslog(__METHOD__.' $this->id='.$this->id.', folder_number='.$folder_number, LOG_DEBUG);
+		dol_syslog(__METHOD__.' $this->id='.$this->id.', folder_number='.$folder_number, LOG_DEBUG);
 
-			$resql = $this->db->query($sql);
+		$resql = $this->db->query($sql);
 		if (!$resql) {
 			$this->errors[] = $this->db->error();
 			$error++;

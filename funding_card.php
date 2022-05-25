@@ -687,6 +687,7 @@ if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 // Part to show record
 if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$formconfirm = '';
+	$lineid = '';
 
 	// Confirmation of action refresh supprimer?
 	if ($action == 'refresh') {
@@ -768,6 +769,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 
 	// Object card
 	// ------------------------------------------------------------
+	$morehtmlref = '';
+	$morehtmlleft = '';
+	$morehtmlright = '';
+	$morehtmlstatus = '';
 
 	if (!empty($typedoc) && $typedoc == 'propal') {
 		$linkback = '<a href="'.dol_buildpath('/comm/propal/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=propals', 1).'">'.$langs->trans("BackToList").'</a>';
