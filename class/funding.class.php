@@ -295,18 +295,17 @@ class Funding extends CommonObject
 			}
 		}
 
-		// Fix PHP8 Comment code
+		// Fix PHP8 add "isset($val['arrayofkeyval']) &&"
 		// Translate some data of arrayofkeyval
-		/*if (is_object($langs)) {
+		if (is_object($langs)) {
 			foreach ($this->fields as $key => $val) {
-				var_dump($val);
-				if (is_array($val['arrayofkeyval'])) {
+				if (isset($val['arrayofkeyval']) && is_array($val['arrayofkeyval'])) {
 					foreach ($val['arrayofkeyval'] as $key2 => $val2) {
 						$this->fields[$key]['arrayofkeyval'][$key2] = $langs->trans($val2);
 					}
 				}
 			}
-		}*/
+		}
 
 		//Chagement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
