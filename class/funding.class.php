@@ -295,16 +295,18 @@ class Funding extends CommonObject
 			}
 		}
 
+		// Fix PHP8 Comment code
 		// Translate some data of arrayofkeyval
-		if (is_object($langs)) {
+		/*if (is_object($langs)) {
 			foreach ($this->fields as $key => $val) {
+				var_dump($val);
 				if (is_array($val['arrayofkeyval'])) {
 					foreach ($val['arrayofkeyval'] as $key2 => $val2) {
 						$this->fields[$key]['arrayofkeyval'][$key2] = $langs->trans($val2);
 					}
 				}
 			}
-		}
+		}*/
 
 		//Chagement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
@@ -1897,7 +1899,10 @@ class Funding extends CommonObject
 			$statusType = 'status6';
 		}*/
 
-		return dolGetStatus($this->labelStatusFolder[$status], $this->labelStatusFolderShort[$status], '', $statusType, $mode);
+		// Fix PHP8 if (!empty($status)) {
+		if (!empty($status)) {
+			return dolGetStatus($this->labelStatusFolder[$status], $this->labelStatusFolderShort[$status], '', $statusType, $mode);
+		}
 	}
 
 	/**

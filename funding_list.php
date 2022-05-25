@@ -160,7 +160,8 @@ foreach ($object->fields as $key => $val) {
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
 foreach ($object->fields as $key => $val) {
-	if ($val['searchall']) {
+	// Fix PHP8 isset($val['searchall'])
+	if (isset($val['searchall'])) {
 		$fieldstosearchall['t.'.$key] = $val['label'];
 	}
 }
@@ -174,7 +175,8 @@ foreach ($object->fields as $key => $val) {
 	}
 }
 // Extra fields
-if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label']) > 0) {
+// Fix PHP8 isset($extrafields->attributes[$object->table_element]['label'])
+if (is_array(isset($extrafields->attributes[$object->table_element]['label'])?$extrafields->attributes[$object->table_element]['label']:'') && count($extrafields->attributes[$object->table_element]['label']) > 0) {
 	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
 		if (!empty($extrafields->attributes[$object->table_element]['list'][$key])) {
 			$arrayfields["ef.".$key] = array(
@@ -563,7 +565,8 @@ foreach ($object->fields as $key => $val) {
 	$sql .= 't.'.$key.', ';
 }
 // Add fields from extrafields
-if (!empty($extrafields->attributes[$object->table_element]['label'])) {
+// Fix PHP8 isset($extrafields->attributes[$object->table_element]['label'])
+if (isset($extrafields->attributes[$object->table_element]['label']) && !empty($extrafields->attributes[$object->table_element]['label'])) {
 	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
 		$sql .= ($extrafields->attributes[$object->table_element]['type'][$key] != 'separate' ? "ef.".$key.' as options_'.$key.', ' : '');
 	}
@@ -574,7 +577,8 @@ $reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $obje
 $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
-if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
+// Fix PHP8 isset($extrafields->attributes[$object->table_element]['label'])
+if (is_array(isset($extrafields->attributes[$object->table_element]['label'])?$extrafields->attributes[$object->table_element]['label']:'') && count($extrafields->attributes[$object->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
 if ($object->ismultientitymanaged == 1) {
@@ -843,7 +847,8 @@ if ($iddoc) {
 	$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/funding_card.php', 1).'?typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=create&backtopage='.urlencode($_SERVER['REQUEST_URI']), '', $permissiontoadd);
 }
 
-print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
+// Fix PHP8 isset($newcardbutton)?$newcardbutton:''
+print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, isset($newcardbutton)?$newcardbutton:'', '', $limit, 0, 0, 1);
 
 // Add code for pre mass action (confirmation or email presend form)
 $topicmail = "SendFundingRef";
