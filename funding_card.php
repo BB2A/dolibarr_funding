@@ -823,7 +823,8 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
-	$param = '';
+	$param = ''; // FIX PHP8
+	$file = ''; // FIX PHP8
 	print '</table>';
 	print '<div class="div-table-responsive-no-min">';
 	// Documents client
@@ -855,7 +856,6 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
 	} else {
-		$file = '';
 		$relativepath = $object->ref.'/'.$object->fundoc1;
 		($object->fundoc1)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc1.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
 		print '<td></td>';
@@ -1148,49 +1148,49 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		if (empty($reshook) && empty($user->socid)) {
 			// Folder status
 			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=sendorg">'.$langs->trans('BtnSendorg').'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=sendorg&token='.newToken().'">'.$langs->trans('BtnSendorg').'</a>'."\n";
 				// if (empty($object->status_folder)) {
 				// } elseif ($object->status >= $object::STATUS_VALIDATED && $object->status <= $object::STATUS_ACCEPT && $object->status_folder != $object::STATUS_FOLDER_LACK) {
 				// 	print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lack">'.$langs->trans('BtnLack').'</a>'."\n";
 				// }
 			} elseif ($permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin <> 'propal' && $object->status_folder != $object::STATUS_FOLDER_EXTENSION) {
 				if (empty($object->status_folder)) {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension">'.$langs->trans('BtnExtension').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension&token='.newToken().'">'.$langs->trans('BtnExtension').'</a>'."\n";
 				}
 			}
 
 			// Set status accepted/refused
 			if ($object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused'.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused&token='.newToken().''.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
 			}
 
 			// Send
 			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED) {
 				$sendto = $conf->global->FUNDING_MAIL_DEFAULT;
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc'.$iddoc.'&sendto='.$sendto.'&action=presend&mode=init#formmailbeforetitle&token='.newToken().'">'.$langs->trans('SendMail').'</a>'."\n";
 			}
 
 			// closefinich
 			if ($permissionmanage && $object->status == $object::STATUS_RUNNING) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=closefinich&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('closefinich').'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=closefinich&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans('closefinich').'</a>'."\n";
 			}
 
 			// Modify
 			if ($permissiontoadd && $object->status < $object::STATUS_RUNNING) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Modify").'</a>'."\n";
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Modify").'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
 			}
 
 			//Back to draft
 			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED) {
-				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("SetToDraft").'</a>';
+				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&token='.newToken().'&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("SetToDraft").'</a>';
 			}
 
 			// Validate
 			if ($permissiontoadd && $object->status == $object::STATUS_DRAFT) {
 				if (empty($object->table_element_line) || (is_array($object->lines) && count($object->lines) > 0)) {
-					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Validate").'</a>';
+					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&token='.newToken().'&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("Validate").'</a>';
 				} else {
 					$langs->load("errors");
 					print '<a class="butActionRefused" href="" title="'.$langs->trans("ErrorAddAtLeastOneLineFirst").'">'.$langs->trans("Validate").'</a>';
@@ -1200,15 +1200,15 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 			// Runing funding
 			if ($permissiontoadd && $object->origin <> 'propal') {
 				if ($object->status == $object::STATUS_ACCEPT) {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("BtnRunning").'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=run&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("BtnRunning").'</a>'."\n";
 				} elseif ($object->status >= $object::STATUS_RUNNING) {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("ReOpen").'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("ReOpen").'</a>'."\n";
 				}
 			}
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
-				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&backtopage='.$backtopage.'">'.$langs->trans('Delete').'</a>'."\n";
+				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete_object&token='.newToken().'&backtopage='.$backtopage.'">'.$langs->trans('Delete').'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Delete').'</a>'."\n";
 			}
