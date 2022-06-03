@@ -106,6 +106,10 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 		//Check if there is funding for the maipulated document.
 		global $conf, $db;
+
+		$notrigger = ''; // FIX PHP8
+		$result = ''; // FIX PHP8
+
 		if ($object->element == 'propal' || $object->element == 'commande') {
 			$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
 			if ($object->element == 'propal') {
@@ -446,9 +450,9 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							setEventMessages($langs->trans("updateok"), null);
 						} else {
 							setEventMessages($langs->trans("updatenok"), null, 'errors');
+							return $result;
 						}
 					}
-					return $result;
 				}
 				return 0;
 
