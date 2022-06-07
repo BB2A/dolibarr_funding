@@ -1645,6 +1645,7 @@ class Funding extends CommonObject
 	public function setStatusFolder($user, $status, $notrigger = 0)
 	{
 		$error = 0;
+		$triger = ''; // FIX PHP8
 
 		$this->db->begin();
 

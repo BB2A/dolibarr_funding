@@ -711,7 +711,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 				array('type' => 'onecolumn', 'value' => $notify->confirmMessage('FUNDING_ACCEPT_DENIED', $object->socid, $object)),
 			));
 		}*/
-
+		$text = '';
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SetAcceptedRefused'), $text, 'setAcceptedRefused', $formquestion, '', 1, 200);
 	}
 
