@@ -85,14 +85,15 @@ include_once DOL_DOCUMENT_ROOT . '/core/lib/geturl.lib.php';
 include_once DOL_DOCUMENT_ROOT . '/core/lib/parsemd.lib.php';
 
 $filefound = false;
+$moduleName = $tmpmodule->name;
 $modulePath = dol_buildpath('/funding', 0);
 $pathoffile = $modulePath . '/ChangeLog.md';
 
 if (dol_is_file($pathoffile)) {
-    $filefound = true;
+	$filefound = true;
 }
 if ($filefound) {
-    $moduleUrlPath = dol_buildpath('/' . strtolower($moduleName), 1);
+	$moduleUrlPath = dol_buildpath('/' . strtolower($moduleName), 1);
 	$content = file_get_contents($pathoffile);
 }
 $changelog  = dolMd2Html($content, 'parsedown', array('doc/' => $moduleUrlPath . '/doc/'));

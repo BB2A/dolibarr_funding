@@ -81,25 +81,43 @@ $backtopage = GETPOST('backtopage', 'alpha');
 
 $value = GETPOST('value', 'alpha');
 
+isset($conf->global->FUNDING_ID_REGLEMENT) ? $conf->global->FUNDING_ID_REGLEMENT : $conf->global->FUNDING_ID_REGLEMENT = '';
+isset($conf->global->FUNDING_DEFAULT_DURATION) ? $conf->global->FUNDING_DEFAULT_DURATION : $conf->global->FUNDING_DEFAULT_DURATION = '';
+isset($conf->global->FUNDING_DEFAULT_SCALE) ? $conf->global->FUNDING_DEFAULT_SCALE : $conf->global->FUNDING_DEFAULT_SCALE = '';
+isset($conf->global->FUNDING_DEFAULT_REDEMPTION) ? $conf->global->FUNDING_DEFAULT_REDEMPTION : $conf->global->FUNDING_DEFAULT_REDEMPTION = '';
+isset($conf->global->FUNDING_DEFAULT_TYPE) ? $conf->global->FUNDING_DEFAULT_TYPE : $conf->global->FUNDING_DEFAULT_TYPE= '';
+
+isset($conf->global->FUNDING_FILTRE_ORGANIZATION) ? $conf->global->FUNDING_FILTRE_ORGANIZATION : $conf->global->FUNDING_FILTRE_ORGANIZATION = '';
+isset($conf->global->FUNDING_DEFAULT_ORGANIZATION) ? $conf->global->FUNDING_DEFAULT_ORGANIZATION : $conf->global->FUNDING_DEFAULT_ORGANIZATION = '';
+
+isset($conf->global->FUNDING_MAIL_DEFAULT) ? $conf->global->FUNDING_MAIL_DEFAULT : $conf->global->FUNDING_MAIL_DEFAULT = '';
+isset($conf->global->FUNDING_MAIL_AUTOCOPY_TO) ? $conf->global->FUNDING_MAIL_AUTOCOPY_TO : $conf->global->FUNDING_MAIL_AUTOCOPY_TO = '';
+isset($conf->global->FUNDING_MAIL_VALIDATION) ? $conf->global->FUNDING_MAIL_VALIDATION : $conf->global->FUNDING_MAIL_VALIDATION = '';
+
+isset($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) ? $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION : $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION = '';
+
+isset($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL) ? $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL: $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL = '';
+isset($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST) ? $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST : $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST = '';
+
 $arrayofparameters = array(
 
-	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
 
-	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_DEFAULT_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_DEFAULT_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
 
-	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
 
-	'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
 
-	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1),
-	'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST'=>array('css'=>'minwidth200','enabled'=>1),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
 
 );
 
