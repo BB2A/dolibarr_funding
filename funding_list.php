@@ -176,7 +176,7 @@ foreach ($object->fields as $key => $val) {
 }
 // Extra fields
 // Fix PHP8 isset($extrafields->attributes[$object->table_element]['label'])
-if (is_array(isset($extrafields->attributes[$object->table_element]['label'])?$extrafields->attributes[$object->table_element]['label']:'') && count($extrafields->attributes[$object->table_element]['label']) > 0) {
+if (is_array(isset($extrafields->attributes[$object->table_element]['label']) ? $extrafields->attributes[$object->table_element]['label'] : '') && count($extrafields->attributes[$object->table_element]['label']) > 0) {
 	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
 		if (!empty($extrafields->attributes[$object->table_element]['list'][$key])) {
 			$arrayfields["ef.".$key] = array(
@@ -566,7 +566,7 @@ foreach ($object->fields as $key => $val) {
 }
 // Add fields from extrafields
 // Fix PHP8 isset($extrafields->attributes[$object->table_element]['label'])
-if (isset($extrafields->attributes[$object->table_element]['label']) && !empty($extrafields->attributes[$object->table_element]['label'])) {
+if (isset($extrafields->attributes[$object->table_element]['label'])  && !empty($extrafields->attributes[$object->table_element]['label'])) {
 	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
 		$sql .= ($extrafields->attributes[$object->table_element]['type'][$key] != 'separate' ? "ef.".$key.' as options_'.$key.', ' : '');
 	}
