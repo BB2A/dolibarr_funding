@@ -123,7 +123,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 			if ($resql) {
 				$obj = $db->fetch_object($resql);
-				$fudid = $obj->rowid;
+				$fudid = isset($obj->rowid) ? $obj->rowid : '';
 			} else {
 				$errors = 'Error '.$this->db->lasterror();
 				dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
