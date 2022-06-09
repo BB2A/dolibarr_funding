@@ -715,7 +715,7 @@ if (!empty($socid)) {
 
 	$linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
 
-	dol_banner_tab($soc, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
+	dol_banner_tab($soc, 'socid', $linkback, (empty($user->societe_id) ? 0 : 1), 'rowid', 'nom');
 
 	$cssclass='titlefield';
 
