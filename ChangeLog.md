@@ -11,6 +11,7 @@
 - NEW - Ajout hook notification
 - NEW - Ajout hook dernier financement sur comm card du tiers
 - NEW - Amélioration pour affichage technicien
+- NEW - Ajout de badge dans les onglets pour connaitre le nombre de financement
 
 ## [1.0.3] - 02/2022
 
