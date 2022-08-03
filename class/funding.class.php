@@ -2001,10 +2001,11 @@ class Funding extends CommonObject
 	 *
 	 * @return $nbfunding      	Nb funding
 	 */
-	public function getcountForThird($id, $obj)	{
+	public function getcountForThird($id, $obj)
+	{
 		global $db;
-		
-		$nbfunding = 0;
+
+		$nb = 0;
 
 		$sql = "SELECT rowid, fk_soc, origin FROM ".MAIN_DB_PREFIX.$obj->table_element;
 		$sql .= " WHERE fk_soc = ".$id;
@@ -2014,63 +2015,65 @@ class Funding extends CommonObject
 		}
 		$resql = $this->db->query($sql);
 		if ($resql) {
-			$nbfunding = $this->db->num_rows($resql);
+			$nb = $this->db->num_rows($resql);
 		} else {
 			dol_print_error($this->db);
 		}
 
-		return $nbfunding;
+		return $nb;
 	}
 
 
 	/**
-	 *  Create badge number label tab Tird-Party
+	 *  Create badge number label tab Propal
 	 *
 	 * @param  int     $id       Id of object
 	 * @param  object  $obj      object
 	 *
 	 * @return $nbfunding      	Nb funding
 	 */
-	public function getcountForPropal($id, $obj) {
+	public function getcountForPropal($id, $obj)
+	{
 		global $db;
 
-		$nbfunding = 0;
+		$nb = 0;
 
 		$sql = "SELECT rowid, fk_soc, origin FROM ".MAIN_DB_PREFIX.$obj->table_element;
 		$sql .= " WHERE origin = 'PROPAL' and origin_id = ".$id;
 		$resql = $this->db->query($sql);
 		if ($resql) {
-			$nbfunding = $this->db->num_rows($resql);
+			$nb = $this->db->num_rows($resql);
 		} else {
 			dol_print_error($this->db);
 		}
 
-		return $nbfunding;
+		return $nb;
 	}
 
 	/**
-	 *  Create badge number label tab Tird-Party
+	 *  Create badge number label tab Order
 	 *
 	 * @param  int     $id       Id of object
 	 * @param  object  $obj      object
 	 *
 	 * @return $nbfunding      	Nb funding
 	 */
-	public function getcountForOrder($id, $obj) {
+	public function getcountForOrder($id, $obj)
+	{
 		global $db;
 
-		$nbfunding = 0;
+		$nb = 0;
 
 		$sql = "SELECT rowid, fk_soc, origin FROM ".MAIN_DB_PREFIX.$obj->table_element;
 		$sql .= " WHERE origin = 'ORDER' and origin_id = ".$id;
 		$resql = $this->db->query($sql);
 		if ($resql) {
-			$nbfunding = $this->db->num_rows($resql);
+			$nb = $this->db->num_rows($resql);
 		} else {
 			dol_print_error($this->db);
 		}
 
-		return $nbfunding;
+		return $nb;
 	}
 
 	/**
