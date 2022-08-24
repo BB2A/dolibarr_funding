@@ -20,7 +20,8 @@
 # Module label 'ModuleFundingName'
 ModuleFundingName=Financements
 # Module description 'ModuleFundingDesc'
-ModuleFundingDesc=Description de Financement
+ModuleFundingDesc=Gestion des financements client
+ModuleFundingDescLong=Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.
 #
 # Page d'administration
 #

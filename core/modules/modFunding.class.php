@@ -58,9 +58,9 @@ class modFunding extends DolibarrModules
 		// Module label (no space allowed), used if translation string 'ModuleFundingName' not found (Funding is name of module).
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 		// Module description, used if translation string 'ModuleFundingDesc' not found (Funding is name of module).
-		$this->description = "Gestion des financements client";
+		$this->description = "ModuleFundingDesc";
 		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.";
+		$this->descriptionlong = "ModuleFundingDescLong";
 		$this->editor_name = 'BB2A - Anthony Berton';
 		$this->editor_url = 'https://www.bb2a.fr';
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
@@ -165,7 +165,6 @@ class modFunding extends DolibarrModules
 			$this->tabs[0] = array('data'=>'thirdparty:+Funding:Fundings:mylangfile@funding:$user->rights->funding->lists:/funding/funding_list.php?socid=__ID__');
 			$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
 			$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
-	
 		}
 
 		// Example:
