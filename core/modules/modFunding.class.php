@@ -162,7 +162,7 @@ class modFunding extends DolibarrModules
 			$this->tabs[1] = array('data'=>'propal:+Funding:Funding,funding,/funding/class/funding.class.php,getcountForPropal:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
 			$this->tabs[2] = array('data'=>'order:+Funding:Funding,funding,/funding/class/funding.class.php,getcountForOrder:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
 		} else {
-			$this->tabs[0] = array('data'=>'thirdparty:+Funding:Fundings:mylangfile@funding:$user->rights->funding->lists:/funding/funding_list.php?socid=__ID__');
+			$this->tabs[0] = array('data'=>'thirdparty:+Funding:Fundings:mylangfile@funding:$user->rights->funding->read:/funding/funding_list.php?socid=__ID__');
 			$this->tabs[1] = array('data'=>'propal:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=propal&iddoc=__ID__');
 			$this->tabs[2] = array('data'=>'order:+Funding:Funding:mylangfile@funding:$user->rights->funding->read:/funding/funding_card.php?typedoc=order&iddoc=__ID__');
 		}
