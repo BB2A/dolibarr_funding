@@ -2,7 +2,7 @@
 
 ## [1.0.4] - 03/2022
 
-- FIX - Création de la fonction sendDocumentFunding() pour une meilleur gestion des fichiers envoyer
+- FIX - Création de la fonction [sendDocumentFunding()] pour une meilleur gestion des fichiers envoyer
 - FIX - Php V8 warning class html form
 - FIX - Enregistrement d'une piéce demandé plus de message d'erreur pas de fichier
 - FIX - Permission pour la suppression de document
