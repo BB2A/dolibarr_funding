@@ -2171,7 +2171,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 *  Create a document onto disk according to template module.
+	 *  Upload and manage documents for funding.
 	 *
 	 *  @param      string      $fileupload        	Files send
 	 *  @param      bool      	$cherchfile			Files cherch
@@ -2187,17 +2187,9 @@ class Funding extends CommonObject
 		$doc = GETPOST('doc');  // Document envoyé
 		$file = GETPOST('file'); // Fichier à supprimer
 		$filecheck = GETPOST('filecheck'); // Si Fichier nécessaire est à vrais
+		$fileoutputname = $fileupload;
 
-
-
-			/*$test=count($_FILES['userfile']['name']);
-			setEventMessages($test.'10', '', 'errors');
-			if (is_countable($_FILES['userfile']['name'])) {
-				$test=count($_FILES['userfile']['name']);
-				setEventMessages($test.'10', '', 'errors');
-			}*/
-
-			// Si un fichier existe donc enregistrement
+		// Si un fichier existe donc enregistrement
 		if (!empty($cherchfile)) {
 			/*$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 			$fileuploadnewname = $this->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
@@ -2310,8 +2302,8 @@ class Funding extends CommonObject
 					}
 				}
 			*/
-				// Si selecteur de plusieur fichiers
-			if (is_countable($fileupload)) {
+			// Si selecteur de plusieur fichiers
+			/*if (is_countable($fileupload)) {
 				$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload[0]);
 			} else {
 				$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
@@ -2320,8 +2312,8 @@ class Funding extends CommonObject
 				$info = pathinfo($file);
 				$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 
-				$fileuploadname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
-				$fileuploadname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileuploadname.'.'.strtolower($info['extension']));
+				$fileoutputname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
+				$fileoutputname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileoutputname.'.'.strtolower($info['extension']));
 
 				// Le fichier est une image conversion
 				if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
@@ -2340,7 +2332,7 @@ class Funding extends CommonObject
 
 						$pdf = pdf_getInstance($format);
 						$pdf->SetMargins($marge_gauche, $marge_haute, $marge_droite);
-						$pdf->SetTitle($fileuploadname);
+						$pdf->SetTitle($fileoutputname);
 						$pdf->SetAuthor(!empty($conf->global->MAIN_INFO_SOCIETE_NOM)?$conf->global->MAIN_INFO_SOCIETE_NOM:'');
 						$pdf->SetCreator($user->getfullname($langs));
 						if (class_exists('TCPDF')) {
@@ -2350,24 +2342,159 @@ class Funding extends CommonObject
 
 						// Convertion de l'image en PDF
 						$pdf->AddPage();
-						$pdf->Image($upload_dir.'/'.$fileuploadname, '', '', $page_largeur - $marge_gauche - $marge_droite);
+						$pdf->Image($upload_dir.'/'.$fileoutputname, '', '', $page_largeur - $marge_gauche - $marge_droite);
 
-						$fileuploadname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
-						$fileuploadname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileuploadname.'.pdf');
+						$fileoutputname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
+						$fileoutputname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileoutputname.'.pdf');
 						// Création du fichier PDF
-						$pdf->Output($upload_dir.'/'.$fileuploadname, 'F');
+						$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
 						$pdf->Close();
 					}
 				}
+			}*/
+
+			/*
+			//
+			//
+			//
+			*/
+				$fileoutputname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
+				$fileoutputname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileoutputname.'.pdf');
+
+				//Fusion des PDF
+				// Libraries
+				require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
+				$formatarray = pdf_getFormat();
+				$page_largeur = $formatarray['width'];
+				$page_hauteur = $formatarray['height'];
+				$format = array($page_largeur, $page_hauteur);
+				$marge_gauche = isset($conf->global->MAIN_PDF_MARGIN_LEFT) ? $conf->global->MAIN_PDF_MARGIN_LEFT : 10;
+				$marge_droite = isset($conf->global->MAIN_PDF_MARGIN_RIGHT) ? $conf->global->MAIN_PDF_MARGIN_RIGHT : 10;
+				$marge_haute = isset($conf->global->MAIN_PDF_MARGIN_TOP) ? $conf->global->MAIN_PDF_MARGIN_TOP : 10;
+				$marge_basse = isset($conf->global->MAIN_PDF_MARGIN_BOTTOM) ? $conf->global->MAIN_PDF_MARGIN_BOTTOM : 10;
+
+				$pdf = pdf_getInstance($format);
+				$pdf->SetMargins($marge_gauche, $marge_haute, $marge_droite);
+				$pdf->SetTitle($fileoutputname);
+				$pdf->SetAuthor(!empty($conf->global->MAIN_INFO_SOCIETE_NOM)?$conf->global->MAIN_INFO_SOCIETE_NOM:'');
+				$pdf->SetCreator($user->getfullname($langs));
+			if (class_exists('TCPDF')) {
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
 			}
 
-				// Vérifie si le fichier à bien ete créer pour inscription en db
-			if (file_exists($upload_dir.'/'.$fileuploadname)) {
+			// Selecteur d'un seul fichier et le fichier est un PDF
+			if (!is_countable($_FILES['userfile']['name'])) {
+				// Le fichier est un PDF
+				if (strpos($_FILES['userfile']['type'], '/pdf') == true) {
+					$result = dol_move($upload_dir.'/'.$fileupload, $upload_dir.'/'.$fileoutputname);
+				}
+				// Le fichier est une image
+				if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
+					$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
+					// Extenssion lowercase
+					$info = pathinfo($file);
+					$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
+
+					if (file_exists($file) && is_readable($file)) {
+						// Convertion de l'image en PDF
+						$pdf->AddPage();
+						$pdf->Image($file, '', '', $page_largeur - $marge_gauche - $marge_droite);
+
+						// Création du fichier PDF
+						$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
+						$pdf->Close();
+						dol_delete_file($file);
+					}
+				}
+			}
+			// Sélécteur de plusieur fichiers
+			if (is_countable($_FILES['userfile']['name'])) {
+				$nbfiles = count($_FILES['userfile']['name']);
+				// Si un seul fichier je fait la même chose qu'un selecteur simple
+				if ($nbfiles == 1) {
+					foreach ($fileupload as $file) {
+						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
+						// Extenssion lowercase
+						$info = pathinfo($file);
+						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
+						$finfo = finfo_open(FILEINFO_MIME_TYPE);
+						$mtype = finfo_file($finfo, $file);
+
+						if (file_exists($file)) {
+							// Le fichier est un PDF
+							if (strpos($mtype, '/pdf') == true) {
+								$result = dol_move($file, $upload_dir.'/'.$fileoutputname);
+							}
+							// Le fichier est une image
+							if (strpos($mtype, 'image/') === 0) {
+								if (file_exists($file) && is_readable($file)) {
+									// Convertion de l'image en PDF
+									$pdf->AddPage();
+									$pdf->Image($file, '', '', $page_largeur - $marge_gauche - $marge_droite);
+									// Création du fichier PDF
+									$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
+									$pdf->Close();
+									dol_delete_file($file);
+								}
+							}
+						}
+					}
+				} else {
+					// Si plusieur fichier on créer un PDF
+					foreach ($fileupload as $file) {
+						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
+						// Extenssion lowercase
+						$info = pathinfo($file);
+						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
+						$finfo = finfo_open(FILEINFO_MIME_TYPE);
+						$mtype = finfo_file($finfo, $file);
+						// Vérification si le fichier existe
+						if (file_exists($file) && is_readable($file)) {
+							// Si il y a une image on l'ajoute dans une page
+							if (strpos($mtype, '/pdf') == true) {
+								$pagecount = $pdf->setSourceFile($file);
+								for ($i = 1; $i <= $pagecount; $i++) {
+									$tplIdx = $pdf->importPage($i);
+									if ($tplIdx !== false) {
+										$s = $pdf->getTemplatesize($tplIdx);
+										var_dump($s);
+										$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
+										$pdf->useTemplate($tplIdx);
+									} else {
+										setEventMessages(null, array($file.' cannot be added, probably protected PDF'), 'warnings');
+									}
+								}
+							} elseif (strpos($mtype, 'image/') === 0) {
+								$pdf->AddPage();
+								$pdf->Image($file, '', '', $page_largeur - $marge_gauche - $marge_droite);
+							}
+						}
+					}
+					// Création du fichier PDF
+					$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
+					$pdf->Close();
+					// Supprime les fichiers source
+					foreach ($fileupload as $file) {
+						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
+						// Extenssion lowercase
+						$info = pathinfo($file);
+						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
+						dol_delete_file($file);
+					}
+				}
+			}
+			// Supprime le dossier 'thumbs' creer par l'envoie d'images'
+			if (is_dir($upload_dir.'/thumbs')) {
+				dol_delete_dir_recursive($upload_dir.'/thumbs');
+			}
+			// Vérifie si le fichier à bien ete créer pour inscription en db
+			if (file_exists($upload_dir.'/'.$fileoutputname)) {
 				$doccheck = $doc.'check';
 				if (isset($this->$doccheck)) {
-					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileuploadname."',".$doc."check = NULL WHERE rowid = ".$this->id;
+					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doc."check = NULL WHERE rowid = ".$this->id;
 				} else {
-					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileuploadname."'WHERE rowid = ".$this->id;
+					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."'WHERE rowid = ".$this->id;
 				}
 				$resql = $db->query($sql);
 				$this->db->free($resql);
@@ -2378,8 +2505,7 @@ class Funding extends CommonObject
 
 				dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 			}
-				//}
-				// Delete document
+			// Delete document
 		} elseif ($action == 'deletefile' && !empty($upload_dir) && $file) {
 			$delet = '';
 			$file = $upload_dir.'/'.$file;
@@ -2396,7 +2522,7 @@ class Funding extends CommonObject
 			} else {
 				setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 			}
-		} elseif ($filecheck && empty($cherchfile)) {
+		} elseif (!empty($filecheck) && empty($cherchfile)) {
 			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$filecheck." = 1 WHERE rowid = ".$this->id;
 			$resql = $db->query($sql);
 			$this->db->free($resql);
@@ -2418,7 +2544,6 @@ class Funding extends CommonObject
 				setEventMessages($langs->trans('FilesUnChecked'), '');
 			}
 		}
-
 		return 1;
 	}
 	/**

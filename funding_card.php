@@ -311,8 +311,6 @@ if (empty($reshook)) {
 	}
 	$_POST['addfile'] = '';
 
-
-
 	$documenturl = DOL_URL_ROOT.'/document.php';
 	if (isset($conf->global->DOL_URL_ROOT_DOCUMENT_PHP)) {
 		$documenturl = $conf->global->DOL_URL_ROOT_DOCUMENT_PHP;
@@ -321,29 +319,30 @@ if (empty($reshook)) {
 
 	if ($action == 'savedoc' && $permissiontoadd || $action == 'deletefile' && $permissiontoadd) {
 		$doc = GETPOST('doc');  // Document envoyé
-		$fileupload = $_FILES['userfile']['name'];
 		$file = GETPOST('file'); // Fichier à supprimer
 		$filecheck = GETPOST('filecheck'); // Si Fichier nécessaire est à vrais
+		$fileupload = '';
+		$cherchfile = '';
 
+		if ($action == 'savedoc') {
+			$fileupload = $_FILES['userfile']['name'];
 
-		if (is_countable($_FILES['userfile']['name']) && empty($fileupload[0])) {
-			$cherchfile  = 0; // Pas de fichier donc suppression ou check only
-		} elseif (empty($fileupload)) {
-			$cherchfile = 0; // Pas de fichier donc suppression ou check only
-		} else {
-			$cherchfile = 1; // Fichier donc enregistrement
+			if (is_countable($_FILES['userfile']['name']) && empty($fileupload[0])) {
+				$cherchfile  = 0; // Pas de fichier donc suppression ou check only
+			} elseif (empty($fileupload)) {
+				$cherchfile = 0; // Pas de fichier donc suppression ou check only
+			} else {
+				$cherchfile = 1; // Fichier donc enregistrement
+			}
 		}
 
 		if ($action == 'deletefile' || $cherchfile == 1) {
 			include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 		}
-		/*$test=count($_FILES['userfile']['name']);
-		setEventMessages($test.'10', '', 'errors');
-		if (is_countable($_FILES['userfile']['name'])) {
-			$test=count($_FILES['userfile']['name']);
-			setEventMessages($test.'10', '', 'errors');
-		}*/
 
+		$object->sendDocumentFunding($fileupload, $cherchfile, $upload_dir, $action);
+
+		/* Code à supprimer remplacé par sendDocumentFunding car des problémes quand les fichers etait protégés
 		if (!empty($cherchfile)) {
 			$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
 			$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
@@ -400,7 +399,7 @@ if (empty($reshook)) {
 							}
 						}
 					}
-					// Si un seul fichier
+				// Si un seul fichier
 				} else {
 					$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
 					// Extenssion lowercase
@@ -471,7 +470,7 @@ if (empty($reshook)) {
 					dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
 				}
 			}
-			// Delete document
+		// Delete document
 		} elseif ($action == 'deletefile' && !empty($upload_dir) && $file) {
 			$file = $upload_dir.'/'.$file;
 			if (file_exists($file)) {
@@ -505,7 +504,7 @@ if (empty($reshook)) {
 				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
 				setEventMessages($langs->trans('FilesUnChecked'), '');
 			}
-		}
+		}*/
 	}
 
 	// Load object

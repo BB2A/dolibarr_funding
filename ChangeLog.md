@@ -2,16 +2,17 @@
 
 ## [1.0.4] - 03/2022
 
+- FIX - Création de la fonction sendDocumentFunding() pour une meilleur gestion des fichiers envoyer
 - FIX - Php V8 warning class html form
 - FIX - Enregistrement d'une piéce demandé plus de message d'erreur pas de fichier
 - FIX - Permission pour la suppression de document
 - FIX - Finnancement pouvant etre actif sans date de livraison
 - FIX - Sécurité si utilisateur externe ne vois rien
 
-- NEW - Ajout hook notification
+- NEW - Ajout hook notification Dolibarr V16
 - NEW - Ajout hook dernier financement sur comm card du tiers
 - NEW - Amélioration pour affichage technicien
-- NEW - Ajout de badge dans les onglets pour connaitre le nombre de financement
+- NEW - Ajout de badge dans les onglets pour connaitre le nombre de financement à partir de Dolibarr V16
 
 ## [1.0.3] - 02/2022
 
