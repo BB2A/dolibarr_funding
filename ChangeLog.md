@@ -1,8 +1,12 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.0.5] - 10/2022
+
+- FIX - Le retour apres suppression se fait correctement sur la fiche du document ou sur la liste
+- FIX - Création de la fonction [sendDocumentFunding()] pour une meilleur gestion des fichiers envoyer
+
 ## [1.0.4] - 03/2022
 
-- FIX - Création de la fonction [sendDocumentFunding()] pour une meilleur gestion des fichiers envoyer
 - FIX - Php V8 warning class html form
 - FIX - Enregistrement d'une piéce demandé plus de message d'erreur pas de fichier
 - FIX - Permission pour la suppression de document

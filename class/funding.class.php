@@ -1169,7 +1169,7 @@ class Funding extends CommonObject
 				$error++;
 			}
 		}
-		/*
+
 		if (!$error) {
 			dol_syslog(get_class($this)."::delete ".$this->id." by ".$user->id, LOG_DEBUG);
 			$this->db->commit();
@@ -1178,7 +1178,6 @@ class Funding extends CommonObject
 			$this->db->rollback();
 			return -1;
 		}
-		*/
 	}
 
 	/**

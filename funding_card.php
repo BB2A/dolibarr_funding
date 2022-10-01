@@ -184,7 +184,11 @@ if ($reshook < 0) {
 if (empty($reshook)) {
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/funding/funding_list.php', 1);
+	if ($action == 'confirm_delete' && !empty($iddoc)) {
+		$backurlforlist = dol_buildpath('/funding/funding_card.php', 1).'?id=&typedoc='.$typedoc.'&iddoc='.$iddoc;
+	} else {
+		$backurlforlist = dol_buildpath('/funding/funding_list.php', 1);
+	}
 
 	if (!empty($typedoc) && !empty($iddoc) && $typedoc == 'propal') {
 		$backurl = dol_buildpath('/comm/propal/card.php?id='.$iddoc, 1);
