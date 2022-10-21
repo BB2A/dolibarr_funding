@@ -71,7 +71,7 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		}
 		$substitutionarray['__FUNDING_DESCRIPTION__'] = isset($object->description) ? $object->description : '';
 		$substitutionarray['__FUNDING_STATUS__'] = isset($object->status) ? $object->getLibStatut() : '';
-		$substitutionarray['__FUNDING_STATUS_FOLDER__'] = isset($object->status_folder) ? $object->getLibStatutFolder() : '';
+		$substitutionarray['__FUNDING_STATUS_FOLDER__'] = !empty($object->status_folder) ? $object->getLibStatutFolder() : '';
 
 		//Organisme
 		$org = $object->fetchSoc($object->fk_org);
