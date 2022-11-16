@@ -338,6 +338,8 @@ SENDORGInDolibarr=Financement %s Envoyé à l'organisme
 LACKInDolibarr=Financement %s Manque des documents
 LACKOKInDolibarr=Financement %s documents rajoutés
 EXTENSIONInDolibarr=Financement %s Prolongation
+COEFFICIENTDISABLEInDolibarr=Coefficient %s desactivé
+COEFFICIENTENABLEnDolibarr=Coefficient %s activé
 
 
 #

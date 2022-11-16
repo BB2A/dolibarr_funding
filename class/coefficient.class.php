@@ -60,9 +60,8 @@ class Coefficient extends CommonObject
 	public $picto = 'coefficient@funding';
 
 
-	const STATUS_DRAFT = 0;
-	const STATUS_VALIDATED = 1;
-	const STATUS_CANCELED = 9;
+	const STATUS_DISABLE = 0;
+	const STATUS_ENABLE = 1;
 
 
 	/**
@@ -108,7 +107,7 @@ class Coefficient extends CommonObject
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Disable', '1'=>'Enable'),),
 	);
 	public $rowid;
 	public $ref;
@@ -388,6 +387,9 @@ class Coefficient extends CommonObject
 	 */
 	public function update(User $user, $notrigger = false)
 	{
+		if (empty($this->date_creation)){
+			$this->date_creation = dol_now();
+		}
 		return $this->updateCommon($user, $notrigger);
 	}
 
@@ -439,7 +441,7 @@ class Coefficient extends CommonObject
 		$error = 0;
 
 		// Protection
-		if ($this->status == self::STATUS_VALIDATED) {
+		if ($this->status == self::STATUS_ENABLE) {
 			dol_syslog(get_class($this)."::validate action abandonned: already validated", LOG_WARNING);
 			return 0;
 		}
@@ -468,7 +470,7 @@ class Coefficient extends CommonObject
 			// Validate
 			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element;
 			$sql .= " SET ref = '".$this->db->escape($num)."',";
-			$sql .= " status = ".self::STATUS_VALIDATED;
+			$sql .= " status = ".self::STATUS_ENABLE;
 			if (!empty($this->fields['date_validation'])) $sql .= ", date_validation = '".$this->db->idate($now)."',";
 			if (!empty($this->fields['fk_user_valid'])) $sql .= ", fk_user_valid = ".$user->id;
 			$sql .= " WHERE rowid = ".$this->id;
@@ -527,7 +529,7 @@ class Coefficient extends CommonObject
 		// Set new ref and current status
 		if (!$error) {
 			$this->ref = $num;
-			$this->status = self::STATUS_VALIDATED;
+			$this->status = self::STATUS_ENABLE;
 		}
 
 		if (!$error) {
@@ -550,7 +552,7 @@ class Coefficient extends CommonObject
 	public function setDraft($user, $notrigger = 0)
 	{
 		// Protection
-		if ($this->status <= self::STATUS_DRAFT) {
+		if ($this->status <= self::STATUS_DISABLE) {
 			return 0;
 		}
 
@@ -561,7 +563,7 @@ class Coefficient extends CommonObject
 		 return -1;
 		 }*/
 
-		return $this->setStatusCommon($user, self::STATUS_DRAFT, $notrigger, 'COEFFICIENT_UNVALIDATE');
+		return $this->setStatusCommon($user, self::STATUS_DISABLE, $notrigger, 'COEFFICIENT_UNVALIDATE');
 	}
 
 	/**
@@ -574,7 +576,7 @@ class Coefficient extends CommonObject
 	public function cancel($user, $notrigger = 0)
 	{
 		// Protection
-		if ($this->status != self::STATUS_VALIDATED) {
+		if ($this->status != self::STATUS_ENABLE) {
 			return 0;
 		}
 
@@ -609,7 +611,7 @@ class Coefficient extends CommonObject
 		 return -1;
 		 }*/
 
-		return $this->setStatusCommon($user, self::STATUS_VALIDATED, $notrigger, 'COEFFICIENT_REOPEN');
+		return $this->setStatusCommon($user, self::STATUS_ENABLE, $notrigger, 'COEFFICIENT_REOPEN');
 	}
 
 	/**
@@ -729,17 +731,15 @@ class Coefficient extends CommonObject
 		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
 			global $langs;
 			//$langs->load("funding");
-			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
+			$this->labelStatus[self::STATUS_DISABLE] = $langs->trans('Disable');
+			$this->labelStatus[self::STATUS_ENABLE] = $langs->trans('Enable');
+			$this->labelStatusShort[self::STATUS_DISABLE] = $langs->trans('Disable');
+			$this->labelStatusShort[self::STATUS_ENABLE] = $langs->trans('Enable');
 		}
 
 		$statusType = 'status'.$status;
-		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-		if ($status == self::STATUS_CANCELED) $statusType = 'status6';
+		//if ($status == self::STATUS_ENABLE) $statusType = 'status1';
+		if ($status == self::STATUS_DISABLE) $statusType = 'status6';
 
 		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}

@@ -103,7 +103,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 
 $permissiontoread = $user->rights->funding->coefficient->read;
 $permissiontoadd = $user->rights->funding->coefficient->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->funding->coefficient->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissiontodelete = $user->rights->funding->coefficient->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DISABLE);
 $permissionnote = $user->rights->funding->coefficient->write; // Used by the include of actions_setnotes.inc.php
 $permissiondellink = $user->rights->funding->coefficient->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
@@ -111,7 +111,7 @@ $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->
 // Security check - Protection if external user
 if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
-//$isdraft = (($object->statut == $object::STATUS_DRAFT) ? 1 : 0);
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
 //$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
 
 //if (!$permissiontoread) accessforbidden();
@@ -136,7 +136,7 @@ if (empty($reshook)) {
 			else $backtopage = dol_buildpath('/funding/coefficient_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 		}
 	}
-	$triggermodname = 'FUNDING_COEFFICIENT_MODIFY'; // Name of trigger action code to execute when we modify record
+	$triggermodname = 'FUNDING_COEFFICIENT_UPDATE'; // Name of trigger action code to execute when we modify record
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
@@ -366,14 +366,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Validate
-			if ($object->status == $object::STATUS_DRAFT) {
+			if ($object->status == $object::STATUS_DISABLE && $permissiontoadd) {
 				if ($permissiontoadd) {
 					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&token='.newToken().'&confirm=yes">'.$langs->trans("Validate").'</a>';
 				}
 			}
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
-			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd)) {
+			if ($permissiontodelete || ($object->status == $object::STATUS_DISABLE && $permissiontoadd)) {
 				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete&token='.newToken().'">'.$langs->trans('Delete').'</a>'."\n";
 			} else {
 				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Delete').'</a>'."\n";
