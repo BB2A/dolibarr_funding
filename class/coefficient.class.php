@@ -387,7 +387,7 @@ class Coefficient extends CommonObject
 	 */
 	public function update(User $user, $notrigger = false)
 	{
-		if (empty($this->date_creation)){
+		if (empty($this->date_creation)) {
 			$this->date_creation = dol_now();
 		}
 		return $this->updateCommon($user, $notrigger);
