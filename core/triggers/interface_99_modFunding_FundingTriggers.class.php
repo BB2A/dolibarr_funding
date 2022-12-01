@@ -359,8 +359,9 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				if (!empty($fudid) && $fundingobject->status == $fundingobject::STATUS_RUNNING) {
 					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
 					return -1;
-				} else {
+				} elseif (!empty($fudid)) {
 					$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
+					return $result;
 				}
 				return 0;
 			case 'ORDER_CLOSE':
