@@ -40,6 +40,11 @@ function coefficientPrepareHead($object)
 	$head[$h][1] = $langs->trans("CoefCard");
 	$head[$h][2] = 'card';
 	$h++;
+
+	$head[$h][0] = dol_buildpath("/funding/coefficient_agenda.php", 1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("Events");
+	$head[$h][2] = 'agenda';
+	$h++;
 	
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'coefficient@funding');
 

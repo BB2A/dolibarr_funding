@@ -62,12 +62,12 @@ function retentionPrepareHead($object)
 	$head[$h][1] = $langs->trans('Documents');
 	if (($nbFiles + $nbLinks) > 0) $head[$h][1] .= '<span class="badge marginleftonlyshort">'.($nbFiles + $nbLinks).'</span>';
 	$head[$h][2] = 'document';
-	$h++;
+	$h++;*/
 
 	$head[$h][0] = dol_buildpath("/funding/retention_agenda.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
-	$h++;*/
+	$h++;
 
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
