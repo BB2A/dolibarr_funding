@@ -45,7 +45,7 @@ function coefficientPrepareHead($object)
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
 	$h++;
-	
+
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'coefficient@funding');
 
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'coefficient@funding', 'remove');
