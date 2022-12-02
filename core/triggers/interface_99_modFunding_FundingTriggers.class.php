@@ -359,10 +359,12 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				if (!empty($fudid) && $fundingobject->status == $fundingobject::STATUS_RUNNING) {
 					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
 					return -1;
-				} elseif (!empty($fudid)) {
-					$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
-					return $result;
 				}
+				// Il n'est pas nécessaire de passer le financement en valider de plus si il est en cancel ou refusé il serat repassé en validé l'orsque la commande est validé et le montant différent
+				// elseif (!empty($fudid)) {
+				// 	$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
+				// 	return $result;
+				// }
 				return 0;
 			case 'ORDER_CLOSE':
 				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
