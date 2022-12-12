@@ -1024,18 +1024,23 @@ class Funding extends CommonObject
 				} else {
 					$this->fk_soc_invoice = '';
 				}
-
-				$this->amount       = $document->total_ht;
-				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
-				if ($this->retention == 1) {
-					$this->retention_rate = $this->retentionrate($this->fk_org);
-					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
-					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
+				// Si le montant ne change pas on ne met pas à jour le coef et la retenu de garantie
+				if ($this->amount != $document->total_ht) {
+					$this->amount       = $document->total_ht;
+					$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
+					if ($this->retention == 1) {
+						$this->retention_rate = $this->retentionrate($this->fk_org);
+						$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
+						$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
+					} else {
+						$this->retention_rate = '';
+						$this->retention_mount = '';
+					}
+					$coef = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				} else {
-					$this->retention_rate = '';
-					$this->retention_mount = '';
+					$coef = $this->coef;
 				}
-				$coef = $this->coef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
+
 				if ($coef > 0) {
 					$this->coef         = $coef;
 					$this->amount_rent  = price2num($this->amount_total * $coef / 100, 'MT');
