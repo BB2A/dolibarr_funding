@@ -926,7 +926,7 @@ class pdf_standard_funding extends ModelePDFFunding
 		$pdf->SetFont('', 'B', $default_font_size + 3);
 		$pdf->SetXY($posx, $posy);
 		$pdf->SetTextColor(0, 0, 60);
-		$title = $outputlangs->transnoentities("PdfTitle");
+		$title = $outputlangs->transnoentities("funding");
 		if (!empty($conf->global->PDF_USE_ALSO_LANGUAGE_CODE) && is_object($outputlangsbis)) {
 			$title .= ' - ';
 			$title .= $outputlangsbis->transnoentities("PdfTitle");

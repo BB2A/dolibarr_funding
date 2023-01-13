@@ -243,29 +243,24 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-
 	if ($action == 'run' && $permissiontoadd) {
 		$result = $object->setRun($user);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-
 	if ($action == 'reopen' && $permissiontoadd) {
 		$result = $object->setStatusCommon($user, $object::STATUS_ACCEPT, $notrigger, 'FUNDING_REOPEN');
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-
 	if ($action == 'set_thirdparty' && $permissiontoadd) {
 		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'FUNDING_MODIFY');
 	}
-
 	if ($action == 'classin' && $permissiontoadd) {
 		$object->setProject(GETPOST('projectid', 'int'));
 	}
-
 	if ($action == 'setAcceptedRefused' && $permissiontoadd && !GETPOST('cancel', 'alpha')) {
 		if (!(GETPOST('statut', 'int') > 0)) {
 			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("CloseAs")), null, 'errors');
@@ -287,11 +282,9 @@ if (empty($reshook)) {
 			}
 		}
 	}
-
 	if ($action == 'confirm_setdraft' && $permissionmanage) {
 		$object->setStatusFolder($user, 'NULL');
 	}
-
 	if ($action == 'setCloseFinich' && $permissiontoadd) {
 		// prevent browser refresh from closing funding several times
 		if ($object->status == $object::STATUS_RUNNING) {
@@ -313,7 +306,7 @@ if (empty($reshook)) {
 	if ($id > 0 || !empty($ref)) {
 		$upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 	}
-	$_POST['addfile'] = '';
+	// $_POST['addfile'] = ''; // Désactiver car à l'envoie des mails lors de l'ajout d'une piéce le mail etait envoyer
 
 	$documenturl = DOL_URL_ROOT.'/document.php';
 	if (isset($conf->global->DOL_URL_ROOT_DOCUMENT_PHP)) {
@@ -346,169 +339,7 @@ if (empty($reshook)) {
 
 		$object->sendDocumentFunding($fileupload, $cherchfile, $upload_dir, $action);
 
-		/* Code à supprimer remplacé par sendDocumentFunding car des problémes quand les fichers etait protégés
-		if (!empty($cherchfile)) {
-			$fileuploadnewname = dol_string_nohtmltag($langs->trans($doc));
-			$fileuploadnewname = $object->ref.'_'.dol_sanitizeFileName($fileuploadnewname).'.pdf';
-			$fileuploadnewname = dol_string_nospecial($fileuploadnewname);
-			$remove = array('\'' , '&nbsp;', ' ');
-			$fileuploadnewname = str_replace($remove, '_', $fileuploadnewname);
-			if ($action == 'savedoc' && !empty($upload_dir)) {
-					//Fusion des PDF
-					// Libraries
-					require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
-					$formatarray = pdf_getFormat();
-					$page_largeur = $formatarray['width'];
-					$page_hauteur = $formatarray['height'];
-					$format = array($page_largeur, $page_hauteur);
-					$marge_gauche = isset($conf->global->MAIN_PDF_MARGIN_LEFT) ? $conf->global->MAIN_PDF_MARGIN_LEFT : 10;
-					$marge_droite = isset($conf->global->MAIN_PDF_MARGIN_RIGHT) ? $conf->global->MAIN_PDF_MARGIN_RIGHT : 10;
-					$marge_haute = isset($conf->global->MAIN_PDF_MARGIN_TOP) ? $conf->global->MAIN_PDF_MARGIN_TOP : 10;
-					$marge_basse = isset($conf->global->MAIN_PDF_MARGIN_BOTTOM) ? $conf->global->MAIN_PDF_MARGIN_BOTTOM : 10;
-
-					$pdf = pdf_getInstance($format);
-					$pdf->SetMargins($marge_gauche, $marge_haute, $marge_droite);
-					$pdf->SetTitle($fileuploadnewname);
-					$pdf->SetAuthor(!empty($conf->global->MAIN_INFO_SOCIETE_NOM)?$conf->global->MAIN_INFO_SOCIETE_NOM:'');
-					$pdf->SetCreator($user->getfullname($langs));
-				if (class_exists('TCPDF')) {
-					$pdf->setPrintHeader(false);
-					$pdf->setPrintFooter(false);
-				}
-				// Si selecteur de plusieur fichiers
-				if (is_countable($_FILES['userfile']['name'])) {
-					foreach ($fileupload as $file) {
-						$infile = $upload_dir.'/'.dol_sanitizeFileName($file);
-						// Extenssion lowercase
-						$info = pathinfo($infile);
-						$infile = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
-						$finfo = finfo_open(FILEINFO_MIME_TYPE);
-						$mtype = finfo_file($finfo, $infile);
-						if (strpos($mtype, 'image/') === 0) {
-							$pdf->AddPage();
-							$pdf->Image($infile, '', '', $page_largeur - $marge_gauche - $marge_droite);
-						} else {
-							if (file_exists($infile) && is_readable($infile)) {
-								$pagecount = $pdf->setSourceFile($infile);
-								for ($i = 1; $i <= $pagecount; $i++) {
-									$tplIdx = $pdf->importPage($i);
-									if ($tplIdx !== false) {
-										$s = $pdf->getTemplatesize($tplIdx);
-										$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
-										$pdf->useTemplate($tplIdx);
-									} else {
-										setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
-									}
-								}
-							}
-						}
-					}
-				// Si un seul fichier
-				} else {
-					$infile = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
-					// Extenssion lowercase
-					$info = pathinfo($infile);
-					$infile = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
-
-					if (file_exists($infile) && is_readable($infile)) {
-						// Le fichier est une image
-						if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
-							$pdf->AddPage();
-							$pdf->Image($infile, '', '', $page_largeur - $marge_gauche - $marge_droite);
-						} else {
-							$pagecount = $pdf->setSourceFile($infile);
-							for ($i = 1; $i <= $pagecount; $i++) {
-								$tplIdx = $pdf->importPage($i);
-								if ($tplIdx !== false) {
-									$s = $pdf->getTemplatesize($tplIdx);
-									$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
-									$pdf->useTemplate($tplIdx);
-								} else {
-									setEventMessages(null, array($infile.' cannot be added, probably protected PDF'), 'warnings');
-								}
-							}
-						}
-					}
-				}
-
-				// Output the new PDF
-				$pdf->Output($upload_dir.'/'.$fileuploadnewname, 'F');
-
-				// Si selecteur de plusieur fichiers
-				if (is_countable($_FILES['userfile']['name'])) {
-					// Delete old files
-					foreach ($fileupload as $file) {
-						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
-						// Extenssion lowercase
-						$info = pathinfo($file);
-						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
-						if (file_exists($file)) {
-							dol_delete_file($file);
-						}
-					}
-				} else {
-					$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
-					// Extenssion lowercase
-					$info = pathinfo($file);
-					$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
-					if (file_exists($file)) {
-						dol_delete_file($file);
-					}
-				}
-
-				// Vérifie si le fichier à bien ete créer pour inscription en db
-				if (file_exists($upload_dir.'/'.$fileuploadnewname)) {
-					$doccheck = $doc.'check';
-					if (isset($object->$doccheck)) {
-						$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."',".$doc."check = NULL WHERE rowid = ".$object->id;
-					} else {
-						$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '".$fileuploadnewname."'WHERE rowid = ".$object->id;
-					}
-					$resql = $db->query($sql);
-					$object->db->free($resql);
-					$object->fetch($object->id);
-					if (empty($object->fundoc1check) && empty($object->fundoc2check) && empty($object->fundoc3check) && empty($object->fundoc4check) && empty($object->fundoc5check) && $object->status_folder == $object::STATUS_FOLDER_LACK) {
-						$object->setStatusFolder($user, $object::STATUS_FOLDER_LACKOK);
-					}
-
-					dol_syslog(__METHOD__." $object->id=".$object->id.", '".$doc."'=''", LOG_DEBUG);
-				}
-			}
-		// Delete document
-		} elseif ($action == 'deletefile' && !empty($upload_dir) && $file) {
-			$file = $upload_dir.'/'.$file;
-			if (file_exists($file)) {
-				$delet = dol_delete_file($file);
-			}
-			$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc." = '' WHERE rowid = ".$object->id;
-			$resql = $db->query($sql);
-			$object->db->free($resql);
-
-			dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
-			if ($delet) {
-				setEventMessages($langs->trans('FilesDeleted'), '');
-			} else {
-				setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
-			}
-		} elseif ($filecheck && empty($cherchfile)) {
-			$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$filecheck." = 1 WHERE rowid = ".$object->id;
-			$resql = $db->query($sql);
-			$object->db->free($resql);
-
-			$object->setStatusFolder($user, $object::STATUS_FOLDER_LACK);
-			dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
-			setEventMessages($langs->trans('FilesChecked'), '');
-		} elseif (empty($filecheck) && empty($cherchfile)) {
-			$doccheck = $doc.'check';
-			if (isset($object->$doccheck)) {
-				$sql = "UPDATE ".MAIN_DB_PREFIX.$object->table_element." SET ".$doc."check = NULL WHERE rowid = ".$object->id;
-				$resql = $db->query($sql);
-				$object->db->free($resql);
-
-				dol_syslog(__METHOD__." $object->id=".$object->id.", ".$doc."=''", LOG_DEBUG);
-				setEventMessages($langs->trans('FilesUnChecked'), '');
-			}
-		}*/
+		// Ancien code sauvegardé dans fichier cloud
 	}
 
 	// Load object
