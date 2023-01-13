@@ -2257,6 +2257,7 @@ class Funding extends CommonObject
 						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 						$finfo = finfo_open(FILEINFO_MIME_TYPE);
 						$mtype = finfo_file($finfo, $file);
+						finfo_close($finfo);
 
 						if (file_exists($file)) {
 							// Le fichier est un PDF
@@ -2286,6 +2287,7 @@ class Funding extends CommonObject
 						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 						$finfo = finfo_open(FILEINFO_MIME_TYPE);
 						$mtype = finfo_file($finfo, $file);
+						finfo_close($finfo);
 						// Vérification si le fichier existe
 						if (file_exists($file) && is_readable($file)) {
 							// Si il y a une image on l'ajoute dans une page
@@ -2295,7 +2297,6 @@ class Funding extends CommonObject
 									$tplIdx = $pdf->importPage($i);
 									if ($tplIdx !== false) {
 										$s = $pdf->getTemplatesize($tplIdx);
-										var_dump($s);
 										$pdf->AddPage($s['h'] > $s['w'] ? 'P' : 'L');
 										$pdf->useTemplate($tplIdx);
 									} else {
