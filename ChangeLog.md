@@ -5,6 +5,8 @@
 - FIX - Le retour apres suppression se fait correctement sur la fiche du document ou sur la liste
 - FIX - Création de la fonction [sendDocumentFunding()] pour une meilleur gestion des fichiers envoyer
 - FIX - Le coef et la retenu de garantie n'ai pas mise à jour si le montant ne change pas
+- FIX - Pré-envoyer un e-mail et ajouter une pièce jointe envoyer le e-mail automatiquement
+
 
 - NEW - Ajout du positionement de la colonne de selection à gauche avec l'option MAIN_CHECKBOX_LEFT_COLUMN
 
