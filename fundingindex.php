@@ -180,7 +180,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 1";
-	$sql.= " AND f.origin = 'order'";
+	$sql.= " AND f.origin = 'propal'";
 	$sql.= " AND f.fk_soc = s.rowid";
 	// Filtre l'autorisation de voir certain financement - BB2A
 	if (empty($user->rights->societe->client->voir) && empty($socid)) {
@@ -328,7 +328,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 	$sql.= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 	$sql .= ", ".MAIN_DB_PREFIX."societe as s";
 	$sql.= " WHERE f.status = 1";
-	$sql.= " AND f.origin = 'order'";
+	$sql.= " AND f.origin = 'propal'";
 	$sql.= " AND f.fk_soc = s.rowid";
 	// Filtre l'autorisation de voir certain financement - BB2A
 	if (empty($user->rights->societe->client->voir) && empty($socid)) {
