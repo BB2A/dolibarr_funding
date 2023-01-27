@@ -514,5 +514,63 @@ class ActionsFunding
 		return 0;
 	}
 
+	/**
+	 * Overloading the notifsupported function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function amountPropalSign($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$contexts = explode(':', $parameters['context']);
+
+		$result = 0;
+		$resultprint = '';
+
+		if ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $parameters['source'] == 'proposal') {
+			dol_include_once('/funding/class/funding.class.php');
+
+			$sql = 'SELECT rowid, amount_rent_edit, fk_duration, status';
+			$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
+			$sql .= " WHERE f.fk_soc = ".((int) $object->socid);
+			$sql.= " AND origin = 'propal'";
+			$sql.= " AND origin_id = ".((int) $object->id);
+			$resql = $db->query($sql);
+			$num = $db->num_rows($resql);
+			if ($resql) {
+				if ($num > 0) {
+					$objp = $db->fetch_object($resql);
+
+
+					$fundingstatic = new Funding($db);
+					$fundingstatic->amount_rent_edit = $objp->amount_rent_edit;
+					$fundingstatic->duration = $fundingstatic->fetchDuration($objp->fk_duration);
+
+					// Amount rent
+					$resultprint .= '<tr class="CTableRow2"><td class="CTableRow2">'.$langs->trans("Rent");
+					$resultprint .= '</td><td class="CTableRow2">';
+					$resultprint .= '<b>'.price($fundingstatic->amount_rent_edit, 0, $langs, 1, -1, -1, $conf->currency).'</b>';
+					$resultprint .= '</td></tr>'."\n";
+
+					// Duration rent
+					$resultprint .= '<tr class="CTableRow2"><td class="CTableRow2">'.$langs->trans("duration");
+					$resultprint .= '</td><td class="CTableRow2">';
+					$resultprint .= '<b>'.$fundingstatic->duration->label.'</b>';
+					$resultprint .= '</td></tr>'."\n";
+				}
+			} else {
+				dol_print_error($db);
+			}
+			$db->free($resql);
+			$result = 1;
+		}
+
+		$this->resprints = $resultprint;
+		return $result;
+	}
 	/* Add here any other hooked methods... */
 }
