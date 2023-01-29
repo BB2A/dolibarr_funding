@@ -92,12 +92,13 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 			$result = $doc->fetch($object->origin_id);
 			$contacid = $doc->getIdContact('external', 'CUSTOMER');
 		}
+		if (!empty($contacid)) {
+			$contact = new Contact($db);
+			$obj_contact = $contact->fetch($contacid[0]);
+			$contactname = $contact->getFullName($langs, '1');
+			$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
+		}
 
-
-		$contact = new Contact($db);
-		$obj_contact = $contact->fetch($contacid[0]);
-		$contactname = $contact->getFullName($langs, '1');
-		$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
 
 		//Tiers de facturation
 		$soc_invoice = $object->fetchSoc($object->fk_soc_invoice);
