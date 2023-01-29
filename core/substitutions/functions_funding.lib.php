@@ -40,7 +40,7 @@
  */
 function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 {
-	global $langs, $conf,$db;
+	global $langs, $conf, $db, $outputlangs;
 	if (is_object($object) && $object->element == 'funding') {
 		$substitutionarray['__FUNDING_STUDY_NIMBER__'] = isset($object->study_number) ? $object->study_number : '';
 		$substitutionarray['__FUNDING_FOLDER_NUMBER__'] = isset($object->folder_number) ? $object->folder_number : '';
