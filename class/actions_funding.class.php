@@ -386,7 +386,7 @@ class ActionsFunding
 		global $langs, $conf;
 		$contexts = explode(':', $parameters['context']);
 
-		$sendtosocid = $object->fk_org;
+		// $sendtosocid = $object->fk_org;
 
 		//$myvalue = $sendtosocid = $object->fk_org;
 		//$object->results = $sendtosocid = $this->fk_org;
