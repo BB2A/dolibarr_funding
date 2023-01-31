@@ -40,7 +40,7 @@
  */
 function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 {
-	global $langs, $conf,$db;
+	global $langs, $conf, $db, $outputlangs;
 	if (is_object($object) && $object->element == 'funding') {
 		$substitutionarray['__FUNDING_STUDY_NIMBER__'] = isset($object->study_number) ? $object->study_number : '';
 		$substitutionarray['__FUNDING_FOLDER_NUMBER__'] = isset($object->folder_number) ? $object->folder_number : '';
@@ -92,12 +92,13 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 			$result = $doc->fetch($object->origin_id);
 			$contacid = $doc->getIdContact('external', 'CUSTOMER');
 		}
+		if (!empty($contacid)) {
+			$contact = new Contact($db);
+			$obj_contact = $contact->fetch($contacid[0]);
+			$contactname = $contact->getFullName($langs, '1');
+			$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
+		}
 
-
-		$contact = new Contact($db);
-		$obj_contact = $contact->fetch($contacid[0]);
-		$contactname = $contact->getFullName($langs, '1');
-		$substitutionarray['__FUNDING_CONTACT_NAME_CUSTOMER__'] = isset($contactname) ? $contactname : '';
 
 		//Tiers de facturation
 		$soc_invoice = $object->fetchSoc($object->fk_soc_invoice);
