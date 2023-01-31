@@ -218,6 +218,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				}
 				return 0;
 			case 'ORDER_VALIDATE':
+				$result = 0;
 				//Update si financement existe déja
 				if (!empty($fudid)) {
 					if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
