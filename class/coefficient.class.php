@@ -107,7 +107,7 @@ class Coefficient extends CommonObject
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>1, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Disable', '1'=>'Enable'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>4, 'default'=>'0', 'index'=>1, 'arrayofkeyval'=>array('0'=>'Disable', '1'=>'Enable'),),
 	);
 	public $rowid;
 	public $ref;
@@ -262,17 +262,18 @@ class Coefficient extends CommonObject
 	 */
 	public function create(User $user, $notrigger = false)
 	{
-		$now 		= dol_now();
-		$create = $this->createCommon($user, $notrigger);
-		if ($create > 0) {
+		$now = dol_now();
+		$result = $this->createCommon($user, $notrigger);
+		if ($result >= 0) {
 			// Créate ref
-			$this->ref = "(PROV".$this->id.")";
-			$sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
-			$resql = $this->db->query($sql);
-			if (!$resql) $error++;
+			// $this->ref = "(PROV".$this->id.")";
+			// $sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
+			// $resql = $this->db->query($sql);
+			// if (!$resql) $error++;
 			$this->date_creation = $now;
 			$this->validate($user);
 		}
+		return $result;
 	}
 
 	/**
