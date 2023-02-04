@@ -348,6 +348,7 @@ COEFFICIENTENABLEnDolibarr=Coefficient %s activé
 BtnSendorg=Envoyé à l'organisme
 BtnRunning=Actif
 BtnExtension=Prolongation
+BtnLack=Pièces manquantes
 
 #
 #Mass actions
