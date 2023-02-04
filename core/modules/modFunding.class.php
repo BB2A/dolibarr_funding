@@ -198,7 +198,7 @@ class modFunding extends DolibarrModules
 		$this->dictionaries=array(
 			'langs'=>'funding@funding',
 			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale",MAIN_DB_PREFIX."c_type_funding"),
+			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale",MAIN_DB_PREFIX."c_funding_type"),
 			// Label of tables
 			'tablib'=>array("Funding_duration","Funding_scale","Funding_type"),
 			// Request to select fields
