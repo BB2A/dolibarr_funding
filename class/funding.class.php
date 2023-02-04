@@ -1149,8 +1149,7 @@ class Funding extends CommonObject
 					if (!dol_delete_file($file, 0, 0, 0, $this)) {
 						$this->error = 'ErrorFailToDeleteFile';
 						$this->errors[] = $this->error;
-						$this->db->rollback();
-						return 0;
+						$error++;
 					}
 				}
 
@@ -1159,8 +1158,7 @@ class Funding extends CommonObject
 					if (!$res) {
 						$this->error = 'ErrorFailToDeleteDir';
 						$this->errors[] = $this->error;
-						$this->db->rollback();
-						return 0;
+						$error++;
 					}
 				}
 			}
