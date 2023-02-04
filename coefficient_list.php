@@ -383,7 +383,16 @@ print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 //print '<input type="hidden" name="page" value="'.$page.'">';
 print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/funding/coefficient_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
+// TODO @LDR Implement this
+if (getDolGlobalInt('MAIN_FEATURES_LEVEL') >= 5) {
+	$url = '/custom/funding/coefficient_card.php?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']);
+	$newbutton = '<span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans('New').'"></span>';
+	$tmpbacktopagejsfields = 'addthirdparty:socid,search_socid';
+	$newcardbutton = dolButtonToOpenUrlInDialogPopup('addfundingcoef', $langs->transnoentitiesnoconv('New'), $newbutton, $url, '', '', '', $tmpbacktopagejsfields);
+} else {
+	$url = dol_buildpath('/funding/coefficient_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']);
+	$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $url, '', $permissiontoadd);
+}
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 
