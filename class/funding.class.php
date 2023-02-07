@@ -796,7 +796,6 @@ class Funding extends CommonObject
 		return $result;
 	}
 
-
 	/**
 	 * Load list of objects in memory from the database.
 	 *
@@ -874,6 +873,46 @@ class Funding extends CommonObject
 			return -1;
 		}
 	}
+
+	/**
+	 * Load object in memory from the database
+	 *
+	 * @param int    $origin   Origin doc for funding (propal, order)
+	 * @param string $origin_id  id doc for funding
+	 * @return object         <object if OK, -1 if NOK
+	 */
+	public function fetchForDoc($origin, $origin_id)
+	{
+
+		dol_syslog(__METHOD__, LOG_DEBUG);
+
+		$object = new self($this->db);
+
+		$this->db->begin();
+
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX."funding_funding";
+		$sql.= " WHERE origin = '".$origin."' AND origin_id = ".$origin_id;
+		$sql.= " ORDER BY rowid";
+		$resql = $this->db->query($sql);
+		$row = $this->db->fetch_row($resql);
+		// var_dump($object);
+		if (!empty($row[0])) {
+			$idfinding = $row[0];
+			// $funding = new funding($this->db);
+			$result = $this->fetch($idfinding);
+		}
+
+		// End
+		if (!$error) {
+			$this->db->commit();
+			return $result;
+		} else {
+			$this->db->rollback();
+			return -1;
+		}
+	}
+
+
 
 	/**
 	 * Récupére la durée

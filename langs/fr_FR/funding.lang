@@ -265,6 +265,8 @@ ErrorIsNoRunningNoOrder=Financements non actif
 FilesChecked=Fichier demandé
 FilesUnChecked=Fichier retiré de la demande
 
+ErrorMontMaintInFund=Montant de maintenance dans le financement le rajouter dans la commande
+
 #
 #Status
 #
