@@ -225,6 +225,7 @@ paramnok=Parametres manquants
 checknok=Tous les paramétres ne sont pas réunis
 creatrefnok=Création ref impossible
 amountRentEdit<amountRent=Loyer personnalisé modifié, car inférieur ou égale au montant calculé
+amountRentEdit<amountRent=Loyer personnalisé supérieur au montant calculé
 nodoc=Document non trouvé
 socinvoicenok=Societe de facturation non trouvé
 supppropalnok=Un financement existe suppresion impossible
