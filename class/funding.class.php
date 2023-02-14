@@ -883,7 +883,7 @@ class Funding extends CommonObject
 	 */
 	public function fetchForDoc($origin, $origin_id)
 	{
-
+		$error = '';
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
 		$object = new self($this->db);
