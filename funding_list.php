@@ -946,7 +946,9 @@ foreach ($object->fields as $key => $val) {
 	}
 	if (!empty($arrayfields['t.'.$key]['checked'])) {
 		print '<td class="liste_titre'.($cssforfield ? ' '.$cssforfield : '').'">';
-		if (!empty($val['arrayofkeyval']) && is_array($val['arrayofkeyval'])) {
+		if ($key == 'fundoc1') {
+			print '';
+		} elseif (!empty($val['arrayofkeyval']) && is_array($val['arrayofkeyval'])) {
 			print $form->selectarray('search_'.$key, $val['arrayofkeyval'], (isset($search[$key]) ? $search[$key] : ''), $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth100', 1);
 		} elseif ((strpos($val['type'], 'integer:') === 0) || (strpos($val['type'], 'sellist:') === 0)) {
 			print $object->showInputField($val, $key, (isset($search[$key]) ? $search[$key] : ''), '', '', 'search_', 'maxwidth125', 1);
@@ -993,7 +995,7 @@ if (!empty($conf->global->MAIN_CHECKBOX_LEFT_COLUMN)) {
 }
 foreach ($object->fields as $key => $val) {
 	$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
-	if ($key == 'status' || $key == 'status_folder' || $key == 'funcheck') {
+	if ($key == 'status' || $key == 'status_folder' || $key == 'fundoc1') {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
 	} elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 		$cssforfield .= ($cssforfield ? ' ' : '').'center';
@@ -1065,7 +1067,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
 		if (in_array($val['type'], array('date', 'datetime', 'timestamp'))) {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
-		} elseif ($key == 'status' || $key == 'status_folder' || $key == 'funcheck') {
+		} elseif ($key == 'status' || $key == 'status_folder' || $key == 'fundoc1') {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
 		}
 
@@ -1079,7 +1081,6 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			$cssforfield .= ($cssforfield ? ' ' : '').'right';
 		}
 		//if (in_array($key, array('fk_soc', 'fk_user', 'fk_warehouse'))) $cssforfield = 'tdoverflowmax100';
-
 		if (!empty($arrayfields['t.'.$key]['checked'])) {
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
 			if ($key == 'status') {
@@ -1089,6 +1090,12 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			} elseif ($key == 'funcheck') {
 				if ($obj->funcheck == 1) {
 					print img_picto('', 'check');
+				} else {
+					print img_picto('', 'uncheck');
+				}
+			} elseif ($key == 'fundoc1') {
+				if (!empty($obj->fundoc1)) {
+					print img_picto('', 'pdf');
 				} else {
 					print img_picto('', 'uncheck');
 				}
