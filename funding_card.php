@@ -231,6 +231,14 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
+	if ($action == 'clean' && $permissiontoadd) {
+		$object->amount_maint = '';
+		$object->amount_rent_edit = '';
+		$result = $object->update($user);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
 	if ($action == 'lack' && $permissionmanage) {
 		$result = $object->setStatusFolder($user, $object::STATUS_FOLDER_LACK);
 		if ($result <= 0) {
@@ -980,13 +988,13 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		}
 
 		if (empty($reshook) && empty($user->socid)) {
+			// Clean
+			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
+				print dolGetButtonAction('', $langs->trans('Clean'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=clean&token='.newToken());
+			}
 			// Folder status
 			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=sendorg&token='.newToken().'">'.$langs->trans('BtnSendorg').'</a>'."\n";
-				// if (empty($object->status_folder)) {
-				// } elseif ($object->status >= $object::STATUS_VALIDATED && $object->status <= $object::STATUS_ACCEPT && $object->status_folder != $object::STATUS_FOLDER_LACK) {
-				// 	print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lack">'.$langs->trans('BtnLack').'</a>'."\n";
-				// }
 			} elseif ($permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin <> 'propal' && $object->status_folder != $object::STATUS_FOLDER_EXTENSION) {
 				if (empty($object->status_folder)) {
 					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension&token='.newToken().'">'.$langs->trans('BtnExtension').'</a>'."\n";

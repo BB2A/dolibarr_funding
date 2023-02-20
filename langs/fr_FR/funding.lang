@@ -348,6 +348,7 @@ COEFFICIENTENABLEnDolibarr=Coefficient %s activé
 #
 #Buttun action
 #
+Clean=Nettoyer
 BtnSendorg=Envoyé à l'organisme
 BtnRunning=Actif
 BtnExtension=Prolongation
