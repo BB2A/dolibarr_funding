@@ -9,6 +9,8 @@
 
 
 - NEW - Ajout du positionement de la colonne de selection à gauche avec l'option MAIN_CHECKBOX_LEFT_COLUMN
+- NEW - Afficher si le RIB est bien présent (Faire attention si le RIB est sur le Tiers Ou sur le financement).
+- NEW - Ajouter un bouton pour nettoyer le montant de maintenance et le loyer personnalisé.
 
 ## [1.0.4] - 03/2022
 
