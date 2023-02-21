@@ -990,20 +990,20 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		if (empty($reshook) && empty($user->socid)) {
 			// Clean
 			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
-				print dolGetButtonAction('', $langs->trans('Clean'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=clean&token='.newToken());
+				print dolGetButtonAction('', $langs->trans('Clean'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=clean&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
 			}
 			// Folder status
 			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
 				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=sendorg&token='.newToken().'">'.$langs->trans('BtnSendorg').'</a>'."\n";
 			} elseif ($permissiontoadd && $object->status == $object::STATUS_RUNNING && $object->origin <> 'propal' && $object->status_folder != $object::STATUS_FOLDER_EXTENSION) {
 				if (empty($object->status_folder)) {
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension&token='.newToken().'">'.$langs->trans('BtnExtension').'</a>'."\n";
+					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=extension&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken().'">'.$langs->trans('BtnExtension').'</a>'."\n";
 				}
 			}
 
 			// Set status accepted/refused
 			if ($object->status < $object::STATUS_ACCEPT && $object->status >= $object::STATUS_VALIDATED && $permissiontoadd) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused&token='.newToken().''.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=AcceptedRefused&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken().''.(empty($conf->global->MAIN_JUMP_TAG) ? '' : '#close').'&typedoc='.$typedoc.'&iddoc'.$iddoc.'">'.$langs->trans('SetAcceptedRefused').'</a>';
 			}
 
 			// Send
