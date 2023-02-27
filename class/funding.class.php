@@ -169,6 +169,8 @@ class Funding extends CommonObject
 	public $ref;
 	public $study_number;
 	public $folder_number;
+	public $fk_soc;
+	public $fk_soc_invoice;
 	public $amount;
 	public $amount_maint;
 	public $amount_total;
@@ -187,8 +189,6 @@ class Funding extends CommonObject
 	public $retention_rate;
 	public $retention_mount;
 	public $fk_org;
-	public $fk_soc;
-	public $fk_soc_invoice;
 	public $fk_user_comm;
 	public $description;
 	public $fundoc1;
@@ -884,6 +884,7 @@ class Funding extends CommonObject
 	public function fetchForDoc($origin, $origin_id)
 	{
 		$error = '';
+		$result = 0;
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
 		$object = new self($this->db);
