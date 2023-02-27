@@ -101,23 +101,23 @@ isset($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST) ? $conf->global-
 
 $arrayofparameters = array(
 
-	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_ID_REGLEMENT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_DEFAULT_DURATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
-	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_DEFAULT_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_DEFAULT_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
-	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
-	'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
-	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
-	'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>''),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
 );
 
