@@ -78,26 +78,40 @@ class Funding extends CommonObject
 	const STATUS_FOLDER_EXTENSION = 9;
 
 	/**
-	 *  'type' if the field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
-	 *         Note: Filter can be a string like "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.nature:is:NULL)"
+	 *  'type' field format:
+	 *  	'integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter[:Sortfield]]]',
+	 *  	'select' (list of values are in 'options'),
+	 *  	'sellist:TableName:LabelFieldName[:KeyFieldName[:KeyFieldParent[:Filter[:Sortfield]]]]',
+	 *  	'chkbxlst:...',
+	 *  	'varchar(x)',
+	 *  	'text', 'text:none', 'html',
+	 *   	'double(24,8)', 'real', 'price',
+	 *  	'date', 'datetime', 'timestamp', 'duration',
+	 *  	'boolean', 'checkbox', 'radio', 'array',
+	 *  	'mail', 'phone', 'url', 'password', 'ip'
+	 *		Note: Filter must be a Dolibarr Universal Filter syntax string. Example: "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.status:!=:0) or (t.nature:is:NULL)"
 	 *  'label' the translation key.
-	 *  'enabled' is a condition when the field must be managed (Example: 1 or '$conf->global->MY_SETUP_PARAM)
+	 *  'picto' is code of a picto to show before value in forms
+	 *  'enabled' is a condition when the field must be managed (Example: 1 or '$conf->global->MY_SETUP_PARAM' or 'isModEnabled("multicurrency")' ...)
 	 *  'position' is the sort order of field.
 	 *  'notnull' is set to 1 if not null in database. Set to -1 if we must set data to null if empty ('' or 0).
 	 *  'visible' says if field is visible in list (Examples: 0=Not visible, 1=Visible on list and create/update/view forms, 2=Visible on list only, 3=Visible on create/update/view form only (not list), 4=Visible on list and update/view form only (not create). 5=Visible on list and view only (not create/not update). Using a negative value means field is not shown by default on list but can be selected for viewing)
 	 *  'noteditable' says if field is not editable (1 or 0)
+	 *  'alwayseditable' says if field can be modified also when status is not draft ('1' or '0')
 	 *  'default' is a default value for creation (can still be overwrote by the Setup of Default Values if field is editable in creation form). Note: If default is set to '(PROV)' and field is 'ref', the default value will be set to '(PROVid)' where id is rowid when a new record is created.
 	 *  'index' if we want an index in database.
 	 *  'foreignkey'=>'tablename.field' if the field is a foreign key (it is recommanded to name the field fk_...).
 	 *  'searchall' is 1 if we want to search in this field when making a search from the quick search button.
-	 *  'isameasure' must be set to 1 if you want to have a total on list for this field. Field type must be summable like integer or double(24,8).
-	 *  'css' is the CSS style to use on field. For example: 'maxwidth200'
-	 *  'help' is a string visible as a tooltip on field
+	 *  'isameasure' must be set to 1 or 2 if field can be used for measure. Field type must be summable like integer or double(24,8). Use 1 in most cases, or 2 if you don't want to see the column total into list (for example for percentage)
+	 *  'css' and 'cssview' and 'csslist' is the CSS style to use on field. 'css' is used in creation and update. 'cssview' is used in view mode. 'csslist' is used for columns in lists. For example: 'css'=>'minwidth300 maxwidth500 widthcentpercentminusx', 'cssview'=>'wordbreak', 'csslist'=>'tdoverflowmax200'
+	 *  'help' and 'helplist' is a 'TranslationString' to use to show a tooltip on field. You can also use 'TranslationString:keyfortooltiponlick' for a tooltip on click.
 	 *  'showoncombobox' if value of the field must be visible into the label of the combobox that list record
 	 *  'disabled' is 1 if we want to have the field locked by a 'disabled' attribute. In most cases, this is never set into the definition of $fields into class, but is set dynamically by some part of code.
-	 *  'arraykeyval' to set list of value if type is a list of predefined values. For example: array("0"=>"Draft","1"=>"Active","-1"=>"Cancel")
+	 *  'arrayofkeyval' to set a list of values if type is a list of predefined values. For example: array("0"=>"Draft","1"=>"Active","-1"=>"Cancel"). Note that type can be 'integer' or 'varchar'
 	 *  'autofocusoncreate' to have field having the focus on a create form. Only 1 field should have this property set to 1.
 	 *  'comment' is not used. You can store here any text of your choice. It is not used by application.
+	 *	'validate' is 1 if need to validate with $this->validateField()
+	 *  'copytoclipboard' is 1 or 2 to allow to add a picto to copy value into clipboard (1=picto after label, 2=picto after value)
 	 *
 	 *  Note: To have value dynamic, you can set value to 0 in definition and edit the value on the fly into the constructor.
 	 */
@@ -111,8 +125,10 @@ class Funding extends CommonObject
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>2, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>3, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_studyNumber", 'showoncombobox'=>'1',),
 		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>4, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folderNumber", 'showoncombobox'=>'1',),
-		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>5, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToThirparty",),
-		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>6, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToThirpartyInvoice",),
+		// 'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND entity IN (__SHARED_ENTITIES__))', 'label'=>'ThirdParty', 'enabled'=>'isModEnabled("societe")', 'position'=>5, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToThirparty",),
+		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'ThirdParty', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>5, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'showoncombobox'=>'1', 'help'=>"Help_linkToThirparty",),
+		// 'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::(status:=:1 AND entity IN (__SHARED_ENTITIES__))', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>6, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToThirpartyInvoice",),
+		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'ThirdPartyInvoice', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>6, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'showoncombobox'=>'1', 'help'=>"Help_linkToThirpartyInvoice",),
 		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>7, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
 		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>8, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountMaint",),
 		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>9, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountTotal",),
@@ -130,8 +146,9 @@ class Funding extends CommonObject
 		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'), 'help'=>"Help_retention",),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
 		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
-		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>24, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToOrganization",),
-		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid',),
+		//'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::(status=1 AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'enabled'=>'1', 'position'=>24, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToOrganization",),
+		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
+		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'picto'=>'user', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid', 'css'=>'maxwidth250 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150'),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
 		'fundoc1' => array('type'=>'varchar(255)', 'label'=>'fundoc1', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>-2,),
 		'fundoc1check' => array('type'=>'smallint', 'label'=>'fundoc1check', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>0,),
@@ -280,7 +297,7 @@ class Funding extends CommonObject
 		}
 
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) {
-			$this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+			$this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
 		}
 
 		if (GETPOST('action', 'alpha') == 'edit') {
