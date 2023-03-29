@@ -1,4 +1,4 @@
-# FUNDINF FOR <a href="https://www.dolibarr.org">DOLIBARR ERP CRM</a>
+# FUNDING FOR <a href="https://www.dolibarr.org">DOLIBARR ERP CRM</a>
 
 ## Features
 Description...
