@@ -297,7 +297,7 @@ class Funding extends CommonObject
 		}
 
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) {
-			$this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
+			$this->fields['fk_org']['type'] .= " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
 		}
 
 		if (GETPOST('action', 'alpha') == 'edit') {
