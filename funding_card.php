@@ -162,14 +162,19 @@ $permissiondellink = $user->rights->funding->write; // Used by the include of ac
 $permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 
-
 // Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
+}
 if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->statut == $object::STATUS_DRAFT) ? 1 : 0);
 //$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
-
-//if (!$permissiontoread) accessforbidden();
+if (!isModEnabled("funding")) {
+	accessforbidden();
+}
+if (!$permissiontoread) accessforbidden();
 
 /*
  * Actions

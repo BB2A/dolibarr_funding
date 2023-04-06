@@ -106,13 +106,23 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity]."/".$object->id;
 
-// Security check - Protection if external user
-if ($user->socid > 0) accessforbidden();
-//if ($user->socid > 0) $socid = $user->socid;
-//$result = restrictedArea($user, 'funding', $object->id);
-
+$permissiontoread = $user->rights->funding->retention->read;
 $permissiontoadd = $user->rights->funding->retention->write; // Used by the include of actions_addupdatedelete.inc.php
 
+// Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
+}
+
+if ($user->socid > 0) accessforbidden();
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
+//$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
+
+if (!isModEnabled("funding")) {
+	accessforbidden();
+}
+if (!$permissiontoread) accessforbidden();
 
 /*
  *  Actions

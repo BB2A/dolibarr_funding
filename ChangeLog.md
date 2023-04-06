@@ -2,6 +2,7 @@
 
 ## [1.0.5] - 10/2022
 
+- FIX - Update security check
 - FIX - Le retour apres suppression se fait correctement sur la fiche du document ou sur la liste
 - FIX - Création de la fonction [sendDocumentFunding()] pour une meilleur gestion des fichiers envoyer
 - FIX - Le coef et la retenu de garantie n'ai pas mise à jour si le montant ne change pas

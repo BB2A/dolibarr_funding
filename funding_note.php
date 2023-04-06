@@ -58,19 +58,23 @@ $hookmanager->initHooks(array('fundingnote', 'globalcard')); // Note that conf->
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
 
+$permissiontoread = $user->rights->funding->read;
+$permissiontoadd = $user->rights->funding->write; // Used by the include of actions_addupdatedelete.inc.php
+
 // Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
+}
 if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
-//$result = restrictedArea($user, 'funding', $id);
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
+//$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
 
-// Load object
-include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
-if ($id > 0 || !empty($ref)) $upload_dir = $conf->funding->multidir_output[$object->entity]."/".$object->id;
-
-$permissionnote = $user->rights->funding->funding->write; // Used by the include of actions_setnotes.inc.php
-$permissiontoadd = $user->rights->funding->funding->write; // Used by the include of actions_addupdatedelete.inc.php
-
-
+if (!isModEnabled("funding")) {
+	accessforbidden();
+}
+if (!$permissiontoread) accessforbidden();
 
 /*
  * Actions

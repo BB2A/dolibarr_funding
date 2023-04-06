@@ -196,19 +196,20 @@ $permissiontoadd = $user->rights->funding->write;
 $permissiontodelete = $user->rights->funding->delete;
 $permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
 
-// Security check
-if (empty($conf->funding->enabled)) {
-	accessforbidden('Module not enabled');
+// Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
 }
+if ($user->socid > 0) accessforbidden();
+//if ($user->socid > 0) $socid = $user->socid;
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
+//$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
 
-//BB2A
-//$socid = 0;
-if ($user->socid > 0) { // Protection if external user
-	//$socid = $user->socid;
+if (!isModEnabled("funding")) {
 	accessforbidden();
 }
-//$result = restrictedArea($user, 'funding', $id, '');
-//if (!$permissiontoread) accessforbidden();
+if (!$permissiontoread) accessforbidden();
 
 
 

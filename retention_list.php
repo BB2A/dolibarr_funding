@@ -152,13 +152,21 @@ $permissiontoread = $user->rights->funding->retention->read;
 $permissiontoadd = $user->rights->funding->retention->write;
 $permissiontodelete = $user->rights->funding->retention->delete;
 
-// Security check
-if (empty($conf->funding->enabled)) accessforbidden('Module not enabled');
-$socid = 0;
-if ($user->socid > 0) {	// Protection if external user
-	//$socid = $user->socid;
+// Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
+}
+
+if ($user->socid > 0) accessforbidden();
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
+//$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
+
+if (!isModEnabled("funding")) {
 	accessforbidden();
 }
+
+if (!$permissiontoread) accessforbidden();
 //$result = restrictedArea($user, 'funding', $id, '');
 //if (!$permissiontoread) accessforbidden();
 

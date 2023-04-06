@@ -50,15 +50,8 @@ dol_include_once('/funding/lib/funding.lib.php');
 $langs->loadLangs(array("funding@funding"));
 
 $action = GETPOST('action', 'alpha');
-
-
-// Security check
-//if (! $user->rights->funding->myobject->read) accessforbidden();
 $socid = GETPOST('socid', 'int');
-if (isset($user->socid) && $user->socid > 0) {
-	$action = '';
-	$socid = $user->socid;
-}
+
 
 $max = 5;
 $now = dol_now();
@@ -67,6 +60,21 @@ $permissiontoread = $user->rights->funding->read;
 $permissiontoadd = $user->rights->funding->write;
 $permissiontodelete = $user->rights->funding->delete;
 $permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
+
+// Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
+}
+
+if ($user->socid > 0) accessforbidden();
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
+//$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
+
+if (!isModEnabled("funding")) {
+	accessforbidden();
+}
+if (!$permissiontoread) accessforbidden();
 
 /*
  * Actions

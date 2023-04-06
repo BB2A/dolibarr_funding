@@ -141,11 +141,16 @@ if ($enablepermissioncheck) {
 	$permissiontoadd = 1;
 }
 
-// Security check (enable the most restrictive one)
-//if ($user->socid > 0) accessforbidden();
+// Security check - Protection if external user
+if (isset($user->socid) && $user->socid > 0) {
+	$action = '';
+	$socid = $user->socid;
+}
+if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
-//$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
-//restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
+//$isdraft = (($object->statut == $object::STATUS_DISABLE) ? 1 : 0);
+//$result = restrictedArea($user, 'funding', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
+
 if (!isModEnabled("funding")) {
 	accessforbidden();
 }
