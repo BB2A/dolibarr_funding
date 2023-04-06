@@ -174,7 +174,6 @@ class Retention extends CommonObject
 		if (DOL_VERSION < '17.0.0') {
 			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 		}
-
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && $conf->global->FUNDING_FILTRE_ORGANIZATION > 0 && isset($this->fields['fk_soc'])) {
