@@ -296,7 +296,7 @@ class Funding extends CommonObject
 			$this->fields['entity']['enabled'] = 0;
 		}
 
-		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) {
+		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && $conf->global->FUNDING_FILTRE_ORGANIZATION > 0 && isset($this->fields['fk_org'])) {
 			$this->fields['fk_org']['type'] .= " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
 		}
 
