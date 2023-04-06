@@ -125,9 +125,7 @@ class Funding extends CommonObject
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref.', 'enabled'=>'1', 'position'=>2, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'study_number' => array('type'=>'varchar(128)', 'label'=>'StudyNumber', 'enabled'=>'1', 'position'=>3, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_studyNumber", 'showoncombobox'=>'1',),
 		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>4, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folderNumber", 'showoncombobox'=>'1',),
-		// 'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND entity IN (__SHARED_ENTITIES__))', 'label'=>'ThirdParty', 'enabled'=>'isModEnabled("societe")', 'position'=>5, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToThirparty",),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'ThirdParty', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>5, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'showoncombobox'=>'1', 'help'=>"Help_linkToThirparty",),
-		// 'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::(status:=:1 AND entity IN (__SHARED_ENTITIES__))', 'label'=>'ThirdPartyInvoice', 'enabled'=>'1', 'position'=>6, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToThirpartyInvoice",),
 		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'ThirdPartyInvoice', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>6, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'showoncombobox'=>'1', 'help'=>"Help_linkToThirpartyInvoice",),
 		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>7, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
 		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>8, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountMaint",),
@@ -146,7 +144,6 @@ class Funding extends CommonObject
 		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'), 'help'=>"Help_retention",),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
 		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
-		//'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::(status=1 AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'enabled'=>'1', 'position'=>24, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'showoncombobox'=>'1', 'help'=>"Help_linkToOrganization",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
 		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'picto'=>'user', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid', 'css'=>'maxwidth250 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150'),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
@@ -289,29 +286,34 @@ class Funding extends CommonObject
 
 		$this->db = $db;
 
+		// Rétrocompatile
+		if (DOL_VERSION < '17.0.0') {
+			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
+			$this->fields['fk_soc_invoice']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
+			$this->fields['fk_org']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
+		}
 		if (!empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) {
 			$this->fields['rowid']['visible'] = 1;
 		}
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) {
 			$this->fields['entity']['enabled'] = 0;
 		}
-
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && $conf->global->FUNDING_FILTRE_ORGANIZATION > 0 && isset($this->fields['fk_org'])) {
-			$this->fields['fk_org']['type'] .= " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
+			if (DOL_VERSION < '17.0.0') {
+				$this->fields['fk_org']['type'] .= " AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+			} else {
+				$this->fields['fk_org']['type'] .= " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
+			}
 		}
-
 		if (GETPOST('action', 'alpha') == 'edit') {
 			$this->fields['amount_rent_edit']['visible'] = 1 & $this->fields['amount_rent']['visible'] = 1;
 		}
-
-
 		// Unset fields that are disabled
 		foreach ($this->fields as $key => $val) {
 			if (isset($val['enabled']) && empty($val['enabled'])) {
 				unset($this->fields[$key]);
 			}
 		}
-
 		// Fix PHP8 add "isset($val['arrayofkeyval']) &&"
 		// Translate some data of arrayofkeyval
 		if (is_object($langs)) {
@@ -323,7 +325,6 @@ class Funding extends CommonObject
 				}
 			}
 		}
-
 		//Chagement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
@@ -349,7 +350,6 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
 		}
-
 		//Chagement du dictionnaire scale
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
@@ -375,7 +375,6 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
 		}
-
 		//Chagement du dictionnaire type
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_type as c';

@@ -101,7 +101,8 @@ class Coefficient extends CommonObject
 		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>25, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>1, 'css'=>'maxwidth75imp', 'help'=>"Help text for quantity",),
 		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>35, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_Scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
-		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'foreignkey'=>'societe.rowid', 'help'=>"LinkToThirparty",),
+		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
+		// 'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'Organization', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'foreignkey'=>'societe.rowid', 'help'=>"LinkToThirparty",),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
@@ -172,11 +173,22 @@ class Coefficient extends CommonObject
 		global $conf, $langs;
 
 		$this->db = $db;
-
+		// Rétrocompatile
+		if (DOL_VERSION < '17.0.0') {
+			$this->fields['fk_org']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
+		}
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
-		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['type'] = $this->fields['fk_org']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
-		if (!empty($conf->global->FUNDING_DEFAULT_ORGANIZATION) && isset($this->fields['fk_org'])) $this->fields['fk_org']['default'] = $this->fields['fk_org']['default'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
+		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && $conf->global->FUNDING_FILTRE_ORGANIZATION > 0 && isset($this->fields['fk_org'])) {
+			if (DOL_VERSION < '17.0.0') {
+				$this->fields['fk_org']['type'] .= " AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+			} else {
+				$this->fields['fk_org']['type'] .= " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
+			}
+		}
+		if (!empty($conf->global->FUNDING_DEFAULT_ORGANIZATION) && isset($this->fields['fk_org'])) {
+			$this->fields['fk_org']['default'] = $this->fields['fk_org']['default'] = $conf->global->FUNDING_DEFAULT_ORGANIZATION;
+		}
 
 		// Example to show how to set values of fields definition dynamically
 		/*if ($user->rights->funding->coefficient->read) {

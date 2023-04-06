@@ -102,7 +102,8 @@ class Retention extends CommonObject
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'css'=>'left', 'comment'=>"Id", 'help'=>""),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object", 'help'=>""),
-		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToThirparty",),
+		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
+		// 'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToThirparty",),
 		'rate' => array('type'=>'real', 'label'=>'Rate', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>1, 'help'=>"Help text for rate", 'help'=>""),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2, 'help'=>""),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2, 'help'=>""),
@@ -169,9 +170,20 @@ class Retention extends CommonObject
 
 		$this->db = $db;
 
+		// Rétrocompatile
+		if (DOL_VERSION < '17.0.0') {
+			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
+		}
+
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
-				if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && isset($this->fields['fk_soc'])) $this->fields['fk_soc']['type'] = $this->fields['fk_soc']['type']. "AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && $conf->global->FUNDING_FILTRE_ORGANIZATION > 0 && isset($this->fields['fk_soc'])) {
+			if (DOL_VERSION < '17.0.0') {
+				$this->fields['fk_soc']['type'] .= " AND fk_typent=".$conf->global->FUNDING_FILTRE_ORGANIZATION;
+			} else {
+				$this->fields['fk_soc']['type'] .= " AND (fk_typent:=:".$conf->global->FUNDING_FILTRE_ORGANIZATION.")";
+			}
+		}
 
 
 		// Example to show how to set values of fields definition dynamically
