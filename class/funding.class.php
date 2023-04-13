@@ -57,7 +57,7 @@ class Funding extends CommonObject
 	/**
 	 * @var string String with name of icon for funding. Must be the part after the 'object_' into object_funding.png
 	 */
-	public $picto = 'funding@funding';
+	public $picto = 'fa-piggy-bank';
 
 
 	const STATUS_DRAFT = 0;

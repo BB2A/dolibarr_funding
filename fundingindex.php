@@ -94,7 +94,7 @@ $companystatic = new Societe($db);
 
 llxHeader("", $langs->trans("Funding"));
 
-print load_fiche_titre($langs->trans("Funding"), '', 'index_funding@funding');
+print load_fiche_titre($langs->trans("Funding"), '', 'fa-piggy-bank');
 
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
