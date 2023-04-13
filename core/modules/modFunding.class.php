@@ -332,7 +332,7 @@ class modFunding extends DolibarrModules
 			'fk_menu'=>'',                          // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'top',                          // This is a Top menu entry
 			'titre'=>'ModuleFundingName',
-			'prefix' => img_picto('', $this->picto, ''),
+			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
 			'mainmenu'=>'funding',
 			'url'=>'/funding/fundingindex.php',
 			'langs'=>'funding@funding',         // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
