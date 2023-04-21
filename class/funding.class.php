@@ -2286,6 +2286,7 @@ class Funding extends CommonObject
 				if (strpos($_FILES['userfile']['type'], '/pdf') == true) {
 					$result = dol_move($upload_dir.'/'.$fileupload, $upload_dir.'/'.$fileoutputname);
 					if ($result == false) {
+						setEventMessages($langs->trans('ErrorFileNotRename'), '', 'errors');
 						if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
 							$this->error = 'ErrorFailToDeleteFile';
 							$this->errors[] = $this->error;
@@ -2340,6 +2341,7 @@ class Funding extends CommonObject
 							// Le fichier est un PDF
 							if (strpos($mtype, '/pdf') == true) {
 								$result = dol_move($file, $upload_dir.'/'.$fileoutputname);
+								setEventMessages($langs->trans('ErrorFileNotRename'), '', 'errors');
 								if ($result == false) {
 									if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
 										$this->error = 'ErrorFailToDeleteFile';

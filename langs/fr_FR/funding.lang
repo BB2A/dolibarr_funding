@@ -19,9 +19,11 @@
 
 # Module label 'ModuleFundingName'
 ModuleFundingName=Financements
+
 # Module description 'ModuleFundingDesc'
 ModuleFundingDesc=Gestion des financements client
 ModuleFundingDescLong=Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.
+
 #
 # Page d'administration
 #
@@ -50,7 +52,7 @@ FundingChangelog = Changelog de financement
 MyPageName=Nom de ma page
 
 #
-#Others
+# Others
 #
 Funding=Financement
 Fundings=Financements
@@ -122,7 +124,7 @@ LastFunding=Les derniers financements
 AllFunding=Tout les financements
 
 #
-#Menu
+# Menu
 #
 ListFunding=Liste de financements
 ListFundingDraft=Brouillon
@@ -144,14 +146,14 @@ ListFundingCoef=Liste des coefficients
 ListFundingRetention=Liste des retenues de garantie
 
 #
-#Dictionnaires
+# Dictionnaires
 #
 Funding_duration=Financement - Durée
 Funding_scale=Financement - Baréme
 Funding_type=Financement - Type
 
 #
-#Paramettres
+# Paramettres
 #
 FUNDING_ID_REGLEMENT=Mode de réglement pour financement
 FUNDING_DEFAULT_DURATION=Valeur par default pour la durée de financement
@@ -173,7 +175,7 @@ FUNDING_LISTE_THIRDPARTY_PROPAL=Afficher les propositions de financement dans ti
 FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST=Afficher les propositions de financement dans la liste coute du tiers
 
 #
-#Aides
+# Aides
 #
 Help_studyNumber=Numéro d'etude délivré par l'organisme de financement
 Help_folderNumber=Numéro de dossier délivré par l'organisme de financement
@@ -199,7 +201,7 @@ Help_documentRequired=Document requis
 Help_documentNotRequired=Document non requis
 
 #
-#Droits
+# Droits
 #
 ReadFunding=Lire
 CreateUpdateFunding=Créer modifier
@@ -214,7 +216,7 @@ CreateUpdateRetention=Creer modifier les retenues de garanties
 DeleteRetention=Supprimer les retenues de garanties
 
 #
-#Events messages
+# Events messages
 #
 commnok=Commercial introuvable
 coefnok=Coef introuvable
@@ -269,8 +271,10 @@ FilesUnChecked=Fichier retiré de la demande
 ErrorMontMaintInFund=Montant de maintenance dans le financement le rajouter dans la commande
 SendFunding=Envoyer le financement
 
+ErrorFileNotRename=Impossible de ronnomer le fichier
+
 #
-#Status
+# Status
 #
 FundingStatusDraft=Financement brouillon
 FundingStatusValidated=Nouveau financement
@@ -292,7 +296,7 @@ FundingStatusEndShort=Terminé
 FundingStatusDisabledShort=Annulé
 
 #
-#Status folder
+# Status folder
 #
 FundingStatusFolderSendOrg=étude en cours
 FundingStatusFolderLack=Pièces à fournir pour étude
@@ -310,7 +314,7 @@ FundingStatusFolderRedeemedShort=contrat racheté
 FundingStatusFolderExtensionShort=prolongation en cours
 
 #
-#Documents
+# Documents
 #
 fundoc1=RIB
 fundoc2=Kbis
@@ -325,7 +329,7 @@ funfoldoc5=Rachat demande
 funfoldoc6=Rachat signé
 
 #
-#Trigger
+# Trigger
 #
 CREATEInDolibarr=Financement %s Creer
 VALIDATEInDolibarr=Financement %s validé
@@ -347,7 +351,7 @@ COEFFICIENTENABLEnDolibarr=Coefficient %s activé
 
 
 #
-#Buttun action
+# Buttun action
 #
 Clean=Nettoyer
 BtnSendorg=Envoyé à l'organisme
@@ -356,7 +360,7 @@ BtnExtension=Prolongation
 BtnLack=Pièces manquantes
 
 #
-#Mass actions
+# Mass actions
 #
 ConfirmMassValidation=Validation des financements
 ConfirmMassValidationQuestion=Voulez vous valider les financements?
@@ -375,7 +379,7 @@ ConfirmMassExtensionQuestion=Voulez vous mettre les financements en extension?
 
 
 #
-#Cron
+# Cron
 #
 CronFundingEnd = Financement terminé
 CommentCronFundingEnd = Met à jour le statut des financements actif, qui ne sont pas en prolongation et dont la date de fin est dépassé.
@@ -388,7 +392,7 @@ OutputCronFundingSoonFinished = Financement bientot a terme
 
 
 #
-#Notifications
+# Notifications
 #
 Notify_FUNDING_VALIDATE=Financement vilidé
 Notify_FUNDING_SENTBYMAIL=Financement envoyé par mail
