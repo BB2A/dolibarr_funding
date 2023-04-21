@@ -2285,6 +2285,16 @@ class Funding extends CommonObject
 				// Le fichier est un PDF
 				if (strpos($_FILES['userfile']['type'], '/pdf') == true) {
 					$result = dol_move($upload_dir.'/'.$fileupload, $upload_dir.'/'.$fileoutputname);
+					if ($result == false) {
+						if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
+							$this->error = 'ErrorFailToDeleteFile';
+							$this->errors[] = $this->error;
+							$error++;
+							setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
+						} else {
+							setEventMessages($langs->trans('FilesDeleted'), '');
+						}
+					}
 				}
 				// Le fichier est une image
 				if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
@@ -2301,7 +2311,14 @@ class Funding extends CommonObject
 						// Création du fichier PDF
 						$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
 						$pdf->Close();
-						dol_delete_file($file);
+						// dol_delete_file($file); // Old version to delete
+						dol_delete_preview($this);
+
+						if (!dol_delete_file($file, 0, 0, 0, $this)) {
+							$this->error = 'ErrorFailToDeleteFile';
+							$this->errors[] = $this->error;
+							$error++;
+						}
 					}
 				}
 			}
@@ -2323,6 +2340,16 @@ class Funding extends CommonObject
 							// Le fichier est un PDF
 							if (strpos($mtype, '/pdf') == true) {
 								$result = dol_move($file, $upload_dir.'/'.$fileoutputname);
+								if ($result == false) {
+									if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
+										$this->error = 'ErrorFailToDeleteFile';
+										$this->errors[] = $this->error;
+										$error++;
+										setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
+									} else {
+										setEventMessages($langs->trans('FilesDeleted'), '');
+									}
+								}
 							}
 							// Le fichier est une image
 							if (strpos($mtype, 'image/') === 0) {
@@ -2333,7 +2360,14 @@ class Funding extends CommonObject
 									// Création du fichier PDF
 									$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
 									$pdf->Close();
-									dol_delete_file($file);
+									// dol_delete_file($file); // Old version to delete
+									dol_delete_preview($this);
+
+									if (!dol_delete_file($file, 0, 0, 0, $this)) {
+										$this->error = 'ErrorFailToDeleteFile';
+										$this->errors[] = $this->error;
+										$error++;
+									}
 								}
 							}
 						}
@@ -2378,7 +2412,14 @@ class Funding extends CommonObject
 						// Extenssion lowercase
 						$info = pathinfo($file);
 						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
-						dol_delete_file($file);
+						// dol_delete_file($file); // Old vertion to delete file
+						dol_delete_preview($this);
+
+						if (!dol_delete_file($file, 0, 0, 0, $this)) {
+							$this->error = 'ErrorFailToDeleteFile';
+							$this->errors[] = $this->error;
+							$error++;
+						}
 					}
 				}
 			}
