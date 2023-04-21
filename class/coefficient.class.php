@@ -173,6 +173,10 @@ class Coefficient extends CommonObject
 		global $conf, $langs;
 
 		$this->db = $db;
+
+		// Force display to 3 decimals
+		$conf->global->MAIN_MAX_DECIMALS_SHOWN = 3;
+
 		// Rétrocompatile
 		if (DOL_VERSION < '17.0.0') {
 			$this->fields['fk_org']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
