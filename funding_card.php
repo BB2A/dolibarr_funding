@@ -677,13 +677,13 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	// Documents client
 	print '<table class="noborder tableforfield centpercent margintable">';
 	print '<tr class="liste_titre">';
-		print '<td colspan="2">'.$langs->trans("DocumentsForFunding").'</td>';
-		print '<td align="center">'.$langs->trans("Lack").'</td>';
-		print '<td></td>';
-		print '</tr>';
-		// Document 1
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1', '', $object, 0).'</td>';
+	print '<td colspan="2">'.$langs->trans("DocumentsForFunding").'</td>';
+	print '<td align="center">'.$langs->trans("Lack").'</td>';
+	print '<td></td>';
+	print '</tr>';
+	// Document 1
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->fundoc1)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -708,10 +708,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->fundoc1 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc1&file='.$object->fundoc1.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
-		print '</tr>';
-		// Document 2
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('fundoc2', 'fundoc2', '', $object, 0).'</td>';
+	print '</tr>';
+	// Document 2
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('fundoc2', 'fundoc2', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->fundoc2)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -727,10 +727,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->fundoc2 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc2&file='.$object->fundoc2.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
-		print '</tr>';
-		// Document 3
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('fundoc3', 'fundoc3', '', $object, 0).'</td>';
+	print '</tr>';
+	// Document 3
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('fundoc3', 'fundoc3', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->fundoc3)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -746,10 +746,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->fundoc3 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc3&file='.$object->fundoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
-		print '</tr>';
-		// Document 4
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('fundoc4', 'fundoc4', '', $object, 0).'</td>';
+	print '</tr>';
+	// Document 4
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('fundoc4', 'fundoc4', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->fundoc4)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -765,10 +765,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->fundoc4 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc4&file='.$object->fundoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
-		print '</tr>';
-		// Document 5
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('fundoc5', 'fundoc5', '', $object, 0).'</td>';
+	print '</tr>';
+	// Document 5
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('fundoc5', 'fundoc5', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->fundoc5)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -784,21 +784,21 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->fundoc5 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc5&file='.$object->fundoc5.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
-		print '</tr>';
-		//print '</table">';
+	print '</tr>';
+	//print '</table">';
 
-		// Document du financement
+	// Document du financement
 
-		//print '<table class="noborder tableforfield centpercent margintable">';
-		print '<tr class="liste_titre">';
-		print '<td td colspan="2">'.$langs->trans("FundingFolder").'</td>';
-		print '<td></td>';
-		print '<td></td>';
-		print '</tr>';
+	//print '<table class="noborder tableforfield centpercent margintable">';
+	print '<tr class="liste_titre">';
+	print '<td td colspan="2">'.$langs->trans("FundingFolder").'</td>';
+	print '<td></td>';
+	print '<td></td>';
+	print '</tr>';
 
-		// FundingFolderDoc 1
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1', '', $object, 0).'</td>';
+	// FundingFolderDoc 1
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->funfoldoc1)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -814,10 +814,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->funfoldoc1 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc1&file='.$object->funfoldoc1.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 	}
-		print '</tr>';
-		// FundingFolderDoc 2
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2', '', $object, 0).'</td>';
+	print '</tr>';
+	// FundingFolderDoc 2
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->funfoldoc2)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -833,10 +833,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->funfoldoc2 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc2&file='.$object->funfoldoc2.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 	}
-		print '</tr>';
-		// FundingFolderDoc 3
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('funfoldoc3', 'funfoldoc3', '', $object, 0).'</td>';
+	print '</tr>';
+	// FundingFolderDoc 3
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('funfoldoc3', 'funfoldoc3', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->funfoldoc3)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -852,10 +852,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<td></td>';
 		($object->funfoldoc3 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc3&file='.$object->funfoldoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
 	}
-		print '</tr>';
-		// FundingFolderDoc 4
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('funfoldoc4', 'funfoldoc4', '', $object, 0).'</td>';
+	print '</tr>';
+	// FundingFolderDoc 4
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('funfoldoc4', 'funfoldoc4', '', $object, 0).'</td>';
 	if ($permissiontoadd && empty($object->funfoldoc4)) {
 		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
