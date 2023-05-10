@@ -675,7 +675,8 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '</table>';
 	print '<div class="div-table-responsive-no-min">';
 	// Documents client
-	print '<table class="noborder tableforfield centpercent margintable">';
+	// print '<table class="noborder tableforfield centpercent margintable">';
+	print '<table class="border centpercent">';
 	print '<tr class="liste_titre">';
 	print '<td colspan="2">'.$langs->trans("DocumentsForFunding").'</td>';
 	print '<td align="center">'.$langs->trans("Lack").'</td>';
