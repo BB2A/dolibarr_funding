@@ -34,6 +34,11 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
 class Coefficient extends CommonObject
 {
 	/**
+	 * @var string ID of module.
+	 */
+	public $module = 'funding';
+
+	/**
 	 * @var string ID to identify managed object
 	 */
 	public $element = 'coefficient';
@@ -402,7 +407,7 @@ class Coefficient extends CommonObject
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function update(User $user, $notrigger = false)
+	public function update(User $user, $notrigger = 0)
 	{
 		if (empty($this->date_creation)) {
 			$this->date_creation = dol_now();
@@ -417,7 +422,7 @@ class Coefficient extends CommonObject
 	 * @param bool $notrigger  false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function delete(User $user, $notrigger = false)
+	public function delete(User $user, $notrigger = 0)
 	{
 		return $this->deleteCommon($user, $notrigger);
 		//return $this->deleteCommon($user, $notrigger, 1);
@@ -431,7 +436,7 @@ class Coefficient extends CommonObject
 	 *  @param 	bool 	$notrigger  false=launch triggers after, true=disable triggers
 	 *  @return int         		>0 if OK, <0 if KO
 	 */
-	public function deleteLine(User $user, $idline, $notrigger = false)
+	public function deleteLine(User $user, $idline, $notrigger = 0)
 	{
 		if ($this->status < 0) {
 			$this->error = 'ErrorDeleteLineNotAllowedByObjectStatus';
