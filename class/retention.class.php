@@ -217,7 +217,7 @@ class Retention extends CommonObject
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
-	public function create(User $user, $notrigger = false)
+	public function create(User $user, $notrigger = 0)
 	{
 		$now 		= dol_now();
 		$this->status = 0;
@@ -424,7 +424,7 @@ class Retention extends CommonObject
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function update(User $user, $notrigger = false)
+	public function update(User $user, $notrigger = 0)
 	{
 		return $this->updateCommon($user, $notrigger);
 	}
@@ -436,7 +436,7 @@ class Retention extends CommonObject
 	 * @param bool $notrigger  false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function delete(User $user, $notrigger = false)
+	public function delete(User $user, $notrigger = 0)
 	{
 		return $this->deleteCommon($user, $notrigger);
 		//return $this->deleteCommon($user, $notrigger, 1);
@@ -450,7 +450,7 @@ class Retention extends CommonObject
 	 *  @param 	bool 	$notrigger  false=launch triggers after, true=disable triggers
 	 *  @return int         		>0 if OK, <0 if KO
 	 */
-	public function deleteLine(User $user, $idline, $notrigger = false)
+	public function deleteLine(User $user, $idline, $notrigger = 0)
 	{
 		if ($this->status < 0) {
 			$this->error = 'ErrorDeleteLineNotAllowedByObjectStatus';
