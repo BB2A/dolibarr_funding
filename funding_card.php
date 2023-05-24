@@ -214,7 +214,7 @@ if (empty($reshook)) {
 		}
 	}
 
-	$triggermodname = 'FUNDING_UPDATE'; // Name of trigger action code to execute when we modify record
+	$triggermodname = 'FUNDING_MODIFY'; // Name of trigger action code to execute when we modify record
 
 	// Positionne study number
 	if ($action == 'setstudy_number' && $permissiontoadd) {
@@ -1099,8 +1099,8 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
-		$includedocgeneration = 1;
-		/*
+		$includedocgeneration = 0;
+
 		// Documents
 		if ($includedocgeneration) {
 			$objref = dol_sanitizeFileName($object->ref);
@@ -1111,7 +1111,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 			$delallowed = $user->rights->funding->write;    // If you can create/edit, you can remove a file on card
 			print $formfile->showdocuments('funding', $objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
-		*/
+
 		// Show links to link elements
 		$linktoelem = $form->showLinkToObjectBlock($object, null, array('funding'));
 		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
