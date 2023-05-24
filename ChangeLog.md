@@ -4,7 +4,9 @@
 - FIX - Trigger FUNDING_UPDATE was doubled to update funding
 
 - NEW - Ajout des triggers pour les coeficients et les retenu de garantie
+- NEW - Ajout du script sql lors de la mise à jour du module
 - NEW - Ajout du positionement de la colonne de selection à gauche avec l'option MAIN_CHECKBOX_LEFT_COLUMN
+- NEW - Ajout du script sql lors de la mise à jour de dolibarr
 
 ## [1.0.5] - 10/2022
 
