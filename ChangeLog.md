@@ -1,5 +1,11 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.0.5] - 05/2023
+- FIX - Trigger FUNDING_UPDATE was doubled to update funding
+
+- NEW - Ajout des triggers pour les coeficients et les retenu de garantie
+- NEW - Ajout du positionement de la colonne de selection à gauche avec l'option MAIN_CHECKBOX_LEFT_COLUMN
+
 ## [1.0.5] - 10/2022
 
 - FIX - Update security check
@@ -8,8 +14,6 @@
 - FIX - Le coef et la retenu de garantie n'ai pas mise à jour si le montant ne change pas
 - FIX - Pré-envoyer un e-mail et ajouter une pièce jointe envoyer le e-mail automatiquement
 
-
-- NEW - Ajout du positionement de la colonne de selection à gauche avec l'option MAIN_CHECKBOX_LEFT_COLUMN
 - NEW - Afficher si le RIB est bien présent (Faire attention si le RIB est sur le Tiers Ou sur le financement).
 - NEW - Ajouter un bouton pour nettoyer le montant de maintenance et le loyer personnalisé.
 
