@@ -530,7 +530,7 @@ class Funding extends CommonObject
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
-	public function create(User $user, $notrigger = false)
+	public function create(User $user, $notrigger = 0)
 	{
 		global $langs, $conf;
 		$now        = dol_now();
@@ -1053,7 +1053,7 @@ class Funding extends CommonObject
 	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function update(User $user, $notrigger = false)
+	public function update(User $user, $notrigger = 0)
 	{
 		global $langs;
 
@@ -1134,14 +1134,6 @@ class Funding extends CommonObject
 					if ($this->status >= self::STATUS_ACCEPT && $this->amount <> $document->total_ht) {
 							$this->status = self::STATUS_UPDATE;
 					}
-					if (!$error && !$notrigger) {
-						// Call trigger
-						$result = $this->call_trigger('FUNDING_UPDATE', $user);
-						if ($result < 0) {
-							$error++;
-						}
-						// End call triggers
-					}
 					if (!$error) {
 						return $this->updateCommon($user, $notrigger);
 					}
@@ -1163,7 +1155,7 @@ class Funding extends CommonObject
 	 * @param bool $notrigger  false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
-	public function delete(User $user, $notrigger = false)
+	public function delete(User $user, $notrigger = 0)
 	{
 		global $langs, $conf;
 
@@ -1253,7 +1245,7 @@ class Funding extends CommonObject
 	 *  @param  bool    $notrigger  false=launch triggers after, true=disable triggers
 	 *  @return int                 >0 if OK, <0 if KO
 	 */
-	public function deleteLine(User $user, $idline, $notrigger = false)
+	public function deleteLine(User $user, $idline, $notrigger = 0)
 	{
 		if ($this->status < 0) {
 			$this->error = 'ErrorDeleteLineNotAllowedByObjectStatus';
