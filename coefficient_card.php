@@ -143,7 +143,7 @@ if (empty($reshook)) {
 			else $backtopage = dol_buildpath('/funding/coefficient_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 		}
 	}
-	$triggermodname = 'FUNDING_COEFFICIENT_UPDATE'; // Name of trigger action code to execute when we modify record
+	$triggermodname = 'COEFFICIENT_MODIFY'; // Name of trigger action code to execute when we modify record
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
@@ -388,6 +388,59 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		print '</div>'."\n";
 	}
+
+	// Select mail models is same action as presend
+	if (GETPOST('modelselected')) {
+		$action = 'presend';
+	}
+
+	if ($action != 'presend') {
+		print '<div class="fichecenter"><div class="fichehalfleft">';
+		print '<a name="builddoc"></a>'; // ancre
+
+		$includedocgeneration = 0;
+
+		// Documents
+		if ($includedocgeneration) {
+			$objref = dol_sanitizeFileName($object->ref);
+			$relativepath = $objref.'/'.$objref.'.pdf';
+			$filedir = $conf->funding->dir_output.'/'.$object->element.'/'.$objref;
+			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
+			$genallowed = $user->rights->funding->retention->read; // If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->funding->retention->write; // If you can create/edit, you can remove a file on card
+			print $formfile->showdocuments('funding:Retention', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
+		}
+
+		// Show links to link elements
+		$linktoelem = $form->showLinkToObjectBlock($object, null, array('coefficient'));
+		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
+
+		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
+
+		$MAXEVENT = 10;
+
+		$morehtmlright = '<a href="'.dol_buildpath('/funding/coefficient_agenda.php', 1).'?id='.$object->id.'">';
+		$morehtmlright .= $langs->trans("SeeAll");
+		$morehtmlright .= '</a>';
+
+		// List of actions on element
+		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
+		$formactions = new FormActions($db);
+		$somethingshown = $formactions->showactions($object, $object->element.'@'.$object->module, (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
+
+		print '</div></div></div>';
+	}
+
+	//Select mail models is same action as presend
+	if (GETPOST('modelselected')) $action = 'presend';
+
+	// Presend form
+	$modelmail = 'coefficient';
+	$defaulttopic = 'InformationMessage';
+	$diroutput = $conf->funding->dir_output;
+	$trackid = 'coefficient'.$object->id;
+
+	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
 }
 
 // End of page
