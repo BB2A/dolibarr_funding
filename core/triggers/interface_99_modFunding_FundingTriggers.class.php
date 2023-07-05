@@ -187,6 +187,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			// Customer orders
 			//case 'ORDER_CREATE':
 			case 'ORDER_MODIFY':
+				$result = 0;
 				if (!empty($fudid)) {
 					if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
 						$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
