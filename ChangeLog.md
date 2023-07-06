@@ -2,6 +2,7 @@
 
 ## [1.0.5] - 05/2023
 - FIX - Trigger FUNDING_UPDATE was doubled to update funding
+- FIX - Erreur de retour apres la modification d'une commande avec financement annuler $result n'etait pas initialisé
 
 - NEW - Ajout des triggers pour les coeficients et les retenu de garantie
 - NEW - Ajout du script sql lors de la mise à jour du module
