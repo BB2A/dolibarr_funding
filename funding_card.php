@@ -786,6 +786,25 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		($object->fundoc5 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc5&file='.$object->fundoc5.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
 	print '</tr>';
+	// Document 6
+	print '<tr class="">';
+	print '<td>'.$form->editfieldkey('fundoc6', 'fundoc6', '', $object, 0).'</td>';
+	if ($permissiontoadd && empty($object->fundoc6)) {
+		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="action" value="savedoc">';
+		print '<input type="hidden" name="doc" value="fundoc6">';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc6input"></td>';
+		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc6check" '.($object->fundoc6check ? 'value="fundoc6checkchecked" checked' : 'value="fundoc6check"').'></td>';
+		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+		print '</form>';
+	} else {
+		$relativepath = $object->ref.'/'.$object->fundoc6;
+		($object->fundoc6)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc6.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+		print '<td></td>';
+		($object->fundoc6 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc6&file='.$object->fundoc6.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
+	}
+	print '</tr>';
 	//print '</table">';
 
 	// Document du financement

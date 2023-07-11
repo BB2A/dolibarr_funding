@@ -157,6 +157,8 @@ class Funding extends CommonObject
 		'fundoc4check' => array('type'=>'smallint', 'label'=>'fundoc4check', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
 		'fundoc5' => array('type'=>'varchar(255)', 'label'=>'fundoc5', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
 		'fundoc5check' => array('type'=>'smallint', 'label'=>'fundoc5check', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
+		'fundoc6' => array('type'=>'varchar(255)', 'label'=>'fundoc6', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
+		'fundoc6check' => array('type'=>'smallint', 'label'=>'fundoc6check', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc1' => array('type'=>'varchar(255)', 'label'=>'funfoldoc1', 'enabled'=>'1', 'position'=>110, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc2' => array('type'=>'varchar(255)', 'label'=>'funfoldoc2', 'enabled'=>'1', 'position'=>111, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
@@ -2333,8 +2335,8 @@ class Funding extends CommonObject
 							// Le fichier est un PDF
 							if (strpos($mtype, '/pdf') == true) {
 								$result = dol_move($file, $upload_dir.'/'.$fileoutputname);
-								setEventMessages($langs->trans('ErrorFileNotRename'), '', 'errors');
 								if ($result == false) {
+									setEventMessages($langs->trans('ErrorFileNotRename'), '', 'errors');
 									if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
 										$this->error = 'ErrorFailToDeleteFile';
 										$this->errors[] = $this->error;
@@ -2423,6 +2425,7 @@ class Funding extends CommonObject
 			}
 			// Vérifie si le fichier à bien ete créer pour inscription en db
 			if (file_exists($upload_dir.'/'.$fileoutputname)) {
+				var_dump($doc);
 				$doccheck = $doc.'check';
 				if (isset($this->$doccheck)) {
 					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doc."check = NULL WHERE rowid = ".$this->id;
