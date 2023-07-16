@@ -1,6 +1,6 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [1.0.6] - 05/2023
+## [1.0.6] - 07/2023
 - FIX - Ammélioration de la gestion des erreurs et messages sur l'envoie de fichier
 
 - NEW - Ajout de la recherche du RIB dans un autre financement

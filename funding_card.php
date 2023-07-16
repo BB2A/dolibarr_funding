@@ -361,7 +361,6 @@ if (empty($reshook)) {
 		$result = $object->sendDocumentFunding($fileupload, $cherchfile, $upload_dir, $action);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
-			
 		} else {
 			setEventMessages($object->message, $object->messages);
 		}

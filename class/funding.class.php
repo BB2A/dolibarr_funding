@@ -179,7 +179,7 @@ class Funding extends CommonObject
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'funcheck' => array('type'=>'smallint', 'label'=>'Checked', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>-2, 'default'=>'0', 'css'=>'center','arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
 		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0' => 'FundingStatusDraftShort', '1' => 'FundingStatusValidatedShort', '2' => 'FundingStatusUpdateShort',/* '3' => 'FundingStatusSendOrgShort', */'4' => 'FundingStatusAcceptShort', '5' => 'FundingStatusDeniedShort', '6' => 'FundingStatusRunningShort', '7' => 'FundingStatusEndShort', '8' => 'FundingStatusDisabledShort'),),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0'=>'FundingStatusDraftShort', '1'=>'FundingStatusValidatedShort', '2'=>'FundingStatusUpdateShort',/* '3'=>'FundingStatusSendOrgShort', */'4'=>'FundingStatusAcceptShort', '5'=>'FundingStatusDeniedShort', '6'=>'FundingStatusRunningShort', '7'=>'FundingStatusEndShort', '8'=>'FundingStatusDisabledShort'),),
 	);
 	public $rowid;
 	public $ref;
@@ -2229,11 +2229,10 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Update staus folder object
+	 * Search doc fundoc object
 	 *
 	 * @param		User		$user			User that modifies
 	 * @param		string		$upload_dir		upload dir
-	 * @param		bool		$notrigger		false=launch triggers after, true=disable triggers
 	 * @return		int							<0 if KO, >0 if OK
 	 */
 	public function searchDoc($user, $upload_dir)
@@ -2246,7 +2245,7 @@ class Funding extends CommonObject
 		$doccheck = $doc.'check';
 
 		// Sécurity verif if fundoc is empty
-		if(!empty($this->$doc)){
+		if (!empty($this->$doc)) {
 			return 0;
 		}
 		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
@@ -2256,7 +2255,7 @@ class Funding extends CommonObject
 
 		if ($resql) {
 			$nbtotalofrecords = $db->num_rows($resql);
-			if($nbtotalofrecords > 0){
+			if ($nbtotalofrecords > 0) {
 				$i = 0;
 				$total = 0;
 				while ($i < $nbtotalofrecords) {
@@ -2267,7 +2266,7 @@ class Funding extends CommonObject
 					$i++;
 				}
 			}
-			if(!empty($docSearch)){
+			if (!empty($docSearch)) {
 				// On copie le document dans le bon dossier
 				$upload_dir_orig = $upload_dir."/".dol_sanitizeFileName($obj->ref);
 				$upload_dir_dest = $upload_dir."/".dol_sanitizeFileName($this->ref);
@@ -2279,15 +2278,15 @@ class Funding extends CommonObject
 				if (!(is_dir($upload_dir_dest))) {
 					$result = dol_mkdir($upload_dir_dest);
 				}
-				if ($result < 0){
+				if ($result < 0) {
 					$this->error = 'ErrorCreateFolder';
 					$this->errors[] = 'Error create folder'.$langs->trans('ErrorFileNotFound');
 					$error++;
 					dol_syslog(__METHOD__.' $this->id='.$this->id.' '.join(',', $this->errors), LOG_ERR);
 				}
-				
+
 				$result = dol_copy($upload_dir_orig.'/'.$fileintputname, $upload_dir_dest.'/'.$fileoutputname);
-				if ($result < 0){
+				if ($result < 0) {
 					$this->error = 'ErrorCopyFile';
 					$this->errors[] = 'Error copy file'.$langs->trans('ErrorFileNotFound');
 					$error++;
@@ -2304,19 +2303,19 @@ class Funding extends CommonObject
 					$resql = $db->query($sql);
 					$db->free($resql);
 					$this->fetch($this->id);
-					if ($resql){
+					if ($resql) {
 						if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
 							$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
 						}
 						return 1;
-					}else{
+					} else {
 						$this->error = 'ErrorFailsql';
 						$this->errors[] = 'Error '.$this->db->lasterror();
 						$error++;
 						dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 					}
 				}
-			}else{
+			} else {
 				$this->error = 'NoFileSearch';
 				$error++;
 			}
@@ -2327,9 +2326,9 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 		}
 
-		if (empty($error)){
+		if (empty($error)) {
 			return 1;
-		}else{
+		} else {
 			return -1 * $error;
 		}
 	}
@@ -2540,21 +2539,21 @@ class Funding extends CommonObject
 				}
 				$resql = $db->query($sql);
 				$db->free($resql);
-				if ($resql){
+				if ($resql) {
 					$this->fetch($this->id);
 					if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
 						$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
 					}
 					$this->message = 'FileAdded';
 					$this->messages[] = $this->message;
-				}else{
+				} else {
 					$this->error = 'ErrorFailToAddedFile';
 					$this->errors[] = 'Error '.$this->db->lasterror();
 					$error++;
 					dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 				}
 			}
-		// Delete document
+			// Delete document
 		} elseif ($action == 'deletefile' && !empty($upload_dir) && $file) {
 			$file = $upload_dir.'/'.$file;
 			if (file_exists($file)) {
@@ -2566,13 +2565,12 @@ class Funding extends CommonObject
 				$this->db->free($resql);
 				$this->message = 'FilesDeleted';
 				$this->messages[] = $this->message;
-				if (!$resql){
+				if (!$resql) {
 					$this->error = 'ErrorFailToDeleteFile';
 					$this->errors[] = 'Error '.$this->db->lasterror();
 					$error++;
 					dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 				}
-				
 			} else {
 				$this->error = 'ErrorFailToDeleteFile';
 				$this->errors[] = $this->error;
@@ -2580,37 +2578,37 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__." $this->id=".$this->id.", ".$doc."=''", LOG_DEBUG);
 				setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 			}
-		// Met la demande de documment à vrais
+			// Met la demande de documment à vrais
 		} elseif (!empty($filecheck) && empty($cherchfile)) {
 			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$filecheck." = 1 WHERE rowid = ".$this->id;
 			$resql = $db->query($sql);
 			$db->free($resql);
-			if ($resql){
+			if ($resql) {
 				$this->setStatusFolder($user, $this::STATUS_FOLDER_LACK);
 				$this->message = 'FilesChecked';
 				$this->messages[] = $this->message;
-			}else{
+			} else {
 				$this->error = 'ErrorFailToFilesChecked';
 				$this->errors[] = 'Error '.$this->db->lasterror();
 				$error++;
 				dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 			}
-			
-		// Met la demande de documment à faut
+
+			// Met la demande de documment à faut
 		} elseif (empty($filecheck) && empty($cherchfile)) {
 			$doccheck = $doc.'check';
 			if (isset($this->$doccheck)) {
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc."check = NULL WHERE rowid = ".$this->id;
 				$resql = $db->query($sql);
 				$db->free($resql);
-				if ($resql){
+				if ($resql) {
 					$this->fetch($this->id);
 					if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
 						$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
 					}
 					$this->message = 'FilesUnChecked';
 					$this->messages[] = $this->message;
-				}else{
+				} else {
 					$this->error = 'ErrorFailToFilesUnChecked';
 					$this->errors[] = 'Error '.$this->db->lasterror();
 					$error++;
@@ -2618,9 +2616,9 @@ class Funding extends CommonObject
 				}
 			}
 		}
-		if (empty($error)){
+		if (empty($error)) {
 			return 1;
-		}else{
+		} else {
 			return -1 * $error;
 		}
 	}
