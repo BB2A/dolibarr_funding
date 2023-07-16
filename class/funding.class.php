@@ -755,7 +755,7 @@ class Funding extends CommonObject
 			);
 
 			if (!(is_dir($dirdest))) {
-				mkdir($dirdest);
+				$result = dol_mkdir($dirdest);
 			}
 
 			foreach ($filesmove as $key => $file) {
@@ -917,7 +917,7 @@ class Funding extends CommonObject
 		$sql.= " ORDER BY rowid";
 		$resql = $this->db->query($sql);
 		$row = $this->db->fetch_row($resql);
-		// var_dump($object);
+
 		if (!empty($row[0])) {
 			$idfinding = $row[0];
 			// $funding = new funding($this->db);
@@ -2229,13 +2229,119 @@ class Funding extends CommonObject
 	}
 
 	/**
+	 * Update staus folder object
+	 *
+	 * @param		User		$user			User that modifies
+	 * @param		string		$upload_dir		upload dir
+	 * @param		bool		$notrigger		false=launch triggers after, true=disable triggers
+	 * @return		int							<0 if KO, >0 if OK
+	 */
+	public function searchDoc($user, $upload_dir)
+	{
+		global $conf, $db, $langs;
+
+		$error = 0;
+		$docSearch = '';
+		$doc = 'fundoc1';
+		$doccheck = $doc.'check';
+
+		// Sécurity verif if fundoc is empty
+		if(!empty($this->$doc)){
+			return 0;
+		}
+		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
+		$sql.= ' WHERE c.fk_soc = ' . $this->fk_soc;
+		$sql.= ' AND c.'.$doc.' <> "" ';
+		$resql = $db->query($sql);
+
+		if ($resql) {
+			$nbtotalofrecords = $db->num_rows($resql);
+			if($nbtotalofrecords > 0){
+				$i = 0;
+				$total = 0;
+				while ($i < $nbtotalofrecords) {
+					$obj = $db->fetch_object($resql);
+					if (is_object($obj)) {
+						$docSearch = $obj->$doc;
+					}
+					$i++;
+				}
+			}
+			if(!empty($docSearch)){
+				// On copie le document dans le bon dossier
+				$upload_dir_orig = $upload_dir."/".dol_sanitizeFileName($obj->ref);
+				$upload_dir_dest = $upload_dir."/".dol_sanitizeFileName($this->ref);
+
+				$fileintputname = $obj->$doc;
+				$fileoutputname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
+				$fileoutputname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileoutputname.'.pdf');
+
+				if (!(is_dir($upload_dir_dest))) {
+					$result = dol_mkdir($upload_dir_dest);
+				}
+				if ($result < 0){
+					$this->error = 'ErrorCreateFolder';
+					$this->errors[] = 'Error create folder'.$langs->trans('ErrorFileNotFound');
+					$error++;
+					dol_syslog(__METHOD__.' $this->id='.$this->id.' '.join(',', $this->errors), LOG_ERR);
+				}
+				
+				$result = dol_copy($upload_dir_orig.'/'.$fileintputname, $upload_dir_dest.'/'.$fileoutputname);
+				if ($result < 0){
+					$this->error = 'ErrorCopyFile';
+					$this->errors[] = 'Error copy file'.$langs->trans('ErrorFileNotFound');
+					$error++;
+					dol_syslog(__METHOD__.' $this->id='.$this->id.' '.join(',', $this->errors), LOG_ERR);
+				}
+
+				// Vérifie si le fichier à bien ete créer pour inscription en db
+				if (file_exists($upload_dir_dest.'/'.$fileoutputname)) {
+					if (isset($this->$doccheck)) {
+						$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doc."check = NULL WHERE rowid = ".$this->id;
+					} else {
+						$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."'WHERE rowid = ".$this->id;
+					}
+					$resql = $db->query($sql);
+					$db->free($resql);
+					$this->fetch($this->id);
+					if ($resql){
+						if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
+							$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
+						}
+						return 1;
+					}else{
+						$this->error = 'ErrorFailsql';
+						$this->errors[] = 'Error '.$this->db->lasterror();
+						$error++;
+						dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+					}
+				}
+			}else{
+				$this->error = 'NoFileSearch';
+				$error++;
+			}
+		} else {
+			$this->error = 'ErrorFailsql';
+			$this->errors[] = 'Error '.$this->db->lasterror();
+			$error++;
+			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+		}
+
+		if (empty($error)){
+			return 1;
+		}else{
+			return -1 * $error;
+		}
+	}
+
+	/**
 	 *  Upload and manage documents for funding.
 	 *
 	 *  @param      string      $fileupload        	Files send
 	 *  @param      bool      	$cherchfile			Files cherch
 	 * 	@param      string      $upload_dir			upload dir
 	 * 	@param      string      $action				action
-	 *  @return     int                         0 if KO, 1 if OK
+	 *  @return     int								0< if KO, 1 if OK
 	 */
 	public function sendDocumentFunding($fileupload, $cherchfile, $upload_dir, $action)
 	{
@@ -2283,11 +2389,12 @@ class Funding extends CommonObject
 						setEventMessages($langs->trans('ErrorFileNotRename'), '', 'errors');
 						if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
 							$this->error = 'ErrorFailToDeleteFile';
-							$this->errors[] = $this->error;
+							$this->errors[] = $langs->trans('ErrorFileNotFound').' '.$this->error;
 							$error++;
 							setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 						} else {
-							setEventMessages($langs->trans('FilesDeleted'), '');
+							$this->message = 'FilesDeleted';
+							$this->messages[] = $this->message;
 						}
 					}
 				}
@@ -2338,12 +2445,12 @@ class Funding extends CommonObject
 								if ($result == false) {
 									setEventMessages($langs->trans('ErrorFileNotRename'), '', 'errors');
 									if (!dol_delete_file($upload_dir.'/'.$fileupload, 0, 0, 0, $this)) {
-										$this->error = 'ErrorFailToDeleteFile';
+										$this->error = 'ErrorFileNotFound';
 										$this->errors[] = $this->error;
 										$error++;
-										setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 									} else {
-										setEventMessages($langs->trans('FilesDeleted'), '');
+										$this->message = 'FilesDeleted';
+										$this->messages[] = $this->message;
 									}
 								}
 							}
@@ -2425,7 +2532,6 @@ class Funding extends CommonObject
 			}
 			// Vérifie si le fichier à bien ete créer pour inscription en db
 			if (file_exists($upload_dir.'/'.$fileoutputname)) {
-				var_dump($doc);
 				$doccheck = $doc.'check';
 				if (isset($this->$doccheck)) {
 					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doc."check = NULL WHERE rowid = ".$this->id;
@@ -2433,54 +2539,90 @@ class Funding extends CommonObject
 					$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."'WHERE rowid = ".$this->id;
 				}
 				$resql = $db->query($sql);
-				$this->db->free($resql);
-				$this->fetch($this->id);
-				if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
-					$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
+				$db->free($resql);
+				if ($resql){
+					$this->fetch($this->id);
+					if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
+						$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
+					}
+					$this->message = 'FileAdded';
+					$this->messages[] = $this->message;
+				}else{
+					$this->error = 'ErrorFailToAddedFile';
+					$this->errors[] = 'Error '.$this->db->lasterror();
+					$error++;
+					dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 				}
-
-				dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 			}
-			// Delete document
+		// Delete document
 		} elseif ($action == 'deletefile' && !empty($upload_dir) && $file) {
-			$delet = '';
 			$file = $upload_dir.'/'.$file;
 			if (file_exists($file)) {
-				$delet = dol_delete_file($file);
+				$result = dol_delete_file($file);
 			}
-			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '' WHERE rowid = ".$this->id;
-			$resql = $db->query($sql);
-			$this->db->free($resql);
-
-			dol_syslog(__METHOD__." $this->id=".$this->id.", ".$doc."=''", LOG_DEBUG);
-			if (!empty($delet)) {
-				setEventMessages($langs->trans('FilesDeleted'), '');
+			if ($result >= 0) {
+				$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '' WHERE rowid = ".$this->id;
+				$resql = $db->query($sql);
+				$this->db->free($resql);
+				$this->message = 'FilesDeleted';
+				$this->messages[] = $this->message;
+				if (!$resql){
+					$this->error = 'ErrorFailToDeleteFile';
+					$this->errors[] = 'Error '.$this->db->lasterror();
+					$error++;
+					dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
+				}
+				
 			} else {
+				$this->error = 'ErrorFailToDeleteFile';
+				$this->errors[] = $this->error;
+				$error++;
+				dol_syslog(__METHOD__." $this->id=".$this->id.", ".$doc."=''", LOG_DEBUG);
 				setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 			}
+		// Met la demande de documment à vrais
 		} elseif (!empty($filecheck) && empty($cherchfile)) {
 			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$filecheck." = 1 WHERE rowid = ".$this->id;
 			$resql = $db->query($sql);
-			$this->db->free($resql);
-
-			$this->setStatusFolder($user, $this::STATUS_FOLDER_LACK);
-			dol_syslog(__METHOD__." $this->id=".$this->id.", ".$doc."=''", LOG_DEBUG);
-			setEventMessages($langs->trans('FilesChecked'), '');
+			$db->free($resql);
+			if ($resql){
+				$this->setStatusFolder($user, $this::STATUS_FOLDER_LACK);
+				$this->message = 'FilesChecked';
+				$this->messages[] = $this->message;
+			}else{
+				$this->error = 'ErrorFailToFilesChecked';
+				$this->errors[] = 'Error '.$this->db->lasterror();
+				$error++;
+				dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
+			}
+			
+		// Met la demande de documment à faut
 		} elseif (empty($filecheck) && empty($cherchfile)) {
 			$doccheck = $doc.'check';
 			if (isset($this->$doccheck)) {
 				$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc."check = NULL WHERE rowid = ".$this->id;
 				$resql = $db->query($sql);
-				$this->db->free($resql);
-				$this->fetch($this->id);
-				if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
-					$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
+				$db->free($resql);
+				if ($resql){
+					$this->fetch($this->id);
+					if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
+						$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
+					}
+					$this->message = 'FilesUnChecked';
+					$this->messages[] = $this->message;
+				}else{
+					$this->error = 'ErrorFailToFilesUnChecked';
+					$this->errors[] = 'Error '.$this->db->lasterror();
+					$error++;
+					dol_syslog(__METHOD__."id=".$this->id.", ".$doc."=''", LOG_DEBUG);
 				}
-				//dol_syslog(__METHOD__."id=".$this->id.", ".$doc."=''", LOG_DEBUG);
-				setEventMessages($langs->trans('FilesUnChecked'), '');
 			}
 		}
-		return 1;
+		if (empty($error)){
+			return 1;
+		}else{
+			return -1 * $error;
+		}
 	}
 	/**
 	 * Action executed by scheduler

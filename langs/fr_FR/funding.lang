@@ -264,14 +264,20 @@ hasBeenExtension=Financements prolongé %s
 CantBeExtension=Financements non prolongé %s
 ErrorIsNoRunningNoOrder=Financements non actif
 
-
+FileAdded=Fichier ajouté
+ErrorFailToAddedFile=Erreur ajout du fichier
 FilesChecked=Fichier demandé
 FilesUnChecked=Fichier retiré de la demande
+ErrorFailToFilesChecked=Erreur ajout demande de fichier
+ErrorFailToFilesUnChecked=Erreur retré du fichier demandé
 
 ErrorMontMaintInFund=Montant de maintenance dans le financement le rajouter dans la commande
 SendFunding=Envoyer le financement
 
 ErrorFileNotRename=Impossible de ronnomer le fichier
+
+NoFileSearch=Pas de fichier trouvé
+FileAdding=Fichier trouvé et ajouter
 
 #
 # Status

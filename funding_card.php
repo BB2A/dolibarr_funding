@@ -236,6 +236,14 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
+	if ($action == 'searchDoc' && $permissiontoadd) {
+		$result = $object->searchDoc($user, $upload_dir);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		} else {
+			setEventMessages('FileAdding', '');
+		}
+	}
 	if ($action == 'clean' && $permissiontoadd) {
 		$object->amount_maint = '';
 		$object->amount_rent_edit = '';
@@ -350,8 +358,13 @@ if (empty($reshook)) {
 			include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 		}
 
-		$object->sendDocumentFunding($fileupload, $cherchfile, $upload_dir, $action);
-
+		$result = $object->sendDocumentFunding($fileupload, $cherchfile, $upload_dir, $action);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+			
+		} else {
+			setEventMessages($object->message, $object->messages);
+		}
 		// Ancien code sauvegardé dans fichier cloud
 	}
 
@@ -1013,6 +1026,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		}
 
 		if (empty($reshook) && empty($user->socid)) {
+			// Clean
+			if ($permissiontoadd && empty($object->fundoc1)) {
+				print dolGetButtonAction('', $langs->trans('Search').' '.$langs->trans('fundoc1'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=searchDoc&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
+			}
 			// Clean
 			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
 				print dolGetButtonAction('', $langs->trans('Clean'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=clean&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
