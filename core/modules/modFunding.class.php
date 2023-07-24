@@ -267,59 +267,59 @@ class modFunding extends DolibarrModules
 
 		// Permissions provided by this module
 		$this->rights = array();
-		$r = 183004;
+		$r = 0;
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadFunding'; // Permission label
+		$this->rights[$r][1] = 'RightReadFunding'; // Permission label
 		$this->rights[$r][4] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateFunding'; // Permission label
+		$this->rights[$r][1] = 'RightCreateUpdateFunding'; // Permission label
 		$this->rights[$r][4] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteFunding'; // Permission label
+		$this->rights[$r][1] = 'RightDeleteFunding'; // Permission label
 		$this->rights[$r][4] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ManageFunding'; // Permission label
+		$this->rights[$r][1] = 'RightManageFunding'; // Permission label
 		$this->rights[$r][4] = 'manage'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ListsFunding'; // Permission label
+		$this->rights[$r][1] = 'RightListsFunding'; // Permission label
 		$this->rights[$r][4] = 'lists'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		//Permission for coefficient
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadCoefficient'; // Permission label
+		$this->rights[$r][1] = 'RightReadCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateCoefficient'; // Permission label
+		$this->rights[$r][1] = 'RightCreateUpdateCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteCoefficient'; // Permission label
+		$this->rights[$r][1] = 'RightDeleteCoefficient'; // Permission label
 		$this->rights[$r][4] = 'coefficient'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		//Permission for retention
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'ReadRetention'; // Permission label
+		$this->rights[$r][1] = 'RightReadRetention'; // Permission label
 		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'CreateUpdateRetention'; // Permission label
+		$this->rights[$r][1] = 'RightCreateUpdateRetention'; // Permission label
 		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'DeleteRetention'; // Permission label
+		$this->rights[$r][1] = 'RightDeleteRetention'; // Permission label
 		$this->rights[$r][4] = 'retention'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->funding->level1->level2)
 		$r++;

@@ -203,17 +203,17 @@ Help_documentNotRequired=Document non requis
 #
 # Droits
 #
-ReadFunding=Lire
-CreateUpdateFunding=Créer modifier
-DeleteFunding=Supprimer
-ManageFunding=Manage funding
-ListsFunding=Liste des financements
-ReadCoefficient=Lire les coef
-CreateUpdateCoefficient=Creer modifier les coef
-DeleteCoefficient=Supprimer les coef
-ReadRetention=Lire les retenues de garanties
-CreateUpdateRetention=Creer modifier les retenues de garanties
-DeleteRetention=Supprimer les retenues de garanties
+RightReadFunding=Lire
+RightCreateUpdateFunding=Créer / modifier
+RightDeleteFunding=Supprimer
+RightManageFunding=Manager les financements
+RightListsFunding=Liste des financements
+RightReadCoefficient=Lire les coef
+RightCreateUpdateCoefficient=Creer / modifier les coef
+RightDeleteCoefficient=Supprimer les coef
+RightReadRetention=Lire les retenues de garanties
+RightCreateUpdateRetention=Creer / modifier les retenues de garanties
+RightDeleteRetention=Supprimer les retenues de garanties
 
 #
 # Events messages
