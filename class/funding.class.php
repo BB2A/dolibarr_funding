@@ -746,6 +746,7 @@ class Funding extends CommonObject
 			'fundoc2'=>$object->fundoc2,
 			'fundoc3'=>$object->fundoc3,
 			'fundoc4'=>$object->fundoc4,
+			'fundoc5'=>$object->fundoc5,
 			'funfoldoc1'=>$object->funfoldoc1,
 			'funfoldoc2'=>$object->funfoldoc2,
 			'funfoldoc3'=>$object->funfoldoc3,
@@ -1067,6 +1068,7 @@ class Funding extends CommonObject
 		$duration = -1;
 		$typedoc = $this->origin;
 		$iddoc = $this->origin_id;
+		$oldamounttotal = $this->amount_total;
 
 		//Document
 		if ($iddoc && $typedoc) {
@@ -1095,6 +1097,10 @@ class Funding extends CommonObject
 					$this->retention_rate = '';
 					$this->retention_mount = '';
 				}
+				if (!empty($this->coef)) {
+					$coef = $this->coef;
+				}
+				// var_dump($oldamounttotal,$this->amount_total);
 				$coef = $this->searchCoef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				if ($coef > 0) {
 					$this->coef = $coef;
