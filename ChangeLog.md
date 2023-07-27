@@ -2,6 +2,7 @@
 
 ## [1.0.6] - 07/2023
 - FIX - Ammélioration de la gestion des erreurs et messages sur l'envoie de fichier
+- FIX - Pas de mise à jour du taux et de la retenu de garantie si il y à pas de modification du montant.
 
 - NEW - Ajout de la recherche du RIB dans un autre financement
 
