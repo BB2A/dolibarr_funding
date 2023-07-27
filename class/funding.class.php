@@ -1060,7 +1060,7 @@ class Funding extends CommonObject
 	 */
 	public function update(User $user, $notrigger = 0)
 	{
-		global $langs;
+		global $langs, $action;
 
 		$error = 0;
 
@@ -1095,7 +1095,7 @@ class Funding extends CommonObject
 					// Mise à jour retenue garentie uniquement sur changement de prix.
 					// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
 					$newamounttotal = $this->amount_total + $this->retention_mount; // Ajout du montant de la retenue de garantie pour la conparaison si non toujour à true
-					if (empty($this->retention_rate) || ($oldamounttotal != $newamounttotal)) {
+					if ((empty($this->retention_rate) || ($oldamounttotal != $newamounttotal)) && $action == 'updateforce') {
 						$this->retention_rate = $this->searchRetentionRate($this->fk_org);
 					}
 					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
@@ -1106,7 +1106,7 @@ class Funding extends CommonObject
 				}
 				// Mise à jour du coéf uniquement sur changement de prix.
 				// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
-				if (!empty($this->coef) && ($oldamounttotal == $this->amount_total)) {
+				if (!empty($this->coef) && ($oldamounttotal == $this->amount_total) && $action != 'updateforce') {
 					$coef = $this->coef;
 				} else {
 					$coef = $this->searchCoef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);

@@ -5,6 +5,7 @@
 - FIX - Pas de mise à jour du taux et de la retenu de garantie si il y à pas de modification du montant.
 
 - NEW - Ajout de la recherche du RIB dans un autre financement
+- NEW - Ajout d'un boutton pour forcer la mise a jour avec taux et retenu
 
 ## [1.0.5] - 05/2023
 - FIX - Trigger FUNDING_UPDATE was doubled to update funding

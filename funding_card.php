@@ -236,7 +236,15 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-	if ($action == 'searchDoc' && $permissiontoadd) {
+	// Force update maj coef and Retention
+	if ($action == 'updateforce' && $permissiontoadd) {
+		$result = $object->update($user);
+		if ($result <= 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	// Search donc in other funding for thirdpartie
+	if ($action == 'searchdoc' && $permissiontoadd) {
 		$result = $object->searchDoc($user, $upload_dir);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
@@ -1025,9 +1033,13 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		}
 
 		if (empty($reshook) && empty($user->socid)) {
-			// Clean
+			// Force update maj coef and Retention
+			if ($permissiontoadd && $object->status < $object::STATUS_ACCEPT) {
+				print dolGetButtonAction('', $langs->trans('UpdateForce'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=updateforce&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
+			}
+			// Search doc
 			if ($permissiontoadd && empty($object->fundoc1)) {
-				print dolGetButtonAction('', $langs->trans('Search').' '.$langs->trans('fundoc1'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=searchDoc&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
+				print dolGetButtonAction('', $langs->trans('Search').' '.$langs->trans('fundoc1'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=searchdoc&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
 			}
 			// Clean
 			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {
