@@ -217,6 +217,8 @@ class Funding extends CommonObject
 	public $fundoc4check;
 	public $fundoc5;
 	public $fundoc5check;
+	public $fundoc6;
+	public $fundoc6check;
 	public $funfoldoc1;
 	public $funfoldoc2;
 	public $funfoldoc3;
@@ -501,7 +503,7 @@ class Funding extends CommonObject
 	 * @param   int     $org            Organisme de financement
 	 * @return                          $rate = ok or -1 = nok
 	 */
-	public function retentionrate($org)
+	public function searchRetentionRate($org)
 	{
 		global $conf, $db;
 
@@ -570,7 +572,7 @@ class Funding extends CommonObject
 				$this->amount       = $document->total_ht;
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
-					$this->retention_rate = $this->retentionrate($this->fk_org);
+					$this->retention_rate = $this->searchRetentionRate($this->fk_org);
 					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 				} else {
@@ -1090,18 +1092,26 @@ class Funding extends CommonObject
 				$this->amount       = $document->total_ht;
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
-					$this->retention_rate = $this->retentionrate($this->fk_org);
+					// Mise à jour retenue garentie uniquement sur changement de prix.
+					// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
+					$newamounttotal = $this->amount_total + $this->retention_mount; // Ajout du montant de la retenue de garantie pour la conparaison si non toujour à true
+					if (empty($this->retention_rate) || ($oldamounttotal != $newamounttotal)) {
+						$this->retention_rate = $this->searchRetentionRate($this->fk_org);
+					}
 					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
 					$this->amount_total = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT');
 				} else {
 					$this->retention_rate = '';
 					$this->retention_mount = '';
 				}
-				if (!empty($this->coef)) {
+				// Mise à jour du coéf uniquement sur changement de prix.
+				// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
+				if (!empty($this->coef) && ($oldamounttotal == $this->amount_total)) {
 					$coef = $this->coef;
+				} else {
+					$coef = $this->searchCoef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
 				}
-				// var_dump($oldamounttotal,$this->amount_total);
-				$coef = $this->searchCoef($this->amount_total, $this->fk_duration, $this->fk_scale, $this->fk_org);
+
 				if ($coef > 0) {
 					$this->coef = $coef;
 					$this->amount_rent  = price2num($this->amount_total * $coef / 100, 'MT');
