@@ -39,7 +39,7 @@ Setup=Param
 About=À propos
 FundingAbout=À propos de Financement
 FundingAboutPage=Page à propos de Financement
-BB2ADesc = Intégrateur et Dévellopeur Dolibarr<br> <a href=http://www.bb2a.fr target="_blank">http://www.bb2a.fr</a> - <a href=mailto:contact@bb2a.fr>contact@bb2a.fr</a><br>Documentation dans le dossier doc du module ou sur notre site
+BB2ADesc = Intégrateur et Dévelopeur Dolibarr<br> <a href=http://www.bb2a.fr target="_blank">http://www.bb2a.fr</a> - <a href=mailto:contact@bb2a.fr>contact@bb2a.fr</a><br>Documentation dans le dossier doc du module ou sur notre site
 
 #
 # Page À changelog
@@ -274,7 +274,7 @@ ErrorFailToFilesUnChecked=Erreur retré du fichier demandé
 ErrorMontMaintInFund=Montant de maintenance dans le financement le rajouter dans la commande
 SendFunding=Envoyer le financement
 
-ErrorFileNotRename=Impossible de ronnomer le fichier
+ErrorFileNotRename=Impossible de rennomer le fichier
 
 NoFileSearch=Pas de fichier trouvé
 FileAdding=Fichier trouvé et ajouter
@@ -360,6 +360,7 @@ COEFFICIENTENABLEnDolibarr=Coefficient %s activé
 #
 # Buttun action
 #
+UpdateForce=Mise à jour des taux
 Clean=Nettoyer
 BtnSendorg=Envoyé à l'organisme
 BtnRunning=Actif
