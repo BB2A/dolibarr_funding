@@ -587,7 +587,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			$totalarray['nbfield'] = 0;
 			if (!$i) $totalarray['nbfield']++;
 			if (!empty($val['isameasure'])) {
-				if (!$i){
+				if (!$i) {
 					$totalarray['pos'][$totalarray['nbfield']] = 't.'.$key;
 				}
 				if (!isset($totalarray['type']['t.'.$key])) {
