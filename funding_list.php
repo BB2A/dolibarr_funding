@@ -1113,6 +1113,9 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 				if (!$i) {
 					$totalarray['pos'][$totalarray['nbfield']] = 't.'.$key;
 				}
+				if (!isset($totalarray['type']['t.'.$key])) {
+					$totalarray['type'][$totalarray['nbfield']] = $val['type'];
+				}
 				if (!isset($totalarray['val'])) {
 					$totalarray['val'] = array();
 				}
