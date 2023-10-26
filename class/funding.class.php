@@ -175,6 +175,7 @@ class Funding extends CommonObject
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2, 'showoncombobox'=>'1',),
 		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
+		'fk_invoice' => array('type'=>'integer', 'label'=>'invoice_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
@@ -184,6 +185,7 @@ class Funding extends CommonObject
 	);
 	public $rowid;
 	public $ref;
+	public $entity;
 	public $study_number;
 	public $folder_number;
 	public $fk_soc;
@@ -235,6 +237,7 @@ class Funding extends CommonObject
 	public $fk_user_modif;
 	public $origin;
 	public $origin_id;
+	public $fk_invoice;
 	public $last_main_doc;
 	public $import_key;
 	public $model_pdf;

@@ -70,6 +70,7 @@ CREATE TABLE llx_funding_funding(
 	fk_user_modif integer, 
 	origin varchar(128) NOT NULL, 
 	origin_id integer NOT NULL, 
+	fk_invoice integer, 
 	last_main_doc varchar(255), 
 	import_key varchar(14), 
 	model_pdf varchar(255), 
@@ -94,6 +95,7 @@ ALTER TABLE llx_funding_funding ADD COLUMN fundoc6check smallint AFTER fundoc6;
 ALTER TABLE llx_funding_funding ADD COLUMN funfoldoc6 varchar(255) AFTER funfoldoc5;
 ALTER TABLE llx_funding_funding ADD COLUMN extension smallint AFTER funfoldoc6;
 ALTER TABLE llx_funding_funding ADD COLUMN funcheck smallint AFTER model_pdf;
+ALTER TABLE llx_funding_funding ADD COLUMN fk_invoice integer AFTER origin_id;
 ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_order;
