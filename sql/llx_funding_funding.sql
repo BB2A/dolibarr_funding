@@ -18,6 +18,7 @@ CREATE TABLE llx_funding_funding(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
+	entity integer DEFAULT 1 NOT NULL,    -- multi company id
 	study_number varchar(128), 
 	folder_number varchar(128), 
 	amount double DEFAULT NULL, 
@@ -78,6 +79,7 @@ CREATE TABLE llx_funding_funding(
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
 
+ALTER TABLE llx_funding_funding ADD COLUMN entity integer DEFAULT 1 NOT NULL AFTER ref;    -- multi company id
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
 ALTER TABLE llx_funding_funding ADD COLUMN retention_mount double AFTER retention_rate;
 ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
@@ -96,3 +98,4 @@ ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_order;
 
+-- UPDATE llx_funding_funding SET entity = 1 where WHERE entity IS NULL;
