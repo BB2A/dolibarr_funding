@@ -249,7 +249,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result -1;
 						}
 					}
-					//Regarde si il existe un lien sur une proposition
+					// Regarde si il existe un lien sur une proposition
 				} elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
 					$sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = ".$object->id;
@@ -264,7 +264,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						setEventMessages('1'.$errors, null, 'errors');
 						$result = -1;
 					}
-					//Si existe un lien vérifie si un financement sur propo
+					// Si existe un lien vérifie si un financement sur propo
 					if (!empty($sourceid)) {
 						$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as f';
 						$sql.= " WHERE f.origin = 'propal' and f.origin_id = ".$sourceid;
@@ -281,7 +281,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result = -1;
 						}
 					}
-					//Création du financeemnt sur commande
+					// Création du financeemnt sur commande
 					if (!empty($fudid)) {
 						dol_include_once('/funding/class/funding.class.php');
 						$fundingobject = new Funding($this->db);

@@ -135,7 +135,7 @@ class Funding extends CommonObject
 		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>11, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
 		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>12, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRent",),
-		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRentEdit",),
+		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'0', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRentEdit",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
@@ -308,6 +308,10 @@ class Funding extends CommonObject
 		}
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) {
 			$this->fields['entity']['enabled'] = 0;
+		}
+		// Activation du loyer personalisé
+		if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT)) {
+			$this->fields['amount_rent_edit']['enabled'] = 1;
 		}
 		if (!empty($conf->global->FUNDING_FILTRE_ORGANIZATION) && $conf->global->FUNDING_FILTRE_ORGANIZATION > 0 && isset($this->fields['fk_org'])) {
 			if (DOL_VERSION < '17.0.0') {
@@ -666,6 +670,7 @@ class Funding extends CommonObject
 		unset($object->id);
 		unset($object->fk_user_creat);
 		unset($object->import_key);
+		unset($object->amount_rent_edit);
 
 		// Clear fields
 		if (property_exists($object, 'ref')) {
@@ -1122,9 +1127,11 @@ class Funding extends CommonObject
 
 					if ($this->amount_rent_edit < $this->amount_rent) {
 						$this->amount_rent_edit = $this->amount_rent;
-						setEventMessages($langs->trans("amountRentEdit<amountRent"), null, 'errors');
+						if ($this->origin == 'PROPAL') {
+							setEventMessages($langs->trans("amountRentEdit<amountRent"), null, 'errors');
+						}
 					}
-					if ($this->amount_rent_edit > $this->amount_rent) {
+					if ($this->amount_rent_edit > $this->amount_rent && $this->origin == 'PROPAL') {
 						setEventMessages($langs->trans("amountRentEdit>amountRent"), null);
 					}
 					$this->date_delivery = $document->date_livraison;

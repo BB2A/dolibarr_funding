@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2007-2017 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2020 		BERTON Anthony 			<bertonanthony@gmail.com>
+ * Copyright (C) 2020-2023 BERTON Anthony 			<anthony.berton@bb2a.fr>
  * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
@@ -164,6 +164,11 @@ foreach ($object->fields as $key => $val) {
 	if (isset($val['searchall'])) {
 		$fieldstosearchall['t.'.$key] = $val['label'];
 	}
+}
+
+// Activation du loyer personalisé
+if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT) && $search['origin'] != 'propal') {
+	unset($object->fields['amount_rent_edit']);                 // Hide field already shown in banner
 }
 
 // Definition of fields for list

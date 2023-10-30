@@ -119,10 +119,12 @@ $arrayofparameters = array(
 	'FUNDING_LISTE_THIRDPARTY_PROPAL'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 	'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
+	'FUNDING_ENABLED_RENTEDIT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+
 );
 
 $error = 0;
-$setupnotempty = 0;
+$setupnotempty = 1;
 
 
 /*
@@ -241,7 +243,7 @@ llxHeader('', $langs->trans($page_name));
 // Subheader
 $linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1').'">'.$langs->trans("BackToModuleList").'</a>';
 
-print load_fiche_titre($langs->trans($page_name), $linkback, 'object_funding@funding');
+print load_fiche_titre($langs->trans($page_name), $linkback,  'object_'.$object->picto);
 
 // Configuration header
 $head = fundingAdminPrepareHead();
@@ -279,6 +281,9 @@ if (1 == 1) {
 			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_TYPE', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_TYPE);
 		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
+		} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
+			print '</td>';
+			print '<td align="right" width="230">'.$form->selectarray('FUNDING_NOCLOSEDFINISHAUTO_EXTENSION', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION);
 		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL') {
 			print '</td>';
 			print '<td align="right" width="230">';
@@ -297,9 +302,15 @@ if (1 == 1) {
 				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
 				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST);
 			}
-		} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
+		} elseif ($key == 'FUNDING_ENABLED_RENTEDIT') {
 			print '</td>';
-			print '<td align="right" width="230">'.$form->selectarray('FUNDING_NOCLOSEDFINISHAUTO_EXTENSION', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION);
+			print '<td align="right" width="230">';
+			if ($conf->use_javascript_ajax) {
+				print ajax_constantonoff('FUNDING_ENABLED_RENTEDIT');
+			} else {
+				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+				print $form->selectarray("FUNDING_ENABLED_RENTEDIT", $arrval, $conf->global->FUNDING_ENABLED_RENTEDIT);
+			}
 		} else {
 			print '</td><td align="right" width="230"><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 		}
@@ -586,9 +597,9 @@ foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
 	}
 }
 
-if (empty($setupnotempty)) {
-	print '<br>'.$langs->trans("NothingToSetup");
-}
+// if (empty($setupnotempty)) {
+// 	print '<br>'.$langs->trans("NothingToSetup");
+// }
 
 // Page end
 dol_fiche_end();

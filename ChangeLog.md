@@ -1,11 +1,17 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.0.7] - 07/2023
+- FIX - Loyer personnalisé uniquement sur les propositions pour l'affichage sur les PDF et les mail. Sur les commandes et factures aucun intéré doit refléter le montant réel.
+
+- NEW - Ajout de "entity" en base sur funding pour l'implémentation du multisociété(Coef et retenue de garantie commun au société à définir plus tard)
+- NEW - Ajout de "fk-invoice" en base sur funding pour le ratachement future à la facture.
+
 ## [1.0.6] - 07/2023
 - FIX - Ammélioration de la gestion des erreurs et messages sur l'envoie de fichier
 - FIX - Pas de mise à jour du taux et de la retenu de garantie si il y à pas de modification du montant.
 
 - NEW - Ajout de la recherche du RIB dans un autre financement
-- NEW - Ajout d'un boutton pour forcer la mise a jour avec taux et retenu
+- NEW - Ajout d'un boutton pour forcer la mise a jour avec taux et retenu de garantie
 
 ## [1.0.5] - 05/2023
 - FIX - Trigger FUNDING_UPDATE was doubled to update funding

@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
- * Copyright (C) 2020-2022	BERTON Anthony 			<anthony.berton@bb2a.fr>
+ * Copyright (C) 2020-2023	BERTON Anthony 			<anthony.berton@bb2a.fr>
  * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
@@ -435,31 +435,37 @@ jQuery(document).ready(function() {
 
 //Regarde si on est dans un document ou fiche funding
 if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($object->origin_id)) {
-	//BB2A_Récupération table propal
+	// Récupération table propal
 	if ($typedoc == 'propal' || $object->origin == 'propal') {
 		$prop = new Propal($db);
 		$result = $prop->fetch(empty($iddoc)?$object->origin_id:$iddoc);
 	}
-	//BB2A_Récupération table order
+	// Récupération table order
 	if ($typedoc == 'order' || $object->origin == 'order') {
 		$ord = new Commande($db);
 		$result = $ord->fetch(empty($iddoc)?$object->origin_id:$iddoc);
 	}
+	// Activation du loyer personalisé
+	if ((!empty($typedoc) && $typedoc != 'propal') || (!empty($object->origin) && $object->origin != 'propal')) {
+		if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT)) {
+			unset($object->fields['amount_rent_edit']);                 // Hide field already shown in banner
+		}
+	}
 }
 
-// BB2A Vérification si on est dans un document pour afficher la bonne entête
+// Vérification si on est dans un document pour afficher la bonne entête
 if ($typedoc == 'propal') {
-	//BB2A_Affichage encadrer propal
+	// Affichage encadrer propal
 	$prop->fetch_thirdparty();
 
 	$head = propal_prepare_head($prop);
 	dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
 } elseif ($typedoc == 'order') {
-	//BB2A_Affichage encadrer order
+	// Affichage encadrer order
 	$head = commande_prepare_head($ord);
 	dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
 } else {
-	//BB2A_Affichage encadrer funding
+	// Affichage encadrer funding
 	$res = $object->fetch_optionals();
 	$head = fundingPrepareHead($object);
 	dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);

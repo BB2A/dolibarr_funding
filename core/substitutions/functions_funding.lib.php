@@ -54,7 +54,9 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		$scale = $object->fetchScale($object->fk_scale);
 		$substitutionarray['__FUNDING_SCALE__'] = isset($scale->label) ? $scale->label : '';
 		$substitutionarray['__FUNDING_AMOUNT_RENT__'] = isset($object->amount_rent) ? price($object->amount_rent, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
-		$substitutionarray['__FUNDING_AMOUNT_RENT_EDIT__'] = isset($object->amount_rent_edit) ? price($object->amount_rent_edit, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
+		if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT) && $object->origin == 'propal') {
+			$substitutionarray['__FUNDING_AMOUNT_RENT_EDIT__'] = isset($object->amount_rent_edit) ? price($object->amount_rent_edit, 0, $outputlangs, 0, 0, -1, $conf->currency) : '';
+		}
 		$substitutionarray['__FUNDING_DATE_DELIVERY__'] = isset($object->date_delivery) ? dol_print_date($object->date_delivery, 'day', 0, $outputlangs) : '';
 		$substitutionarray['__FUNDING_DATE_END__'] = isset($object->date_end) ? dol_print_date($object->date_end, 'day', 0, $outputlangs) : '';
 		$substitutionarray['__FUNDING_REDEMPTION__'] = isset($object->redemption) ? ($object->redemption == 1 ? $langs->trans("Yes") : $langs->trans("No")) : '';
