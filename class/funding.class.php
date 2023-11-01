@@ -2747,14 +2747,17 @@ class Funding extends CommonObject
 	}
 
 	/**
-	* @param   int          $duration    delais de comparaison
+	* @param   int          $duration    delais de comparaison (mois)
 	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
 	*/
 	public function cronFundingSoonFinished($duration = 6)
 	{
 		global $conf, $langs, $db;
+
 		$date = dol_now('tzserver');
 		$dateEnd = date('Y-m-d', strtotime('+'.$duration.' month', $date));
+		$output = '<ul>';
+		$errormsg = '';
 
 		$sql = 'SELECT rowid, ref, fk_soc, fk_user_comm, date_end, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2776,16 +2779,11 @@ class Funding extends CommonObject
 					if (empty($obj)) {
 						break; // Should not happen
 					}
-					$message = '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a> - '.$soc->nom.'('.$soc->name_alias.') - '.date('d-m-Y', strtotime($obj->date_end));
-					$result = $funding->sendMail($comm->email, $comm->email, $langs->trans("OutputCronFundingSoonFinished"), $message);
-					if ($i == $num) {
-						$output .= $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end));
-					} else {
-						$output .= $obj->ref." - ".$soc->nom."(".$soc->name_alias.") - ".date('d-m-Y', strtotime($obj->date_end))." _ ";
-					}
+					$output .= '<li><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a> - '.date('d-m-Y', strtotime($obj->date_end)).' - '.$soc->nom.' ('.$soc->name_alias.')</li>';
 					$i++;
 				}
 			}
+			$output .= '</ul>';
 			$this->db->free($resql);
 		} else {
 			$error = $this->db;
@@ -2793,10 +2791,20 @@ class Funding extends CommonObject
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
-		$this->error = '';
-
 		if (!empty($output)) {
-			$this->output = $langs->trans("OutputCronFundingSoonFinished").' '.$output;
+			if ($num > 1) {
+				$subject = $langs->trans("OutputCronFundingsSoonFinished");
+			} else {
+				$subject = $langs->trans("OutputCronFundingSoonFinished");
+			}
+			$output = $subject.' '.$output;
+			$result = $funding->sendMail($comm->email, $comm->email, dol_string_nohtmltag($subject), $output);
+			if ($result < 0) {
+				$error++;
+				$errormsg .= 'Send mail not found';
+			}
+			$this->output = $output;
+			$this->error = $errormsg;
 		}
 
 		if (!empty($error)) {
@@ -2848,7 +2856,7 @@ class Funding extends CommonObject
 		}
 
 		include_once DOL_DOCUMENT_ROOT . '/core/class/CMailFile.class.php';
-		$mailfile = new CMailFile($subject, $sendto, $from, $message, '', '', '', '', '', 0, -1);
+		$mailfile = new CMailFile($subject, $sendto, $from, $message, '', '', '', '', '', 0, 1);
 		$result = $mailfile->sendfile();
 
 		return $result;

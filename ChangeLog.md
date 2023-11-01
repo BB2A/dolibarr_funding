@@ -2,7 +2,9 @@
 
 ## [1.0.7] - 07/2023
 - FIX - Loyer personnalisé uniquement sur les propositions pour l'affichage sur les PDF et les mail. Sur les commandes et factures aucun intéré doit refléter le montant réel.
+- FIX - Amélioration sur l'envoie du mail pour les financements bientot à therme.
 
+- NEW - Si ouverture proposition financiere indique si un financement existe pour la commande ou facture correspondante
 - NEW - Ajout de "entity" en base sur funding pour l'implémentation du multisociété(Coef et retenue de garantie commun au société à définir plus tard)
 - NEW - Ajout de "fk-invoice" en base sur funding pour le ratachement future à la facture.
 
