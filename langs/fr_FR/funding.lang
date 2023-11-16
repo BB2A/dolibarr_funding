@@ -106,16 +106,16 @@ Lack=Pièces demandées
 #
 # Box d'exemple
 #
-FundindBoxValidate=Les nouveaux financements
-FundindBoxValidatePropal=Les nouvelles propositions financières
-FundindBoxUpdate=Les 10 derniers financements mise à jour
-FundindBoxUpdatePropal=Les 10 dernières propositions financieres mise à jour
-FundindBoxAccept=Les 10 derniers financements accepté
-FundindBoxAcceptPropal=LLes 10 dernières propositions financieres accepté
-FundindBoxDenied=Les 10 derniers financements refusé
-FundindBoxDeniedPropal=LLes 10 dernières propositions financieres refusé
-FundindBoxRunning=Les 10 derniers financements actif
-FundindBoxEnd=Les 10 derniers financements terminé
+FundindBoxValidate=Les derniers financements validé
+FundindBoxValidatePropal=Les dernières propositions financières validé
+FundindBoxUpdate=Les derniers financements mise à jour
+FundindBoxUpdatePropal=Les dernières propositions financieres mise à jour
+FundindBoxAccept=Les derniers financements accepté
+FundindBoxAcceptPropal=Les dernières propositions financieres accepté
+FundindBoxDenied=Les derniers financements refusé
+FundindBoxDeniedPropal=Les dernières propositions financieres refusé
+FundindBoxRunning=Les derniers financements actif
+FundindBoxEnd=Les derniers financements terminé
 
 #
 # Last in comm card
@@ -191,7 +191,7 @@ Help_retention=RG (Retenue de garantie)
 Help_retention_rate=Pourcentage de retenue de garantie
 Help_retention_mount=Valeur de la retenu de garantie
 Help_amountRent=Montant des loyer
-Help_amountRentEdit=Uniquement pour les propositions commercial
+Help_amountRentEdit=Uniquement pour les propositions commercial. Il est arrondi à l'euro supérieur.. 
 Help_dateDelivery=Date de livraison du matériel
 Help_dateSignature=Date de signature du procès verbale de livraison
 Help_dateEnd=Date de fin du financement
@@ -368,6 +368,7 @@ BtnSendorg=Envoyé à l'organisme
 BtnRunning=Actif
 BtnExtension=Prolongation
 BtnLack=Pièces manquantes
+searchdocinotherfunding=Récupéréer Documents
 
 #
 # Mass actions

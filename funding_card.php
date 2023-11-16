@@ -249,7 +249,8 @@ if (empty($reshook)) {
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		} else {
-			setEventMessages('FileAdding', '');
+			setEventMessages($object->msg, $object->msgs);
+			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
 	if ($action == 'clean' && $permissiontoadd) {
@@ -1045,7 +1046,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 			}
 			// Search doc
 			if ($permissiontoadd && empty($object->fundoc1)) {
-				print dolGetButtonAction('', $langs->trans('Search').' '.$langs->trans('fundoc1'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=searchdoc&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
+				print dolGetButtonAction('', $langs->trans('searchdocinotherfunding'), 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=searchdoc&typedoc='.$typedoc.'&iddoc'.$iddoc.'&token='.newToken());
 			}
 			// Clean
 			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED && $object->status < $object::STATUS_ACCEPT) {

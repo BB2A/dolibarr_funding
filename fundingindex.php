@@ -91,6 +91,8 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $funding = new Funding($db);
 $companystatic = new Societe($db);
+$nbmax = 10;
+$max = 3;
 
 llxHeader("", $langs->trans("Funding"));
 
@@ -98,7 +100,7 @@ print load_fiche_titre($langs->trans("Funding"), '', 'fa-piggy-bank');
 
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
-//print getCustomerFundingPieChart($socid); //Affichage du graph
+// print getCustomerFundingPieChart($socid); //Affichage du graph
 print '<br>';
 
 
@@ -127,12 +129,12 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 
 		print '<table class="noborder centpercent">';
 		print '<tr class="liste_titre">';
-		print '<th colspan="4">'.$langs->trans("FundindBoxValidate").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+		print '<th colspan="4">'.$langs->trans("FundindBoxValidate").($num?'<span class="badge marginleftonlyshort">'.$nbmax.' / '.$num.'</span>':'').'</th></tr>';
 
 		$var = true;
 		if ($num > 0) {
 			$i = 0;
-			while ($i < $num) {
+			while ($i < $num and $i <> $nbmax) {
 				$obj = $db->fetch_object($resql);
 				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id = isset($obj->rowid)?$obj->rowid:'';
@@ -175,10 +177,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
 
-$NBMAX = 3;
-$max = 3;
-
-//print getCustomerFundingPieChart2($socid);  //Affichage du graph
+// print getCustomerFundingPieChart2($socid);  //Affichage du graph
 print '<br>';
 
 	// Tableau bis
@@ -203,12 +202,12 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 
 		print '<table class="noborder centpercent">';
 		print '<tr class="liste_titre">';
-		print '<th colspan="4">'.$langs->trans("FundindBoxValidatePropal").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+		print '<th colspan="4">'.$langs->trans("FundindBoxValidatePropal").($num?'<span class="badge marginleftonlyshort">'.$nbmax.' / '.$num.'</span>':'').'</th></tr>';
 
 		$var = true;
 		if ($num > 0) {
 			$i = 0;
-			while ($i < $num) {
+			while ($i < $num and $i <> $nbmax) {
 				$obj = $db->fetch_object($resql);
 				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id = isset($obj->rowid)?$obj->rowid:'';
@@ -275,12 +274,12 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 
 		print '<table class="noborder centpercent">';
 		print '<tr class="liste_titre">';
-		print '<th colspan="4">'.$langs->trans("FundindBoxUpdate").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+		print '<th colspan="4">'.$langs->trans("FundindBoxUpdate").($num?'<span class="badge marginleftonlyshort">'.$nbmax.' / '.$num.'</span>':'').'</th></tr>';
 
 		$var = true;
 		if ($num > 0) {
 			$i = 0;
-			while ($i < $num and $i <> 10) {
+			while ($i < $num and $i <> $nbmax) {
 				$obj = $db->fetch_object($resql);
 				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id = isset($obj->rowid)?$obj->rowid:'';
@@ -322,11 +321,6 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
-
-$NBMAX = 3;
-$max = 3;
-
-
 print '<br>';
 
 if (! empty($conf->funding->enabled) && $permissiontoread) {
@@ -351,12 +345,12 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 
 		print '<table class="noborder centpercent">';
 		print '<tr class="liste_titre">';
-		print '<th colspan="4">'.$langs->trans("FundindBoxUpdatePropal").($num?'<span class="badge marginleftonlyshort">'.$num.'</span>':'').'</th></tr>';
+		print '<th colspan="4">'.$langs->trans("FundindBoxUpdatePropal").($num?'<span class="badge marginleftonlyshort">'.$nbmax.' / '.$num.'</span>':'').'</th></tr>';
 
 		$var = true;
 		if ($num > 0) {
 			$i = 0;
-			while ($i < $num and $i <> 10) {
+			while ($i < $num and $i <> $nbmax) {
 				$obj = $db->fetch_object($resql);
 				print '<tr class="oddeven"><td class="nowrap tdoverflowmax100">';
 				$funding->id = isset($obj->rowid)?$obj->rowid:'';

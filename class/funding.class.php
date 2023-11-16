@@ -2261,31 +2261,48 @@ class Funding extends CommonObject
 		global $conf, $db, $langs;
 
 		$error = 0;
-		$docSearch = '';
-		$doc = 'fundoc1';
-		$doccheck = $doc.'check';
+		$this->msg = '';
+		$this->msgs[] = '';
+		// // Sécurity verif if fundoc is empty
+		// if (!empty($this->$doc)) {
+		// 	return 0;
+		// }
 
-		// Sécurity verif if fundoc is empty
-		if (!empty($this->$doc)) {
-			return 0;
-		}
-		$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
-		$sql.= ' WHERE c.fk_soc = ' . $this->fk_soc;
-		$sql.= ' AND c.'.$doc.' <> "" ';
-		$resql = $db->query($sql);
+			$i = 1;
+		while ($i <= 4) {
+			$docSearch = '';
+			$doc = 'fundoc'.$i;
+			$doccheck = $doc.'check';
 
-		if ($resql) {
-			$nbtotalofrecords = $db->num_rows($resql);
-			if ($nbtotalofrecords > 0) {
-				$i = 0;
-				$total = 0;
-				while ($i < $nbtotalofrecords) {
-					$obj = $db->fetch_object($resql);
-					if (is_object($obj)) {
-						$docSearch = $obj->$doc;
+			// Sécurity verif if fundoc
+			// if (!isset($this->$doc)) {
+			// 	$i++;
+			// 	continue;
+			// }
+
+			$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as c';
+			$sql.= ' WHERE c.fk_soc = ' . $this->fk_soc;
+			$sql.= ' AND c.'.$doc.' <> "" ';
+			$resql = $db->query($sql);
+
+			if ($resql) {
+				$nbtotalofrecords = $db->num_rows($resql);
+				if ($nbtotalofrecords > 0) {
+					$j = 0;
+					$total = 0;
+					while ($j < $nbtotalofrecords) {
+						$obj = $db->fetch_object($resql);
+						if (empty($this->$doc) && is_object($obj) && !empty($obj->$doc)) {
+							$docSearch = $obj->$doc;
+						}
+						$j++;
 					}
-					$i++;
 				}
+			} else {
+				$this->error = 'ErrorFailsql';
+				$this->errors[] = 'Error '.$this->db->lasterror();
+				$error++;
+				dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			}
 			if (!empty($docSearch)) {
 				// On copie le document dans le bon dossier
@@ -2298,6 +2315,8 @@ class Funding extends CommonObject
 
 				if (!(is_dir($upload_dir_dest))) {
 					$result = dol_mkdir($upload_dir_dest);
+				} else {
+					$result = 1;
 				}
 				if ($result < 0) {
 					$this->error = 'ErrorCreateFolder';
@@ -2317,7 +2336,7 @@ class Funding extends CommonObject
 				// Vérifie si le fichier à bien ete créer pour inscription en db
 				if (file_exists($upload_dir_dest.'/'.$fileoutputname)) {
 					if (isset($this->$doccheck)) {
-						$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doc."check = NULL WHERE rowid = ".$this->id;
+						$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doccheck." = NULL WHERE rowid = ".$this->id;
 					} else {
 						$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."'WHERE rowid = ".$this->id;
 					}
@@ -2328,7 +2347,8 @@ class Funding extends CommonObject
 						if (empty($this->fundoc1check) && empty($this->fundoc2check) && empty($this->fundoc3check) && empty($this->fundoc4check) && empty($this->fundoc5check) && $this->status_folder == $this::STATUS_FOLDER_LACK) {
 							$this->setStatusFolder($user, $this::STATUS_FOLDER_LACKOK);
 						}
-						return 1;
+						$this->msg = 'FileAdding';
+						$this->msgs[] = '-> '.$langs->trans($doc);
 					} else {
 						$this->error = 'ErrorFailsql';
 						$this->errors[] = 'Error '.$this->db->lasterror();
@@ -2338,14 +2358,11 @@ class Funding extends CommonObject
 				}
 			} else {
 				$this->error = 'NoFileSearch';
-				$error++;
+				$this->errors[] = '-> '.$langs->trans($doc);
 			}
-		} else {
-			$this->error = 'ErrorFailsql';
-			$this->errors[] = 'Error '.$this->db->lasterror();
-			$error++;
-			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			$i++;
 		}
+
 
 		if (empty($error)) {
 			return 1;
