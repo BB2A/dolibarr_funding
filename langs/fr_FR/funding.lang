@@ -373,8 +373,6 @@ searchdocinotherfunding=Récupéréer Documents
 #
 # Mass actions
 #
-ConfirmMassValidation=Validation des financements
-ConfirmMassValidationQuestion=Voulez vous valider les financements?
 ConfirmMassSendOrg=Financements envoyés aux organismes
 ConfirmMassSendOrgQuestion=Voulez vous mettre les financements en envoyés
 ConfirmMassLAck=Passer les financements en pièces manquantent
