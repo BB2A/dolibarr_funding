@@ -1085,7 +1085,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 			}
 
 			//Back to draft
-			if ($permissionmanage && $object->status >= $object::STATUS_VALIDATED) {
+			if ($permissiontoadd && $object->status >= $object::STATUS_VALIDATED) {
 				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&token='.newToken().'&confirm=yes&typedoc='.$typedoc.'&iddoc='.$iddoc.'">'.$langs->trans("SetToDraft").'</a>';
 			}
 
