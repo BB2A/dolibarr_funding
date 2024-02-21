@@ -85,11 +85,11 @@ class Funding extends CommonObject
 	 *  	'chkbxlst:...',
 	 *  	'varchar(x)',
 	 *  	'text', 'text:none', 'html',
-	 *   	'double(24,8)', 'real', 'price',
+	 *  	'double(24,8)', 'real', 'price',
 	 *  	'date', 'datetime', 'timestamp', 'duration',
 	 *  	'boolean', 'checkbox', 'radio', 'array',
 	 *  	'mail', 'phone', 'url', 'password', 'ip'
-	 *		Note: Filter must be a Dolibarr Universal Filter syntax string. Example: "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.status:!=:0) or (t.nature:is:NULL)"
+	 *  	Note: Filter must be a Dolibarr Universal Filter syntax string. Example: "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.status:!=:0) or (t.nature:is:NULL)"
 	 *  'label' the translation key.
 	 *  'picto' is code of a picto to show before value in forms
 	 *  'enabled' is a condition when the field must be managed (Example: 1 or '$conf->global->MY_SETUP_PARAM' or 'isModEnabled("multicurrency")' ...)
@@ -1134,7 +1134,12 @@ class Funding extends CommonObject
 					if ($this->amount_rent_edit > $this->amount_rent && $this->origin == 'PROPAL') {
 						setEventMessages($langs->trans("amountRentEdit>amountRent"), null);
 					}
-					$this->date_delivery = $document->date_livraison;
+
+					$this->date_delivery = $document->delivery_date;
+					// If version is down to 19
+					if (version_compare(DOL_VERSION, '18.0.0') == -1) {
+						$this->date_delivery = $document->date_livraison;
+					}
 
 					// Date de signature renseigné si commande livré
 					if ($document->status == 3) {
