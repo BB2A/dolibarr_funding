@@ -124,6 +124,11 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			if ($resql) {
 				$obj = $db->fetch_object($resql);
 				$fudid = isset($obj->rowid) ? $obj->rowid : '';
+				$delivery_date = $object->delivery_date;
+				// If version is down to 19
+				if (version_compare(DOL_VERSION, '18.0.0') == -1) {
+					$delivery_date = $object->date_livraison;
+				}
 			} else {
 				$errors = 'Error '.$this->db->lasterror();
 				dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
@@ -327,7 +332,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			//case 'ORDER_SENTBYMAIL':
 			case 'ORDER_CLASSIFY_BILLED':
 				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
-					if (!empty($object->date_livraison)) {
+					if (!empty($delivery_date)) {
 						// Date de signature renseigné si commande livré
 						if (empty($obj->date_signature)) {
 							$obj->date_signature = $obj->date_delivery;
@@ -370,7 +375,8 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return 0;
 			case 'ORDER_CLOSE':
 				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
-					if (!empty($object->date_livraison)) {
+					
+					if (!empty($delivery_date)) {
 						// Date de signature renseigné si commande livré
 						if (empty($obj->date_signature)) {
 							$obj->date_signature = $obj->date_delivery;
