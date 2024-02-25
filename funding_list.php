@@ -167,7 +167,7 @@ foreach ($object->fields as $key => $val) {
 }
 
 // Activation du loyer personalisé
-if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT) && $search['origin'] != 'propal') {
+if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT) && isset($search['origin']) && $search['origin'] != 'propal') {
 	unset($object->fields['amount_rent_edit']);                 // Hide field already shown in banner
 }
 
