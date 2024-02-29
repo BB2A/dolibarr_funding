@@ -103,7 +103,6 @@ $hookmanager->initHooks(array('fundingcard', 'globalcard')); // Note that conf->
 
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
-
 $search_array_options = $extrafields->getOptionalsFromPost($object->table_element, '', 'search_');
 
 // Initialize array of search criterias

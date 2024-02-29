@@ -1136,7 +1136,7 @@ class Funding extends CommonObject
 					}
 
 					$this->date_delivery = $document->delivery_date;
-					// If version is down to 19
+					// If version is down to 18
 					if (version_compare(DOL_VERSION, '18.0.0') == -1) {
 						$this->date_delivery = $document->date_livraison;
 					}
