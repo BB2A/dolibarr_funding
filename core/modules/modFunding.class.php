@@ -109,6 +109,9 @@ class modFunding extends DolibarrModules
 					  'formmail',
 					  'notification',
 					  'onlinesign',
+					  'propallist',
+					  'orderlist',
+					  'invoicelist',
 				  ),
 				 // 'entity' => '0',
 			),
@@ -198,7 +201,7 @@ class modFunding extends DolibarrModules
 		$this->dictionaries=array(
 			'langs'=>'funding@funding',
 			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."c_funding_duration",MAIN_DB_PREFIX."c_funding_scale",MAIN_DB_PREFIX."c_funding_type"),
+			'tabname'=>array("c_funding_duration","c_funding_scale","c_funding_type"),
 			// Label of tables
 			'tablib'=>array("Funding_duration","Funding_scale","Funding_type"),
 			// Request to select fields

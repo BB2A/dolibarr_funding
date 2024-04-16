@@ -1,5 +1,6 @@
 <?php
-/* Copyright (C) 2021 BERTON Anthony <a.berton@gest-mag.com>
+/* Copyright (C) 2017  		Laurent Destailleur 	<eldy@users.sourceforge.net> 
+ * Copyright (C) 2021-2024	BERTON Anthony			<anthony.berton@bb2a.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,20 +99,11 @@ class ActionsFunding
 
 		$error = 0; // Error counter
 
-		/* print_r($parameters); print_r($object); echo "action: " . $action; */
-		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2'))) {	    // do something only for the context 'somecontext1' or 'somecontext2'
-			// Do what you want here...
-			// You can for example call global vars like $fieldstosearchall to overwrite them, or update database depending on $action and $_POST values.
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {	    // do something only for the context 'somecontext1' or 'somecontext2'
+			$parameters['arrayfields']['funding.status'] = array('label'=>'Funding', 'checked'=>1, 'enabled'=>1, 'visible'=>-1, 'position'=>1000 );
 		}
 
-		if (!$error) {
-			$this->results = array('myreturn' => 999);
-			$this->resprints = 'A text to show';
-			return 0; // or return 1 to replace standard code
-		} else {
-			$this->errors[] = 'Error message';
-			return -1;
-		}
+		return 0; // or return 1 to replace standard code
 	}
 
 
@@ -572,5 +564,209 @@ class ActionsFunding
 		$this->resprints = $resultprint;
 		return $result;
 	}
+
+	/**
+	 * Overloading the completeFieldsToSearchAll function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function completeFieldsToSearchAll($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$contexts = explode(':', $parameters['context']);
+		return 0;
+	}
+	
+	/**
+	 * Overloading the printFieldListSelect function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListSelect($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$sql = '';
+
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {
+			$sql .= ',funding.rowid as fundrowid, funding.ref as fundref, funding.status as fundstatus';
+		}
+		$this->resprints = $sql;
+		return 0;
+	}
+
+	/**
+	 * Overloading the printFieldListFrom function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListFrom($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$sql = '';
+
+		if (in_array($parameters['currentcontext'], array('propallist'))) {
+			$sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'funding_funding as funding ON (p.rowid = funding.origin_id and funding.origin="propal")';
+		}
+
+		if (in_array($parameters['currentcontext'], array('orderlist'))) {
+			$sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'funding_funding as funding ON (c.rowid = funding.origin_id and funding.origin="order")';
+		}
+		
+
+		$this->resprints = $sql;
+		return 0;
+	}
+
+	/**
+	 * Overloading the printFieldListHaving function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListHaving($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$sql = '';
+		// If Stock is enabled
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {
+		}
+		$this->resprints = $sql;
+		return 0;
+	}
+	
+	/**
+	 * Overloading the printFieldListSearchParam function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListSearchParam($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$param = '';
+		$search_funding_status = '';
+
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && $search_funding_status > 0) {
+			$parameters['param'] .= '&search_funding_status='.urlencode($search_funding_status);
+		}
+
+		$this->resprints = $param;
+		return 0;
+	}
+
+	/**
+	 * Overloading the printFieldPreListTitle function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldPreListTitle($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$param = '';
+
+		$this->resprints = $param;
+		return 0;
+	}
+
+	/**
+	 * Overloading the printFieldListOption function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListOption($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$moreforfilter = '';
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
+			$moreforfilter .= '<td class="liste_titre">';
+			$moreforfilter .= '</td>';
+		}
+
+		$this->resprints = $moreforfilter;
+		return 0;
+	}
+
+	/**
+	 * Overloading the printFieldListTitl function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListTitle($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$result = '';
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
+			$result = print_liste_field_titre('Funding', $_SERVER['PHP_SELF'], '', '', $parameters['param'], 'class="center"', $parameters['sortfield'], $parameters['sortorder']);
+			$parameters['totalarray']['nbfield']++;
+		}
+
+		$this->resprints = $result;
+		return 0;
+	}
+
+	/**
+	 * Overloading the printFieldListValue function
+	 *
+	 * @param   array           $parameters     Hook metadatas (context, etc...)
+	 * @param   Object			$object		   	Object output on PDF
+	 * @param   string          $action         Current action (if set). Generally create or edit or null
+	 * @return  int 		      			  	array,
+	 *
+	 */
+	public function printFieldListValue($parameters, &$object, &$action)
+	{
+		global $langs, $conf, $db;
+		$result = '';
+		$value = img_picto('uncheck','uncheck');
+	
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
+			dol_include_once('/funding/class/funding.class.php');
+			$funding = new funding($db);
+			if (!empty($parameters['obj']->fundstatus)){
+				$funding->fetch($parameters['obj']->fundrowid);
+				$value = $funding->LibStatut($parameters['obj']->fundstatus, 3).' '.$funding->getNomUrl(1);
+			}
+			// $funding->fetch($parameters['obj']->fundstatus);
+			$result .= '<td align="center" class="nowrap">';
+			$result .=  $value;
+			$result .=  '</td>';
+			if (!$parameters['i']) {
+				$parameters['totalarray']['nbfield']++;
+			}
+		}
+		$this->resprints = $result;
+		return 0;
+	}
+	
 	/* Add here any other hooked methods... */
 }

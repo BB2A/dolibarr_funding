@@ -303,12 +303,14 @@ class Funding extends CommonObject
 			$this->fields['fk_soc_invoice']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 			$this->fields['fk_org']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 		}
+
 		if (!empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) {
 			$this->fields['rowid']['visible'] = 1;
 		}
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) {
 			$this->fields['entity']['enabled'] = 0;
 		}
+
 		// Activation du loyer personalisé
 		if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT)) {
 			$this->fields['amount_rent_edit']['enabled'] = 1;
@@ -323,6 +325,7 @@ class Funding extends CommonObject
 		if (GETPOST('action', 'alpha') == 'edit') {
 			$this->fields['amount_rent_edit']['visible'] = 1 & $this->fields['amount_rent']['visible'] = 1;
 		}
+
 		// Unset fields that are disabled
 		foreach ($this->fields as $key => $val) {
 			if (isset($val['enabled']) && empty($val['enabled'])) {
@@ -340,6 +343,7 @@ class Funding extends CommonObject
 				}
 			}
 		}
+
 		//Chagement du dictionnaire duration
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
@@ -365,6 +369,7 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
 		}
+
 		//Chagement du dictionnaire scale
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
@@ -390,6 +395,7 @@ class Funding extends CommonObject
 			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
 			return -1;
 		}
+
 		//Chagement du dictionnaire type
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_type as c';
@@ -594,7 +600,7 @@ class Funding extends CommonObject
 					$this->amount_rent_edit = $this->amount_rent;
 
 					// Information sur date de livraison date de fin
-					$this->date_delivery = $document->date_livraison;
+					$this->date_delivery = isset($document->date_livraison)?$document->date_livraison:'';
 
 					// Commercial
 					$idcomm = $this->commtiers($document->socid);

@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
- * Copyright (C) 2020-2023	BERTON Anthony 			<anthony.berton@bb2a.fr>
+ * Copyright (C) 2020-2023	Anthony Berton 			<anthony.berton@bb2a.fr>
  * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
@@ -525,6 +525,7 @@ if ($action == 'create' && $permissiontoadd) {
 // Part to edit record
 if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
+
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="update">';

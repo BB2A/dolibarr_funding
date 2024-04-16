@@ -3,8 +3,9 @@
 
 ## [1.0.8] - 02/2024
 - FIX - Compatibilitée à partir de la version 18.0.0 dans les commandes le champ date_livraison est maintenant delivery_date.
+
 - NEW - Permission Add plutôt que manage pour le retour en brouillon.
-- 
+- NEW - Jout d'une colone dans la liste des propositions et des commandes
 
 ## [1.0.7] - 07/2023
 - FIX - Loyer personnalisé uniquement sur les propositions pour l'affichage sur les PDF et les mail. Sur les commandes et factures aucun intéré doit refléter le montant réel.
