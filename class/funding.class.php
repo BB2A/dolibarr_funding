@@ -34,6 +34,11 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
 class Funding extends CommonObject
 {
 	/**
+	 * @var string ID of module.
+	 */
+	public $module = 'funding';
+
+	/**
 	 * @var string ID to identify managed object
 	 */
 	public $element = 'funding';
