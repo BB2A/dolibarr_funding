@@ -664,7 +664,7 @@ class ActionsFunding
 		$param = '';
 		$search_funding_status = '';
 
-		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && $search_funding_status > 0) {
+		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($search_funding_status)) {
 			$parameters['param'] .= '&search_funding_status='.urlencode($search_funding_status);
 		}
 
@@ -745,14 +745,14 @@ class ActionsFunding
 	 */
 	public function printFieldListValue($parameters, &$object, &$action)
 	{
-		global $langs, $conf, $db;
+		global $langs, $conf, $db, $object;
 		$result = '';
 		$value = img_picto('uncheck','uncheck');
 	
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
 			dol_include_once('/funding/class/funding.class.php');
 			$funding = new funding($db);
-			if (!empty($parameters['obj']->fundstatus)){
+			if (isset($parameters['obj']->fundstatus)){
 				$funding->fetch($parameters['obj']->fundrowid);
 				$value = $funding->LibStatut($parameters['obj']->fundstatus, 3).' '.$funding->getNomUrl(1);
 			}
