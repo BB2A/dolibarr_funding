@@ -204,6 +204,14 @@ Help_documentRequired=Document requis
 Help_documentNotRequired=Document non requis
 
 #
+# Info admin
+#
+OrderExistForPropal=Une commande existe pour cette proposition financiére.
+OrdersExistForPropal=Plusieurs commandes d'associer à cette proposition.
+LinkFundingOrder=Aller sur le financement de la commande
+OrderRegIsNotFunding=Le mode de règlement sur la commande n'est pas défini sur financement.
+
+#
 # Droits
 #
 RightReadFunding=Lire

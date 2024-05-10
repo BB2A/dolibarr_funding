@@ -439,6 +439,30 @@ if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($obj
 	if ($typedoc == 'propal' || $object->origin == 'propal') {
 		$prop = new Propal($db);
 		$result = $prop->fetch(empty($iddoc)?$object->origin_id:$iddoc);
+
+		// Vérifier si la propo n'est pas lié à une commande pour afficher un avertissement. #20240510
+		// Todo Vérifier si il y a pas une facture pour cette proposition
+		$prop->fetchObjectLinked(null, '', null, 'order', 'OR', 0, 'sourcetype', 'commande');
+		$orderlinkeds = $prop->linkedObjects;
+		if (!empty($orderlinkeds)){
+			if (count($orderlinkeds) == 1) {
+				foreach ($orderlinkeds['commande'] as $arrayorderlinkeds => $orderlink) {
+					// $objorderlinked = new Commande($db);
+					// $result = $objorderlinked->fetch($orderlink->id);
+					$orderreginfo = '';
+					if ($orderlink->mode_reglement_id <> $conf->global->FUNDING_ID_REGLEMENT){
+						$orderreginfo = '('.$langs->trans("OrderRegIsNotFunding").')';
+					}
+					$orderfundurl = dol_buildpath('/funding/funding_card.php?typedoc=order&iddoc='.$orderlink->id, 1);
+					Print info_admin($langs->trans("OrderExistForPropal"). ' <a href='. $orderfundurl.'>'.$langs->trans("LinkFundingOrder").'</a> '.$orderreginfo, 0, 0, 'error', 'clearboth');
+				}
+			} else {
+				Print info_admin($langs->trans("OrdersExistForPropal"), 0, 0, 'error', 'clearboth');
+
+			}
+			
+		}
+		
 	}
 	// Récupération table order
 	if ($typedoc == 'order' || $object->origin == 'order') {

@@ -4,6 +4,7 @@
 ## [1.0.8] - 02/2024
 - FIX - Compatibilitée à partir de la version 18.0.0 dans les commandes le champ date_livraison est maintenant delivery_date.
 
+- NEW - Ajout d'un avertissement sur les propositions financiére l'orsque une commande est faite pour celle-ci.
 - NEW - Permission Add plutôt que manage pour le retour en brouillon.
 - NEW - Ajout d'une colone dans la liste des propositions et des commandes
 
