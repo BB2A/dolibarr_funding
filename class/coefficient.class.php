@@ -41,7 +41,7 @@ class Coefficient extends CommonObject
 	/**
 	 * @var string ID to identify managed object
 	 */
-	public $element = 'coefficient';
+	public $element = 'funding_coefficient';
 
 	/**
 	 * @var string Name of table without prefix where object is stored

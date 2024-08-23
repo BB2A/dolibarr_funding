@@ -1191,9 +1191,8 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		}
 
 		// Show links to link elements
-		$linktoelem = $form->showLinkToObjectBlock($object, null, array('funding'));
+		$linktoelem = $form->showLinkToObjectBlock($object, null, array('funding_funding'));
 		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
-
 
 		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
 

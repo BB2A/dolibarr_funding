@@ -41,7 +41,7 @@ class Funding extends CommonObject
 	/**
 	 * @var string ID to identify managed object
 	 */
-	public $element = 'funding';
+	public $element = 'funding_funding';
 
 	/**
 	 * @var string Name of table without prefix where object is stored
@@ -655,13 +655,13 @@ class Funding extends CommonObject
 	 * @param   int     $origin_id  Id of object to clone
 	 * @return  mixed               New object created, <0 if KO
 	 */
-	public function createFromClone(User $user, $fromid, $origin, $origin_id)
+	public function createFromClone(User $user, $fromid, $origin, $origin_id, $notrigger = 0)
 	{
 		global $conf, $db, $langs, $extrafields;
 		$error = 0;
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
-
+		$now = dol_now();
 		$object = new self($this->db);
 
 		$this->db->begin();
@@ -2797,14 +2797,16 @@ class Funding extends CommonObject
 		$sql .= ' WHERE f.date_end >= "'.dol_print_date($date, 'dayrfc').'"';
 		$sql .= ' AND f.date_end <= "'.$dateEnd.'"';
 		$sql .= ' AND f.status = '.self::STATUS_RUNNING;
-		$sql .= ' ORDER BY f.date_end ASC'; //DESC
+		$sql .= ' ORDER BY f.fk_user_comm, f.date_end ASC'; //DESC
 		$resql = $this->db->query($sql);
 		if ($resql) {
-			if ($num = $this->db->num_rows($resql)) {
+			$num = $this->db->num_rows($resql);
+			if (!empty($num)) {
 				$i = 1;
 				$soc = new Societe($db);
 				$comm = new User($db);
 				$funding = new Funding($db);
+				$FundingSoonFinished = array();
 				while ($i <= $num) {
 					$obj = $this->db->fetch_object($resql);
 					$soc->fetch($obj->fk_soc);
@@ -2813,6 +2815,15 @@ class Funding extends CommonObject
 						break; // Should not happen
 					}
 					$output .= '<li><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a> - '.date('d-m-Y', strtotime($obj->date_end)).' - '.$soc->nom.' ('.$soc->name_alias.')</li>';
+					
+					if (in_array($FundingSoonFinished['user_comm'])){
+						$FundingSoonFinished['user_comm']['mess'] = $output;
+					}else{
+						$FundingSoonFinished['user_comm'] = $comm->rowid;
+						$FundingSoonFinished['user_comm'][$comm->rowid]['email'] = $comm->email;
+					}
+					
+					
 					$i++;
 				}
 			}

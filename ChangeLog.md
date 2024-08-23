@@ -3,6 +3,7 @@
 
 ## [1.0.9] - 08/2024
 - FIX - Validation d'une commande, on clone le financement à partir d'une proposition. Modification du filtre de recherche de la proposition lié à cette commande en ajoutant 'c.targettype = 'commande'', car les id de commande ou de proposition pouvait être les mêmes qu'un financement ce qui faisait récupérer le mauvais financement.
+- FIX - Changement $object->element pour etre conforme avec dolibarr
 
 ## [1.0.8] - 02/2024
 - FIX - Compatibilitée à partir de la version 18.0.0 dans les commandes le champ date_livraison est maintenant delivery_date.

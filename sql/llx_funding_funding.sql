@@ -101,3 +101,6 @@ ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_order;
 
 -- UPDATE llx_funding_funding SET entity = 1 where WHERE entity IS NULL;
+
+UPDATE llx_actioncomm SET elementtype = 'funding_funding' WHERE elementtype = 'funding';
+UPDATE llx_element_element SET targettype = 'funding_funding' WHERE targettype = 'funding';
