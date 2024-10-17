@@ -894,7 +894,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="savedoc">';
 		print '<input type="hidden" name="doc" value="funfoldoc2">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc2input"></td>';
+		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="funfoldoc2input"></td>';
 		print '<td></td>';
 		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
 		print '</form>';
