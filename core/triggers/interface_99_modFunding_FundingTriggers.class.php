@@ -375,7 +375,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				// }
 				return 0;
 			case 'ORDER_CLOSE':
-				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
+				if (!empty($fudid) && $obj->status >= $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					
 					if (!empty($delivery_date)) {
 						// Date de signature renseigné si commande livré

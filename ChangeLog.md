@@ -1,6 +1,10 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 
+## [1.0.10] - 03/2025
+- FIX - La mise à jour forcé des taux ne mettait pas à jour le taux de la retenu de garantie
+- FIX - La date de livraison n'etait plus pris en compte quand le document etait passer en facture avant la livraison le statut actif du financement bloqué la mise a jour de la date de signature.
+
 ## [1.0.9] - 08/2024
 - FIX - Validation d'une commande, on clone le financement à partir d'une proposition. Modification du filtre de recherche de la proposition lié à cette commande en ajoutant 'c.targettype = 'commande'', car les id de commande ou de proposition pouvait être les mêmes qu'un financement ce qui faisait récupérer le mauvais financement.
 - FIX - Changement $object->element pour etre conforme avec dolibarr
