@@ -1115,7 +1115,7 @@ class Funding extends CommonObject
 					// Mise à jour retenue garentie uniquement sur changement de prix.
 					// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
 					$newamounttotal = $this->amount_total + $this->retention_mount; // Ajout du montant de la retenue de garantie pour la conparaison si non toujour à true
-					if ((empty($this->retention_rate) || ($oldamounttotal != $newamounttotal)) && $action == 'updateforce') {
+					if ((empty($this->retention_rate) || ($oldamounttotal != $newamounttotal)) || $action == 'updateforce') {
 						$this->retention_rate = $this->searchRetentionRate($this->fk_org);
 					}
 					$this->retention_mount = price2num($this->amount_total / (1-($this->retention_rate/100)), 'MT') - $this->amount_total;
