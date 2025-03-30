@@ -29,6 +29,8 @@ CREATE TABLE llx_funding_funding(
 	fk_scale integer NOT NULL, 
 	amount_rent double DEFAULT NULL, 
 	amount_rent_edit double DEFAULT NULL, 
+	date_accepted date, 
+	date_acceptedend date, 
 	date_delivery date, 
 	date_signature date, 
 	date_end date, 
@@ -83,6 +85,8 @@ CREATE TABLE llx_funding_funding(
 ALTER TABLE llx_funding_funding ADD COLUMN entity integer DEFAULT 1 NOT NULL AFTER ref;    -- multi company id
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
 ALTER TABLE llx_funding_funding ADD COLUMN retention_mount double AFTER retention_rate;
+ALTER TABLE llx_funding_funding ADD COLUMN date_accepted date AFTER amount_rent_edit;
+ALTER TABLE llx_funding_funding ADD COLUMN date_acceptedend date AFTER date_accepted;
 ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc1check smallint AFTER fundoc1;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc2check smallint AFTER fundoc2;
@@ -100,7 +104,7 @@ ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
 ALTER TABLE llx_funding_funding DROP COLUMN fk_order;
 
--- UPDATE llx_funding_funding SET entity = 1 where WHERE entity IS NULL;
+UPDATE llx_funding_funding SET entity = 1 where WHERE entity IS NULL;
 
-UPDATE llx_actioncomm SET elementtype = 'funding_funding' WHERE elementtype = 'funding';
-UPDATE llx_element_element SET targettype = 'funding_funding' WHERE targettype = 'funding';
+-- UPDATE llx_actioncomm SET elementtype = 'funding_funding' WHERE elementtype = 'funding';
+-- UPDATE llx_element_element SET targettype = 'funding_funding' WHERE targettype = 'funding';
