@@ -141,6 +141,8 @@ class Funding extends CommonObject
 		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>12, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'0', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRentEdit",),
+		'date_accepted' => array('type'=>'date', 'label'=>'DateAccepted', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAccepted",),
+		'date_acceptedend' => array('type'=>'date', 'label'=>'DateAcceptedEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAcceptedEnd",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
