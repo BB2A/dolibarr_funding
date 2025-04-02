@@ -1,5 +1,11 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.1.0] - 04/2025
+
+- FIX - 03/04/2025 - Modification de triggers nouveau fonctionnement nom de l'element
+- FIX - 03/04/2025 - Changement du nom de l'editeur
+- NEW - 03/04/2025 - Ajout d'un champ date d'acceptation et un champ date de validité.
+- NEW - 03/04/2025 - Ajout d'un paramettre générale du module "nombres de jours validité" qui permet de calculer la date de fin de validité
 
 ## [1.0.10] - 03/2025
 - FIX - La mise à jour forcé des taux ne mettait pas à jour le taux de la retenu de garantie

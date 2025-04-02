@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
- * Copyright (C) 2020-2023	Anthony Berton 			<anthony.berton@bb2a.fr>
+ * Copyright (C) 2020-2025	Anthony Berton 			<anthony.berton@bb2a.fr>
  * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
@@ -225,6 +225,13 @@ if (empty($reshook)) {
 	// Positionne folder number
 	if ($action == 'setfolder_number' && $permissiontoadd) {
 		$result = $object->setFolderNumber($user, GETPOST('folder_number'));
+		if ($result < 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	// Positionne date accepted
+	if ($action == 'setdate_accepted' && $permissiontoadd) {
+		$result = $object->setDateAccepted($user, GETPOST('date_accepted'));
 		if ($result < 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
@@ -686,6 +693,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	$morehtmlref .= $form->editfieldval("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
 	$morehtmlref .= '<br/>'.$form->editfieldkey("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', 0, 1);
 	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
+	$morehtmlref .= '<br/>'.$form->editfieldkey("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'string', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'string', '', null, null, '', 1);
+	!empty($object->date_accepted)?$morehtmlref .= $langs->trans('DateAcceptedEnd') . ' : ' . (is_object($object->date_acceptedend) ? $object->date_accepted : ''):'';
+
 	// Thirdparty
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
 
@@ -1205,7 +1216,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		// List of actions on element
 		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
 		$formactions = new FormActions($db);
-		$somethingshown = $formactions->showactions($object, $object->element, (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
+		$somethingshown = $formactions->showactions($object, $object->element.'@'.$object->module, (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
 
 		print '</div></div></div>';
 	}

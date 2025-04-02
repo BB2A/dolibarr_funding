@@ -41,7 +41,7 @@ class Funding extends CommonObject
 	/**
 	 * @var string ID to identify managed object
 	 */
-	public $element = 'funding_funding';
+	public $element = 'funding';
 
 	/**
 	 * @var string Name of table without prefix where object is stored
@@ -305,7 +305,7 @@ class Funding extends CommonObject
 		$conf->global->MAIN_MAX_DECIMALS_SHOWN = 3;
 
 		// Rétrocompatile
-		if (DOL_VERSION < '17.0.0') {
+		if (version_compare(DOL_VERSION, '17.0.0', '<')) {
 			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 			$this->fields['fk_soc_invoice']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 			$this->fields['fk_org']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
@@ -1667,6 +1667,7 @@ class Funding extends CommonObject
 				}
 				// End call triggers
 			}
+			setEventMessages($object->error, '', 'errors');
 			return 1;
 		} else {
 			foreach ($this->errors as $errmsg) {
@@ -1707,6 +1708,71 @@ class Funding extends CommonObject
 		if (!$error) {
 			$this->oldcopy = clone $this;
 			$this->folder_number = $folder_number;
+		}
+
+		if (!$error) {
+			$this->db->commit();
+
+			if (!$notrigger && empty($error)) {
+				// Call trigger
+				$result = $this->call_trigger('FUNDING_MODIFY', $user);
+				if ($result < 0) {
+					$error++;
+				}
+				// End call triggers
+			}
+			return 1;
+		} else {
+			foreach ($this->errors as $errmsg) {
+				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
+				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
+			}
+			$this->db->rollback();
+			return -1 * $error;
+		}
+	}
+
+	/**
+	 * Update object into database
+	 *
+	 * @param  User     $user               User that modifies
+	 * @param  string   $date_accepted      Date funding accepted
+	 * @param  bool     $notrigger          false=launch triggers after, true=disable triggers
+	 * @return int                          <0 if KO, >0 if OK
+	 */
+	public function setDateAccepted($user, $date_accepted, $notrigger = 0)
+	{
+		$error = 0;
+
+		$this->db->begin();
+
+		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+		$sql .= " SET date_accepted = ".($date_accepted != '' ? "'".$date_accepted."'" : 'null');
+		$sql .= " WHERE rowid = ".$this->id;
+
+		$date_acceptedend = '';
+		$durationvalidity = getDolGlobalString('FUNDING_VALIDITY_MONTH');
+		// Si date d'acceptation calcul date de fin
+		if (!empty($date_accepted) && !empty($durationvalidity)) {
+			//Ajoute la durée à la date 'acceptation' pour avoir la date de fin
+			$date_acceptedend = date('Y-m-d', strtotime('+'.$durationvalidity.' month', strtotime(date('Y-m-d', $date_accepted))));
+		}
+
+		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
+		$sql .= " SET date_acceptedend = ".(!empty($date_acceptedend) ? "'".$date_acceptedend."'" : 'null');
+		$sql .= " WHERE rowid = ".$this->id;
+
+		dol_syslog(__METHOD__.' $this->id='.$this->id.', date_accepted ='.$date_accepted.', date_acceptedend ='.$date_acceptedend , LOG_DEBUG);
+
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->error();
+			$error++;
+		}
+
+		if (!$error) {
+			$this->oldcopy = clone $this;
+			$this->date_accepted = $date_accepted;
 		}
 
 		if (!$error) {

@@ -40,7 +40,7 @@ class Retention extends CommonObject
 	/**
 	 * @var string ID to identify managed object.
 	 */
-	public $element = 'funding_retention';
+	public $element = 'retention';
 
 	/**
 	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.

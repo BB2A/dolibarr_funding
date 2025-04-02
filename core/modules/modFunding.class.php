@@ -61,7 +61,7 @@ class modFunding extends DolibarrModules
 		$this->description = "ModuleFundingDesc";
 		// Used only if file README.md and README-LL.md not found.
 		$this->descriptionlong = "ModuleFundingDescLong";
-		$this->editor_name = 'BB2A - Anthony Berton';
+		$this->editor_name = 'BB2A';
 		$this->editor_url = 'https://www.bb2a.fr';
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 		$this->version = '1.0.9';
