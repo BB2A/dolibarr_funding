@@ -164,7 +164,7 @@ if ($object->id > 0) {
 	$head = retentionPrepareHead($object);
 
 
-	print dol_get_fiche_head($head, 'agenda', $langs->trans("Retention"), -1, $object->picto);
+	print dol_get_fiche_head($head, 'agenda', $langs->trans("Retention"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	// Object card
 	// ------------------------------------------------------------

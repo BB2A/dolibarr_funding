@@ -143,7 +143,7 @@ if ($object->id > 0) {
 	$head = fundingPrepareHead($object);
 
 
-	dol_fiche_head($head, 'agenda', $langs->trans("Funding"), -1, 'object_'.$object->picto);
+	dol_fiche_head($head, 'agenda', $langs->trans("Funding"), -1, 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	// Object card
 	// ------------------------------------------------------------

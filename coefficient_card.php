@@ -200,7 +200,7 @@ jQuery(document).ready(function() {
 
 // Part to create
 if ($action == 'create') {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Coefficient")), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Coefficient")), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -238,7 +238,7 @@ if ($action == 'create') {
 
 // Part to edit record
 if (($id || $ref) && $action == 'edit') {
-	print load_fiche_titre($langs->trans("Coefficient"), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("Coefficient"), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -273,7 +273,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$res = $object->fetch_optionals();
 
 	$head = coefficientPrepareHead($object);
-	dol_fiche_head($head, 'card', $langs->trans("Coefficient"), -1, $object->picto);
+	dol_fiche_head($head, 'card', $langs->trans("Coefficient"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	$formconfirm = '';
 

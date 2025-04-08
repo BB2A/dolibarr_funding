@@ -98,7 +98,7 @@ if ($id > 0 || !empty($ref)) {
 
 	$head = fundingPrepareHead($object);
 
-	dol_fiche_head($head, 'note', $langs->trans("Funding"), -1, $object->picto);
+	dol_fiche_head($head, 'note', $langs->trans("Funding"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	// Object card
 	// ------------------------------------------------------------

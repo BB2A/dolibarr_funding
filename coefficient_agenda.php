@@ -201,7 +201,7 @@ if ($object->id > 0) {
 	$head = coefficientPrepareHead($object);
 
 
-	print dol_get_fiche_head($head, 'agenda', $langs->trans("Coefficient"), -1, $object->picto);
+	print dol_get_fiche_head($head, 'agenda', $langs->trans("Coefficient"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	// Object card
 	// ------------------------------------------------------------

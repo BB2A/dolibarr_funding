@@ -499,12 +499,12 @@ if ($typedoc == 'propal') {
 	// Affichage encadrer funding
 	$res = $object->fetch_optionals();
 	$head = fundingPrepareHead($object);
-	dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto);
+	dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 }
 
 // Part to create
 if ($action == 'create' && $permissiontoadd) {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -549,13 +549,13 @@ if ($action == 'create' && $permissiontoadd) {
 
 	//dol_set_focus('input[name="ref"]');
 } elseif (empty($object->id)) {
-	print load_fiche_titre($langs->trans('Funding'), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans('Funding'), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 	print '<h2 align="center">'.$langs->trans("NoFunding").'</h1>';
 }
 
 // Part to edit record
 if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
-	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';

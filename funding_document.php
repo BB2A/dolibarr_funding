@@ -122,7 +122,7 @@ if ($object->id) {
 	 */
 	$head = fundingPrepareHead($object);
 
-	dol_fiche_head($head, 'document', $langs->trans("Funding"), -1, $object->picto);
+	dol_fiche_head($head, 'document', $langs->trans("Funding"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 
 	// Build file list

@@ -857,7 +857,7 @@ if ($iddoc) {
 }
 
 // Fix PHP8 isset($newcardbutton)?$newcardbutton:''
-print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, isset($newcardbutton)?$newcardbutton:'', '', $limit, 0, 0, 1);
+print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle', 0, isset($newcardbutton)?$newcardbutton:'', '', $limit, 0, 0, 1);
 
 // Add code for pre mass action (confirmation or email presend form)
 $topicmail = "SendFundingRef";
