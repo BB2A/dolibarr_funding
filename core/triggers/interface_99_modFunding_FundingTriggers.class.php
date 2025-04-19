@@ -262,7 +262,8 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 					if ($resql) {
 						$obj = $db->fetch_object($resql);
-						$sourceid = $obj->fk_source;
+						
+						is_object($obj) ? $sourceid = $obj->fk_source : $sourceid="";
 					} else {
 						$errors = 'Error '.$this->db->lasterror();
 						dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
