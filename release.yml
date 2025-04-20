@@ -1,2 +1,2 @@
-changelog.categories[FIX - ].title
-changelog.categories[NEW - ].title
+changelog.categories[FIX - *].title
+changelog.categories[NEW - *].title
