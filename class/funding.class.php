@@ -142,14 +142,14 @@ class Funding extends CommonObject
 		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRent",),
 		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'0', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRentEdit",),
 		'date_accepted' => array('type'=>'date', 'label'=>'DateAccepted', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAccepted",),
-		'date_acceptedend' => array('type'=>'date', 'label'=>'DateAcceptedEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAcceptedEnd",),
+		'date_endvalidity' => array('type'=>'date', 'label'=>'DateEndValidity', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAcceptedEnd",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
-		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>19, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>19, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
 		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemptionNumber", 'showoncombobox'=>'1',),
-		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'), 'help'=>"Help_retention",),
+		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'), 'help'=>"Help_retention",),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
 		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
@@ -173,7 +173,7 @@ class Funding extends CommonObject
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>113, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc6' => array('type'=>'varchar(255)', 'label'=>'funfoldoc6', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
-		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
@@ -184,9 +184,9 @@ class Funding extends CommonObject
 		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'fk_invoice' => array('type'=>'integer', 'label'=>'invoice_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
-		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0,),
+		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0, 'default'=>'',),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
-		'funcheck' => array('type'=>'smallint', 'label'=>'Checked', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>-2, 'default'=>'0', 'css'=>'center','arrayofkeyval'=>array('0'=>'Non', '1'=>'Oui'),),
+		'funcheck' => array('type'=>'smallint', 'label'=>'Checked', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>-2, 'default'=>'0', 'css'=>'center','arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
 		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0'=>'FundingStatusDraftShort', '1'=>'FundingStatusValidatedShort', '2'=>'FundingStatusUpdateShort',/* '3'=>'FundingStatusSendOrgShort', */'4'=>'FundingStatusAcceptShort', '5'=>'FundingStatusDeniedShort', '6'=>'FundingStatusRunningShort', '7'=>'FundingStatusEndShort', '8'=>'FundingStatusDisabledShort'),),
 	);
@@ -569,7 +569,7 @@ class Funding extends CommonObject
 
 		$this->ref = $this->getNextNumRef();
 
-		// Initialise les information obligatoire non editable
+		// Initialise les informations obligatoire non editable
 		// Document
 		if ($iddoc && $typedoc) {
 			$this->origin = $typedoc;
@@ -808,6 +808,7 @@ class Funding extends CommonObject
 			$this->db->commit();
 			return $object;
 		} else {
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1;
 		}
@@ -954,6 +955,7 @@ class Funding extends CommonObject
 			$this->db->commit();
 			return $result;
 		} else {
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1;
 		}
@@ -1273,6 +1275,7 @@ class Funding extends CommonObject
 			$this->db->commit();
 			return 1;
 		} else {
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1;
 		}
@@ -1426,6 +1429,7 @@ class Funding extends CommonObject
 			$this->db->commit();
 			return 1;
 		} else {
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1;
 		}
@@ -1490,7 +1494,7 @@ class Funding extends CommonObject
 	 *  @param  int     $notrigger      1=Does not execute triggers, 0=Execute triggers
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function setAcceptedRefused($user, $status, $retention = 0, $notrigger = 0)
+	public function setAcceptedRefused($user, $status, $study_number = "", $folder_number = "", $date_accepted = "", $retention = 0, $notrigger = 0)
 	{
 		// Protection
 		if ($this->status == self::STATUS_CANCELED) {
@@ -1502,6 +1506,19 @@ class Funding extends CommonObject
 		if ($status == self::STATUS_DENIED) {
 			$triger = 'FUNDING_DENIED';
 		}
+		// Mise à jour du numéro d'étude à l'acceptation
+		if (!empty($study_number)) {
+			$this->setStudyNumber($user, $study_number);
+		}
+		// Mise à jour du numéro de dossier à l'acceptation
+		if (!empty($folder_number)) {
+			$this->setFolderNumber($user, $folder_number);
+		}
+		// Mise à jour date acceptation pour calculer date fin de validité offre
+		if (!empty($date_accepted)) {
+			$this->setDateAccepted($user, $date_accepted);
+		}
+		// Mise à jour si retenu de garantie ajouté à l'acceptation
 		if ($retention == 'on') {
 			$this->setStatusFolder($user, $this::STATUS_FOLDER_ACCEPT_RETENTION);
 		} else {
@@ -1620,6 +1637,7 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
 				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
 			}
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1 * $error;
 		}
@@ -1653,11 +1671,6 @@ class Funding extends CommonObject
 		}
 
 		if (!$error) {
-			$this->oldcopy = clone $this;
-			$this->study_number = $study_number;
-		}
-
-		if (!$error) {
 			$this->db->commit();
 			if (!$notrigger && empty($error)) {
 				// Call trigger
@@ -1667,13 +1680,13 @@ class Funding extends CommonObject
 				}
 				// End call triggers
 			}
-			setEventMessages($object->error, '', 'errors');
 			return 1;
 		} else {
 			foreach ($this->errors as $errmsg) {
 				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
 				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
 			}
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1 * $error;
 		}
@@ -1706,11 +1719,6 @@ class Funding extends CommonObject
 		}
 
 		if (!$error) {
-			$this->oldcopy = clone $this;
-			$this->folder_number = $folder_number;
-		}
-
-		if (!$error) {
 			$this->db->commit();
 
 			if (!$notrigger && empty($error)) {
@@ -1727,6 +1735,7 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
 				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
 			}
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1 * $error;
 		}
@@ -1736,48 +1745,64 @@ class Funding extends CommonObject
 	 * Update object into database
 	 *
 	 * @param  User     $user               User that modifies
-	 * @param  string   $date_accepted      Date funding accepted
+	 * @param  date   $date_accepted      Date funding accepted
 	 * @param  bool     $notrigger          false=launch triggers after, true=disable triggers
 	 * @return int                          <0 if KO, >0 if OK
 	 */
 	public function setDateAccepted($user, $date_accepted, $notrigger = 0)
 	{
+		global $langs;
+
 		$error = 0;
+		$date_endvalidity = '';
+		$duration_value = getDolGlobalString('FUNDING_VALIDITY_MONTH');
+		$duration_unit = "m";
+		// var_dump(strtotime($date_accepted), $date_accepted);exit;
+
+		// Si date d'acceptation calcul date de fin
+		if (!empty($date_accepted) && !empty($duration_value)) {
+			$time = strtotime(str_replace('/', '-', $date_accepted));
+			// Ajout des mois
+			$date_endvalidity = dol_time_plus_duree($time, $duration_value, $duration_unit);
+			// Mise en forme dates
+			$date_accepted = date('Y-m-d', $time);
+			$date_endvalidity = date('Y-m-d', $date_endvalidity);
+		}elseif(empty($duration_value)){
+			$this->errors[] = $langs->trans("NoDurationValue");
+			$error++;
+		}
 
 		$this->db->begin();
-
+		// Enregistrement de la date acceptation
 		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
 		$sql .= " SET date_accepted = ".($date_accepted != '' ? "'".$date_accepted."'" : 'null');
 		$sql .= " WHERE rowid = ".$this->id;
 
-		$date_acceptedend = '';
-		$durationvalidity = getDolGlobalString('FUNDING_VALIDITY_MONTH');
-		// Si date d'acceptation calcul date de fin
-		if (!empty($date_accepted) && !empty($durationvalidity)) {
-			//Ajoute la durée à la date 'acceptation' pour avoir la date de fin
-			$date_acceptedend = date('Y-m-d', strtotime('+'.$durationvalidity.' month', strtotime(date('Y-m-d', $date_accepted))));
+		// Execution de la requettes
+		$resql = $this->db->query($sql);
+
+		if (!$resql) {
+			$this->errors[] = $this->db->error();
+			$error++;
 		}
 
+		// Enregistrement date de fin de vlidité
 		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
-		$sql .= " SET date_acceptedend = ".(!empty($date_acceptedend) ? "'".$date_acceptedend."'" : 'null');
+		$sql .= " SET date_endvalidity = ".(!empty($date_endvalidity) ? "'".$date_endvalidity."'" : 'null');
 		$sql .= " WHERE rowid = ".$this->id;
 
-		dol_syslog(__METHOD__.' $this->id='.$this->id.', date_accepted ='.$date_accepted.', date_acceptedend ='.$date_acceptedend , LOG_DEBUG);
+		dol_syslog(__METHOD__.' $this->id='.$this->id.', date_accepted ='.$date_accepted.', date_endvalidity ='.$date_endvalidity , LOG_DEBUG);
 
+		// Execution de la requettes
 		$resql = $this->db->query($sql);
+
 		if (!$resql) {
 			$this->errors[] = $this->db->error();
 			$error++;
 		}
 
 		if (!$error) {
-			$this->oldcopy = clone $this;
-			$this->date_accepted = $date_accepted;
-		}
-
-		if (!$error) {
 			$this->db->commit();
-
 			if (!$notrigger && empty($error)) {
 				// Call trigger
 				$result = $this->call_trigger('FUNDING_MODIFY', $user);
@@ -1792,6 +1817,7 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
 				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
 			}
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1 * $error;
 		}
@@ -1852,6 +1878,7 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__.' Error: '.$errmsg, LOG_ERR);
 				$this->error .= ($this->error ? ', '.$errmsg : $errmsg);
 			}
+			setEventMessages($this->error, '', 'errors');
 			$this->db->rollback();
 			return -1 * $error;
 		}
@@ -2085,36 +2112,44 @@ class Funding extends CommonObject
 	 */
 	public function info($id)
 	{
-		$sql = 'SELECT rowid, date_creation as datec, tms as datem,';
-		$sql .= ' fk_user_creat, fk_user_modif';
-		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as t';
-		$sql .= ' WHERE t.rowid = '.$id;
+		$sql = "SELECT rowid,";
+		$sql .= " date_creation as datec, tms as datem";
+		if (!empty($this->fields['date_validation'])) {
+			$sql .= ", date_validation as datev";
+		}
+		if (!empty($this->fields['fk_user_creat'])) {
+			$sql .= ", fk_user_creat";
+		}
+		if (!empty($this->fields['fk_user_modif'])) {
+			$sql .= ", fk_user_modif";
+		}
+		if (!empty($this->fields['fk_user_valid'])) {
+			$sql .= ", fk_user_valid";
+		}
+		$sql .= " FROM ".MAIN_DB_PREFIX.$this->table_element." as t";
+		$sql .= " WHERE t.rowid = ".((int) $id);
+
 		$result = $this->db->query($sql);
 		if ($result) {
 			if ($this->db->num_rows($result)) {
 				$obj = $this->db->fetch_object($result);
+
 				$this->id = $obj->rowid;
-				if ($obj->fk_user_author) {
-					$cuser = new User($this->db);
-					$cuser->fetch($obj->fk_user_author);
-					$this->user_creation = $cuser;
-				}
 
-				if ($obj->fk_user_valid) {
-					$vuser = new User($this->db);
-					$vuser->fetch($obj->fk_user_valid);
-					$this->user_validation = $vuser;
+				if (!empty($this->fields['fk_user_creat'])) {
+					$this->user_creation_id = $obj->fk_user_creat;
 				}
-
-				if ($obj->fk_user_cloture) {
-					$cluser = new User($this->db);
-					$cluser->fetch($obj->fk_user_cloture);
-					$this->user_cloture = $cluser;
+				if (!empty($this->fields['fk_user_modif'])) {
+					$this->user_modification_id = $obj->fk_user_modif;
 				}
-
+				if (!empty($this->fields['fk_user_valid'])) {
+					$this->user_validation_id = $obj->fk_user_valid;
+				}
 				$this->date_creation     = $this->db->jdate($obj->datec);
-				$this->date_modification = $this->db->jdate($obj->datem);
-				$this->date_validation   = $this->db->jdate($obj->datev);
+				$this->date_modification = empty($obj->datem) ? '' : $this->db->jdate($obj->datem);
+				if (!empty($obj->datev)) {
+					$this->date_validation   = empty($obj->datev) ? '' : $this->db->jdate($obj->datev);
+				}
 			}
 
 			$this->db->free($result);

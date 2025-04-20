@@ -95,12 +95,12 @@ Checked=Pointé
 FunCheck=Pointer
 FunUnCheck=Dépointer
 
-SetAcceptedRefused=Accepter/Refuser
+
 Accepted=Accepté
 Refused=Refusé %s
 CloseAs=Positionner le statut à
-DateAccepted=Date acceptation
-DateAcceptedEnd=Date fin d'acceptation
+DateAccepted=Date accéptation
+DateValidity=Date validité
 DateSignature=Date signature P.V.
 closefinich=Cloturer
 NoFunding=Pas de financement
@@ -163,6 +163,7 @@ FUNDING_DEFAULT_DURATION=Valeur par default pour la durée de financement
 FUNDING_DEFAULT_SCALE=Barème par default
 FUNDING_DEFAULT_REDEMPTION=Valeur par default pour le rachat
 FUNDING_DEFAULT_TYPE=Type de financement par default
+FUNDING_VALIDITY_MONTH=Nombres de mois validité offre financement
 
 FUNDING_FILTRE_ORGANIZATION=Filtre organisme financement
 FUNDING_DEFAULT_ORGANIZATION=Organisme par default
@@ -293,6 +294,8 @@ ErrorFileNotRename=Impossible de rennomer le fichier
 
 NoFileSearch=Pas de fichier trouvé
 FileAdding=Fichier trouvé et ajouter
+
+NoDurationValue=Pas de durée de validité renseigné
 
 #
 # Status

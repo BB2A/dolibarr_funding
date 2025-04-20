@@ -305,7 +305,7 @@ if (empty($reshook)) {
 			// prevent browser refresh from closing funding several times
 			if ($object->status >= $object::STATUS_VALIDATED) {
 				$db->begin();
-				$result = $object->setAcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('retention', 'alpha'));
+				$result = $object->setAcceptedRefused($user, GETPOST('statut', 'int'), GETPOST('study_number', 'alpha'), GETPOST('folder_number', 'alpha'), GETPOST('date_accepted'), GETPOST('retention', 'alpha'));
 				if ($result <= 0) {
 					setEventMessages($object->error, $object->errors, 'errors');
 					$error++;
@@ -604,20 +604,23 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		//Form to (signed or not)
 		$formquestion = array(
 			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT, 1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED, 1))),
-			array('type' => 'checkbox', 'name' => 'retention', 'label' => $langs->trans("QuestionRetention"), 'value' => '0')
+			array('type' => 'text', 'name' => 'study_number', 'label' => $langs->trans("StudyNumber"), 'value' => $object->study_number),
+			array('type' => 'text', 'name' => 'folder_number', 'label' => $langs->trans("FolderNumber"), 'value' => $object->folder_number),
+			array('type' => 'date', 'name' => 'date_accepted', 'label' => $langs->trans("DateAccepted"), 'value' => $object->date_accepted, 'datenow' => 1),
+			array('type' => 'checkbox', 'name' => 'retention', 'label' => $langs->trans("QuestionRetention"), 'value' => $object->retention)
 		);
 
-		// BB2A Notification voir pour aline changement de statut
-		/*if (!empty($conf->notification->enabled))
+		// BB2A Notification voir pour changement de statut
+		if (!empty($conf->notification->enabled))
 		{
 			require_once DOL_DOCUMENT_ROOT.'/core/class/notify.class.php';
 			$notify = new Notify($db);
 			$formquestion = array_merge($formquestion, array(
-				array('type' => 'onecolumn', 'value' => $notify->confirmMessage('FUNDING_ACCEPT_DENIED', $object->socid, $object)),
+				array('type' => 'onecolumn', 'value' => $notify->confirmMessage('FUNDING_ACCEPT_DENIED', $object->fk_soc, $object)),
 			));
-		}*/
+		}
 		$text = '';
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SetAcceptedRefused'), $text, 'setAcceptedRefused', $formquestion, '', 1, 200);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('setAcceptedRefused'), $text, 'setAcceptedRefused', $formquestion, '', 1, 350);
 	}
 
 	// Selec close end
@@ -693,9 +696,10 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	$morehtmlref .= $form->editfieldval("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
 	$morehtmlref .= '<br/>'.$form->editfieldkey("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', 0, 1);
 	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
-	$morehtmlref .= '<br/>'.$form->editfieldkey("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'string', '', 0, 1);
-	$morehtmlref .= $form->editfieldval("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'string', '', null, null, '', 1);
-	!empty($object->date_accepted)?$morehtmlref .= $langs->trans('DateAcceptedEnd') . ' : ' . (is_object($object->date_acceptedend) ? $object->date_accepted : ''):'';
+	$morehtmlref .= '<br/>'.$form->editfieldkey("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'datetime', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'datetime', '', null, null, '', 1);
+	// $morehtmlref .= '<br/>'.$langs->trans('DateAccepted') . ' : ' . dol_print_date($object->date_accepted)	;
+	!empty($object->date_accepted && $action != "editdate_accepted") ? $morehtmlref .= " - " . $langs->trans('DateValidity') . ' : ' . dol_print_date($object->date_endvalidity, "dayhour") :'';
 
 	// Thirdparty
 	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');

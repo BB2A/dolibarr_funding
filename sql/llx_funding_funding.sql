@@ -30,7 +30,7 @@ CREATE TABLE llx_funding_funding(
 	amount_rent double DEFAULT NULL, 
 	amount_rent_edit double DEFAULT NULL, 
 	date_accepted date, 
-	date_acceptedend date, 
+	date_endvalidity date, 
 	date_delivery date, 
 	date_signature date, 
 	date_end date, 
@@ -86,7 +86,7 @@ ALTER TABLE llx_funding_funding ADD COLUMN entity integer DEFAULT 1 NOT NULL AFT
 ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
 ALTER TABLE llx_funding_funding ADD COLUMN retention_mount double AFTER retention_rate;
 ALTER TABLE llx_funding_funding ADD COLUMN date_accepted date AFTER amount_rent_edit;
-ALTER TABLE llx_funding_funding ADD COLUMN date_acceptedend date AFTER date_accepted;
+ALTER TABLE llx_funding_funding ADD COLUMN date_endvalidity date AFTER date_accepted;
 ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc1check smallint AFTER fundoc1;
 ALTER TABLE llx_funding_funding ADD COLUMN fundoc2check smallint AFTER fundoc2;
