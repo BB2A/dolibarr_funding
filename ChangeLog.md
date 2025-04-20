@@ -2,6 +2,7 @@
 
 ## [1.1.0] - 04/2025
 
+- FIX - 20/04/2025 - PHP erreurs onglet  événements d'un financement
 - FIX - 19/04/2025 - Lors de la réation d'une commande on vérifie le lien avec propo pour copier le finanacement. Si le financement n'exister pas sur la propo ou pas de lien vers une propo erreur php.
 - FIX - 03/04/2025 - Modification de triggers nouveau fonctionnement element@module
 - FIX - 03/04/2025 - Changement du nom de l'editeur
