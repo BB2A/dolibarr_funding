@@ -79,13 +79,15 @@ if (!$user->admin) {
 $action = GETPOST('action', 'alpha');
 $backtopage = GETPOST('backtopage', 'alpha');
 
-$value = GETPOST('value', 'alpha');
+// $value = GETPOST('value', 'alpha');
 
 isset($conf->global->FUNDING_ID_REGLEMENT) ? $conf->global->FUNDING_ID_REGLEMENT : $conf->global->FUNDING_ID_REGLEMENT = '';
 isset($conf->global->FUNDING_DEFAULT_DURATION) ? $conf->global->FUNDING_DEFAULT_DURATION : $conf->global->FUNDING_DEFAULT_DURATION = '';
 isset($conf->global->FUNDING_DEFAULT_SCALE) ? $conf->global->FUNDING_DEFAULT_SCALE : $conf->global->FUNDING_DEFAULT_SCALE = '';
 isset($conf->global->FUNDING_DEFAULT_REDEMPTION) ? $conf->global->FUNDING_DEFAULT_REDEMPTION : $conf->global->FUNDING_DEFAULT_REDEMPTION = '';
 isset($conf->global->FUNDING_DEFAULT_TYPE) ? $conf->global->FUNDING_DEFAULT_TYPE : $conf->global->FUNDING_DEFAULT_TYPE= '';
+isset($conf->global->FUNDING_VALIDITY_MONTH) ? $conf->global->FUNDING_VALIDITY_MONTH : $conf->global->FUNDING_VALIDITY_MONTH= '';
+
 
 isset($conf->global->FUNDING_FILTRE_ORGANIZATION) ? $conf->global->FUNDING_FILTRE_ORGANIZATION : $conf->global->FUNDING_FILTRE_ORGANIZATION = '';
 isset($conf->global->FUNDING_DEFAULT_ORGANIZATION) ? $conf->global->FUNDING_DEFAULT_ORGANIZATION : $conf->global->FUNDING_DEFAULT_ORGANIZATION = '';
@@ -106,6 +108,7 @@ $arrayofparameters = array(
 	'FUNDING_DEFAULT_SCALE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 	'FUNDING_DEFAULT_REDEMPTION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 	'FUNDING_DEFAULT_TYPE'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_VALIDITY_MONTH'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>'number', 'step'=>'1', 'min'=>'0'),
 
 	'FUNDING_FILTRE_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 	'FUNDING_DEFAULT_ORGANIZATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
@@ -243,7 +246,7 @@ llxHeader('', $langs->trans($page_name));
 // Subheader
 $linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1').'">'.$langs->trans("BackToModuleList").'</a>';
 
-print load_fiche_titre($langs->trans($page_name), $linkback,  'object_'.$object->picto);
+print load_fiche_titre($langs->trans($page_name), $linkback, 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 // Configuration header
 $head = fundingAdminPrepareHead();
@@ -253,108 +256,76 @@ dol_fiche_head($head, 'settings', '', -1, "funding@funding");
 echo '<span class="opacitymedium">'.$langs->trans("FundingSetupPage").'</span><br><br>';
 
 
-// if ($action == 'edit') {
-if (1 == 1) {
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="action" value="update">';
+print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
+print '<input type="hidden" name="action" value="update">';
 
-	print '<table class="noborder centpercent">';
-	print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td align="center">'.$langs->trans("Value").'</td></tr>';
+print '<table class="noborder centpercent">';
+print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td align="center">'.$langs->trans("Value").'</td></tr>';
 
-	foreach ($arrayofparameters as $key => $val) {
-		print '<tr class="oddeven"><td>';
-		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-		if ($key == 'FUNDING_ID_REGLEMENT') {
-			print '</td><td align="right" width="230">';
-			$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 1, 0, 1);
-			print '</td></tr>';
-		} elseif ($key == 'FUNDING_DEFAULT_DURATION') {
-			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_DURATION', $object->fields['fk_duration']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_DURATION);
-		} elseif ($key == 'FUNDING_DEFAULT_SCALE') {
-			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_SCALE', $object->fields['fk_scale']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_SCALE);
-		} elseif ($key == 'FUNDING_DEFAULT_REDEMPTION') {
-			$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
-			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_REDEMPTION', $arrval, $conf->global->FUNDING_DEFAULT_REDEMPTION);
-		} elseif ($key == 'FUNDING_DEFAULT_TYPE') {
-			print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_TYPE', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_TYPE);
-		} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-			print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
-		} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
-			print '</td>';
-			print '<td align="right" width="230">'.$form->selectarray('FUNDING_NOCLOSEDFINISHAUTO_EXTENSION', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION);
-		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL') {
-			print '</td>';
-			print '<td align="right" width="230">';
-			if ($conf->use_javascript_ajax) {
-				print ajax_constantonoff('FUNDING_LISTE_THIRDPARTY_PROPAL');
-			} else {
-				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
-				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL);
-			}
-		} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST') {
-			print '</td>';
-			print '<td align="right" width="230">';
-			if ($conf->use_javascript_ajax) {
-				print ajax_constantonoff('FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST');
-			} else {
-				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
-				print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST);
-			}
-		} elseif ($key == 'FUNDING_ENABLED_RENTEDIT') {
-			print '</td>';
-			print '<td align="right" width="230">';
-			if ($conf->use_javascript_ajax) {
-				print ajax_constantonoff('FUNDING_ENABLED_RENTEDIT');
-			} else {
-				$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
-				print $form->selectarray("FUNDING_ENABLED_RENTEDIT", $arrval, $conf->global->FUNDING_ENABLED_RENTEDIT);
-			}
+foreach ($arrayofparameters as $key => $val) {
+	print '<tr class="oddeven"><td>';
+	$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+	print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+	if ($key == 'FUNDING_ID_REGLEMENT') {
+		print '</td><td align="right" width="230">';
+		$form->select_types_paiements($conf->global->FUNDING_ID_REGLEMENT, 'FUNDING_ID_REGLEMENT', 'CRDT', 0, 1, 1, 0, 1);
+		print '</td></tr>';
+	} elseif ($key == 'FUNDING_DEFAULT_DURATION') {
+		print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_DURATION', $object->fields['fk_duration']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_DURATION);
+	} elseif ($key == 'FUNDING_DEFAULT_SCALE') {
+		print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_SCALE', $object->fields['fk_scale']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_SCALE);
+	} elseif ($key == 'FUNDING_DEFAULT_REDEMPTION') {
+		$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+		print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_REDEMPTION', $arrval, $conf->global->FUNDING_DEFAULT_REDEMPTION);
+	} elseif ($key == 'FUNDING_DEFAULT_TYPE') {
+		print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_TYPE', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_TYPE);
+	} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
+		print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
+	} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
+		print '</td>';
+		print '<td align="right" width="230">'.$form->selectarray('FUNDING_NOCLOSEDFINISHAUTO_EXTENSION', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION);
+	} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL') {
+		print '</td>';
+		print '<td align="right" width="230">';
+		if ($conf->use_javascript_ajax) {
+			print ajax_constantonoff('FUNDING_LISTE_THIRDPARTY_PROPAL');
 		} else {
-			print '</td><td align="right" width="230"><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+			$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+			print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL);
 		}
-	}
-	print '</table>';
-
-	print '<br><div class="center">';
-	print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
-	print '</div>';
-
-	print '</form>';
-	print '<br>';
-} else {
-	if (!empty($arrayofparameters)) {
-		print '<table class="noborder centpercent">';
-		print '<tr class="liste_titre"><td class="titlefield" style="width:auto">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
-
-		foreach ($arrayofparameters as $key => $val) {
-			$setupnotempty++;
-
-			print '<tr class="oddeven"><td>';
-			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-			if ($key == 'FUNDING_ID_REGLEMENT') {
-				print '</td><td>';
-				$form->form_modes_reglement($conf->global->FUNDING_ID_REGLEMENT, $conf->global->FUNDING_ID_REGLEMENT, 'none');
-				print '</td></tr>';
-			} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
-				print '</td><td>';
-				$formcompany->formThirdpartyType($conf->global->FUNDING_FILTRE_ORGANIZATION, $conf->global->FUNDING_FILTRE_ORGANIZATION, 'none', '');
-				print '</td></tr>';
-			} else {
-				print '</td><td>'.$conf->global->$key.'</td></tr>';
-			}
+	} elseif ($key == 'FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST') {
+		print '</td>';
+		print '<td align="right" width="230">';
+		if ($conf->use_javascript_ajax) {
+			print ajax_constantonoff('FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST');
+		} else {
+			$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+			print $form->selectarray("FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST", $arrval, $conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST);
 		}
-		print '</table>';
-
-		print '<div class="tabsAction">';
-		print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit">'.$langs->trans("Modify").'</a>';
-		print '</div>';
-	} else {
-		print '<br>'.$langs->trans("NothingToSetup");
+	} elseif ($key == 'FUNDING_ENABLED_RENTEDIT') {
+		print '</td>';
+		print '<td align="right" width="230">';
+		if ($conf->use_javascript_ajax) {
+			print ajax_constantonoff('FUNDING_ENABLED_RENTEDIT');
+		} else {
+			$arrval = array('0' => $langs->trans("No"), '1' => $langs->trans("Yes"));
+			print $form->selectarray("FUNDING_ENABLED_RENTEDIT", $arrval, $conf->global->FUNDING_ENABLED_RENTEDIT);
+		}
+	} elseif ($val["type"] == "number"){
+		print '</td><td align="right" width="230"><input type="number" min='.$val["min"].' step='.$val["step"] . ' name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+	}else {
+		print '</td><td align="right" width="230"><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
 	}
 }
+print '</table>';
+
+print '<br><div class="center">';
+print '<input class="button" type="submit" value="'.$langs->trans("Save").'">';
+print '</div>';
+
+print '</form>';
+print '<br>';
 
 $moduledir = 'funding';
 $myTmpObjects = array();
