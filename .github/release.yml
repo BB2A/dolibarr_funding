@@ -1,1 +1,8 @@
-
+changelog:
+categories:
+    - title: Bug fix 🛠
+      labels:
+        - FIX
+    - title: New Features 🎉
+      labels:
+        - Features
