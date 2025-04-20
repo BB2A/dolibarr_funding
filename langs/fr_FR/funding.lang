@@ -356,21 +356,21 @@ funfoldoc6=Rachat signé
 #
 # Trigger
 #
-FUNDINGCREATEInDolibarr=Financement %s Creer
-FUNDINGVALIDATEInDolibarr=Financement %s validé
-FUNDINGSENTBYMAILInDolibarr=Financement envoyé par mail
-FUNDINGUPDATEInDolibarr=Financement %s mis à jour
-FUNDINGACCEPTInDolibarr=Financement %s Accépté
-FUNDINGDENIEDInDolibarr=Financement %s Refusé
-FUNDINGRUNNINGInDolibarr=Financement %s En cours
-FUNDINGENDInDolibarr=Financement %s Fini
-FUNDINGCANCELInDolibarr=Financement %s Annulé
-FUNDINGREOPENInDolibarr=Financement %s Rouvert
-FUNDINGUNVALIDATEInDolibarr=Financement %s Retour en brouillon
-FUNDINGSENDORGInDolibarr=Financement %s Envoyé à l'organisme
-FUNDINGLACKInDolibarr=Financement %s Manque des documents
-FUNDINGLACKOKInDolibarr=Financement %s documents rajoutés
-FUNDINGEXTENSIONInDolibarr=Financement %s Prolongation
+CREATEInDolibarr=Financement %s Creer
+VALIDATEInDolibarr=Financement %s validé
+SENTBYMAILInDolibarr=Financement envoyé par mail
+UPDATEInDolibarr=Financement %s mis à jour
+ACCEPTInDolibarr=Financement %s Accépté
+DENIEDInDolibarr=Financement %s Refusé
+RUNNINGInDolibarr=Financement %s En cours
+ENDInDolibarr=Financement %s Fini
+CANCELInDolibarr=Financement %s Annulé
+REOPENInDolibarr=Financement %s Rouvert
+UNVALIDATEInDolibarr=Financement %s Retour en brouillon
+SENDORGInDolibarr=Financement %s Envoyé à l'organisme
+LACKInDolibarr=Financement %s Manque des documents
+LACKOKInDolibarr=Financement %s documents rajoutés
+EXTENSIONInDolibarr=Financement %s Prolongation
 COEFFICIENTDISABLEInDolibarr=Coefficient %s desactivé
 COEFFICIENTENABLEnDolibarr=Coefficient %s activé
 
