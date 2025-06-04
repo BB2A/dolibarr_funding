@@ -1757,7 +1757,6 @@ class Funding extends CommonObject
 		$date_endvalidity = '';
 		$duration_value = getDolGlobalString('FUNDING_VALIDITY_MONTH');
 		$duration_unit = "m";
-		// var_dump(strtotime($date_accepted), $date_accepted);exit;
 
 		// Si date d'acceptation calcul date de fin
 		if (!empty($date_accepted) && !empty($duration_value)) {
