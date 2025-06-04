@@ -946,8 +946,8 @@ class Funding extends CommonObject
 
 		if (!empty($row[0])) {
 			$idfinding = $row[0];
-			// $funding = new funding($this->db);
 			$result = $this->fetch($idfinding);
+
 		}
 
 		// End
@@ -1544,7 +1544,7 @@ class Funding extends CommonObject
 
 		if (!empty($typedoc) && !empty($iddoc)) {
 			$document = $this->infodoc($iddoc, $typedoc);
-			if (!empty($this->date_signature) && !empty($this->date_delivery) && !empty($document->date_livraison) && $this->status == self::STATUS_ACCEPT && $document->status > 0) {
+			if (!empty($this->date_signature) && !empty($this->date_delivery) && !empty($document->date_livraison) || !empty($document->delivery_date) && $this->status == self::STATUS_ACCEPT && $document->status > 0) {
 				$status = self::STATUS_RUNNING;
 				$triger = 'FUNDING_RUNNING';
 				return $this->setStatusCommon($user, $status, $notrigger, $triger);
@@ -2894,6 +2894,8 @@ class Funding extends CommonObject
 		$dateEnd = date('Y-m-d', strtotime('+'.$duration.' month', $date));
 		$output = '<ul>';
 		$errormsg = '';
+		$beforusersale = 0;
+		$beforusersalemail = "";
 
 		$sql = 'SELECT rowid, ref, fk_soc, fk_user_comm, date_end, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2909,28 +2911,54 @@ class Funding extends CommonObject
 				$soc = new Societe($db);
 				$comm = new User($db);
 				$funding = new Funding($db);
-				$FundingSoonFinished = array();
-				while ($i <= $num) {
-					$obj = $this->db->fetch_object($resql);
-					$soc->fetch($obj->fk_soc);
-					$comm->fetch($obj->fk_user_comm);
-					if (empty($obj)) {
+				// $FundingSoonFinished = array();
+				// On rajoute 1 a num pour envoyer le dernier mail
+				while ($i <= $num+1) {
+					if ($i < $num+1){
+						$obj = $this->db->fetch_object($resql);
+						$soc->fetch($obj->fk_soc);
+						$comm->fetch($obj->fk_user_comm);
+					}
+					if ($comm->id != $beforusersale && $i > 1){
+						// On referme la liste
+						$output .= '</ul>';
+						// Envoie du mail
+						if (!empty($beforusersalemail) && !empty($output)){
+							$subject = $langs->trans("OutputCronFundingsSoonFinished");
+							$output = $subject.' '.$output;
+							$result = $funding->sendMail($comm->email, $comm->email, dol_string_nohtmltag($subject), $output);
+							if ($result < 0) {
+								$error++;
+								$errormsg .= 'Send mail not found';
+							}
+						}
+						// On réinitialise le message
+						$output = '<ul>';
+					}
+					if (empty($obj)){
+						// On réinitialise pour envoyer le mail au commercial précédent
+						$beforusersale = 0;
+						$beforusersalemail = "";
 						break; // Should not happen
 					}
 					$output .= '<li><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a> - '.date('d-m-Y', strtotime($obj->date_end)).' - '.$soc->nom.' ('.$soc->name_alias.')</li>';
 					
-					if (in_array($FundingSoonFinished['user_comm'])){
-						$FundingSoonFinished['user_comm']['mess'] = $output;
-					}else{
-						$FundingSoonFinished['user_comm'] = $comm->rowid;
-						$FundingSoonFinished['user_comm'][$comm->rowid]['email'] = $comm->email;
-					}
+					$beforusersale = $comm->id;
+					$beforusersalemail = $comm->email;
 					
-					
+					// if ($i > 1){
+					// 	if (in_array($FundingSoonFinished['user_comm'])){
+					// 		$FundingSoonFinished['user_comm']['mess'] = $output;
+					// 	}else{
+					// 		$FundingSoonFinished['user_comm'] = $comm->rowid;
+					// 		$FundingSoonFinished['user_comm'][$comm->rowid]['email'] = $comm->email;
+					// 	}
+					// }
 					$i++;
 				}
+			}else{
+				$output = $langs->trans("NotFundingSoonFinished");
 			}
-			$output .= '</ul>';
 			$this->db->free($resql);
 		} else {
 			$error = $this->db;
@@ -2938,21 +2966,12 @@ class Funding extends CommonObject
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
-		if (!empty($output)) {
-			if ($num > 1) {
-				$subject = $langs->trans("OutputCronFundingsSoonFinished");
-			} else {
-				$subject = $langs->trans("OutputCronFundingSoonFinished");
-			}
-			$output = $subject.' '.$output;
-			$result = $funding->sendMail($comm->email, $comm->email, dol_string_nohtmltag($subject), $output);
-			if ($result < 0) {
-				$error++;
-				$errormsg .= 'Send mail not found';
-			}
-			$this->output = $output;
-			$this->error = $errormsg;
+		if (is_array($FundingSoonFinished)){
+			exit;
 		}
+		
+		$this->output = $output;
+		$this->error = $errormsg;
 
 		if (!empty($error)) {
 			return $error;
@@ -2970,7 +2989,7 @@ class Funding extends CommonObject
 	* @param   int          $message    message
 	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
 	*/
-	public function sendMail($from = '', $sendto = '', $subject = '', $message = '')
+	public function sendMail($from = '', $sendto = '', $subject = '', $message = '',  $filename = '')
 	{
 		global $conf, $langs;
 

@@ -385,7 +385,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						}
 						$result = $fundingobject->update($user);
 						if ($result <> -1) {
-							return $fundingobject->setStatusCommon($user, $fundingobject::STATUS_RUNNING, $notrigger, 'FUNDING_RUNNING');
+							return $fundingobject->setRun($user);
 						} else {
 							return $result;
 						}

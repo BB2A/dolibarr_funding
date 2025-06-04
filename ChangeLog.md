@@ -1,5 +1,9 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## [1.1.1] - 06/2025
+- FIX - 04/06/2025 - Corrections vérificartion date de livraison renseigné sur le document avec retrocompatible
+- FIX - 04/06/2025 - Dans le trigger appel à la fonction setRun pour avoir le même comprtement avec le bouton actif 
+
 ## [1.1.0] - 04/2025
 
 - NEW - 20/04/2025 - Ajout du parametre durée de validité
