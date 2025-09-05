@@ -710,7 +710,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';
-	print '<table class="border centpercent">'."\n";
+	print '<table class="border centpercent  tableforfield">'."\n";
 
 	// Common attributes
 	//$keyforbreak='fieldkeytoswitchonsecondcolumn';    // We change column just before this field
@@ -726,7 +726,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '<div class="div-table-responsive-no-min">';
 	// Documents client
 	// print '<table class="noborder tableforfield centpercent margintable">';
-	print '<table class="border centpercent">';
+	print '<table class="centpercent noborder">';
 	print '<tr class="liste_titre">';
 	print '<td colspan="2">'.$langs->trans("DocumentsForFunding").'</td>';
 	print '<td align="center">'.$langs->trans("Lack").'</td>';
@@ -855,11 +855,12 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		($object->fundoc6 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc6&file='.$object->fundoc6.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
 	}
 	print '</tr>';
-	//print '</table">';
+	print '</table">';
 
 	// Document du financement
 
 	//print '<table class="noborder tableforfield centpercent margintable">';
+	print '<table class="centpercent noborder">';
 	print '<tr class="liste_titre">';
 	print '<td td colspan="2">'.$langs->trans("FundingFolder").'</td>';
 	print '<td></td>';
