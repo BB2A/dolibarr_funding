@@ -2924,7 +2924,7 @@ class Funding extends CommonObject
 						// Envoie du mail
 						if (!empty($beforusersalemail) && !empty($output)){
 							$subject = $langs->trans("OutputCronFundingsSoonFinished");
-							$output = $subject.' '.$output;
+							$output = $comm->email.' '.$subject.' '.$output;
 							$result = $funding->sendMail($comm->email, $comm->email, dol_string_nohtmltag($subject), $output);
 							if ($result < 0) {
 								$error++;
@@ -2965,9 +2965,9 @@ class Funding extends CommonObject
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
-		if (is_array($FundingSoonFinished)){
-			exit;
-		}
+		// if (is_array($FundingSoonFinished)){
+		// 	exit;
+		// }
 		
 		$this->output = $output;
 		$this->error = $errormsg;
@@ -2995,7 +2995,7 @@ class Funding extends CommonObject
 		// Send email to assigned user
 
 		if (empty($from)) {
-			$from = dol_escape_htmltag($conf->global->MAIN_INFO_SOCIETE_MAIL);
+			$from = dol_escape_htmltag($conf->global->MAIN_MAIL_EMAIL_FROM);
 		} else {
 			$from = dol_escape_htmltag($from);
 		}
