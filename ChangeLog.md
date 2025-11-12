@@ -1,6 +1,6 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [1.1.2] - 06/2025 Dolibarr 22
+## [1.1.2] - 11/2025 Dolibarr 22
 - FIX - 09/11/2025 - Update send mail
 
 ## [1.1.2] - 06/2025 Dolibarr 22
