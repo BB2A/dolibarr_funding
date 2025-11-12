@@ -2926,7 +2926,7 @@ class Funding extends CommonObject
 							$subject = $langs->trans("OutputCronFundingsSoonFinished");
 							$output = $comm->email.' '.$subject.' '.$output;
 							$result = $funding->sendMail($comm->email, $comm->email, dol_string_nohtmltag($subject), $output);
-							if ($result < 0) {
+							if ($result <= 0) {
 								$error++;
 								$errormsg .= 'Send mail not found';
 							}
