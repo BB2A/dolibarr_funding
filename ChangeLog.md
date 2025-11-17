@@ -1,10 +1,9 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [1.1.3] - 11/2025 Dolibarr 22
-- FIX - 17/11/2025 - Fix php warning dans les cron + lang
-- FIX - 09/11/2025 - Update send mail
 
 ## [1.1.2] - 06/2025 Dolibarr 22
+- FIX - 17/11/2025 - Fix php warning dans les cron + lang
+- FIX - 09/11/2025 - Update send mail
 - FIX - 05/09/2025 - Correction affichage des tableaux
 
 
