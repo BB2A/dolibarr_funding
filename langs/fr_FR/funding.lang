@@ -173,6 +173,7 @@ FUNDING_DEFAULT_ORGANIZATION=Organisme par default
 FUNDING_MAIL_DEFAULT=Adresse mail d'envoie par default
 FUNDING_MAIL_AUTOCOPY_TO=Adresse mail de copie automatique
 FUNDING_MAIL_VALIDATION=Adresse mail notification validation fiancement
+FUNDING_MAIL_REPORT=Adresse mail d'envoie des rapports
 
 FUNDING_NOCLOSEDFINISHAUTO_EXTENSION=Type de financement mis en extenssion à la date de fin
 
@@ -414,9 +415,13 @@ OutputNoSetStatusCronFundingEnd = Des mises a jour de statut non pas été effec
 
 CronFundingSoonFinished = Financement bientot termine
 CommentCronFundingSoonFinished = Envoie des notifications aux commerciaux pour leur indiquer la fin des financements. Param: $duration -> en mois par default 6 mois si vide (Prend les financements qui se termine dans les 6 prochains mois)
-OutputCronFundingSoonFinished = Financement bientôt à terme
-OutputCronFundingsSoonFinished = Financements bientôt à terme
-NotFundingSoonFinished=Pas de financement bientôt à terme
+OutputCronFundingSoonFinished = Financement bientot a terme
+OutputCronFundingsSoonFinished = Financements bientot a terme
+OutputCronFundingsSoonFinishedAll = Total des financements bientot a terme
+NotFundingSoonFinished=Pas de financement bientot a terme
+
+FundingMessageMailIntroText = Bonjour %s,
+FundingMessageMailMessageText = Voici tes financements qui arrive bientot à terme.
 
 
 #

@@ -95,6 +95,8 @@ isset($conf->global->FUNDING_DEFAULT_ORGANIZATION) ? $conf->global->FUNDING_DEFA
 isset($conf->global->FUNDING_MAIL_DEFAULT) ? $conf->global->FUNDING_MAIL_DEFAULT : $conf->global->FUNDING_MAIL_DEFAULT = '';
 isset($conf->global->FUNDING_MAIL_AUTOCOPY_TO) ? $conf->global->FUNDING_MAIL_AUTOCOPY_TO : $conf->global->FUNDING_MAIL_AUTOCOPY_TO = '';
 isset($conf->global->FUNDING_MAIL_VALIDATION) ? $conf->global->FUNDING_MAIL_VALIDATION : $conf->global->FUNDING_MAIL_VALIDATION = '';
+isset($conf->global->FUNDING_MAIL_REPORT) ? $conf->global->FUNDING_MAIL_REPORT : $conf->global->FUNDING_MAIL_REPORT = '';
+
 
 isset($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) ? $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION : $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION = '';
 
@@ -116,6 +118,7 @@ $arrayofparameters = array(
 	'FUNDING_MAIL_DEFAULT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 	'FUNDING_MAIL_AUTOCOPY_TO'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 	'FUNDING_MAIL_VALIDATION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
+	'FUNDING_MAIL_REPORT'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 
 	'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION'=>array('css'=>'minwidth200','enabled'=>1, 'default'=>'', 'type'=>''),
 

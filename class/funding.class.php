@@ -2895,10 +2895,28 @@ class Funding extends CommonObject
 
 		$date = dol_now('tzserver');
 		$dateEnd = date('Y-m-d', strtotime('+'.$duration.' month', $date));
-		$output = '<ul>';
+		$outputinit = '';
+		$output = '';
+		$outputtotal = '';
+		$error = 0;
 		$errormsg = '';
 		$beforusersale = 0;
 		$beforusersalemail = "";
+
+		$subject = $langs->trans($langs->transnoentities("OutputCronFundingsSoonFinished"));
+
+		$outputinit = '<table>';
+		$outputinit .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
+		$outputinit .= '<td colspan="3" style="text-color: #000;">';
+		$outputinit .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_RUNNING.'">'.$subject.'</a>';
+		$outputinit .= '</td></tr>';
+		$outputinit .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
+		$outputinit.= '<th>'.$langs->trans("Ref").'</th>';
+		$outputinit .= '<th>'.$langs->trans("Date").'</th>';
+		$outputinit .= '<th>'.$langs->trans("Thirdparty").'</th>';
+		$outputinit .= '</tr>';
+
+		$output = $outputinit;
 
 		$sql = 'SELECT rowid, ref, fk_soc, fk_user_comm, date_end, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2918,47 +2936,56 @@ class Funding extends CommonObject
 				// On rajoute 1 a num pour envoyer le dernier mail
 				while ($i <= $num+1) {
 					if ($i < $num+1){
+						// Récupération des infos
 						$obj = $this->db->fetch_object($resql);
 						$soc->fetch($obj->fk_soc);
 						$comm->fetch($obj->fk_user_comm);
 					}
 					if ($comm->id != $beforusersale && $i > 1){
 						// On referme la liste
-						$output .= '</ul>';
+						$output .= '</table>';
+						// On stock la liste total pour envoyer le rapport
+						$outputtotal .= '<h1 style="text-align: center;">'.$beforusersalename.'</h1>'.$output;
 						// Envoie du mail
 						if (!empty($beforusersalemail) && !empty($output)){
-							$subject = $langs->trans("OutputCronFundingsSoonFinished");
-							$output = $comm->email.' '.$subject.' '.$output;
-							$result = $funding->sendMail($comm->email, $comm->email, dol_string_nohtmltag($subject), $output);
+							$output = $langs->trans("FundingMessageMailIntroText", $beforusersalename) .'<br/><br/>' .$langs->trans("FundingMessageMailMessageText").'<br/><br/>'. $output;
+							$result = $funding->sendMail('', $beforusersalemail, dol_string_nohtmltag($subject), $output);
 							if ($result <= 0) {
 								$error++;
 								$errormsg .= 'Send mail not found';
 							}
+							// On réinitialise pour envoyer le mail au commercial précédent
+							$beforusersale = 0;
+							$beforusersalename = "";
+							$beforusersalemail = "";
+							// On réinitialise la liste
+							$output = $outputinit;
 						}
-						// On réinitialise le message
-						$output = '<ul>';
 					}
 					if (empty($obj)){
-						// On réinitialise pour envoyer le mail au commercial précédent
-						$beforusersale = 0;
-						$beforusersalemail = "";
 						break; // Should not happen
 					}
-					$output .= '<li><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a> - '.date('d-m-Y', strtotime($obj->date_end)).' - '.$soc->nom.' ('.$soc->name_alias.')</li>';
+					$output .= '<tr>';
+					$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
+					$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
+					$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+					$output .= '</tr>';
 					
 					$beforusersale = $comm->id;
+					$beforusersalename = $comm->firstname.' '.$comm->lastname;
 					$beforusersalemail = $comm->email;
-					
-					// if ($i > 1){
-					// 	if (in_array($FundingSoonFinished['user_comm'])){
-					// 		$FundingSoonFinished['user_comm']['mess'] = $output;
-					// 	}else{
-					// 		$FundingSoonFinished['user_comm'] = $comm->rowid;
-					// 		$FundingSoonFinished['user_comm'][$comm->rowid]['email'] = $comm->email;
-					// 	}
-					// }
 					$i++;
 				}
+				// Envoie du mail avec la totalité des financements bientôt finis
+				if (!empty($conf->global->FUNDING_MAIL_REPORT) && !empty($outputtotal)){
+					$subject = $langs->trans("OutputCronFundingsSoonFinishedAll");
+					$result = $funding->sendMail('', $conf->global->FUNDING_MAIL_REPORT, dol_string_nohtmltag($subject), $outputtotal);
+					if ($result <= 0) {
+						$error++;
+						$errormsg .= 'Send mail not found';
+					}
+				}
+
 			}else{
 				$output = $langs->trans("NotFundingSoonFinished");
 			}
@@ -2968,12 +2995,8 @@ class Funding extends CommonObject
 		}
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
-
-		// if (is_array($FundingSoonFinished)){
-		// 	exit;
-		// }
 		
-		$this->output = $output;
+		$this->output = $outputtotal;
 		$this->error = $errormsg;
 
 		if (!empty($error)) {
@@ -2981,8 +3004,6 @@ class Funding extends CommonObject
 		} else {
 			return 0;
 		}
-
-		//return $error;
 	}
 
 	/**

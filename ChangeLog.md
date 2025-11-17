@@ -1,7 +1,10 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 
-## [1.1.2] - /2025 Dolibarr 22
+## [1.1.2] - 11/2025 Dolibarr 22
+- NEW - 17/11/2025 - NEW - 17/11/2025 - Envoie d'un mail récapitulatif avec tout les finicements bientôt fini
+- NEW - 17/11/2025 - NEW - 17/11/2025 - Look and Feel mail
+
 - FIX - 17/11/2025 - Fix php warning dans les cron + lang
 - FIX - 09/11/2025 - Update send mail
 - FIX - 05/09/2025 - Correction affichage des tableaux
@@ -14,13 +17,15 @@
 ## [1.1.0] - 04/2025
 
 - NEW - 20/04/2025 - Ajout du parametre durée de validité
+- NEW - 03/04/2025 - Ajout d'un champ date d'acceptation et un champ date de validité.
+- NEW - 03/04/2025 - Ajout d'un paramettre générale du module "nombres de jours validité" qui permet de calculer la date de fin de validité
+
 - FIX - 20/04/2025 - Corrections sur ajout date de vilidité
 - FIX - 20/04/2025 - PHP erreurs onglet  événements d'un financement
 - FIX - 19/04/2025 - Lors de la réation d'une commande on vérifie le lien avec propo pour copier le finanacement. Si le financement n'exister pas sur la propo ou pas de lien vers une propo erreur php.
 - FIX - 03/04/2025 - Modification de triggers nouveau fonctionnement element@module
 - FIX - 03/04/2025 - Changement du nom de l'editeur
-- NEW - 03/04/2025 - Ajout d'un champ date d'acceptation et un champ date de validité.
-- NEW - 03/04/2025 - Ajout d'un paramettre générale du module "nombres de jours validité" qui permet de calculer la date de fin de validité
+
 
 ## [1.0.10] - 03/2025
 - FIX - La mise à jour forcé des taux ne mettait pas à jour le taux de la retenu de garantie
