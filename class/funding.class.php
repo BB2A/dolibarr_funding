@@ -2813,8 +2813,9 @@ class Funding extends CommonObject
 	*/
 	public function cronFundingEnd()
 	{
-		global $conf, $langs, $db;
+		global $conf, $langs, $db, $user;
 		$date = dol_now('tzserver');
+		$output = '';
 
 		$sql = 'SELECT rowid, ref, date_end, fk_funding_type, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2825,6 +2826,7 @@ class Funding extends CommonObject
 		if ($resql) {
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;
+				$result = "";
 				$funding = new Funding($db);
 				while ($i <= $num) {
 					$obj = $this->db->fetch_object($resql);
@@ -2835,7 +2837,8 @@ class Funding extends CommonObject
 					if (!empty($conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION) && $obj->fk_funding_type != $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION || $obj->status_folder == self::STATUS_FOLDER_DENOUNCED) {
 						$status = self::STATUS_END;
 						$triger = 'FUNDING_END';
-						if ($result = $funding->setStatusCommon($user, $status, $notriger, $triger)) {
+						$result = $funding->setStatusCommon($user, $status, $notriger, $triger);
+						if ($result >= 0) {
 							if ($i == $num) {
 								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>';
 							} else {
@@ -2844,7 +2847,8 @@ class Funding extends CommonObject
 						}
 					} else {
 						$status = self::STATUS_FOLDER_EXTENSION;
-						if ($result = $funding->setStatusFolder($user, $status, $notrigger = 0)) {
+						$result = $funding->setStatusFolder($user, $status, $notrigger = 0);
+						if ($result >= 0) {
 							if ($i == $num) {
 								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>';
 							} else {

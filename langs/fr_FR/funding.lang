@@ -412,7 +412,7 @@ CommentCronFundingEnd = Met à jour le statut des financements actif, qui ne son
 OutputCronFundingEnd = Financement mis a jour automatiquement: 
 OutputNoSetStatusCronFundingEnd = Des mises a jour de statut non pas été effectué.
 
-CronFundingSoonFinished = Financement bientôt terminé
+CronFundingSoonFinished = Financement bientot termine
 CommentCronFundingSoonFinished = Envoie des notifications aux commerciaux pour leur indiquer la fin des financements. Param: $duration -> en mois par default 6 mois si vide (Prend les financements qui se termine dans les 6 prochains mois)
 OutputCronFundingSoonFinished = Financement bientôt à terme
 OutputCronFundingsSoonFinished = Financements bientôt à terme
