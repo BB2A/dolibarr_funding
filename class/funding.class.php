@@ -63,7 +63,15 @@ class Funding extends CommonObject
 	 * @var string String with name of icon for funding. Must be the part after the 'object_' into object_funding.png
 	 */
 	public $picto = 'fa-piggy-bank';
+/**
+	 * @var array<int,string>		Array with labels of status
+	 */
+	public $labelStatusFolder = array();
 
+	/**
+	 * @var array<int,string>	Array with short labels of status
+	 */
+	public $labelStatusFolderShort = array();
 
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
@@ -2816,19 +2824,11 @@ class Funding extends CommonObject
 		global $conf, $langs, $db, $user;
 		$date = dol_now('tzserver');
 		$output = '';
+		$output1 = '';
+		$output2 = '';
+		$subject = $langs->trans("OutputCronFundingEnd");
 		
-		$output = '<table>';
-		$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
-		$output .= '<td colspan="3" style="text-color: #000;">';
-		$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_RUNNING.'">'.$subject.'</a>';
-		$output .= '</td></tr>';
-		$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
-		$output .= '<th>'.$langs->trans("Ref").'</th>';
-		$output .= '<th>'.$langs->trans("Date").'</th>';
-		$output .= '<th>'.$langs->trans("Thirdparty").'</th>';
-		$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
-		$output .= '<th>'.$langs->trans("Status").'</th>';
-		$output .= '</tr>';
+		
 
 		$sql = 'SELECT rowid, ref, date_end, fk_funding_type, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2840,10 +2840,12 @@ class Funding extends CommonObject
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;
 				$result = "";
+				$soc = new Societe($db);
 				$funding = new Funding($db);
 				while ($i <= $num) {
 					$obj = $this->db->fetch_object($resql);
 					$funding->fetch($obj->rowid);
+					$soc->fetch($funding->fk_soc);
 					if (empty($obj)) {
 						break; // Should not happen
 					}
@@ -2852,34 +2854,25 @@ class Funding extends CommonObject
 						$triger = 'FUNDING_END';
 						$result = $funding->setStatusCommon($user, $status, $notriger, $triger);
 						if ($result >= 0) {
-							if ($i == $num) {
-								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>';
-							} else {
-								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>'." - ";
-							}
+							$output1 .= '<tr>';
+							$output1 .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
+							$output1 .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
+							$output1 .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+							$output1 .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
+							$output1 .= '<td>'.$funding->getLibStatut(1).'</td>';
+							$output1 .= '</tr>';
 						}
 					} else {
 						$status = self::STATUS_FOLDER_EXTENSION;
-						$result = $funding->setStatusFolder($user, $status, $notrigger = 0);
+						$result = $funding->setStatusFolder($user, $status, $notriger = 0);
 						if ($result >= 0) {
-							if ($i == $num) {
-								$output .= '<tr>';
-								$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
-								$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
-								$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
-								$output .= '<td>'.$obj->status_folder.'</td>';
-								$output .= '<td>'.$obj->status.'</td>';
-								$output .= '</tr>';
-								$output .= '</table>';
-							} else {
-								$output .= '<tr>';
-								$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
-								$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
-								$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
-								$output .= '<td>'.$obj->status_folder.'</td>';
-								$output .= '<td>'.$obj->status.'</td>';
-								$output .= '</tr>';
-							}
+							$output2 .= '<tr>';
+							$output2 .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
+							$output2 .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
+							$output2 .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+							$output2 .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
+							$output2 .= '<td>'.$funding->getLibStatut(1).'</td>';
+							$output2 .= '</tr>';
 						}
 					}
 					$i++;
@@ -2895,6 +2888,34 @@ class Funding extends CommonObject
 		$this->error = '';
 
 		if (!empty($num)) {
+			$output = '<table>';
+			$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
+			$output .= '<td colspan="5" style="text-color: #000;">';
+			
+			if (!empty($output1)) {
+				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_END.'">'.$subject.' '.$this->LibStatut(self::STATUS_END,1).'</a>';
+				$output .= '</td></tr>';
+				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
+				$output .= '<th>'.$langs->trans("Ref").'</th>';
+				$output .= '<th>'.$langs->trans("Date").'</th>';
+				$output .= '<th>'.$langs->trans("Thirdparty").'</th>';
+				$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
+				$output .= '<th>'.$langs->trans("Status").'</th>';
+				$output .= '</tr>';
+				$output .= $output1 . '</table><br/><br/>';
+			}
+			if (!empty($output2)) {
+				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_statusfolder='.self::STATUS_FOLDER_EXTENSION.'">'.$subject.' '.$this->LibStatutFolder(self::STATUS_FOLDER_EXTENSION,1).'</a>';
+				$output .= '</td></tr>';
+				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
+				$output .= '<th>'.$langs->trans("Ref").'</th>';
+				$output .= '<th>'.$langs->trans("Date").'</th>';
+				$output .= '<th>'.$langs->trans("Thirdparty").'</th>';
+				$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
+				$output .= '<th>'.$langs->trans("Status").'</th>';
+				$output .= '</tr>';
+				$output .= $output2 . '</table>';
+			}
 			$this->output = $langs->trans("OutputCronFundingEnd").$output;
 		}
 
@@ -2905,7 +2926,7 @@ class Funding extends CommonObject
 			return $result;
 		} else {
 			if (!empty($num) && !empty($this->output)) {
-				$this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $langs->trans("OutputCronFundingEnd"), $this->output);
+				$this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $subject, $this->output);
 			}
 			return 0;
 		}
@@ -2933,7 +2954,7 @@ class Funding extends CommonObject
 
 		$outputinit = '<table>';
 		$outputinit .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
-		$outputinit .= '<td colspan="3" style="text-color: #000;">';
+		$outputinit .= '<td colspan="5" style="text-color: #000;">';
 		$outputinit .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_RUNNING.'">'.$subject.'</a>';
 		$outputinit .= '</td></tr>';
 		$outputinit .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
@@ -2967,6 +2988,7 @@ class Funding extends CommonObject
 					if ($i < $num+1){
 						// Récupération des infos
 						$obj = $this->db->fetch_object($resql);
+						$funding->fetch($obj->rowid);
 						$soc->fetch($obj->fk_soc);
 						$comm->fetch($obj->fk_user_comm);
 					}
@@ -2998,10 +3020,10 @@ class Funding extends CommonObject
 					$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
 					$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
 					$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
-					$output .= '<td>'.$obj->status_folder.'</td>';
-					$output .= '<td>'.$obj->status.'</td>';
+					$output .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
+					$output .= '<td>'.$funding->getLibStatut(1).'</td>';
 					$output .= '</tr>';
-					
+					// On stock les infos du commercial pour envoie du mail
 					$beforusersale = $comm->id;
 					$beforusersalename = $comm->firstname.' '.$comm->lastname;
 					$beforusersalemail = $comm->email;
