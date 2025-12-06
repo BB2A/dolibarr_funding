@@ -2914,6 +2914,8 @@ class Funding extends CommonObject
 		$outputinit.= '<th>'.$langs->trans("Ref").'</th>';
 		$outputinit .= '<th>'.$langs->trans("Date").'</th>';
 		$outputinit .= '<th>'.$langs->trans("Thirdparty").'</th>';
+		$outputinit .= '<th>'.$langs->trans("StatusFolder").'</th>';
+		$outputinit .= '<th>'.$langs->trans("Status").'</th>';
 		$outputinit .= '</tr>';
 
 		$output = $outputinit;
@@ -2970,6 +2972,8 @@ class Funding extends CommonObject
 					$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
 					$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
 					$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+					$output .= '<td>'.$obj->status_folder.'</td>';
+					$output .= '<td>'.$obj->status.'</td>';
 					$output .= '</tr>';
 					
 					$beforusersale = $comm->id;

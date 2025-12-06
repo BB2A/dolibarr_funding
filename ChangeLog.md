@@ -1,6 +1,7 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [1.1.3] - /2025 Dolibarr 22
+- NEW - 06/12/2025 - Mail des financement bientot fini ajout des statuts
 - NEW - 06/12/2025 - Mail des financement bientot fini garde egalement ceux passé mais toujour actif
 
 ## [1.1.2] - 11/2025 Dolibarr 22
