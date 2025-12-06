@@ -324,20 +324,20 @@ FundingStatusDisabledShort=Annulé
 #
 # Status folder
 #
-FundingStatusFolderSendOrg=étude en cours
+FundingStatusFolderSendOrg=Etude en cours
 FundingStatusFolderLack=Pièces à fournir pour étude
 FundingStatusFolderLackOk=Pièces ok
 FundingStatusFolderAcceptRetention=Dossier avec RG
 FundingStatusFolderDenounced=Financement dénoncé
 FundingStatusFolderRedeemed=Financement racheté
 FundingStatusFolderExtension=Prolongation du financement
-FundingStatusFolderSendOrgShort=étude en cours
-FundingStatusFolderLackShort=pièces pour étude
+FundingStatusFolderSendOrgShort=Etude en cours
+FundingStatusFolderLackShort=Pièces pour étude
 FundingStatusFolderLackOkShort=Pièce ok
-FundingStatusFolderAcceptRetentionShort=dossier avec RG
-FundingStatusFolderDenouncedShort=dénonciation au terme
-FundingStatusFolderRedeemedShort=contrat racheté
-FundingStatusFolderExtensionShort=prolongation en cours
+FundingStatusFolderAcceptRetentionShort=Dossier avec RG
+FundingStatusFolderDenouncedShort=Dénonciation au terme
+FundingStatusFolderRedeemedShort=Contrat racheté
+FundingStatusFolderExtensionShort=Prolongation en cours
 
 #
 # Documents
