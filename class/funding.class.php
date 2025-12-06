@@ -2816,6 +2816,19 @@ class Funding extends CommonObject
 		global $conf, $langs, $db, $user;
 		$date = dol_now('tzserver');
 		$output = '';
+		
+		$output = '<table>';
+		$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
+		$output .= '<td colspan="3" style="text-color: #000;">';
+		$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_RUNNING.'">'.$subject.'</a>';
+		$output .= '</td></tr>';
+		$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
+		$output .= '<th>'.$langs->trans("Ref").'</th>';
+		$output .= '<th>'.$langs->trans("Date").'</th>';
+		$output .= '<th>'.$langs->trans("Thirdparty").'</th>';
+		$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
+		$output .= '<th>'.$langs->trans("Status").'</th>';
+		$output .= '</tr>';
 
 		$sql = 'SELECT rowid, ref, date_end, fk_funding_type, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2850,9 +2863,22 @@ class Funding extends CommonObject
 						$result = $funding->setStatusFolder($user, $status, $notrigger = 0);
 						if ($result >= 0) {
 							if ($i == $num) {
-								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>';
+								$output .= '<tr>';
+								$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
+								$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
+								$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+								$output .= '<td>'.$obj->status_folder.'</td>';
+								$output .= '<td>'.$obj->status.'</td>';
+								$output .= '</tr>';
+								$output .= '</table>';
 							} else {
-								$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a>'." - ";
+								$output .= '<tr>';
+								$output .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
+								$output .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
+								$output .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+								$output .= '<td>'.$obj->status_folder.'</td>';
+								$output .= '<td>'.$obj->status.'</td>';
+								$output .= '</tr>';
 							}
 						}
 					}
@@ -2868,7 +2894,7 @@ class Funding extends CommonObject
 
 		$this->error = '';
 
-		if (!empty($output)) {
+		if (!empty($num)) {
 			$this->output = $langs->trans("OutputCronFundingEnd").$output;
 		}
 
@@ -2878,7 +2904,7 @@ class Funding extends CommonObject
 			$result = $langs->trans("OutputNoSetStatusCronFundingEnd");
 			return $result;
 		} else {
-			if (!empty($output)) {
+			if (!empty($num) && !empty($this->output)) {
 				$this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $langs->trans("OutputCronFundingEnd"), $this->output);
 			}
 			return 0;

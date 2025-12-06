@@ -1,15 +1,16 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [1.1.3] - /2025 Dolibarr 22
-- NEW - 06/12/2025 - Mail des financement bientot fini ajout des statuts
-- NEW - 06/12/2025 - Mail des financement bientot fini garde egalement ceux passé mais toujour actif
+- NEW - 06/12/2025 - Look and Feel mail des financement avec changement de statut automatique
+- NEW - 06/12/2025 - Mail des financements bientot fini ajout des statuts
+- NEW - 06/12/2025 - Mail des financements bientot fini garde egalement ceux passé mais toujour actif
 
 ## [1.1.2] - 11/2025 Dolibarr 22
 - NEW - 17/11/2025 - Envoie d'un mail récapitulatif avec tout les finicements bientôt fini
 - NEW - 17/11/2025 - Look and Feel mail
 
 - FIX - 17/11/2025 - Fix php warning dans les cron + lang
-- FIX - 09/11/2025 - Update send mail
+- FIX - 09/11/2025 - Update send mail des financements bientot fini 
 - FIX - 05/09/2025 - Correction affichage des tableaux
 
 
