@@ -1,3 +1,4 @@
+--ADD Call trigger IN TABLE llx_c_action_trigger FOR FUNDING MODULE
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding@funding', 'FUNDING_CREATE', 'Funding create', 'A funding is created', '1830040') ON DUPLICATE KEY UPDATE `elementtype`='funding@funding';
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding@funding', 'FUNDING_VALIDATE', 'Funding validate', 'A funding is validate', '1830041') ON DUPLICATE KEY UPDATE `elementtype`='funding@funding';
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'funding@funding', 'FUNDING_MODIFY', 'Funding update', 'A funding is updated', '1830042') ON DUPLICATE KEY UPDATE `elementtype`='funding@funding';
@@ -22,12 +23,4 @@ INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `de
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'retention@funding', 'RETENTION_CREATE', 'Funding retention create', 'A funding retention is created', '1830080') ON DUPLICATE KEY UPDATE `elementtype`='retention@funding';
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'retention@funding', 'RETENTION_VALIDATE', 'Funding retention validate', 'A funding retention is validate', '1830081') ON DUPLICATE KEY UPDATE `elementtype`='retention@funding';
 INSERT INTO `llx_c_action_trigger` (`rowid`, `elementtype`, `code`, `label`, `description`, `rang`) VALUES (NULL, 'retention@funding', 'RETENTION_MODIFY', 'Funding retention update', 'A funding retention is updated', '1830082') ON DUPLICATE KEY UPDATE `elementtype`='retention@funding';
---ADD Call trigger IN TABLE
 
-DELETE FROM `llx_c_action_trigger` WHERE `elementtype` = 'funding';
-DELETE FROM `llx_c_action_trigger` WHERE `elementtype` = 'coeficient';
-DELETE FROM `llx_c_action_trigger` WHERE `elementtype` = 'retention';
-
-UPDATE `dolibarr`.`llx_actioncomm` SET `elementtype` = 'funding@funding' WHERE (`elementtype` = 'funding' OR `elementtype` = 'funding_funding');
-UPDATE `dolibarr`.`llx_actioncomm` SET `elementtype` = 'coeficient@funding' WHERE (`elementtype` = 'coeficient' OR `elementtype` = 'funding_coeficient');
-UPDATE `dolibarr`.`llx_actioncomm` SET `elementtype` = 'retention@funding' WHERE (`elementtype` = 'retention' OR `elementtype` = 'funding_retention');
