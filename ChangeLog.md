@@ -5,6 +5,7 @@
 - NEW - 06/12/2025 - Mail des financements bientot fini ajout des statuts
 - NEW - 06/12/2025 - Mail des financements bientot fini garde egalement ceux passé mais toujour actif
 
+- FIX - 07/12/2025 - Ajout d'un script sql pour la mise à jour de dolibarr 19.0.0 à 20.0.0 pour que les liésons d'objet llx_element_element
 - FIX - 07/12/2025 - Ajout d'un script sql pour la mise à jour de dolibarr 18.0.0 à 19.0.0 pour que les corrections d'evennement llx_actioncomm
 
 
