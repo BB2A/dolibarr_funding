@@ -68,6 +68,7 @@ RedemptionNumber=Numéro de rachat
 Organization=Organisme
 ThirdPartyInvoice=Tiers facturation
 DateEnd=Date de fin
+DateEndValidity = Date validité
 Redemption=Rachat
 Retention=Calcul RG
 RetentionOfGuarantee=Calcul RG
