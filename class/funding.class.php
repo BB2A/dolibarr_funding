@@ -2822,7 +2822,11 @@ class Funding extends CommonObject
 	public function cronFundingEnd()
 	{
 		global $conf, $langs, $db, $user;
+
 		$date = dol_now('tzserver');
+		$result = '';
+		$error = 0;
+		$errormsg = '';
 		$output = '';
 		$output1 = '';
 		$output2 = '';
@@ -2839,7 +2843,6 @@ class Funding extends CommonObject
 		if ($resql) {
 			if ($num = $this->db->num_rows($resql)) {
 				$i = 1;
-				$result = "";
 				$soc = new Societe($db);
 				$funding = new Funding($db);
 				while ($i <= $num) {
@@ -2854,25 +2857,37 @@ class Funding extends CommonObject
 						$triger = 'FUNDING_END';
 						$result = $funding->setStatusCommon($user, $status, $notriger, $triger);
 						if ($result >= 0) {
+							$oldstatus = $funding->getLibStatut(1);
+							$funding->fetch($obj->rowid);
 							$output1 .= '<tr>';
 							$output1 .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
 							$output1 .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
 							$output1 .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
 							$output1 .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
-							$output1 .= '<td>'.$funding->getLibStatut(1).'</td>';
+							$output1 .= '<td>'.$oldstatus.'->'.$funding->getLibStatut(1).'</td>';
 							$output1 .= '</tr>';
+						}else{
+							$error++;
+							$errormsg .= 'Set status funding end failed for funding '.$obj->ref.' ('.$funding->id.')';
 						}
 					} else {
 						$status = self::STATUS_FOLDER_EXTENSION;
-						$result = $funding->setStatusFolder($user, $status, $notriger = 0);
-						if ($result >= 0) {
-							$output2 .= '<tr>';
-							$output2 .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
-							$output2 .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
-							$output2 .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
-							$output2 .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
-							$output2 .= '<td>'.$funding->getLibStatut(1).'</td>';
-							$output2 .= '</tr>';
+						if ($funding->status_folder != self::STATUS_FOLDER_EXTENSION) {
+							$result = $funding->setStatusFolder($user, $status, $notriger = 0);
+							if ($result >= 0) {
+								$oldstatusfolder = $funding->getLibStatutFolder(1);
+								$funding->fetch($obj->rowid);
+								$output2 .= '<tr>';
+								$output2 .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
+								$output2 .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
+								$output2 .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
+								$output2 .= '<td>'.$oldstatusfolder.'->'.$funding->getLibStatutFolder(1).'</td>';
+								$output2 .= '<td>'.$funding->getLibStatut(1).'</td>';
+								$output2 .= '</tr>';
+							}else{
+							$error++;
+							$errormsg .= 'Set status folder funding extension failed for funding '.$obj->ref.' ('.$funding->id.')';
+							}
 						}
 					}
 					$i++;
@@ -2883,53 +2898,59 @@ class Funding extends CommonObject
 			$error = $this->db;
 		}
 
-		dol_syslog(__METHOD__, LOG_DEBUG);
-
-		$this->error = '';
-
 		if (!empty($num)) {
-			$output = '<table>';
-			$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
-			$output .= '<td colspan="5" style="text-color: #000;">';
-			
 			if (!empty($output1)) {
+				$output = '<table>';
+				$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
+				$output .= '<td colspan="5" style="text-color: #000;">';
 				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_END.'">'.$subject.' '.$this->LibStatut(self::STATUS_END,1).'</a>';
 				$output .= '</td></tr>';
 				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
 				$output .= '<th>'.$langs->trans("Ref").'</th>';
 				$output .= '<th>'.$langs->trans("Date").'</th>';
-				$output .= '<th>'.$langs->trans("Thirdparty").'</th>';
+				$output .= '<th>'.$langs->trans("ThirdParty").'</th>';
 				$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
 				$output .= '<th>'.$langs->trans("Status").'</th>';
 				$output .= '</tr>';
 				$output .= $output1 . '</table><br/><br/>';
 			}
 			if (!empty($output2)) {
+				$output = '<table>';
+				$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
+				$output .= '<td colspan="5" style="text-color: #000;">';
 				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_statusfolder='.self::STATUS_FOLDER_EXTENSION.'">'.$subject.' '.$this->LibStatutFolder(self::STATUS_FOLDER_EXTENSION,1).'</a>';
 				$output .= '</td></tr>';
 				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
 				$output .= '<th>'.$langs->trans("Ref").'</th>';
 				$output .= '<th>'.$langs->trans("Date").'</th>';
-				$output .= '<th>'.$langs->trans("Thirdparty").'</th>';
+				$output .= '<th>'.$langs->trans("ThirdParty").'</th>';
 				$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
 				$output .= '<th>'.$langs->trans("Status").'</th>';
 				$output .= '</tr>';
 				$output .= $output2 . '</table>';
 			}
-			$this->output = $langs->trans("OutputCronFundingEnd").$output;
 		}
+		if (empty($num) && empty($output)) {
+			$output = $langs->trans("OutputNoSetStatusCronFundingEnd");
+		} elseif (!empty($output)) {
+			$result = $this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $subject, $output);
+			if ($result <= 0) {
+				$error++;
+				$errormsg .= 'Send mail not found';
+			}
+		}
+		
+		dol_syslog(__METHOD__, LOG_DEBUG);
+		
+		$this->output = $output;
+		$this->error = $errormsg;
 
 		if (!empty($error)) {
 			return $error;
-		} elseif ($result == -1) {
-			$result = $langs->trans("OutputNoSetStatusCronFundingEnd");
-			return $result;
 		} else {
-			if (!empty($num) && !empty($this->output)) {
-				$this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $subject, $this->output);
-			}
 			return 0;
 		}
+
 	}
 
 	/**
@@ -2960,7 +2981,7 @@ class Funding extends CommonObject
 		$outputinit .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
 		$outputinit.= '<th>'.$langs->trans("Ref").'</th>';
 		$outputinit .= '<th>'.$langs->trans("Date").'</th>';
-		$outputinit .= '<th>'.$langs->trans("Thirdparty").'</th>';
+		$outputinit .= '<th>'.$langs->trans("ThirdParty").'</th>';
 		$outputinit .= '<th>'.$langs->trans("StatusFolder").'</th>';
 		$outputinit .= '<th>'.$langs->trans("Status").'</th>';
 		$outputinit .= '</tr>';
