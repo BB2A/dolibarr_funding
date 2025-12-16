@@ -1,7 +1,6 @@
 <?php
 /* Copyright (C) 2017  		Laurent Destailleur 	<eldy@users.sourceforge.net>
- * Copyright (C) 2020-2022	BERTON Anthony 			<anthony.berton@bb2a.fr>
- * Copyright (C) ---Put here your own copyright and developer email---
+ * Copyright (C) 2020-2025	BERTON Anthony 			<anthony.berton@bb2a.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -155,9 +154,9 @@ class Funding extends CommonObject
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
-		'redemption' => array('type'=>'smallint', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>19, 'notnull'=>1, 'visible'=>-1, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
+		'redemption' => array('type'=>'boolean', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>19, 'notnull'=>1, 'visible'=>-1,),
 		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemptionNumber", 'showoncombobox'=>'1',),
-		'retention' => array('type'=>'smallint', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'), 'help'=>"Help_retention",),
+		'retention' => array('type'=>'boolean', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'help'=>"Help_retention",),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
 		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
 		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
