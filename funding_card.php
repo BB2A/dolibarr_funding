@@ -1,7 +1,6 @@
 <?php
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
  * Copyright (C) 2020-2025	Anthony Berton 			<anthony.berton@bb2a.fr>
- * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -422,8 +421,8 @@ $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
 
 $title = $langs->trans("Funding");
-$help_url = '';
-llxHeader('', $title, $help_url);
+$help_url = 'EN:Module_Funding_En|FR:Module_Funding_Fr';
+llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-funding page-card');
 
  // Example : Adding jquery code
 print '<script type="text/javascript" language="javascript">
@@ -550,12 +549,11 @@ if ($action == 'create' && $permissiontoadd) {
 	//dol_set_focus('input[name="ref"]');
 } elseif (empty($object->id)) {
 	print load_fiche_titre($langs->trans('Funding'), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
-	print '<h2 align="center">'.$langs->trans("NoFunding").'</h1>';
+	print '<h2 align="center">'.$langs->trans("NoFunding").'</h2>';
 }
 
 // Part to edit record
 if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
-	print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -567,8 +565,6 @@ if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 	if ($backtopageforcancel) {
 		print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
 	}
-
-	dol_fiche_head();
 
 	print '<table class="border centpercent tableforfieldedit">'."\n";
 
@@ -595,7 +591,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	$lineid = '';
 
 	// Confirmation of action refresh supprimer?
-	if ($action == 'refresh') {
+	if ($action == 'refresh' && $permissiontoadd) {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
 	}
 
