@@ -2872,15 +2872,15 @@ class Funding extends CommonObject
 					} else {
 						$status = self::STATUS_FOLDER_EXTENSION;
 						if ($funding->status_folder != self::STATUS_FOLDER_EXTENSION) {
+							$oldstatusfolder = $funding->getLibStatutFolder(1);
 							$result = $funding->setStatusFolder($user, $status, $notriger = 0);
 							if ($result >= 0) {
-								$oldstatusfolder = $funding->getLibStatutFolder(1);
 								$funding->fetch($obj->rowid);
 								$output2 .= '<tr>';
 								$output2 .= '<td><a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_card.php?id='.$obj->rowid.'">'.$obj->ref.'</a></td>';
 								$output2 .= '<td> '.date('d-m-Y', strtotime($obj->date_end)).'</td>';
 								$output2 .= '<td>'.$soc->nom.' ('.$soc->name_alias.')</td>';
-								$output2 .= '<td>'.$oldstatusfolder.'->'.$funding->getLibStatutFolder(1).'</td>';
+								$output2 .= '<td>'.$oldstatusfolder.'<br/>'.$funding->getLibStatutFolder(1).'</td>';
 								$output2 .= '<td>'.$funding->getLibStatut(1).'</td>';
 								$output2 .= '</tr>';
 							}else{
