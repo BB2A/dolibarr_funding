@@ -42,11 +42,11 @@ function coefficientPrepareHead($object)
 	$head[$h][2] = 'card';
 	$h++;
 
+	$mode = 'list';
 	if (version_compare(DOL_VERSION, '22.0.0', '>=')) {
-		$head[$h][0] = dol_buildpath("/funding/coefficient_messaging.php", 1).'?id='.$object->id;
-	} else {
-		$head[$h][0] = dol_buildpath("/funding/coefficient_agenda.php", 1).'?id='.$object->id;
+		$mode = 'messaging';
 	}
+	$head[$h][0] = dol_buildpath("/funding/coefficient_agenda.php", 1).'?id='.$object->id.'&mode='.$mode;
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
 	$h++;

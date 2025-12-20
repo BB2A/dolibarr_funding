@@ -88,6 +88,7 @@ $ref = GETPOST('ref', 'alpha');
 $action = GETPOST('action', 'aZ09');
 $cancel = GETPOST('cancel', 'aZ09');
 $backtopage = GETPOST('backtopage', 'alpha');
+$mode = GETPOST('mode', 'alpha');
 
 if (GETPOST('actioncode', 'array')) {
 	$actioncode = GETPOST('actioncode', 'array', 3);
@@ -288,10 +289,18 @@ if ($object->id > 0) {
 	print '<div class="tabsAction">';
 		$morehtmlright = '';
 		if (version_compare(DOL_VERSION, '22.0.0', '>=')) {
-			$messagingUrl = dol_buildpath("/funding/coeficient_messaging.php", 1).'?id='.$object->id;
-			$morehtmlright .= dolGetButtonTitle($langs->trans('ShowAsConversation'), '', 'fa fa-comments imgforviewmode', $messagingUrl, '', 1);
-			$messagingUrl = dol_buildpath("/funding/coeficient_agenda.php", 1).'?id='.$object->id;
-			$morehtmlright .= dolGetButtonTitle($langs->trans('MessageListViewType'), '', 'fa fa-bars imgforviewmode', $messagingUrl, '', 2);
+			$messagingUrl = dol_buildpath("/funding/coefficient_agenda.php", 1).'?id='.$object->id;
+			if ($mode != 'messaging') {
+				$messagingUrl .= '&mode=messaging';
+				$valbtnmessaging = 2;
+				$valbtnlist = 1;
+			} else {
+				$messagingUrl .= '&mode=list';
+				$valbtnmessaging = 1;
+				$valbtnlist = 2;
+			}
+			$morehtmlright .= dolGetButtonTitle($langs->trans('ShowAsConversation'), '', 'fa fa-comments imgforviewmode', $messagingUrl, '', $valbtnmessaging);
+			$morehtmlright .= dolGetButtonTitle($langs->trans('MessageListViewType'), '', 'fa fa-bars imgforviewmode', $messagingUrl, '', $valbtnlist);
 		}
 
 		if (isModEnabled('agenda')) {
@@ -329,7 +338,11 @@ if ($object->id > 0) {
 		$filters['search_rowid'] = $search_rowid;
 
 		// TODO Replace this with same code than into list.php
-		show_actions_done($conf, $langs, $db, $object, null, 0, $actioncode, '', $filters, $sortfield, $sortorder, property_exists($object, 'module') ? $object->module : '');
+		if ($mode == 'messaging') {
+			show_actions_messaging($conf, $langs, $db, $object, null, 0, $actioncode, '', $filters, $sortfield, $sortorder, property_exists($object, 'module') ? $object->module : '');
+		} else {
+			show_actions_done($conf, $langs, $db, $object, null, 0, $actioncode, '', $filters, $sortfield, $sortorder, property_exists($object, 'module') ? $object->module : '');
+		}
 	}
 }
 
