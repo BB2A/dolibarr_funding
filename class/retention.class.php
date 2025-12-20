@@ -1,6 +1,6 @@
 <?php
-/* Copyright (C) 2017  Laurent Destailleur <eldy@users.sourceforge.net>
- * Copyright (C) ---Put here your own copyright and developer email---
+/* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
+ * Copyright (C) 2020-2025	Anthony Berton 			<anthony.berton@bb2a.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ class Retention extends CommonObject
 	/**
 	 * @var string String with name of icon for retention. Must be the part after the 'object_' into object_retention.png
 	 */
-	public $picto = 'retention@funding';
+	public $picto = 'fa-certificate';
 
 
 	const STATUS_DRAFT = 0;

@@ -87,6 +87,7 @@ $cancel                 = GETPOST('cancel', 'aZ09');
 $contextpage            = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
 $backtopage             = GETPOST('backtopage', 'alpha');
 $backtopageforcancel    = GETPOST('backtopageforcancel', 'alpha');
+$backtopagelist         = GETPOST('backtopagelist', 'alpha');
 
 //$lineid   = GETPOST('lineid', 'int');
 
@@ -498,11 +499,61 @@ if ($typedoc == 'propal') {
 	// Affichage encadrer order
 	$head = commande_prepare_head($ord);
 	dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
-} else {
-	// Affichage encadrer funding
-	$res = $object->fetch_optionals();
-	$head = fundingPrepareHead($object);
-	dol_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
+}
+
+if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'create'))) {
+	if (empty($typedoc) && empty($iddoc)){
+		print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
+		$head = fundingPrepareHead($object);
+		print dol_get_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto  .' infobox-contrat valignmiddle widthpictotitle pictotitle', 0, '', '', 0, '', 1);
+	}
+	$morehtmlref = '';
+	$morehtmlleft = '';
+	$morehtmlright = '';
+	$morehtmlstatus = '';
+
+	if (!empty($typedoc) && $typedoc == 'propal') {
+		$linkback = '<a href="'.dol_buildpath('/comm/propal/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=propals', 1).'">'.$langs->trans("BackToList").'</a>';
+	} elseif (!empty($typedoc) && $typedoc == 'order') {
+		$linkback = '<a href="'.dol_buildpath('/commande/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=orders', 1).'">'.$langs->trans("BackToList").'</a>';
+	} else {
+		$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php?restore_lastsearch_values=1&mainmenu=funding&leftmenu=', 1).'">'.$langs->trans("BackToList").'</a>';
+	}
+
+	$morehtmlref = '<div class="refidno">';
+	// Numbers
+	$morehtmlref .= $form->editfieldkey("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
+	$morehtmlref .= '<br/>'.$form->editfieldkey("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
+	$morehtmlref .= '<br/>'.$form->editfieldkey("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'datetime', '', 0, 1);
+	$morehtmlref .= $form->editfieldval("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'datetime', '', null, null, '', 1);
+	// $morehtmlref .= '<br/>'.$langs->trans('DateAccepted') . ' : ' . dol_print_date($object->date_accepted)	;
+	!empty($object->date_accepted && $action != "editdate_accepted") ? $morehtmlref .= " - " . $langs->trans('DateValidity') . ' : ' . dol_print_date($object->date_endvalidity, "dayhour") :'';
+
+	// Thirdparty
+	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
+
+	$morehtmlref .= '</div>';
+	if ($object->origin == 'propal') {
+		$tabBartitle = $langs->trans('fundingpropal').' ';
+	} elseif ($object->origin == 'order') {
+		$tabBartitle = $langs->trans('Funding').' ';
+	}
+	$checked = ($object->funcheck)?img_picto('', 'check', 'class="pictofixedwidth"'):img_picto('', 'uncheck', 'class="pictofixedwidth"');
+	$morehtmlstatus .= '<h3>'.$checked.$tabBartitle.'</h3>';
+
+	if (!empty($object->status_folder)) {
+		$morehtmlstatus .= '<div>'.$object->getLibStatutFolder(4).'</div><br/>';
+	}
+	$morehtmlref .= '';
+
+	if ($permissiontoadd || $permissionmanage) {
+		dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
+	} else {
+		dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
+	}
+	
 }
 
 // Part to create
@@ -591,6 +642,7 @@ if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 
 // Part to show record
 if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit' && $action != 'create'))) {
+	
 	$formconfirm = '';
 	$lineid = '';
 
@@ -659,54 +711,6 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print $formconfirm;
 
 
-	// Object card
-	// ------------------------------------------------------------
-	$morehtmlref = '';
-	$morehtmlleft = '';
-	$morehtmlright = '';
-	$morehtmlstatus = '';
-
-	if (!empty($typedoc) && $typedoc == 'propal') {
-		$linkback = '<a href="'.dol_buildpath('/comm/propal/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=propals', 1).'">'.$langs->trans("BackToList").'</a>';
-	} elseif (!empty($typedoc) && $typedoc == 'order') {
-		$linkback = '<a href="'.dol_buildpath('/commande/list.php?restore_lastsearch_values=1&mainmenu=commercial&leftmenu=orders', 1).'">'.$langs->trans("BackToList").'</a>';
-	} else {
-		$linkback = '<a href="'.dol_buildpath('/funding/funding_list.php?restore_lastsearch_values=1&mainmenu=funding&leftmenu=', 1).'">'.$langs->trans("BackToList").'</a>';
-	}
-
-	$morehtmlref = '<div class="refidno">';
-	// Numbers
-	$morehtmlref .= $form->editfieldkey("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', 0, 1);
-	$morehtmlref .= $form->editfieldval("StudyNumber", 'study_number', $object->study_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
-	$morehtmlref .= '<br/>'.$form->editfieldkey("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', 0, 1);
-	$morehtmlref .= $form->editfieldval("FolderNumber", 'folder_number', $object->folder_number, $object, $permissiontoadd, 'string', '', null, null, '', 1);
-	$morehtmlref .= '<br/>'.$form->editfieldkey("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'datetime', '', 0, 1);
-	$morehtmlref .= $form->editfieldval("DateAccepted", 'date_accepted', $object->date_accepted, $object, $permissiontoadd, 'datetime', '', null, null, '', 1);
-	// $morehtmlref .= '<br/>'.$langs->trans('DateAccepted') . ' : ' . dol_print_date($object->date_accepted)	;
-	!empty($object->date_accepted && $action != "editdate_accepted") ? $morehtmlref .= " - " . $langs->trans('DateValidity') . ' : ' . dol_print_date($object->date_endvalidity, "dayhour") :'';
-
-	// Thirdparty
-	$morehtmlref .= '<br/>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-
-	$morehtmlref .= '</div>';
-	if ($object->origin == 'propal') {
-		$tabBartitle = $langs->trans('fundingpropal').' ';
-	} elseif ($object->origin == 'order') {
-		$tabBartitle = $langs->trans('Funding').' ';
-	}
-	$checked = ($object->funcheck)?img_picto('', 'check', 'class="pictofixedwidth"'):img_picto('', 'uncheck', 'class="pictofixedwidth"');
-	$morehtmlstatus .= '<h3>'.$checked.$tabBartitle.'</h3>';
-
-	if (!empty($object->status_folder)) {
-		$morehtmlstatus .= '<div>'.$object->getLibStatutFolder(4).'</div><br/>';
-	}
-	$morehtmlref .= '';
-
-	if ($permissiontoadd || $permissionmanage) {
-		dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
-	} else {
-		dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
-	}
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';

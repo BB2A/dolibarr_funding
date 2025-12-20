@@ -1,6 +1,7 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [1.1.3] - /2025 Dolibarr 22
+- NEW - 20/12/2025 - Look and fell title and picto
 - NEW - 20/12/2025 - Préparation pour présentation de l'agenda format message
 - NEW - 14/12/2025 - Boolean pour affichage checkbox RG et Rachat
 - NEW - 06/12/2025 - Look and Feel mail des financement avec changement de statut automatique
