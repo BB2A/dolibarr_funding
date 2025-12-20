@@ -1,5 +1,6 @@
 <?php
-/* Copyright (C) ---Put here your own copyright and developer email---
+/* Copyright (C) 2017  		Laurent Destailleur 	<eldy@users.sourceforge.net>
+ * Copyright (C) 2020-2025	Anthony Berton 			<anthony.berton@bb2a.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,31 +41,12 @@ function fundingPrepareHead($object)
 	$head[$h][1] = $langs->trans("FundingCard");
 	$head[$h][2] = 'card';
 	$h++;
-	/*
-	if (isset($object->fields['note_public']) || isset($object->fields['note_private']))
-	{
-		$nbNote = 0;
-		if (!empty($object->note_private)) $nbNote++;
-		if (!empty($object->note_public)) $nbNote++;
-		$head[$h][0] = dol_buildpath('/funding/funding_note.php', 1).'?id='.$object->id;
-		$head[$h][1] = $langs->trans('Notes');
-		if ($nbNote > 0) $head[$h][1] .= (empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) ? '<span class="badge marginleftonlyshort">'.$nbNote.'</span>' : '');
-		$head[$h][2] = 'note';
-		$h++;
+	
+	if (version_compare(DOL_VERSION, '22.0.0', '>=')) {
+		$head[$h][0] = dol_buildpath("/funding/funding_messaging.php", 1).'?id='.$object->id;
+	} else {
+		$head[$h][0] = dol_buildpath("/funding/funding_agenda.php", 1).'?id='.$object->id;
 	}
-
-	require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/link.class.php';
-	$upload_dir = $conf->funding->dir_output."/funding/".dol_sanitizeFileName($object->ref);
-	$nbFiles = count(dol_dir_list($upload_dir, 'files', 0, '', '(\.meta|_preview.*\.png)$'));
-	$nbLinks = Link::count($db, $object->element, $object->id);
-	$head[$h][0] = dol_buildpath("/funding/funding_document.php", 1).'?id='.$object->id;
-	$head[$h][1] = $langs->trans('Documents');
-	if (($nbFiles + $nbLinks) > 0) $head[$h][1] .= '<span class="badge marginleftonlyshort">'.($nbFiles + $nbLinks).'</span>';
-	$head[$h][2] = 'document';
-	$h++;*/
-
-	$head[$h][0] = dol_buildpath("/funding/funding_agenda.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
 	$h++;
