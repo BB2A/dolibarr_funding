@@ -179,8 +179,12 @@ $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
 
 $title = $langs->trans("Coefficient");
-$help_url = '';
-llxHeader('', $title, $help_url);
+if ($object->id > 0) {
+	$title .= " ".$object->ref;
+}
+if (getDolGlobalInt('MAIN_HTML_TITLE') && getDolGlobalString('MAIN_APPLICATION_TITLE')) $title = getDolGlobalString('MAIN_APPLICATION_TITLE') . " - " . $title;
+$help_url = 'EN:Module_Funding_En|FR:Module_Funding_Fr';
+llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-coefficient page-card');
 
 // Example : Adding jquery code
 print '<script type="text/javascript" language="javascript">
