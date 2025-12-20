@@ -970,12 +970,3 @@ class Coefficient extends CommonObject
 		return $error;
 	}
 }
-
-/**
- * Class CoefficientLine. You can also remove this and generate a CRUD class for lines objects.
- */
-class CoefficientLine
-{
-	// To complete with content of an object CoefficientLine
-	// We should have a field rowid, fk_coefficient and position
-}

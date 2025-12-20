@@ -3134,22 +3134,3 @@ class Funding extends CommonObject
 		return $result;
 	}
 }
-
-/**
- * Class FundingLine. You can also remove this and generate a CRUD class for lines objects.
- */
-class FundingLine
-{
-	// To complete with content of an object FundingLine
-	// We should have a field rowid, fk_funding and position
-}
-
-/* Notification
-	if (!empty($conf->notification->enabled)) {
-			require_once DOL_DOCUMENT_ROOT.'/core/class/notify.class.php';
-			$notify = new Notify($db);
-			$formquestion = array_merge($formquestion, array(
-				array('type' => 'onecolumn', 'value' => $notify->confirmMessage('PROPAL_CLOSE_SIGNED', $object->socid, $object)),
-			));
-		}
-*/
