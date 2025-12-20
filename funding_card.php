@@ -642,7 +642,7 @@ if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 
 // Part to show record
 if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit' && $action != 'create'))) {
-	
+	$res = $object->fetch_optionals();
 	$formconfirm = '';
 	$lineid = '';
 
