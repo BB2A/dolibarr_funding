@@ -196,7 +196,6 @@ $form = new Form($db);
 if ($object->id > 0) {
 	$title = $langs->trans("Coefficient")." - ".$langs->trans('Agenda');
 	$title = $langs->trans("Coefficient")." ".$object->ref." - ".$langs->trans("Agenda");
-	if (getDolGlobalInt('MAIN_HTML_TITLE') && getDolGlobalString('MAIN_APPLICATION_TITLE')) $title = getDolGlobalString('MAIN_APPLICATION_TITLE') . " - " . $title;
 	$help_url = 'EN:Module_Funding_En|FR:Module_Funding_Fr';
 	llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-funding page-card_agenda');
 

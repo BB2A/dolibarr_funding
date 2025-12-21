@@ -193,7 +193,6 @@ $title = $langs->trans("Retention");
 if ($object->id > 0) {
 	$title .= " ".$object->ref;
 }
-if (getDolGlobalInt('MAIN_HTML_TITLE') && getDolGlobalString('MAIN_APPLICATION_TITLE')) $title = getDolGlobalString('MAIN_APPLICATION_TITLE') . " - " . $title;
 $help_url = 'EN:Module_Funding_En|FR:Module_Funding_Fr';
 llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-retention page-card');
 
