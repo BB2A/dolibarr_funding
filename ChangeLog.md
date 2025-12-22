@@ -1,6 +1,7 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [1.1.3] - /2025 Dolibarr 22
+- NEW - 22/12/2025 - Déplacement de la position d'affichage de l'organisme
 - NEW - 20/12/2025 - Look and fell title and picto
 - NEW - 20/12/2025 - Préparation pour présentation de l'agenda format message
 - NEW - 14/12/2025 - Boolean pour affichage checkbox RG et Rachat
@@ -8,6 +9,7 @@
 - NEW - 06/12/2025 - Mail des financements bientot fini ajout des statuts
 - NEW - 06/12/2025 - Mail des financements bientot fini garde egalement ceux passé mais toujour actif
 
+- FIX - 22/12/2025 - Supprimer la contrainte de selection redemption et retentation
 - FIX - 20/12/2025 - Erreur PHP on page agenda
 - FIX - 07/12/2025 - Ajout d'un script sql pour la mise à jour de dolibarr 19.0.0 à 20.0.0 pour que les liésons d'objet llx_element_element
 - FIX - 07/12/2025 - Ajout d'un script sql pour la mise à jour de dolibarr 18.0.0 à 19.0.0 pour que les corrections d'evennement llx_actioncomm

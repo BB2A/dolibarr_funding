@@ -140,27 +140,27 @@ class Funding extends CommonObject
 		'folder_number' => array('type'=>'varchar(128)', 'label'=>'FolderNumber', 'enabled'=>'1', 'position'=>4, 'notnull'=>0, 'visible'=>2, 'index'=>1, 'searchall'=>1, 'help'=>"Help_folderNumber", 'showoncombobox'=>'1',),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'ThirdParty', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>5, 'notnull'=>1, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'showoncombobox'=>'1', 'help'=>"Help_linkToThirparty",),
 		'fk_soc_invoice' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'ThirdPartyInvoice', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>6, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'showoncombobox'=>'1', 'help'=>"Help_linkToThirpartyInvoice",),
-		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>7, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
-		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>8, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountMaint",),
-		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>9, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountTotal",),
-		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
-		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>11, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
-		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>12, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
-		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>13, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRent",),
-		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'0', 'position'=>14, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRentEdit",),
-		'date_accepted' => array('type'=>'date', 'label'=>'DateAccepted', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAccepted",),
-		'date_endvalidity' => array('type'=>'date', 'label'=>'DateEndValidity', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAcceptedEnd",),
-		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
-		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
-		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>15, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
-		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>18, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
-		'redemption' => array('type'=>'boolean', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>19, 'notnull'=>1, 'visible'=>-1,),
-		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemptionNumber", 'showoncombobox'=>'1',),
-		'retention' => array('type'=>'boolean', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'default'=>0, 'help'=>"Help_retention",),
-		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
-		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
-		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>24, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
-		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'picto'=>'user', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid', 'css'=>'maxwidth250 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150'),
+		'fk_org' => array('type'=>'integer:Societe:societe/class/societe.class.php::((status:=:1) AND (entity:IN:__SHARED_ENTITIES__))', 'label'=>'Organization', 'picto'=>'company', 'enabled'=>'isModEnabled("societe")', 'position'=>7, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'css'=>'maxwidth500 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150', 'help'=>"Help_linkToOrganization", 'validate'=>'1',),
+		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>8, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amount",),
+		'amount_maint' => array('type'=>'price', 'label'=>'AmountMaint', 'enabled'=>'1', 'position'=>9, 'notnull'=>0, 'visible'=>1, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountMaint",),
+		'amount_total' => array('type'=>'price', 'label'=>'AmountTotal', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountTotal",),
+		'fk_duration' => array('type'=>'integer', 'label'=>'Duration', 'enabled'=>'1', 'position'=>11, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_duration.rowid', 'help'=>"Help_duration", 'arrayofkeyval'=>array('1'=>'12 Mois', '2'=>'24 Mois', '3'=>'36 Mois', '4'=>'48 Mois', '5'=>'60 Mois'),),
+		'coef' => array('type'=>'real', 'label'=>'Coef', 'enabled'=>'1', 'position'=>12, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_coef",),
+		'fk_scale' => array('type'=>'integer', 'label'=>'Scale', 'enabled'=>'1', 'position'=>13, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_scale.rowid', 'help'=>"Help_scale", 'arrayofkeyval'=>array('1'=>'1 - Standard', '2'=>'2 - Création'),),
+		'amount_rent' => array('type'=>'price', 'label'=>'Rent', 'enabled'=>'1', 'position'=>14, 'notnull'=>0, 'visible'=>5,),
+		'amount_rent_edit' => array('type'=>'price', 'label'=>'RentEdit', 'enabled'=>'0', 'position'=>15, 'notnull'=>0, 'visible'=>5, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_amountRentEdit",),
+		'date_accepted' => array('type'=>'date', 'label'=>'DateAccepted', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAccepted",),
+		'date_endvalidity' => array('type'=>'date', 'label'=>'DateEndValidity', 'enabled'=>'1', 'position'=>17, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAcceptedEnd",),
+		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>18, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
+		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
+		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>20, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
+		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
+		'redemption' => array('type'=>'boolean', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-1,),
+		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemptionNumber", 'showoncombobox'=>'1',),
+		'retention' => array('type'=>'boolean', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>24, 'notnull'=>0, 'visible'=>-1, 'default'=>0, 'help'=>"Help_retention",),
+		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
+		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>26, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
+		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'picto'=>'user', 'enabled'=>'1', 'position'=>27, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid', 'css'=>'maxwidth250 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150'),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
 		'fundoc1' => array('type'=>'varchar(255)', 'label'=>'fundoc1', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>-2,),
 		'fundoc1check' => array('type'=>'smallint', 'label'=>'fundoc1check', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>0,),
@@ -170,16 +170,16 @@ class Funding extends CommonObject
 		'fundoc3check' => array('type'=>'smallint', 'label'=>'fundoc3check', 'enabled'=>'1', 'position'=>103, 'notnull'=>0, 'visible'=>0,),
 		'fundoc4' => array('type'=>'varchar(255)', 'label'=>'fundoc4', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
 		'fundoc4check' => array('type'=>'smallint', 'label'=>'fundoc4check', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
-		'fundoc5' => array('type'=>'varchar(255)', 'label'=>'fundoc5', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
-		'fundoc5check' => array('type'=>'smallint', 'label'=>'fundoc5check', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
-		'fundoc6' => array('type'=>'varchar(255)', 'label'=>'fundoc6', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
-		'fundoc6check' => array('type'=>'smallint', 'label'=>'fundoc6check', 'enabled'=>'1', 'position'=>104, 'notnull'=>0, 'visible'=>0,),
+		'fundoc5' => array('type'=>'varchar(255)', 'label'=>'fundoc5', 'enabled'=>'1', 'position'=>105, 'notnull'=>0, 'visible'=>0,),
+		'fundoc5check' => array('type'=>'smallint', 'label'=>'fundoc5check', 'enabled'=>'1', 'position'=>105, 'notnull'=>0, 'visible'=>0,),
+		'fundoc6' => array('type'=>'varchar(255)', 'label'=>'fundoc6', 'enabled'=>'1', 'position'=>106, 'notnull'=>0, 'visible'=>0,),
+		'fundoc6check' => array('type'=>'smallint', 'label'=>'fundoc6check', 'enabled'=>'1', 'position'=>106, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc1' => array('type'=>'varchar(255)', 'label'=>'funfoldoc1', 'enabled'=>'1', 'position'=>110, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc2' => array('type'=>'varchar(255)', 'label'=>'funfoldoc2', 'enabled'=>'1', 'position'=>111, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc3' => array('type'=>'varchar(255)', 'label'=>'funfoldoc3', 'enabled'=>'1', 'position'=>112, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc4' => array('type'=>'varchar(255)', 'label'=>'funfoldoc4', 'enabled'=>'1', 'position'=>113, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
-		'funfoldoc6' => array('type'=>'varchar(255)', 'label'=>'funfoldoc6', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
+		'funfoldoc6' => array('type'=>'varchar(255)', 'label'=>'funfoldoc6', 'enabled'=>'1', 'position'=>115, 'notnull'=>0, 'visible'=>0,),
 		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
 		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0,),
@@ -2830,6 +2830,7 @@ class Funding extends CommonObject
 	public function cronFundingEnd()
 	{
 		global $conf, $langs, $db, $user;
+		$langs->load("funding@funding");
 
 		$date = dol_now('tzserver');
 		$result = '';
@@ -2968,6 +2969,7 @@ class Funding extends CommonObject
 	public function cronFundingSoonFinished($duration = 6)
 	{
 		global $conf, $langs, $db;
+		$langs->load("funding@funding");
 
 		$date = dol_now('tzserver');
 		$dateEnd = date('Y-m-d', strtotime('+'.$duration.' month', $date));
@@ -2979,7 +2981,7 @@ class Funding extends CommonObject
 		$beforusersale = 0;
 		$beforusersalemail = "";
 
-		$subject = $langs->trans($langs->transnoentities("OutputCronFundingsSoonFinished"));
+		$subject = $langs->trans("OutputCronFundingsSoonFinished");
 
 		$outputinit = '<table>';
 		$outputinit .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
