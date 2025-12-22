@@ -285,6 +285,8 @@ foreach ($arrayofparameters as $key => $val) {
 		print '<td align="right" width="230">'.$form->selectarray('FUNDING_DEFAULT_TYPE', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_DEFAULT_TYPE);
 	} elseif ($key == 'FUNDING_FILTRE_ORGANIZATION') {
 		print '</td><td align="right" width="230">'.$form->selectarray("FUNDING_FILTRE_ORGANIZATION", $formcompany->typent_array(0), $conf->global->FUNDING_FILTRE_ORGANIZATION, 1, 0, 0, '', 0, 0, 0, (empty($conf->global->SOCIETE_SORT_ON_TYPEENT) ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT), '', 1).'</td></tr>';
+	} elseif ($key == 'FUNDING_DEFAULT_ORGANIZATION') {
+		print '</td><td align="right" width="230">'.$form->select_company($conf->global->FUNDING_DEFAULT_ORGANIZATION, 'FUNDING_DEFAULT_ORGANIZATION', $filter = '(s.fk_typent:=:'.$conf->global->FUNDING_FILTRE_ORGANIZATION.')','SelectThirdParty','','','','','','maxwidth100').'</td></tr>';
 	} elseif ($key == 'FUNDING_NOCLOSEDFINISHAUTO_EXTENSION') {
 		print '</td>';
 		print '<td align="right" width="230">'.$form->selectarray('FUNDING_NOCLOSEDFINISHAUTO_EXTENSION', $object->fields['fk_funding_type']['arrayofkeyval'], $conf->global->FUNDING_NOCLOSEDFINISHAUTO_EXTENSION);
