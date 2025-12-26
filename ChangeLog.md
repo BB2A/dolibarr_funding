@@ -10,6 +10,7 @@
 - NEW - 06/12/2025 - Mail des financements bientot fini ajout des statuts
 - NEW - 06/12/2025 - Mail des financements bientot fini garde egalement ceux passé mais toujour actif
 
+- FIX - 26/12/2025 - Erreur à l'envoie de mail  l'orsque un contact est présent sur le document
 - FIX - 22/12/2025 - Supprimer la contrainte de selection redemption et retentation
 - FIX - 20/12/2025 - Erreur PHP on page agenda
 - FIX - 07/12/2025 - Ajout d'un script sql pour la mise à jour de dolibarr 19.0.0 à 20.0.0 pour que les liésons d'objet llx_element_element

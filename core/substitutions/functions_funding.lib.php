@@ -41,6 +41,7 @@
 function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 {
 	global $langs, $conf, $db, $outputlangs;
+	$langs->loadLangs(array("funding@funding", "propal", "orders", "other"));
 	if (is_object($object) && ($object->element == 'funding_funding' || $object->element == 'funding')) {
 		$substitutionarray['__FUNDING_REF__'] = isset($object->ref) ? $object->ref : '';
 		$substitutionarray['__FUNDING_STUDY_NIMBER__'] = isset($object->study_number) ? $object->study_number : '';
@@ -96,6 +97,7 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 			$contacid = $doc->getIdContact('external', 'CUSTOMER');
 		}
 		if (!empty($contacid)) {
+			include_once DOL_DOCUMENT_ROOT . '/contact/class/contact.class.php';
 			$contact = new Contact($db);
 			$obj_contact = $contact->fetch($contacid[0]);
 			$contactname = $contact->getFullName($langs, '1');
