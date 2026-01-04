@@ -2794,42 +2794,13 @@ class Funding extends CommonObject
 			return -1 * $error;
 		}
 	}
-	/**
-	 * Action executed by scheduler
-	 * CAN BE A CRON TASK. In such a case, parameters come from the schedule job setup field 'Parameters'
-	 * Use public function doScheduledJob($param1, $param2, ...) to get parameters
-	 *
-	 * @return  int         0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
-	 */
-	public function doScheduledJob()
-	{
-		global $conf, $langs;
-
-		//$conf->global->SYSLOG_FILE = 'DOL_DATA_ROOT/dolibarr_mydedicatedlofile.log';
-
-		$error = 0;
-		$this->output = '';
-		$this->error = '';
-
-		dol_syslog(__METHOD__, LOG_DEBUG);
-
-		$now = dol_now();
-
-		$this->db->begin();
-
-		// ...
-
-		$this->db->commit();
-
-		return $error;
-	}
 
 	/**
 	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
 	*/
 	public function cronFundingEnd()
 	{
-		global $conf, $langs, $db, $user;
+		global $user, $conf, $langs, $db;
 		$langs->load("funding@funding");
 
 		$date = dol_now('tzserver');
@@ -2839,7 +2810,7 @@ class Funding extends CommonObject
 		$output = '';
 		$output1 = '';
 		$output2 = '';
-		$subject = $langs->trans("OutputCronFundingEnd");
+		$subject = getDolGlobalString('MAIN_APPLICATION_TITLE'). ' - ' . $langs->transnoentitiesnoconv("OutputCronFundingEnd");
 		
 		
 
@@ -2915,11 +2886,11 @@ class Funding extends CommonObject
 				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_END.'">'.$subject.' '.$this->LibStatut(self::STATUS_END,1).'</a>';
 				$output .= '</td></tr>';
 				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
-				$output .= '<th>'.$langs->trans("Ref").'</th>';
-				$output .= '<th>'.$langs->trans("Date").'</th>';
-				$output .= '<th>'.$langs->trans("ThirdParty").'</th>';
-				$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
-				$output .= '<th>'.$langs->trans("Status").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("Ref").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("Date").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("ThirdParty").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("StatusFolder").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("Status").'</th>';
 				$output .= '</tr>';
 				$output .= $output1 . '</table><br/><br/>';
 			}
@@ -2930,17 +2901,17 @@ class Funding extends CommonObject
 				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_statusfolder='.self::STATUS_FOLDER_EXTENSION.'">'.$subject.' '.$this->LibStatutFolder(self::STATUS_FOLDER_EXTENSION,1).'</a>';
 				$output .= '</td></tr>';
 				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
-				$output .= '<th>'.$langs->trans("Ref").'</th>';
-				$output .= '<th>'.$langs->trans("Date").'</th>';
-				$output .= '<th>'.$langs->trans("ThirdParty").'</th>';
-				$output .= '<th>'.$langs->trans("StatusFolder").'</th>';
-				$output .= '<th>'.$langs->trans("Status").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("Ref").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("Date").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("ThirdParty").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("StatusFolder").'</th>';
+				$output .= '<th>'.$langs->transnoentitiesnoconv("Status").'</th>';
 				$output .= '</tr>';
 				$output .= $output2 . '</table>';
 			}
 		}
 		if (empty($num) && empty($output)) {
-			$output = $langs->trans("OutputNoSetStatusCronFundingEnd");
+			$output = $langs->transnoentitiesnoconv("OutputNoSetStatusCronFundingEnd");
 		} elseif (!empty($output)) {
 			$result = $this->sendMail('', $conf->global->FUNDING_MAIL_DEFAULT, $subject, $output);
 			if ($result <= 0) {
@@ -2968,7 +2939,7 @@ class Funding extends CommonObject
 	*/
 	public function cronFundingSoonFinished($duration = 6)
 	{
-		global $conf, $langs, $db;
+		global $user, $conf, $langs, $db;
 		$langs->load("funding@funding");
 
 		$date = dol_now('tzserver');
@@ -2981,7 +2952,7 @@ class Funding extends CommonObject
 		$beforusersale = 0;
 		$beforusersalemail = "";
 
-		$subject = $langs->trans("OutputCronFundingsSoonFinished");
+		$subject = getDolGlobalString('MAIN_APPLICATION_TITLE'). ' - ' . $langs->trans("OutputCronFundingsSoonFinished");
 
 		$outputinit = '<table>';
 		$outputinit .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
@@ -2989,11 +2960,11 @@ class Funding extends CommonObject
 		$outputinit .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_RUNNING.'">'.$subject.'</a>';
 		$outputinit .= '</td></tr>';
 		$outputinit .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
-		$outputinit.= '<th>'.$langs->trans("Ref").'</th>';
-		$outputinit .= '<th>'.$langs->trans("Date").'</th>';
-		$outputinit .= '<th>'.$langs->trans("ThirdParty").'</th>';
-		$outputinit .= '<th>'.$langs->trans("StatusFolder").'</th>';
-		$outputinit .= '<th>'.$langs->trans("Status").'</th>';
+		$outputinit.= '<th>'.$langs->transnoentitiesnoconv("Ref").'</th>';
+		$outputinit .= '<th>'.$langs->transnoentitiesnoconv("Date").'</th>';
+		$outputinit .= '<th>'.$langs->transnoentitiesnoconv("ThirdParty").'</th>';
+		$outputinit .= '<th>'.$langs->transnoentitiesnoconv("StatusFolder").'</th>';
+		$outputinit .= '<th>'.$langs->transnoentitiesnoconv("Status").'</th>';
 		$outputinit .= '</tr>';
 
 		$output = $outputinit;
@@ -3030,7 +3001,7 @@ class Funding extends CommonObject
 						$outputtotal .= '<h1 style="text-align: center;">'.$beforusersalename.'</h1>'.$output;
 						// Envoie du mail
 						if (!empty($beforusersalemail) && !empty($output)){
-							$output = $langs->trans("FundingMessageMailIntroText", $beforusersalename) .'<br/><br/>' .$langs->trans("FundingMessageMailMessageText").'<br/><br/>'. $output;
+							$output = $langs->transnoentitiesnoconv("FundingMessageMailIntroText", $beforusersalename) .'<br/><br/>' .$langs->transnoentitiesnoconv("FundingMessageMailMessageText").'<br/><br/>'. $output;
 							$result = $funding->sendMail('', $beforusersalemail, dol_string_nohtmltag($subject), $output);
 							if ($result <= 0) {
 								$error++;
@@ -3062,7 +3033,7 @@ class Funding extends CommonObject
 				}
 				// Envoie du mail avec la totalité des financements bientôt finis
 				if (!empty($conf->global->FUNDING_MAIL_REPORT) && !empty($outputtotal)){
-					$subject = $langs->trans("OutputCronFundingsSoonFinishedAll");
+					$subject = getDolGlobalString('MAIN_APPLICATION_TITLE'). ' - ' . $langs->transnoentitiesnoconv("OutputCronFundingsSoonFinishedAll");
 					$result = $funding->sendMail('', $conf->global->FUNDING_MAIL_REPORT, dol_string_nohtmltag($subject), $outputtotal);
 					if ($result <= 0) {
 						$error++;
@@ -3071,7 +3042,7 @@ class Funding extends CommonObject
 				}
 
 			}else{
-				$output = $langs->trans("NotFundingSoonFinished");
+				$output = $langs->transnoentitiesnoconv("NotFundingSoonFinished");
 			}
 			$this->db->free($resql);
 		} else {
@@ -3116,13 +3087,13 @@ class Funding extends CommonObject
 		}
 
 		if (empty($subject)) {
-			$subject = dol_escape_htmltag($langs->convToOutputCharset($langs->trans("Funding")));
+			$subject = dol_escape_htmltag($langs->convToOutputCharset($langs->transnoentitiesnoconv("Funding")));
 		} else {
 			$subject = dol_escape_htmltag($langs->convToOutputCharset($subject));
 		}
 
 		if (empty($message)) {
-			$message = $langs->trans("Funding");
+			$message = $langs->transnoentitiesnoconv("Funding");
 		}
 
 		if (empty($filename)) {
@@ -3130,7 +3101,7 @@ class Funding extends CommonObject
 		}
 
 		include_once DOL_DOCUMENT_ROOT . '/core/class/CMailFile.class.php';
-		$mailfile = new CMailFile($subject, $sendto, $from, $message, '', '', '', '', '', 0, 1);
+		$mailfile = new CMailFile(utf8_encode($subject), $sendto, $from, $message, '', '', '', '', '', 0, 1);
 		$result = $mailfile->sendfile();
 
 		return $result;
