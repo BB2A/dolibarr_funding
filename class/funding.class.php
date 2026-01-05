@@ -3089,6 +3089,7 @@ class Funding extends CommonObject
 		if (empty($subject)) {
 			$subject = dol_escape_htmltag($langs->convToOutputCharset($langs->transnoentitiesnoconv("Funding")));
 		} else {
+			$subject = mb_encode_mimeheader($subject, 'UTF-8');
 			$subject = dol_escape_htmltag($langs->convToOutputCharset($subject));
 		}
 

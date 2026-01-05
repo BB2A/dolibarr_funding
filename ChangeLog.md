@@ -10,6 +10,7 @@
 - NEW - 06/12/2025 - Mail des financements bientot fini ajout des statuts
 - NEW - 06/12/2025 - Mail des financements bientot fini garde egalement ceux passé mais toujour actif
 
+- FIX - 05/01/2026 - Supprime les problémes d'accent dans les sujet de mail
 - FIX - 04/01/2026 - Ajout des dans en-US car lange prise par default pour les tavhes planifiées
 - FIX - 26/12/2025 - Erreur à l'envoie de mail  l'orsque un contact est présent sur le document
 - FIX - 22/12/2025 - Supprimer la contrainte de selection redemption et retentation
