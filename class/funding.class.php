@@ -2801,6 +2801,7 @@ class Funding extends CommonObject
 	public function cronFundingEnd()
 	{
 		global $user, $conf, $langs, $db;
+		// setDefaultLang(getDolGlobalString('MAIN_LANG_DEFAULT'));
 		$langs->load("funding@funding");
 
 		$date = dol_now('tzserver');
@@ -2940,6 +2941,7 @@ class Funding extends CommonObject
 	public function cronFundingSoonFinished($duration = 6)
 	{
 		global $user, $conf, $langs, $db;
+		// setDefaultLang(getDolGlobalString('MAIN_LANG_DEFAULT'));
 		$langs->load("funding@funding");
 
 		$date = dol_now('tzserver');
