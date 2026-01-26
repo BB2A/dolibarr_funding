@@ -286,13 +286,11 @@ if ($object->id > 0) {
 	print '<div class="tabsAction">';
 		$morehtmlright = '';
 		if (version_compare(DOL_VERSION, '22.0.0', '>=')) {
-			$messagingUrl = dol_buildpath("/funding/funding_agenda.php", 1).'?id='.$object->id;
+			$messagingUrl = dol_buildpath("/funding/funding_agenda.php", 1).'?id='.$object->id.'&mode='.$mode;
 			if ($mode != 'messaging') {
-				$messagingUrl .= '&mode=messaging';
 				$valbtnmessaging = 2;
 				$valbtnlist = 1;
 			} else {
-				$messagingUrl .= '&mode=list';
 				$valbtnmessaging = 1;
 				$valbtnlist = 2;
 			}
@@ -314,6 +312,7 @@ if ($object->id > 0) {
 		print '<br>';
 
 		$param = '&id='.$object->id.(!empty($socid) ? '&socid='.$socid : '');
+		$param = '&mode='.$mode;
 		if (!empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) {
 			$param .= '&contextpage='.urlencode($contextpage);
 		}
@@ -322,7 +321,8 @@ if ($object->id > 0) {
 		}
 
 		// Try to know count of actioncomm from cache
-		$nbEvent = 0;
+		// $nbEvent = 0;
+		$nbEvent = '';
 		//require_once DOL_DOCUMENT_ROOT.'/core/lib/memory.lib.php';
 		//$cachekey = 'count_events_funding_'.$object->id;
 		//$nbEvent = dol_getcache($cachekey);

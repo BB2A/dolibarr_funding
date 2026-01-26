@@ -1,6 +1,11 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [1.1.3] - 01/2025 Dolibarr 22
+NEW - 
+
+FIX - 26/01/2026 - New view messaging 
+
+## [1.1.3] - 01/2025 Dolibarr 22
 - NEW - 22/12/2025 - Dans les param sélection de l'organisme par default
 - NEW - 22/12/2025 - Déplacement de la position d'affichage de l'organisme
 - NEW - 20/12/2025 - Look and fell title and picto
