@@ -1,9 +1,9 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [1.1.4] - /2025 Dolibarr 22
-NEW - 
+- NEW - 03/02/2026 - Ajout des API REST
 
-FIX - 26/01/2026 - New view messaging 
+- FIX - 26/01/2026 - New view messaging 
 
 ## [1.1.3] - 01/2025 Dolibarr 22
 - NEW - 22/12/2025 - Dans les param sélection de l'organisme par default

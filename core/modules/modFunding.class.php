@@ -95,8 +95,10 @@ class modFunding extends DolibarrModules
 			'theme' => 0,
 			// Set this to relative path of css file if module has its own css file
 			'css' => array(
-				// '/funding/css/funding.css.php',
+			// '/funding/css/funding.css.php',
 			),
+			// Set this to 1 if module is a web service module
+			'api' => 1,
 			// Set this to relative path of js file if module must load a js on all pages
 			'js' => array(
 				//   '/funding/js/funding.js.php',
@@ -235,7 +237,7 @@ class modFunding extends DolibarrModules
 		// unit_frequency must be 60 for minute, 3600 for hour, 86400 for day, 604800 for week
 		$this->cronjobs = array(
 			0 => array(
-				'entity'=>0,
+				'entity'=>1,
 				'label' => 'CronFundingEnd',
 				'jobtype' => 'method',
 				'class' => '/funding/class/funding.class.php',
@@ -250,7 +252,7 @@ class modFunding extends DolibarrModules
 				'priority' => 50,
 			 ),
 			 1 => array(
-				'entity'=>0,
+				'entity'=>1,
 				'label' => 'CronFundingSoonFinished',
 				'jobtype' => 'method',
 				'class' => '/funding/class/funding.class.php',

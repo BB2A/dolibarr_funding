@@ -1,0 +1,1088 @@
+<?php
+/* Copyright (C) 2015		Jean-François Ferry		<jfefe@aternatik.fr>
+ * Copyright (C) 2024		Frédéric France			<frederic.france@free.fr>
+ * Copyright (C) 2025		Anthony Berton			<anthony.berton@bb2a.fr>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+use Luracast\Restler\RestException;
+
+dol_include_once('/funding/class/coefficient.class.php');
+dol_include_once('/funding/class/funding.class.php');
+dol_include_once('/funding/class/retention.class.php');
+
+
+
+/**
+ * \file    htdocs/modulebuilder/template/class/api_funding.class.php
+ * \ingroup funding
+ * \brief   File for API management of myobject.
+ */
+
+/**
+ * API class for funding myobject
+ *
+ * @access protected
+ * @class  DolibarrApiAccess {@requires user,external}
+ */
+class FundingApi extends DolibarrApi
+{
+	/**
+	 * @var MyObject {@type MyObject}
+	 */
+	/*
+	 * @var mixed TODO: set type
+	 */
+	public $coefficient;
+	/*
+	 * @var mixed TODO: set type
+	 */
+	public $funding;
+	/*
+	 * @var mixed TODO: set type
+	 */
+	public $retention;
+
+	/**
+	 * Constructor
+	 *
+	 * @url     GET /
+	 */
+	public function __construct()
+	{
+		global $db;
+		$this->db = $db;
+		$this->coefficient = new Coefficient($this->db);
+		$this->funding = new Funding($this->db);
+		$this->retention = new Retention($this->db);
+	}
+
+
+	/* BEGIN MODULEBUILDER API COEFFICIENT */
+	/**
+	 * Get properties of a coefficient object
+	 *
+	 * Return an array with coefficient information
+	 *
+	 * @param	int		$id				ID of coefficient
+	 * @return  Object					Object with cleaned properties
+	 * @phan-return	Coefficient			Object with cleaned properties
+	 * @phpstan-return	Coefficient			Object with cleaned properties
+	 *
+	 * @phan-return  Coefficient
+	 *
+	 * @url	GET coefficients/{id}
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 */
+	public function getCoefficient($id)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'coefficient', 'read')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('coefficient', $id, 'funding_coefficient')) {
+			throw new RestException(403, 'Access to instance id='.$id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->coefficient->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Coefficient not found');
+		}
+
+		return $this->_cleanObjectDatas($this->coefficient);
+	}
+
+
+	/**
+	 * List coefficients
+	 *
+	 * Get a list of coefficients
+	 *
+	 * @param string		   $sortfield			Sort field
+	 * @param string		   $sortorder			Sort order
+	 * @param int			   $limit				Limit for list
+	 * @param int			   $page				Page number
+	 * @param string           $sqlfilters          Other criteria to filter answers separated by a comma. Syntax example "(t.ref:like:'SO-%') and (t.date_creation:<:'20160101')"
+	 * @param string		   $properties			Restrict the data returned to these properties. Ignored if empty. Comma separated list of properties names
+	 * @return  array                               Array of Coefficient objects
+	 * @phan-return array<int,Coefficient>
+	 * @phpstan-return array<int,Coefficient>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url	GET /coefficients/
+	 */
+	public function indexCoefficient($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $sqlfilters = '', $properties = '')
+	{
+		$obj_ret = array();
+		$tmpobject = new Coefficient($this->db);
+
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'coefficient', 'read')) {
+			throw new RestException(403);
+		}
+
+		$socid = DolibarrApiAccess::$user->socid ?: 0;
+
+		$restrictonsocid = 0; // Set to 1 if there is a field socid in table of object
+
+		// If the internal user must only see his customers, force searching by him
+		$search_sale = 0;
+		if ($restrictonsocid && !DolibarrApiAccess::$user->hasRight('societe', 'client', 'voir') && !$socid) {
+			$search_sale = DolibarrApiAccess::$user->id;
+		}
+		if (!isModEnabled('societe')) {
+			$search_sale = 0; // If module thirdparty not enabled, sale representative is something that does not exists
+		}
+
+		$sql = "SELECT t.rowid";
+		$sql .= " FROM ".$this->db->prefix().$tmpobject->table_element." AS t";
+		$sql .= " LEFT JOIN ".$this->db->prefix().$tmpobject->table_element."_extrafields AS ef ON (ef.fk_object = t.rowid)"; // Modification VMR Global Solutions to include extrafields as search parameters in the API GET call, so we will be able to filter on extrafields
+		$sql .= " WHERE 1 = 1";
+		if ($tmpobject->ismultientitymanaged) {
+			$sql .= ' AND t.entity IN ('.getEntity($tmpobject->element).')';
+		}
+		if ($restrictonsocid && $socid) {
+			$sql .= " AND t.fk_soc = ".((int) $socid);
+		}
+		// Search on sale representative
+		if ($search_sale && $search_sale != '-1') {
+			if ($search_sale == -2) {
+				$sql .= " AND NOT EXISTS (SELECT sc.fk_soc FROM ".$this->db->prefix()."societe_commerciaux as sc WHERE sc.fk_soc = t.fk_soc)";
+			} elseif ($search_sale > 0) {
+				$sql .= " AND EXISTS (SELECT sc.fk_soc FROM ".$this->db->prefix()."societe_commerciaux as sc WHERE sc.fk_soc = t.fk_soc AND sc.fk_user = ".((int) $search_sale).")";
+			}
+		}
+		if ($sqlfilters) {
+			$errormessage = '';
+			$sql .= forgeSQLFromUniversalSearchCriteria($sqlfilters, $errormessage);
+			if ($errormessage) {
+				throw new RestException(400, 'Error when validating parameter sqlfilters -> '.$errormessage);
+			}
+		}
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		$i = 0;
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$tmp_object = new Coefficient($this->db);
+				if ($tmp_object->fetch($obj->rowid)) {
+					$obj_ret[] = $this->_filterObjectProperties($this->_cleanObjectDatas($tmp_object), $properties);
+				}
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving coefficient list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
+	}
+
+	/**
+	 * Create coefficient object
+	 *
+	 * @param array $request_data   Request data
+	 * @phan-param ?array<string,mixed> $request_data
+	 * @phpstan-param ?array<string,mixed> $request_data
+	 * @return int  				ID of coefficient
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 500 System error
+	 *
+	 * @url	POST coefficients/
+	 */
+	public function postCoefficient($request_data = null)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'coefficient', 'write')) {
+			throw new RestException(403);
+		}
+
+		// Check mandatory fields
+		$result = $this->_validateCoefficient($request_data);
+
+		foreach ($request_data as $field => $value) {
+			if ($field === 'caller') {
+				// Add a mention of caller so on trigger called after action, we can filter to avoid a loop if we try to sync back again with the caller @phan-suppress-next-line PhanTypeInvalidDimOffset
+				$this->coefficient->context['caller'] = sanitizeVal((string) $request_data['caller'], 'aZ09');
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->coefficient->array_options[$index] = $this->_checkValForAPI('extrafields', $val, $this->coefficient);
+				}
+				continue;
+			}
+
+			$this->coefficient->$field = $this->_checkValForAPI((string) $field, $value, $this->coefficient);
+		}
+
+		// Clean data
+		// $this->coefficient->abc = sanitizeVal($this->coefficient->abc, 'alphanohtml');
+
+		if ($this->coefficient->create(DolibarrApiAccess::$user) < 0) {
+			throw new RestException(500, "Error creating Coefficient", array_merge(array($this->coefficient->error), $this->coefficient->errors));
+		}
+		return $this->coefficient->id;
+	}
+
+	/**
+	 * Update coefficient
+	 *
+	 * @param 	int   		$id             Id of coefficient to update
+	 * @param 	array 		$request_data   Data
+	 * @phan-param ?array<string,mixed>	$request_data
+	 * @phpstan-param ?array<string,mixed>	$request_data
+	 * @return 	Object						Object after update
+	 * @phan-return Coefficient
+	 * @phpstan-return Coefficient
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 * @throws RestException 500 System error
+	 *
+	 * @url	PUT coefficients/{id}
+	 */
+	public function putCoefient($id, $request_data = null)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'coefficient', 'write')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('coefficient', $id, 'funding_coefficient')) {
+			throw new RestException(403, 'Access to instance id='.$this->coefficient->id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->coefficient->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Coefficient not found');
+		}
+
+		foreach ($request_data as $field => $value) {
+			if ($field == 'id') {
+				continue;
+			}
+			if ($field === 'caller') {
+				// Add a mention of caller so on trigger called after action, we can filter to avoid a loop if we try to sync back again with the caller
+				$this->coefficient->context['caller'] = sanitizeVal($request_data['caller'], 'aZ09');
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->coefficient->array_options[$index] = $this->_checkValForAPI('extrafields', $val, $this->coefficient);
+				}
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->coefficient->array_options[$index] = $this->_checkValForAPI($field, $val, $this->coefficient);
+				}
+				continue;
+			}
+
+			$this->coefficient->$field = $this->_checkValForAPI($field, $value, $this->coefficient);
+		}
+
+		// Clean data
+		// $this->coefficient->abc = sanitizeVal($this->coefficient->abc, 'alphanohtml');
+
+		if ($this->coefficient->update(DolibarrApiAccess::$user, 0) > 0) {
+			return $this->getCoeff($id);
+		} else {
+			throw new RestException(500, $this->coefficient->error);
+		}
+	}
+
+	/**
+	 * Delete coefficient
+	 *
+	 * @param   int     $id   Coefficient ID
+	 * @return  array
+	 * @phan-return array<string,array{code:int,message:string}>
+	 * @phpstan-return array<string,array{code:int,message:string}>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 * @throws RestException 409 Nothing to do
+	 * @throws RestException 500 System error
+	 *
+	 * @url	DELETE coefficients/{id}
+	 */
+	public function deleteCoefficient($id)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'coefficient', 'delete')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('coefficient', $id, 'funding_coefficient')) {
+			throw new RestException(403, 'Access to instance id='.$this->coefficient->id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->coefficient->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Coefficient not found');
+		}
+
+		if ($this->coefficient->delete(DolibarrApiAccess::$user) == 0) {
+			throw new RestException(409, 'Error when deleting Coefficient : '.$this->coefficient->error);
+		} elseif ($this->coefficient->delete(DolibarrApiAccess::$user) < 0) {
+			throw new RestException(500, 'Error when deleting Coefficient : '.$this->coefficient->error);
+		}
+
+		return array(
+			'success' => array(
+				'code' => 200,
+				'message' => 'Coefficient deleted'
+			)
+		);
+	}
+
+
+	/**
+	 * Validate fields before creating or updating object
+	 *
+	 * @param	array		$data   Array of data to validate
+	 * @phan-param		?array<string,null|int|float|string> $data
+	 * @phpstan-param	?array<string,null|int|float|string> $data
+	 * @return	array
+	 * @phan-return		array<string,null|int|float|string>|array{}
+	 * @phpstan-return	array<string,null|int|float|string>|array{}
+	 *
+	 * @throws	RestException
+	 */
+	private function _validateCoefficient($data)
+	{
+		if (!is_array($data)) {
+			$data = array();
+		}
+		$coefficient = array();
+		foreach ($this->coefficient->fields as $field => $propfield) {
+			if (in_array($field, array('rowid', 'entity', 'date_creation', 'tms', 'fk_user_creat')) || $propfield['notnull'] != 1) {
+				continue; // Not a mandatory field
+			}
+			if (!isset($data[$field])) {
+				throw new RestException(400, "$field field missing");
+			}
+			$coefficient[$field] = $data[$field];
+		}
+		return $coefficient;
+	}
+
+	/* END MODULEBUILDER API COEFFICIENT */
+
+
+	/* BEGIN MODULEBUILDER API FUNDING */
+	/**
+	 * Get properties of a funding object
+	 *
+	 * Return an array with funding information
+	 *
+	 * @param	int		$id				ID of funding
+	 * @return  Object					Object with cleaned properties
+	 * @phan-return	Funding			Object with cleaned properties
+	 * @phpstan-return	Funding			Object with cleaned properties
+	 *
+	 * @phan-return  Funding
+	 *
+	 * @url	GET fundings/{id}
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 */
+	public function getFunding($id)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'read')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('funding', $id, 'funding_funding')) {
+			throw new RestException(403, 'Access to instance id='.$id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->funding->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Funding not found');
+		}
+
+		return $this->_cleanObjectDatas($this->funding);
+	}
+
+
+	/**
+	 * List fundings
+	 *
+	 * Get a list of fundings
+	 *
+	 * @param string		   $sortfield			Sort field
+	 * @param string		   $sortorder			Sort order
+	 * @param int			   $limit				Limit for list
+	 * @param int			   $page				Page number
+	 * @param string           $sqlfilters          Other criteria to filter answers separated by a comma. Syntax example "(t.ref:like:'SO-%') and (t.date_creation:<:'20160101')"
+	 * @param string		   $properties			Restrict the data returned to these properties. Ignored if empty. Comma separated list of properties names
+	 * @return  array                               Array of Funding objects
+	 * @phan-return array<int,Funding>
+	 * @phpstan-return array<int,Funding>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url	GET /fundings/
+	 */
+	public function indexFunding($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $sqlfilters = '', $properties = '')
+	{
+		$obj_ret = array();
+		$tmpobject = new Funding($this->db);
+
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'read')) {
+			throw new RestException(403);
+		}
+
+		$socid = DolibarrApiAccess::$user->socid ?: 0;
+
+		$restrictonsocid = 0; // Set to 1 if there is a field socid in table of object
+
+		// If the internal user must only see his customers, force searching by him
+		$search_sale = 0;
+		if ($restrictonsocid && !DolibarrApiAccess::$user->hasRight('societe', 'client', 'voir') && !$socid) {
+			$search_sale = DolibarrApiAccess::$user->id;
+		}
+		if (!isModEnabled('societe')) {
+			$search_sale = 0; // If module thirdparty not enabled, sale representative is something that does not exists
+		}
+
+		$sql = "SELECT t.rowid";
+		$sql .= " FROM ".$this->db->prefix().$tmpobject->table_element." AS t";
+		$sql .= " LEFT JOIN ".$this->db->prefix().$tmpobject->table_element."_extrafields AS ef ON (ef.fk_object = t.rowid)"; // Modification VMR Global Solutions to include extrafields as search parameters in the API GET call, so we will be able to filter on extrafields
+		$sql .= " WHERE 1 = 1";
+		if ($tmpobject->ismultientitymanaged) {
+			$sql .= ' AND t.entity IN ('.getEntity($tmpobject->element).')';
+		}
+		if ($restrictonsocid && $socid) {
+			$sql .= " AND t.fk_soc = ".((int) $socid);
+		}
+		// Search on sale representative
+		if ($search_sale && $search_sale != '-1') {
+			if ($search_sale == -2) {
+				$sql .= " AND NOT EXISTS (SELECT sc.fk_soc FROM ".$this->db->prefix()."societe_commerciaux as sc WHERE sc.fk_soc = t.fk_soc)";
+			} elseif ($search_sale > 0) {
+				$sql .= " AND EXISTS (SELECT sc.fk_soc FROM ".$this->db->prefix()."societe_commerciaux as sc WHERE sc.fk_soc = t.fk_soc AND sc.fk_user = ".((int) $search_sale).")";
+			}
+		}
+		if ($sqlfilters) {
+			$errormessage = '';
+			$sql .= forgeSQLFromUniversalSearchCriteria($sqlfilters, $errormessage);
+			if ($errormessage) {
+				throw new RestException(400, 'Error when validating parameter sqlfilters -> '.$errormessage);
+			}
+		}
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		$i = 0;
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$tmp_object = new Funding($this->db);
+				if ($tmp_object->fetch($obj->rowid)) {
+					$obj_ret[] = $this->_filterObjectProperties($this->_cleanObjectDatas($tmp_object), $properties);
+				}
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving funding list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
+	}
+
+	/**
+	 * Create funding object
+	 *
+	 * @param array $request_data   Request data
+	 * @phan-param ?array<string,mixed> $request_data
+	 * @phpstan-param ?array<string,mixed> $request_data
+	 * @return int  				ID of funding
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 500 System error
+	 *
+	 * @url	POST fundings/
+	 */
+	public function postFunding($request_data = null)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'write')) {
+			throw new RestException(403);
+		}
+
+		// Check mandatory fields
+		$result = $this->_validateFunding($request_data);
+
+		foreach ($request_data as $field => $value) {
+			if ($field === 'caller') {
+				// Add a mention of caller so on trigger called after action, we can filter to avoid a loop if we try to sync back again with the caller @phan-suppress-next-line PhanTypeInvalidDimOffset
+				$this->funding->context['caller'] = sanitizeVal((string) $request_data['caller'], 'aZ09');
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->funding->array_options[$index] = $this->_checkValForAPI('extrafields', $val, $this->funding);
+				}
+				continue;
+			}
+
+			$this->funding->$field = $this->_checkValForAPI((string) $field, $value, $this->funding);
+		}
+
+		// Clean data
+		// $this->funding->abc = sanitizeVal($this->funding->abc, 'alphanohtml');
+
+		if ($this->funding->create(DolibarrApiAccess::$user) < 0) {
+			throw new RestException(500, "Error creating Funding", array_merge(array($this->funding->error), $this->funding->errors));
+		}
+		return $this->funding->id;
+	}
+
+	/**
+	 * Update funding
+	 *
+	 * @param 	int   		$id             Id of funding to update
+	 * @param 	array 		$request_data   Data
+	 * @phan-param ?array<string,mixed>	$request_data
+	 * @phpstan-param ?array<string,mixed>	$request_data
+	 * @return 	Object						Object after update
+	 * @phan-return Funding
+	 * @phpstan-return Funding
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 * @throws RestException 500 System error
+	 *
+	 * @url	PUT fundings/{id}
+	 */
+	public function putFunding($id, $request_data = null)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'write')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('funding', $id, 'funding_funding')) {
+			throw new RestException(403, 'Access to instance id='.$this->funding->id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->funding->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Funding not found');
+		}
+
+		foreach ($request_data as $field => $value) {
+			if ($field == 'id') {
+				continue;
+			}
+			if ($field === 'caller') {
+				// Add a mention of caller so on trigger called after action, we can filter to avoid a loop if we try to sync back again with the caller
+				$this->funding->context['caller'] = sanitizeVal($request_data['caller'], 'aZ09');
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->funding->array_options[$index] = $this->_checkValForAPI('extrafields', $val, $this->funding);
+				}
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->funding->array_options[$index] = $this->_checkValForAPI($field, $val, $this->funding);
+				}
+				continue;
+			}
+
+			$this->funding->$field = $this->_checkValForAPI($field, $value, $this->funding);
+		}
+
+		// Clean data
+		// $this->funding->abc = sanitizeVal($this->funding->abc, 'alphanohtml');
+
+		if ($this->funding->update(DolibarrApiAccess::$user, 0) > 0) {
+			return $this->getFunding($id);
+		} else {
+			throw new RestException(500, $this->funding->error);
+		}
+	}
+
+	/**
+	 * Delete funding
+	 *
+	 * @param   int     $id   Funding ID
+	 * @return  array
+	 * @phan-return array<string,array{code:int,message:string}>
+	 * @phpstan-return array<string,array{code:int,message:string}>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 * @throws RestException 409 Nothing to do
+	 * @throws RestException 500 System error
+	 *
+	 * @url	DELETE fundings/{id}
+	 */
+	public function deleteFunding($id)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'delete')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('funding', $id, 'funding_funding')) {
+			throw new RestException(403, 'Access to instance id='.$this->funding->id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->funding->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Funding not found');
+		}
+
+		if ($this->funding->delete(DolibarrApiAccess::$user) == 0) {
+			throw new RestException(409, 'Error when deleting Funding : '.$this->funding->error);
+		} elseif ($this->funding->delete(DolibarrApiAccess::$user) < 0) {
+			throw new RestException(500, 'Error when deleting Funding : '.$this->funding->error);
+		}
+
+		return array(
+			'success' => array(
+				'code' => 200,
+				'message' => 'Funding deleted'
+			)
+		);
+	}
+
+
+	/**
+	 * Validate fields before creating or updating object
+	 *
+	 * @param	array		$data   Array of data to validate
+	 * @phan-param		?array<string,null|int|float|string> $data
+	 * @phpstan-param	?array<string,null|int|float|string> $data
+	 * @return	array
+	 * @phan-return		array<string,null|int|float|string>|array{}
+	 * @phpstan-return	array<string,null|int|float|string>|array{}
+	 *
+	 * @throws	RestException
+	 */
+	private function _validateFunding($data)
+	{
+		if (!is_array($data)) {
+			$data = array();
+		}
+		$funding = array();
+		foreach ($this->funding->fields as $field => $propfield) {
+			if (in_array($field, array('rowid', 'entity', 'date_creation', 'tms', 'fk_user_creat')) || $propfield['notnull'] != 1) {
+				continue; // Not a mandatory field
+			}
+			if (!isset($data[$field])) {
+				throw new RestException(400, "$field field missing");
+			}
+			$funding[$field] = $data[$field];
+		}
+		return $funding;
+	}
+
+	/* END MODULEBUILDER API FUNDING */
+
+
+	/* BEGIN MODULEBUILDER API RETENTION */
+	/**
+	 * Get properties of a retention object
+	 *
+	 * Return an array with retention information
+	 *
+	 * @param	int		$id				ID of retention
+	 * @return  Object					Object with cleaned properties
+	 * @phan-return	Retention			Object with cleaned properties
+	 * @phpstan-return	Retention			Object with cleaned properties
+	 *
+	 * @phan-return  Retention
+	 *
+	 * @url	GET retentions/{id}
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 */
+	public function getRetention($id)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'retention', 'read')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('retention', $id, 'funding_retention')) {
+			throw new RestException(403, 'Access to instance id='.$id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->retention->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Retention not found');
+		}
+
+		return $this->_cleanObjectDatas($this->retention);
+	}
+
+
+	/**
+	 * List retentions
+	 *
+	 * Get a list of retentions
+	 *
+	 * @param string		   $sortfield			Sort field
+	 * @param string		   $sortorder			Sort order
+	 * @param int			   $limit				Limit for list
+	 * @param int			   $page				Page number
+	 * @param string           $sqlfilters          Other criteria to filter answers separated by a comma. Syntax example "(t.ref:like:'SO-%') and (t.date_creation:<:'20160101')"
+	 * @param string		   $properties			Restrict the data returned to these properties. Ignored if empty. Comma separated list of properties names
+	 * @return  array                               Array of Retention objects
+	 * @phan-return array<int,Retention>
+	 * @phpstan-return array<int,Retention>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url	GET /retentions/
+	 */
+	public function indexRetention($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $sqlfilters = '', $properties = '')
+	{
+		$obj_ret = array();
+		$tmpobject = new Retention($this->db);
+
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'retention', 'read')) {
+			throw new RestException(403);
+		}
+
+		$socid = DolibarrApiAccess::$user->socid ?: 0;
+
+		$restrictonsocid = 0; // Set to 1 if there is a field socid in table of object
+
+		// If the internal user must only see his customers, force searching by him
+		$search_sale = 0;
+		if ($restrictonsocid && !DolibarrApiAccess::$user->hasRight('societe', 'client', 'voir') && !$socid) {
+			$search_sale = DolibarrApiAccess::$user->id;
+		}
+		if (!isModEnabled('societe')) {
+			$search_sale = 0; // If module thirdparty not enabled, sale representative is something that does not exists
+		}
+
+		$sql = "SELECT t.rowid";
+		$sql .= " FROM ".$this->db->prefix().$tmpobject->table_element." AS t";
+		$sql .= " LEFT JOIN ".$this->db->prefix().$tmpobject->table_element."_extrafields AS ef ON (ef.fk_object = t.rowid)"; // Modification VMR Global Solutions to include extrafields as search parameters in the API GET call, so we will be able to filter on extrafields
+		$sql .= " WHERE 1 = 1";
+		if ($tmpobject->ismultientitymanaged) {
+			$sql .= ' AND t.entity IN ('.getEntity($tmpobject->element).')';
+		}
+		if ($restrictonsocid && $socid) {
+			$sql .= " AND t.fk_soc = ".((int) $socid);
+		}
+		// Search on sale representative
+		if ($search_sale && $search_sale != '-1') {
+			if ($search_sale == -2) {
+				$sql .= " AND NOT EXISTS (SELECT sc.fk_soc FROM ".$this->db->prefix()."societe_commerciaux as sc WHERE sc.fk_soc = t.fk_soc)";
+			} elseif ($search_sale > 0) {
+				$sql .= " AND EXISTS (SELECT sc.fk_soc FROM ".$this->db->prefix()."societe_commerciaux as sc WHERE sc.fk_soc = t.fk_soc AND sc.fk_user = ".((int) $search_sale).")";
+			}
+		}
+		if ($sqlfilters) {
+			$errormessage = '';
+			$sql .= forgeSQLFromUniversalSearchCriteria($sqlfilters, $errormessage);
+			if ($errormessage) {
+				throw new RestException(400, 'Error when validating parameter sqlfilters -> '.$errormessage);
+			}
+		}
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		$i = 0;
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$tmp_object = new Retention($this->db);
+				if ($tmp_object->fetch($obj->rowid)) {
+					$obj_ret[] = $this->_filterObjectProperties($this->_cleanObjectDatas($tmp_object), $properties);
+				}
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving retention list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
+	}
+
+	/**
+	 * Create retention object
+	 *
+	 * @param array $request_data   Request data
+	 * @phan-param ?array<string,mixed> $request_data
+	 * @phpstan-param ?array<string,mixed> $request_data
+	 * @return int  				ID of retention
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 500 System error
+	 *
+	 * @url	POST retentions/
+	 */
+	public function postRetention($request_data = null)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'retention', 'write')) {
+			throw new RestException(403);
+		}
+
+		// Check mandatory fields
+		$result = $this->_validateRetention($request_data);
+
+		foreach ($request_data as $field => $value) {
+			if ($field === 'caller') {
+				// Add a mention of caller so on trigger called after action, we can filter to avoid a loop if we try to sync back again with the caller @phan-suppress-next-line PhanTypeInvalidDimOffset
+				$this->retention->context['caller'] = sanitizeVal((string) $request_data['caller'], 'aZ09');
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->retention->array_options[$index] = $this->_checkValForAPI('extrafields', $val, $this->retention);
+				}
+				continue;
+			}
+
+			$this->retention->$field = $this->_checkValForAPI((string) $field, $value, $this->retention);
+		}
+
+		// Clean data
+		// $this->retention->abc = sanitizeVal($this->retention->abc, 'alphanohtml');
+
+		if ($this->retention->create(DolibarrApiAccess::$user) < 0) {
+			throw new RestException(500, "Error creating Retention", array_merge(array($this->retention->error), $this->retention->errors));
+		}
+		return $this->retention->id;
+	}
+
+	/**
+	 * Update retention
+	 *
+	 * @param 	int   		$id             Id of retention to update
+	 * @param 	array 		$request_data   Data
+	 * @phan-param ?array<string,mixed>	$request_data
+	 * @phpstan-param ?array<string,mixed>	$request_data
+	 * @return 	Object						Object after update
+	 * @phan-return Retention
+	 * @phpstan-return Retention
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 * @throws RestException 500 System error
+	 *
+	 * @url	PUT retentions/{id}
+	 */
+	public function putRetention($id, $request_data = null)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'retention', 'write')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('retention', $id, 'funding_retention')) {
+			throw new RestException(403, 'Access to instance id='.$this->retention->id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->retention->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Retention not found');
+		}
+
+		foreach ($request_data as $field => $value) {
+			if ($field == 'id') {
+				continue;
+			}
+			if ($field === 'caller') {
+				// Add a mention of caller so on trigger called after action, we can filter to avoid a loop if we try to sync back again with the caller
+				$this->retention->context['caller'] = sanitizeVal($request_data['caller'], 'aZ09');
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->retention->array_options[$index] = $this->_checkValForAPI('extrafields', $val, $this->retention);
+				}
+				continue;
+			}
+
+			if ($field == 'array_options' && is_array($value)) {
+				foreach ($value as $index => $val) {
+					$this->retention->array_options[$index] = $this->_checkValForAPI($field, $val, $this->retention);
+				}
+				continue;
+			}
+
+			$this->retention->$field = $this->_checkValForAPI($field, $value, $this->retention);
+		}
+
+		// Clean data
+		// $this->retention->abc = sanitizeVal($this->retention->abc, 'alphanohtml');
+
+		if ($this->retention->update(DolibarrApiAccess::$user, 0) > 0) {
+			return $this->getRetention($id);
+		} else {
+			throw new RestException(500, $this->retention->error);
+		}
+	}
+
+	/**
+	 * Delete retention
+	 *
+	 * @param   int     $id   Retention ID
+	 * @return  array
+	 * @phan-return array<string,array{code:int,message:string}>
+	 * @phpstan-return array<string,array{code:int,message:string}>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 404 Not found
+	 * @throws RestException 409 Nothing to do
+	 * @throws RestException 500 System error
+	 *
+	 * @url	DELETE retentions/{id}
+	 */
+	public function deleteRetention($id)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'retention', 'delete')) {
+			throw new RestException(403);
+		}
+		if (!DolibarrApi::_checkAccessToResource('retention', $id, 'funding_retention')) {
+			throw new RestException(403, 'Access to instance id='.$this->retention->id.' of object not allowed for login '.DolibarrApiAccess::$user->login);
+		}
+
+		$result = $this->retention->fetch($id);
+		if (!$result) {
+			throw new RestException(404, 'Retention not found');
+		}
+
+		if ($this->retention->delete(DolibarrApiAccess::$user) == 0) {
+			throw new RestException(409, 'Error when deleting Retention : '.$this->retention->error);
+		} elseif ($this->retention->delete(DolibarrApiAccess::$user) < 0) {
+			throw new RestException(500, 'Error when deleting Retention : '.$this->retention->error);
+		}
+
+		return array(
+			'success' => array(
+				'code' => 200,
+				'message' => 'Retention deleted'
+			)
+		);
+	}
+
+
+	/**
+	 * Validate fields before creating or updating object
+	 *
+	 * @param	array		$data   Array of data to validate
+	 * @phan-param		?array<string,null|int|float|string> $data
+	 * @phpstan-param	?array<string,null|int|float|string> $data
+	 * @return	array
+	 * @phan-return		array<string,null|int|float|string>|array{}
+	 * @phpstan-return	array<string,null|int|float|string>|array{}
+	 *
+	 * @throws	RestException
+	 */
+	private function _validateRetention($data)
+	{
+		if (!is_array($data)) {
+			$data = array();
+		}
+		$retention = array();
+		foreach ($this->retention->fields as $field => $propfield) {
+			if (in_array($field, array('rowid', 'entity', 'date_creation', 'tms', 'fk_user_creat')) || $propfield['notnull'] != 1) {
+				continue; // Not a mandatory field
+			}
+			if (!isset($data[$field])) {
+				throw new RestException(400, "$field field missing");
+			}
+			$retention[$field] = $data[$field];
+		}
+		return $retention;
+	}
+
+	/* END MODULEBUILDER API RETENTION */
+
+
+	/* BEGIN MODULEBUILDER API MYOBJECT */
+	/* END MODULEBUILDER API MYOBJECT */
+
+
+
+	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.PublicUnderscore
+	/**
+	 * Clean sensitive object data fields
+	 * @phpstan-template T of Object
+	 *
+	 * @param   Object  $object     Object to clean
+	 * @return  Object              Object with cleaned properties
+	 *
+	 * @phpstan-param T $object
+	 * @phpstan-return T
+	 */
+	protected function _cleanObjectDatas($object)
+	{
+		// phpcs:enable
+		$object = parent::_cleanObjectDatas($object);
+
+		unset($object->rowid);
+		unset($object->canvas);
+
+		// If object has lines, remove $db property
+		if (isset($object->lines) && is_array($object->lines) && count($object->lines) > 0) {
+			$nboflines = count($object->lines);
+			for ($i = 0; $i < $nboflines; $i++) {
+				$this->_cleanObjectDatas($object->lines[$i]);
+
+				unset($object->lines[$i]->lines);
+				unset($object->lines[$i]->note);
+			}
+		}
+
+		return $object;
+	}
+}
