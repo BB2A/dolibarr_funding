@@ -457,7 +457,7 @@ class FundingApi extends DolibarrApi
 		$obj_ret = array();
 		$tmpobject = new Funding($this->db);
 
-		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'read')) {
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'read')) {
 			throw new RestException(403);
 		}
 
@@ -544,7 +544,7 @@ class FundingApi extends DolibarrApi
 	 */
 	public function postFunding($request_data = null)
 	{
-		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'write')) {
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'write')) {
 			throw new RestException(403);
 		}
 
@@ -596,7 +596,7 @@ class FundingApi extends DolibarrApi
 	 */
 	public function putFunding($id, $request_data = null)
 	{
-		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'write')) {
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'write')) {
 			throw new RestException(403);
 		}
 		if (!DolibarrApi::_checkAccessToResource('funding', $id, 'funding_funding')) {
@@ -662,7 +662,7 @@ class FundingApi extends DolibarrApi
 	 */
 	public function deleteFunding($id)
 	{
-		if (!DolibarrApiAccess::$user->hasRight('funding', 'funding', 'delete')) {
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'delete')) {
 			throw new RestException(403);
 		}
 		if (!DolibarrApi::_checkAccessToResource('funding', $id, 'funding_funding')) {
