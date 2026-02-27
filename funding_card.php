@@ -100,6 +100,7 @@ $object = new Funding($db);
 $extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->funding->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('fundingcard', 'globalcard')); // Note that conf->hooks_modules contains array
+$notrigger = 0;
 
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
