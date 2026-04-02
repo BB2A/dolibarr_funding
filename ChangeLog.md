@@ -1,6 +1,9 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [1.1.4] - /2025 Dolibarr 22
+## [Dev] - /2025 Dolibarr 22
+- PHP min 7.4
+- Dolibarr min 18
+
 - NEW - 03/02/2026 - Ajout des API REST
 
 - FIX - 26/01/2026 - New view messaging 
