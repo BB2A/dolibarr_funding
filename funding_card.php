@@ -455,13 +455,13 @@ if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($obj
 		// Todo Vérifier si il y a pas une facture pour cette proposition
 		$prop->fetchObjectLinked(null, '', null, 'order', 'OR', 0, 'sourcetype', 'commande');
 		$orderlinkeds = $prop->linkedObjects;
-		if (!empty($orderlinkeds)){
+		if (!empty($orderlinkeds)) {
 			if (count($orderlinkeds) == 1) {
 				foreach ($orderlinkeds['commande'] as $arrayorderlinkeds => $orderlink) {
 					// $objorderlinked = new Commande($db);
 					// $result = $objorderlinked->fetch($orderlink->id);
 					$orderreginfo = '';
-					if ($orderlink->mode_reglement_id <> $conf->global->FUNDING_ID_REGLEMENT){
+					if ($orderlink->mode_reglement_id <> $conf->global->FUNDING_ID_REGLEMENT) {
 						$orderreginfo = '('.$langs->trans("OrderRegIsNotFunding").')';
 					}
 					$orderfundurl = dol_buildpath('/funding/funding_card.php?typedoc=order&iddoc='.$orderlink->id, 1);
@@ -469,11 +469,8 @@ if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($obj
 				}
 			} else {
 				Print info_admin($langs->trans("OrdersExistForPropal"), 0, 0, 'error', 'clearboth');
-
 			}
-			
 		}
-		
 	}
 	// Récupération table order
 	if ($typedoc == 'order' || $object->origin == 'order') {
@@ -502,7 +499,7 @@ if ($typedoc == 'propal') {
 }
 
 if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'create'))) {
-	if (empty($typedoc) && empty($iddoc)){
+	if (empty($typedoc) && empty($iddoc)) {
 		print load_fiche_titre($langs->trans("Funding"), '', 'object_'.$object->picto);
 		$head = fundingPrepareHead($object);
 		print dol_get_fiche_head($head, 'card', $langs->trans("Funding"), -1, $object->picto  .' infobox-contrat valignmiddle widthpictotitle pictotitle', 0, '', '', 0, '', 1);
@@ -553,12 +550,11 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'crea
 	} else {
 		dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', '', $morehtmlleft, $morehtmlstatus, '', $morehtmlright);
 	}
-	
 }
 
 // Part to create
 if ($action == 'create' && $permissiontoadd) {
-	if (empty($typedoc) && empty($iddoc)){
+	if (empty($typedoc) && empty($iddoc)) {
 		print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
 	}
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
@@ -610,7 +606,6 @@ if ($action == 'create' && $permissiontoadd) {
 
 // Part to edit record
 if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
-
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="update">';
@@ -664,8 +659,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		);
 
 		// BB2A Notification voir pour changement de statut
-		if (!empty($conf->notification->enabled))
-		{
+		if (!empty($conf->notification->enabled)) {
 			require_once DOL_DOCUMENT_ROOT.'/core/class/notify.class.php';
 			$notify = new Notify($db);
 			$formquestion = array_merge($formquestion, array(
