@@ -1,6 +1,6 @@
 <?php
-/* Copyright (C) 2017  		Laurent Destailleur 	<eldy@users.sourceforge.net> 
- * Copyright (C) 2021-2024	BERTON Anthony			<anthony.berton@bb2a.fr>
+/* Copyright (C) 2017       Laurent Destailleur     <eldy@users.sourceforge.net>
+ * Copyright (C) 2021-2026	Anthony Berton			<anthony.berton@bb2a.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ class ActionsFunding
 		global $conf, $user, $langs;
 
 		$error = 0; // Error counter
-
+		// Affichage dans listes Propos, Commandes et Factures
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {	    // do something only for the context 'somecontext1' or 'somecontext2'
 			$parameters['arrayfields']['funding.status'] = array('label'=>'Funding', 'checked'=>1, 'enabled'=>1, 'visible'=>-1, 'position'=>1000 );
 		}
@@ -357,7 +357,7 @@ class ActionsFunding
 		global $langs, $conf;
 		$contexts = explode(':', $parameters['context']);
 
-		$myvalue= (DOL_VERSION >= '13.0.0') ? img_picto('', 'object_funding.png@funding', 'class="paddingright"').dol_escape_htmltag($langs->trans('Fundings')) : dol_escape_htmltag($langs->trans('Funding'));
+		$myvalue= img_picto('', 'fa-piggy-bank', 'class="paddingright"').dol_escape_htmltag($langs->trans('Fundings'));
 		$this->results = array('funding_send' => $myvalue);
 
 
@@ -580,7 +580,7 @@ class ActionsFunding
 		$contexts = explode(':', $parameters['context']);
 		return 0;
 	}
-	
+
 	/**
 	 * Overloading the printFieldListSelect function
 	 *
@@ -594,7 +594,7 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db;
 		$sql = '';
-		// Affichage dans listes Propos et Commandes
+		// Affichage dans listes Propos, Commandes et Factures
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {
 			$sql .= ',funding.rowid as fundrowid, funding.ref as fundref, funding.status as fundstatus';
 		}
@@ -623,7 +623,7 @@ class ActionsFunding
 		if (in_array($parameters['currentcontext'], array('orderlist'))) {
 			$sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'funding_funding as funding ON (c.rowid = funding.origin_id and funding.origin="order")';
 		}
-		
+
 
 		$this->resprints = $sql;
 		return 0;
@@ -648,7 +648,7 @@ class ActionsFunding
 		$this->resprints = $sql;
 		return 0;
 	}
-	
+
 	/**
 	 * Overloading the printFieldListSearchParam function
 	 *
@@ -749,12 +749,12 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db, $object;
 		$result = '';
-		$value = img_picto('uncheck','uncheck');
+		$value = img_picto('uncheck', 'uncheck');
 		// Affichage dans listes Propos et Commandes
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
 			dol_include_once('/funding/class/funding.class.php');
 			$funding = new funding($db);
-			if (isset($parameters['obj']->fundstatus)){
+			if (isset($parameters['obj']->fundstatus)) {
 				$funding->fetch($parameters['obj']->fundrowid);
 				$value = $funding->LibStatut($parameters['obj']->fundstatus, 3).' '.$funding->getNomUrl(1);
 			}
@@ -769,6 +769,6 @@ class ActionsFunding
 		$this->resprints = $result;
 		return 0;
 	}
-	
+
 	/* Add here any other hooked methods... */
 }
