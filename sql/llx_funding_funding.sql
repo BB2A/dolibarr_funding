@@ -21,6 +21,9 @@ CREATE TABLE llx_funding_funding(
 	entity integer DEFAULT 1 NOT NULL,    -- multi company id
 	study_number varchar(128), 
 	folder_number varchar(128), 
+	fk_org integer NOT NULL,  
+	fk_soc integer NOT NULL, 
+	fk_soc_invoice integer, 
 	amount double DEFAULT NULL, 
 	amount_maint double DEFAULT NULL, 
 	amount_total double DEFAULT NULL, 
@@ -32,6 +35,7 @@ CREATE TABLE llx_funding_funding(
 	date_accepted date, 
 	date_endvalidity date, 
 	date_delivery date, 
+	date_end_calculated date,
 	date_signature date, 
 	date_end date, 
 	fk_funding_type smallint NOT NULL, 
@@ -40,9 +44,6 @@ CREATE TABLE llx_funding_funding(
 	retention smallint, 
 	retention_rate real, 
 	retention_mount double DEFAULT NULL,
-	fk_org integer NOT NULL, 
-	fk_soc integer NOT NULL, 
-	fk_soc_invoice integer, 
 	fk_user_comm integer, 
 	description text, 
 	fundoc1 varchar(255), 
@@ -72,39 +73,15 @@ CREATE TABLE llx_funding_funding(
 	fk_user_modif integer, 
 	origin varchar(128) NOT NULL, 
 	origin_id integer NOT NULL, 
-	fk_invoice integer, 
-	last_main_doc varchar(255), 
 	import_key varchar(14), 
 	model_pdf varchar(255), 
+	last_main_doc varchar(255), 
+	billed smallint, 
 	funcheck smallint,
 	status_folder smallint, 
 	status smallint NOT NULL
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
-
-ALTER TABLE llx_funding_funding ADD COLUMN entity integer DEFAULT 1 NOT NULL AFTER ref;    -- multi company id
-ALTER TABLE llx_funding_funding ADD COLUMN redemption_number varchar(128) AFTER redemption;
-ALTER TABLE llx_funding_funding ADD COLUMN retention_mount double AFTER retention_rate;
-ALTER TABLE llx_funding_funding ADD COLUMN date_accepted date AFTER amount_rent_edit;
-ALTER TABLE llx_funding_funding ADD COLUMN date_endvalidity date AFTER date_accepted;
-ALTER TABLE llx_funding_funding ADD COLUMN date_signature date AFTER date_delivery;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc1check smallint AFTER fundoc1;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc2check smallint AFTER fundoc2;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc3check smallint AFTER fundoc3;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc4check smallint AFTER fundoc4;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc5 varchar(255) AFTER fundoc4check;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc5check smallint AFTER fundoc5;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc6 varchar(255) AFTER fundoc5check;
-ALTER TABLE llx_funding_funding ADD COLUMN fundoc6check smallint AFTER fundoc6;
-ALTER TABLE llx_funding_funding ADD COLUMN funfoldoc6 varchar(255) AFTER funfoldoc5;
-ALTER TABLE llx_funding_funding ADD COLUMN extension smallint AFTER funfoldoc6;
-ALTER TABLE llx_funding_funding ADD COLUMN funcheck smallint AFTER model_pdf;
-ALTER TABLE llx_funding_funding ADD COLUMN fk_invoice integer AFTER origin_id;
-ALTER TABLE llx_funding_funding DROP COLUMN pre_study ;
-ALTER TABLE llx_funding_funding DROP COLUMN fk_propal;
-ALTER TABLE llx_funding_funding DROP COLUMN fk_order;
-
-UPDATE llx_funding_funding SET entity = 1 where WHERE entity IS NULL;
 
 -- UPDATE llx_actioncomm SET elementtype = 'funding_funding' WHERE elementtype = 'funding';
 -- UPDATE llx_element_element SET targettype = 'funding_funding' WHERE targettype = 'funding';
