@@ -558,8 +558,9 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'crea
 
 // Part to create
 if ($action == 'create' && $permissiontoadd) {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
-
+	if (empty($typedoc) && empty($iddoc)){
+		print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Funding")), '', 'object_'.$object->picto.' infobox-contrat valignmiddle widthpictotitle pictotitle');
+	}
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?crea=1&typedoc='.$typedoc.'&iddoc='.$iddoc.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
@@ -588,7 +589,7 @@ if ($action == 'create' && $permissiontoadd) {
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
 
 	print '</table>'."\n";
-
+	print '</div>';
 	dol_fiche_end();
 
 	print '<div class="center">';
@@ -633,10 +634,10 @@ if (($id || $ref) && $action == 'edit' && $permissiontoadd) {
 
 	dol_fiche_end();
 
-	print '<div class="center"><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
+	print '<div class="center">';
+	print '<input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
 	print ' &nbsp; <input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
 	print '</div>';
-
 	print '</form>';
 }
 

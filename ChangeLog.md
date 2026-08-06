@@ -4,9 +4,9 @@
 - PHP min 7.4
 - Dolibarr min 18
 
+- NEW - 06/08/2026 - Amélioration de la logique d'affichage pour la création d'un nouvel objet Funding
 - NEW - 03/02/2026 - Ajout des API REST
-
-- FIX - 26/01/2026 - New view messaging 
+- NEW - 26/01/2026 - New view messaging 
 
 ## [1.1.3] - 01/2025 Dolibarr 22
 - NEW - 22/12/2025 - Dans les param sélection de l'organisme par default
