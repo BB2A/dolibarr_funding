@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
- * Copyright (C) 2020-2025	Anthony Berton 			<anthony.berton@bb2a.fr>
+ * Copyright (C) 2020-2026	Anthony Berton 			<anthony.berton@bb2a.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,6 @@
 
 // Put here all includes required by your class file
 require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
-//require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
-//require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
 
 /**
  * Class for Funding
@@ -61,10 +59,10 @@ class Funding extends CommonObject
 	/**
 	 * @var string String with name of icon for funding. Must be the part after the 'object_' into object_funding.png
 	 */
-	public $picto = 'fa-piggy-bank';
-/**
-	 * @var array<int,string>		Array with labels of status
-	 */
+	public $picto = 'fa-piggy-bank infobox-action';
+	/**
+	* @var array<int,string>		Array with labels of status
+	*/
 	public $labelStatusFolder = array();
 
 	/**
@@ -152,6 +150,7 @@ class Funding extends CommonObject
 		'date_accepted' => array('type'=>'date', 'label'=>'DateAccepted', 'enabled'=>'1', 'position'=>16, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAccepted",),
 		'date_endvalidity' => array('type'=>'date', 'label'=>'DateEndValidity', 'enabled'=>'1', 'position'=>17, 'notnull'=>0, 'visible'=>2, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateAcceptedEnd",),
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>18, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
+		'date_end_calculated' => array('type'=>'date', 'label'=>'DateEndCalculated', 'enabled'=>'1', 'position'=>20, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEndCalculated",),
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
 		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>20, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
@@ -160,7 +159,7 @@ class Funding extends CommonObject
 		'retention' => array('type'=>'boolean', 'label'=>'RetentionOfGuarantee', 'enabled'=>'1', 'position'=>24, 'notnull'=>0, 'visible'=>-1, 'default'=>0, 'help'=>"Help_retention",),
 		'retention_rate' => array('type'=>'real', 'label'=>'RetentionRate', 'enabled'=>'1', 'position'=>25, 'notnull'=>0, 'visible'=>-5, 'noteditable'=>'1', 'default'=>'0', 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"Help_retentionRate",),
 		'retention_mount' => array('type'=>'price', 'label'=>'RetentionMount', 'enabled'=>'1', 'position'=>26, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help_retentionMount",),
-		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'SalesRepresentative', 'picto'=>'user', 'enabled'=>'1', 'position'=>27, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid', 'css'=>'maxwidth250 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150'),
+		'fk_user_comm' => array('type'=>'integer:User:user/class/user.class.php::(entity:IN:__SHARED_ENTITIES__)', 'label'=>'SalesRepresentative', 'picto'=>'user', 'enabled'=>'1', 'position'=>27, 'notnull'=>0, 'visible'=>-4, 'foreignkey'=>'user.rowid', 'css'=>'maxwidth250 widthcentpercentminusxx', 'csslist'=>'tdoverflowmax150'),
 		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>-1,),
 		'fundoc1' => array('type'=>'varchar(255)', 'label'=>'fundoc1', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>-2,),
 		'fundoc1check' => array('type'=>'smallint', 'label'=>'fundoc1check', 'enabled'=>'1', 'position'=>101, 'notnull'=>0, 'visible'=>0,),
@@ -189,10 +188,10 @@ class Funding extends CommonObject
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2, 'showoncombobox'=>'1',),
 		'origin' => array('type'=>'varchar(128)', 'label'=>'origin', 'enabled'=>'1', 'position'=>512, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'origin_id' => array('type'=>'integer', 'label'=>'origin_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
-		'fk_invoice' => array('type'=>'integer', 'label'=>'invoice_id', 'enabled'=>'1', 'position'=>513, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
-		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>0, 'default'=>'',),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
+		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'last_main_doc', 'enabled'=>'1', 'position'=>10, 'notnull'=>0, 'visible'=>0,),
+		'billed' => array('type'=>'integer', 'label'=>'billed', 'enabled'=>'1', 'position'=>514, 'notnull'=>0, 'visible'=>-2, 'noteditable'=>'1', 'index'=>1, 'searchall'=>1,),
 		'funcheck' => array('type'=>'smallint', 'label'=>'Checked', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>-2, 'default'=>'0', 'css'=>'center','arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
 		'status_folder' => array('type'=>'smallint', 'label'=>'StatusFolder', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('1' => 'FundingStatusFolderSendOrgShort', '2' => 'FundingStatusFolderLackShort', '5' => 'FundingStatusFolderAcceptRetentionShort', '7' => 'FundingStatusFolderDenouncedShort', '8' => 'FundingStatusFolderRedeemedShort', '9' => 'FundingStatusFolderExtensionShort'),),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>1, 'visible'=>2, 'default'=>'0', 'index'=>1, 'noteditable'=>'1', 'showoncombobox'=>'1', 'arrayofkeyval'=>array('0'=>'FundingStatusDraftShort', '1'=>'FundingStatusValidatedShort', '2'=>'FundingStatusUpdateShort',/* '3'=>'FundingStatusSendOrgShort', */'4'=>'FundingStatusAcceptShort', '5'=>'FundingStatusDeniedShort', '6'=>'FundingStatusRunningShort', '7'=>'FundingStatusEndShort', '8'=>'FundingStatusDisabledShort'),),
@@ -251,10 +250,10 @@ class Funding extends CommonObject
 	public $fk_user_modif;
 	public $origin;
 	public $origin_id;
-	public $fk_invoice;
 	public $last_main_doc;
 	public $import_key;
 	public $model_pdf;
+	public $billed;
 	public $funcheck;
 	public $status_folder;
 	public $status;
@@ -311,7 +310,7 @@ class Funding extends CommonObject
 		// Force display to 3 decimals
 		$conf->global->MAIN_MAX_DECIMALS_SHOWN = 3;
 
-		// Rétrocompatile
+		// Backward compatibility
 		if (version_compare(DOL_VERSION, '17.0.0', '<')) {
 			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 			$this->fields['fk_soc_invoice']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
@@ -325,7 +324,7 @@ class Funding extends CommonObject
 			$this->fields['entity']['enabled'] = 0;
 		}
 
-		// Activation du loyer personalisé
+		// Activation of custom rent
 		if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT)) {
 			$this->fields['amount_rent_edit']['enabled'] = 1;
 		}
@@ -359,6 +358,7 @@ class Funding extends CommonObject
 		}
 
 		//Chagement du dictionnaire duration
+		$arrayofkeyval=array();
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
 		$sql.= ' WHERE c.active = 1';
@@ -385,6 +385,7 @@ class Funding extends CommonObject
 		}
 
 		//Chagement du dictionnaire scale
+		$arrayofkeyval=array();
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
 		$sql.= ' WHERE c.active = 1';
@@ -411,6 +412,7 @@ class Funding extends CommonObject
 		}
 
 		//Chagement du dictionnaire type
+		$arrayofkeyval=array();
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_type as c';
 		$sql.= ' WHERE c.active = 1';
@@ -438,7 +440,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére les commerciaux du tier
+	 * Fetch the third party salespeople
 	 *
 	 * @param  int      $socid          id thirdparty
 	 * @return                          $idcomm = ok or -1 = nok
@@ -463,7 +465,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére les info document
+	 * Fetch document information
 	 *
 	 * @param  int      $iddoc              id du document
 	 * @param  string   $typedoc            Type de document PROPAL ORDER
@@ -494,11 +496,11 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére le coef corespondant
+	 * Fetch the corresponding coefficient
 	 *
-	 * @param  real     $total          Total à fiancer
-	 * @param  real     $duration       La durée du fiancement
-	 * @param  real     $scale          Le béreme
+	 * @param  real     $total          Total to finance
+	 * @param  real     $duration       Duration of financing
+	 * @param  real     $scale          The rate
 	 * @param  int      $org            Organisme de financement
 	 * @return                          $coef = ok or -1 = nok
 	 */
@@ -526,7 +528,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére le taux retenue de grantie
+	 * Fetch the retention guarantee rate
 	 *
 	 * @param   int     $org            Organisme de financement
 	 * @return                          $rate = ok or -1 = nok
@@ -583,7 +585,7 @@ class Funding extends CommonObject
 			$this->origin_id = $iddoc;
 			$document = $this->infodoc($iddoc, $typedoc);
 			if (is_object($document)) {
-				// Récupére si une adresse facturation différente
+				// Fetch if a different billing address exists
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
 					$socinvoice         = $this->fetchSocinvoice($socpeopleinvoice[0]);
@@ -621,7 +623,7 @@ class Funding extends CommonObject
 					if ($idcomm > 0) {
 						$this->fk_user_comm = $idcomm;
 						$this->status = self::STATUS_DRAFT;
-						// Crétion financement sur commande passe directement en vilider
+						// Creating funding from an order passes directly to validated
 						if ($document->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT && $this->origin == 'order') {
 							$this->status = self::STATUS_VALIDATED;
 						}
@@ -633,8 +635,8 @@ class Funding extends CommonObject
 								$this->error = $this->db->lasterror();
 								$error++;
 							}
-							// Créate ref
-							// Probléme récupére pas les info du document avec le update a la suite
+							// Create ref
+							// Problem: does not retrieve document info with update afterwards
 							//$this->update($user, true); //No trigger
 							//$this->ref = "(PROV".$this->id.")";
 							$this->date_creation = $now;
@@ -662,6 +664,7 @@ class Funding extends CommonObject
 	 * @param   int     $fromid     Id of object to clone
 	 * @param   int     $origin     Id of object to clone
 	 * @param   int     $origin_id  Id of object to clone
+	 * @param   int     $notrigger  false=launch triggers after, true=disable triggers
 	 * @return  mixed               New object created, <0 if KO
 	 */
 	public function createFromClone(User $user, $fromid, $origin, $origin_id, $notrigger = 0)
@@ -954,7 +957,6 @@ class Funding extends CommonObject
 		if (!empty($row[0])) {
 			$idfinding = $row[0];
 			$result = $this->fetch($idfinding);
-
 		}
 
 		// End
@@ -971,7 +973,7 @@ class Funding extends CommonObject
 
 
 	/**
-	 * Récupére la durée
+	 * Fetch the duration
 	 *
 	 * @param   int   $duration       id de la du financement
 	 * @return $duration = ok or -1 = nok
@@ -993,7 +995,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére scale
+	 * Fetch the scale
 	 *
 	 * @param   ind     $scale       scale id de la retenu de garentie
 	 * @return                      $scale = ok or -1 = nok
@@ -1015,7 +1017,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére type funding
+	 * Fetch the funding type
 	 *
 	 * @param  int  $type           id type
 	 * @return                      $idsocinvoic = ok or -1 = nok
@@ -1037,7 +1039,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére soc invoice
+	 * Fetch the billing third party
 	 *
 	 * @param  int $socpeopleinvoice        id contact invoice
 	 * @return                              $idsocinvoic = ok or -1 = nok
@@ -1061,7 +1063,7 @@ class Funding extends CommonObject
 	}
 
 	/**
-	 * Récupére org
+	 * Fetch the organization
 	 *
 	 * @param   int     $soc            id contact invoice
 	 * @return                          $idsocinvoic = ok or -1 = nok
@@ -1108,7 +1110,7 @@ class Funding extends CommonObject
 			$document = $this->infodoc($iddoc, $typedoc);
 
 			if (is_object($document)) {
-				//Récupére si une adresse facturation différente
+				// Fetch if a different billing address exists
 				$socpeopleinvoice   = $document->getIdContact('external', 'BILLING');
 				if ($socpeopleinvoice) {
 					$socinvoice         = $this->fetchSocinvoice($socpeopleinvoice[0]);
@@ -1123,9 +1125,9 @@ class Funding extends CommonObject
 				$this->amount       = $document->total_ht;
 				$this->amount_total = empty($this->amount_maint) ? $document->total_ht : $document->total_ht + $this->amount_maint;
 				if ($this->retention == 1) {
-					// Mise à jour retenue garentie uniquement sur changement de prix.
-					// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
-					$newamounttotal = $this->amount_total + $this->retention_mount; // Ajout du montant de la retenue de garantie pour la conparaison si non toujour à true
+					// Update retention guarantee only on price change.
+					// To avoid altering the rent sent to the client after rate updates.
+					$newamounttotal = $this->amount_total + $this->retention_mount; // Add the retention guarantee amount for comparison if otherwise always true
 					if ((empty($this->retention_rate) || ($oldamounttotal != $newamounttotal)) || $action == 'updateforce') {
 						$this->retention_rate = $this->searchRetentionRate($this->fk_org);
 					}
@@ -1135,8 +1137,8 @@ class Funding extends CommonObject
 					$this->retention_rate = '';
 					$this->retention_mount = '';
 				}
-				// Mise à jour du coéf uniquement sur changement de prix.
-				// Pour ne pas changer le loyer envoyer au client suite à une maj des taux.
+				// Update the coefficient only on a price change.
+				// Do not change the rent sent to the client after rate updates.
 				if (!empty($this->coef) && ($oldamounttotal == $this->amount_total) && $action != 'updateforce') {
 					$coef = $this->coef;
 				} else {
@@ -1163,22 +1165,32 @@ class Funding extends CommonObject
 						$this->date_delivery = $document->date_livraison;
 					}
 
-					// Date de signature renseigné si commande livré
-					if ($document->status == 3) {
-						if (empty($this->date_signature)) {
-							$this->date_signature = $this->date_delivery;
+
+					// Note to self:
+					// Signature date filled when marked delivered
+					// On invoice, request the signature date and prefill it if it already exists
+					// JS to update the end date based on the signature date.
+
+					// Calculate from the delivery date
+					$this->date_end_calculated = '';
+					if (!empty($this->date_delivery) && $this->status >= self::STATUS_RUNNING) {
+						// Add the duration to the delivery date to calculate the end date
+						$duration = $this->fetchDuration($this->fk_duration);
+						if ($duration->code > 0) {
+							$this->date_end_calculated = date('Y-m-d', strtotime('+'.$duration->code.' month', strtotime(date('Y-m-d', $this->date_delivery))));
 						}
 					}
 
-					// Si date de signature calcul date de fin
-					if ($this->date_signature) {
-						//Ajoute la durée à la date de livraison pour avoir la date de fin
+					// Signature date filled if order is delivered and billed, and calculate end date from signature date
+					$this->date_end = '';
+					if ($document->billed == 1) {
+						$this->date_signature = !empty($this->date_signature) ? $this->date_signature : $this->date_delivery;
+
+						// Add the duration to the signature date to calculate the end date
 						$duration = $this->fetchDuration($this->fk_duration);
 						if ($duration->code > 0) {
 							$this->date_end = date('Y-m-d', strtotime('+'.$duration->code.' month', strtotime(date('Y-m-d', $this->date_signature))));
 						}
-					} else {
-						$this->date_end = '';
 					}
 					// Changement du status si le montant du document change et que le financement est accept
 					if ($this->status >= self::STATUS_ACCEPT && $this->amount <> $document->total_ht) {
@@ -1497,7 +1509,10 @@ class Funding extends CommonObject
 	 *
 	 *  @param  User    $user           Object user that modify
 	 *  @param  int     $status         value status
-	 *  @param  alpha   $retention      Accept them retention
+	 *  @param  string  $study_number   Study number
+	 *  @param  string  $folder_number  File number
+	 *  @param  string  $date_accepted  Date accepted
+	 *  @param  float   $retention      Retention amount
 	 *  @param  int     $notrigger      1=Does not execute triggers, 0=Execute triggers
 	 *  @return int                     <0 if KO, 0=Nothing done, >0 if OK
 	 */
@@ -1513,19 +1528,19 @@ class Funding extends CommonObject
 		if ($status == self::STATUS_DENIED) {
 			$triger = 'FUNDING_DENIED';
 		}
-		// Mise à jour du numéro d'étude à l'acceptation
+		// Update study number upon acceptance
 		if (!empty($study_number)) {
 			$this->setStudyNumber($user, $study_number);
 		}
-		// Mise à jour du numéro de dossier à l'acceptation
+		// Update file number upon acceptance
 		if (!empty($folder_number)) {
 			$this->setFolderNumber($user, $folder_number);
 		}
-		// Mise à jour date acceptation pour calculer date fin de validité offre
+		// Update acceptance date to calculate offer validity end date
 		if (!empty($date_accepted)) {
 			$this->setDateAccepted($user, $date_accepted);
 		}
-		// Mise à jour si retenu de garantie ajouté à l'acceptation
+		// Update if retention guarantee is added upon acceptance
 		if ($retention == 'on') {
 			$this->setStatusFolder($user, $this::STATUS_FOLDER_ACCEPT_RETENTION);
 		} else {
@@ -1556,12 +1571,15 @@ class Funding extends CommonObject
 				$triger = 'FUNDING_RUNNING';
 				return $this->setStatusCommon($user, $status, $notrigger, $triger);
 			} else {
-				if (empty($document->date_livraison) || empty($this->date_delivery)) {
+				if ($document->status == 0) {
+					setEventMessages($langs->trans('documentnotvalidated'), '', 'errors');
+				} elseif ($this->status >= self::STATUS_RUNNING) {
+					setEventMessages($langs->trans('statusfundingnok'), '', 'errors');
+				} elseif (empty($document->date_livraison) || empty($this->date_delivery)) {
+					setEventMessages('test', null, 'errors');
 					setEventMessages($langs->trans('fundingnotdatedelivry'), '', 'errors');
 				} elseif (empty($this->date_signature)) {
 					setEventMessages($langs->trans('fundingnotdatesign'), '', 'errors');
-				} elseif ($document->status == 0) {
-					setEventMessages($langs->trans('documentnotvalidated'), '', 'errors');
 				} else {
 					setEventMessages($langs->trans('CantBeValidated'), '', 'errors');
 				}
@@ -1655,7 +1673,7 @@ class Funding extends CommonObject
 	 * Update object into database
 	 *
 	 * @param  User     $user               User that modifies
-	 * @param  string   $study_number       Numéro d'etude
+	 * @param  string   $study_number       Study number
 	 * @param  bool     $notrigger          false=launch triggers after, true=disable triggers
 	 * @return int                          <0 if KO, >0 if OK
 	 */
@@ -1703,7 +1721,7 @@ class Funding extends CommonObject
 	 * Update object into database
 	 *
 	 * @param  User     $user               User that modifies
-	 * @param  string   $folder_number      Numéro de dossier
+	 * @param  string   $folder_number      File number
 	 * @param  bool     $notrigger          false=launch triggers after, true=disable triggers
 	 * @return int                          <0 if KO, >0 if OK
 	 */
@@ -1768,23 +1786,23 @@ class Funding extends CommonObject
 		// Si date d'acceptation calcul date de fin
 		if (!empty($date_accepted) && !empty($duration_value)) {
 			$time = strtotime(str_replace('/', '-', $date_accepted));
-			// Ajout des mois
+			// Add months
 			$date_endvalidity = dol_time_plus_duree($time, $duration_value, $duration_unit);
-			// Mise en forme dates
+			// Format dates
 			$date_accepted = date('Y-m-d', $time);
 			$date_endvalidity = date('Y-m-d', $date_endvalidity);
-		}elseif(empty($duration_value)){
+		} elseif (empty($duration_value)) {
 			$this->errors[] = $langs->trans("NoDurationValue");
 			$error++;
 		}
 
 		$this->db->begin();
-		// Enregistrement de la date acceptation
+			// Record acceptance date
 		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
 		$sql .= " SET date_accepted = ".($date_accepted != '' ? "'".$date_accepted."'" : 'null');
 		$sql .= " WHERE rowid = ".$this->id;
 
-		// Execution de la requettes
+			// Execute the query
 		$resql = $this->db->query($sql);
 
 		if (!$resql) {
@@ -1792,14 +1810,14 @@ class Funding extends CommonObject
 			$error++;
 		}
 
-		// Enregistrement date de fin de vlidité
+			// Record end validity date
 		$sql = "UPDATE ".MAIN_DB_PREFIX."funding_funding";
 		$sql .= " SET date_endvalidity = ".(!empty($date_endvalidity) ? "'".$date_endvalidity."'" : 'null');
 		$sql .= " WHERE rowid = ".$this->id;
 
-		dol_syslog(__METHOD__.' $this->id='.$this->id.', date_accepted ='.$date_accepted.', date_endvalidity ='.$date_endvalidity , LOG_DEBUG);
+		dol_syslog(__METHOD__.' $this->id='.$this->id.', date_accepted ='.$date_accepted.', date_endvalidity ='.$date_endvalidity, LOG_DEBUG);
 
-		// Execution de la requettes
+			// Execute the query
 		$resql = $this->db->query($sql);
 
 		if (!$resql) {
@@ -2043,7 +2061,7 @@ class Funding extends CommonObject
 			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('FundingStatusDisabledShort');
 		}
 
-		// BB2A Status Correspodanse avec les format d'affichage
+		//Status correspondence with display formats
 		$statusType = 'status'.$status;
 		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
 		if ($status == self::STATUS_CANCELED) {
@@ -2094,7 +2112,7 @@ class Funding extends CommonObject
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
 		}
 
-		// BB2A Status Correspodanse avec les format d'affichage
+		// Status correspondence with display formats
 		if (!empty($status)) {
 			$statusType = 'status'.$status;
 		}
@@ -2159,7 +2177,7 @@ class Funding extends CommonObject
 					$cluser->fetch($obj->fk_user_cloture);
 					$this->user_cloture = $cluser;
 				}
-				
+
 				$this->date_creation     = $this->db->jdate($obj->datec);
 				$this->date_modification = empty($obj->datem) ? '' : $this->db->jdate($obj->datem);
 				if (!empty($obj->datev)) {
@@ -2397,7 +2415,7 @@ class Funding extends CommonObject
 		$error = 0;
 		$this->msg = '';
 		$this->msgs[] = '';
-		// // Sécurity verif if fundoc is empty
+		// // Security verify if fundoc is empty
 		// if (!empty($this->$doc)) {
 		// 	return 0;
 		// }
@@ -2408,7 +2426,7 @@ class Funding extends CommonObject
 			$doc = 'fundoc'.$i;
 			$doccheck = $doc.'check';
 
-			// Sécurity verif if fundoc
+			// Security verify if fundoc
 			// if (!isset($this->$doc)) {
 			// 	$i++;
 			// 	continue;
@@ -2467,7 +2485,7 @@ class Funding extends CommonObject
 					dol_syslog(__METHOD__.' $this->id='.$this->id.' '.join(',', $this->errors), LOG_ERR);
 				}
 
-				// Vérifie si le fichier à bien ete créer pour inscription en db
+				// Verify if the file was correctly created for database registration
 				if (file_exists($upload_dir_dest.'/'.$fileoutputname)) {
 					if (isset($this->$doccheck)) {
 						$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$doc." = '".$fileoutputname."',".$doccheck." = NULL WHERE rowid = ".$this->id;
@@ -2519,9 +2537,9 @@ class Funding extends CommonObject
 		global $conf, $langs, $user, $db;
 
 		$_POST['addfile'] = '';
-		$doc = GETPOST('doc');  // Document envoyé
-		$file = GETPOST('file'); // Fichier à supprimer
-		$filecheck = GETPOST('filecheck'); // Si Fichier nécessaire est à vrais
+		$doc = GETPOST('doc');  // Document sent
+		$file = GETPOST('file'); // File to delete
+		$filecheck = GETPOST('filecheck'); // If required file is true
 		$fileoutputname = $fileupload;
 
 		// Si un fichier existe donc enregistrement
@@ -2551,9 +2569,9 @@ class Funding extends CommonObject
 				$pdf->setPrintFooter(false);
 			}
 
-			// Selecteur d'un seul fichier et le fichier est un PDF
+			// Single file selector and the file is a PDF
 			if (!is_countable($_FILES['userfile']['name'])) {
-				// Le fichier est un PDF
+				// The file is a PDF
 				if (strpos($_FILES['userfile']['type'], '/pdf') == true) {
 					$result = dol_move($upload_dir.'/'.$fileupload, $upload_dir.'/'.$fileoutputname);
 					if ($result == false) {
@@ -2569,19 +2587,19 @@ class Funding extends CommonObject
 						}
 					}
 				}
-				// Le fichier est une image
+				// The file is an image
 				if (strpos($_FILES['userfile']['type'], 'image/') === 0) {
 					$file = $upload_dir.'/'.dol_sanitizeFileName($fileupload);
-					// Extenssion lowercase
+					// Lowercase extension
 					$info = pathinfo($file);
 					$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
 
 					if (file_exists($file) && is_readable($file)) {
-						// Convertion de l'image en PDF
+						// Convert the image to PDF
 						$pdf->AddPage();
 						$pdf->Image($file, '', '', $page_largeur - $marge_gauche - $marge_droite);
 
-						// Création du fichier PDF
+						// Creation of the PDF file
 						$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
 						$pdf->Close();
 						// dol_delete_file($file); // Old version to delete
@@ -2595,10 +2613,10 @@ class Funding extends CommonObject
 					}
 				}
 			}
-			// Sélécteur de plusieur fichiers
+			// Selector for multiple files
 			if (is_countable($_FILES['userfile']['name'])) {
 				$nbfiles = count($_FILES['userfile']['name']);
-				// Si un seul fichier je fait la même chose qu'un selecteur simple
+				// If only one file, do the same as a simple selector
 				if ($nbfiles == 1) {
 					foreach ($fileupload as $file) {
 						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
@@ -2610,7 +2628,7 @@ class Funding extends CommonObject
 						finfo_close($finfo);
 
 						if (file_exists($file)) {
-							// Le fichier est un PDF
+							// The file is a PDF
 							if (strpos($mtype, '/pdf') == true) {
 								$result = dol_move($file, $upload_dir.'/'.$fileoutputname);
 								if ($result == false) {
@@ -2625,13 +2643,13 @@ class Funding extends CommonObject
 									}
 								}
 							}
-							// Le fichier est une image
+							// The file is an image
 							if (strpos($mtype, 'image/') === 0) {
 								if (file_exists($file) && is_readable($file)) {
-									// Convertion de l'image en PDF
+									// Convert the image to PDF
 									$pdf->AddPage();
 									$pdf->Image($file, '', '', $page_largeur - $marge_gauche - $marge_droite);
-									// Création du fichier PDF
+									// Creation of the PDF file
 									$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
 									$pdf->Close();
 									// dol_delete_file($file); // Old version to delete
@@ -2647,7 +2665,7 @@ class Funding extends CommonObject
 						}
 					}
 				} else {
-					// Si plusieur fichier on créer un PDF
+					// If multiple files, create a PDF
 					foreach ($fileupload as $file) {
 						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
 						// Extenssion lowercase
@@ -2656,7 +2674,7 @@ class Funding extends CommonObject
 						$finfo = finfo_open(FILEINFO_MIME_TYPE);
 						$mtype = finfo_file($finfo, $file);
 						finfo_close($finfo);
-						// Vérification si le fichier existe
+						// Verify if the file exists
 						if (file_exists($file) && is_readable($file)) {
 							// Si il y a une image on l'ajoute dans une page
 							if (strpos($mtype, '/pdf') == true) {
@@ -2677,16 +2695,16 @@ class Funding extends CommonObject
 							}
 						}
 					}
-					// Création du fichier PDF
+					// Create the PDF file
 					$pdf->Output($upload_dir.'/'.$fileoutputname, 'F');
 					$pdf->Close();
-					// Supprime les fichiers source
+					// Delete the source files
 					foreach ($fileupload as $file) {
 						$file = $upload_dir.'/'.dol_sanitizeFileName($file);
 						// Extenssion lowercase
 						$info = pathinfo($file);
 						$file = $upload_dir.'/'.dol_sanitizeFileName($info['filename'].($info['extension'] != '' ? ('.'.strtolower($info['extension'])) : ''));
-						// dol_delete_file($file); // Old vertion to delete file
+						// dol_delete_file($file); // Old version to delete file
 						dol_delete_preview($this);
 
 						if (!dol_delete_file($file, 0, 0, 0, $this)) {
@@ -2697,11 +2715,11 @@ class Funding extends CommonObject
 					}
 				}
 			}
-			// Supprime le dossier 'thumbs' creer par l'envoie d'images'
+			// Delete the 'thumbs' folder created by image upload
 			if (is_dir($upload_dir.'/thumbs')) {
 				dol_delete_dir_recursive($upload_dir.'/thumbs');
 			}
-			// Vérifie si le fichier à bien ete créer pour inscription en db
+			// Verify that the file was created successfully for database registration
 			if (file_exists($upload_dir.'/'.$fileoutputname)) {
 				$doccheck = $doc.'check';
 				if (isset($this->$doccheck)) {
@@ -2750,7 +2768,7 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__." $this->id=".$this->id.", ".$doc."=''", LOG_DEBUG);
 				setEventMessages($langs->trans('ErrorFileNotFound'), '', 'errors');
 			}
-			// Met la demande de documment à vrais
+			// Mark document request as required
 		} elseif (!empty($filecheck) && empty($cherchfile)) {
 			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element." SET ".$filecheck." = 1 WHERE rowid = ".$this->id;
 			$resql = $db->query($sql);
@@ -2766,7 +2784,7 @@ class Funding extends CommonObject
 				dol_syslog(__METHOD__." $this->id=".$this->id.", '".$doc."'=''", LOG_DEBUG);
 			}
 
-			// Met la demande de documment à faut
+			// Mark document request as not required
 		} elseif (empty($filecheck) && empty($cherchfile)) {
 			$doccheck = $doc.'check';
 			if (isset($this->$doccheck)) {
@@ -2812,8 +2830,8 @@ class Funding extends CommonObject
 		$output1 = '';
 		$output2 = '';
 		$subject = getDolGlobalString('MAIN_APPLICATION_TITLE'). ' - ' . $langs->transnoentitiesnoconv("OutputCronFundingEnd");
-		
-		
+
+
 
 		$sql = 'SELECT rowid, ref, date_end, fk_funding_type, status_folder, status';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as f';
@@ -2847,7 +2865,7 @@ class Funding extends CommonObject
 							$output1 .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
 							$output1 .= '<td>'.$oldstatus.'->'.$funding->getLibStatut(1).'</td>';
 							$output1 .= '</tr>';
-						}else{
+						} else {
 							$error++;
 							$errormsg .= 'Set status funding end failed for funding '.$obj->ref.' ('.$funding->id.')';
 						}
@@ -2865,9 +2883,9 @@ class Funding extends CommonObject
 								$output2 .= '<td>'.$oldstatusfolder.'<br/>'.$funding->getLibStatutFolder(1).'</td>';
 								$output2 .= '<td>'.$funding->getLibStatut(1).'</td>';
 								$output2 .= '</tr>';
-							}else{
-							$error++;
-							$errormsg .= 'Set status folder funding extension failed for funding '.$obj->ref.' ('.$funding->id.')';
+							} else {
+								$error++;
+								$errormsg .= 'Set status folder funding extension failed for funding '.$obj->ref.' ('.$funding->id.')';
 							}
 						}
 					}
@@ -2884,7 +2902,7 @@ class Funding extends CommonObject
 				$output = '<table>';
 				$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
 				$output .= '<td colspan="5" style="text-color: #000;">';
-				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_END.'">'.$subject.' '.$this->LibStatut(self::STATUS_END,1).'</a>';
+				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_status='.self::STATUS_END.'">'.$subject.' '.$this->LibStatut(self::STATUS_END, 1).'</a>';
 				$output .= '</td></tr>';
 				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
 				$output .= '<th>'.$langs->transnoentitiesnoconv("Ref").'</th>';
@@ -2899,7 +2917,7 @@ class Funding extends CommonObject
 				$output = '<table>';
 				$output .= '<tr style="border:1px solid black; text-color: black; text-align: center; font-weight: bold; background-color: #bed0ec87;">';
 				$output .= '<td colspan="5" style="text-color: #000;">';
-				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_statusfolder='.self::STATUS_FOLDER_EXTENSION.'">'.$subject.' '.$this->LibStatutFolder(self::STATUS_FOLDER_EXTENSION,1).'</a>';
+				$output .= '<a href="'.DOL_MAIN_URL_ROOT.'/custom/funding/funding_list.php?search_statusfolder='.self::STATUS_FOLDER_EXTENSION.'">'.$subject.' '.$this->LibStatutFolder(self::STATUS_FOLDER_EXTENSION, 1).'</a>';
 				$output .= '</td></tr>';
 				$output .= '<tr style="border:1px solid black; font-weight: bold; background-color: #bed0ec87;">';
 				$output .= '<th>'.$langs->transnoentitiesnoconv("Ref").'</th>';
@@ -2920,9 +2938,9 @@ class Funding extends CommonObject
 				$errormsg .= 'Send mail not found';
 			}
 		}
-		
+
 		dol_syslog(__METHOD__, LOG_DEBUG);
-		
+
 		$this->output = $output;
 		$this->error = $errormsg;
 
@@ -2931,7 +2949,6 @@ class Funding extends CommonObject
 		} else {
 			return 0;
 		}
-
 	}
 
 	/**
@@ -2989,35 +3006,35 @@ class Funding extends CommonObject
 				// $FundingSoonFinished = array();
 				// On rajoute 1 a num pour envoyer le dernier mail
 				while ($i <= $num+1) {
-					if ($i < $num+1){
-						// Récupération des infos
+					if ($i < $num+1) {
+						// Retrieving information
 						$obj = $this->db->fetch_object($resql);
 						$funding->fetch($obj->rowid);
 						$soc->fetch($obj->fk_soc);
 						$comm->fetch($obj->fk_user_comm);
 					}
-					if ($comm->id != $beforusersale && $i > 1){
+					if ($comm->id != $beforusersale && $i > 1) {
 						// On referme la liste
 						$output .= '</table>';
 						// On stock la liste total pour envoyer le rapport
 						$outputtotal .= '<h1 style="text-align: center;">'.$beforusersalename.'</h1>'.$output;
 						// Envoie du mail
-						if (!empty($beforusersalemail) && !empty($output)){
+						if (!empty($beforusersalemail) && !empty($output)) {
 							$output = $langs->transnoentitiesnoconv("FundingMessageMailIntroText", $beforusersalename) .'<br/><br/>' .$langs->transnoentitiesnoconv("FundingMessageMailMessageText").'<br/><br/>'. $output;
 							$result = $funding->sendMail('', $beforusersalemail, dol_string_nohtmltag($subject), $output);
 							if ($result <= 0) {
 								$error++;
 								$errormsg .= 'Send mail not found';
 							}
-							// On réinitialise pour envoyer le mail au commercial précédent
+							// Reset variables to send the mail to the previous salesperson
 							$beforusersale = 0;
 							$beforusersalename = "";
 							$beforusersalemail = "";
-							// On réinitialise la liste
+							// Reset the list
 							$output = $outputinit;
 						}
 					}
-					if (empty($obj)){
+					if (empty($obj)) {
 						break; // Should not happen
 					}
 					$output .= '<tr>';
@@ -3027,14 +3044,14 @@ class Funding extends CommonObject
 					$output .= '<td>'.$funding->getLibStatutFolder(1).'</td>';
 					$output .= '<td>'.$funding->getLibStatut(1).'</td>';
 					$output .= '</tr>';
-					// On stock les infos du commercial pour envoie du mail
+					// Store salesperson info to send the mail
 					$beforusersale = $comm->id;
 					$beforusersalename = $comm->firstname.' '.$comm->lastname;
 					$beforusersalemail = $comm->email;
 					$i++;
 				}
-				// Envoie du mail avec la totalité des financements bientôt finis
-				if (!empty($conf->global->FUNDING_MAIL_REPORT) && !empty($outputtotal)){
+				// Send mail with all fundings that will soon finish
+				if (!empty($conf->global->FUNDING_MAIL_REPORT) && !empty($outputtotal)) {
 					$subject = getDolGlobalString('MAIN_APPLICATION_TITLE'). ' - ' . $langs->transnoentitiesnoconv("OutputCronFundingsSoonFinishedAll");
 					$result = $funding->sendMail('', $conf->global->FUNDING_MAIL_REPORT, dol_string_nohtmltag($subject), $outputtotal);
 					if ($result <= 0) {
@@ -3042,8 +3059,7 @@ class Funding extends CommonObject
 						$errormsg .= 'Send mail not found';
 					}
 				}
-
-			}else{
+			} else {
 				$output = $langs->transnoentitiesnoconv("NotFundingSoonFinished");
 			}
 			$this->db->free($resql);
@@ -3052,7 +3068,7 @@ class Funding extends CommonObject
 		}
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
-		
+
 		$this->output = $outputtotal;
 		$this->error = $errormsg;
 
@@ -3068,9 +3084,10 @@ class Funding extends CommonObject
 	* @param   int          $sendto    	sender
 	* @param   int          $subject    subject
 	* @param   int          $message    message
+	* @param   int          $filename   filename
 	* @return  int	0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
 	*/
-	public function sendMail($from = '', $sendto = '', $subject = '', $message = '',  $filename = '')
+	public function sendMail($from = '', $sendto = '', $subject = '', $message = '', $filename = '')
 	{
 		global $conf, $langs;
 

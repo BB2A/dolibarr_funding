@@ -4,6 +4,7 @@
 - PHP min 7.4
 - Dolibarr min 18
 
+- NEW - 07/08/2026 - Mise à jour des droits d'auteur, amélioration des commentaires et ajout de la gestion de la date de fin calculée dans la classe Funding
 - NEW - 06/08/2026 - NEW - Mise à jour des droits d'auteur et amélioration des commentaires pour l'affichage dans les listes de Propos, Commandes et Factures action class
 - NEW - 06/08/2026 - Modification sructure SQL
 - NEW - 06/08/2026 - Ajout d'un fichier de règles pour le standard de codage Dolibarr dans ruleset.xml
