@@ -1,5 +1,6 @@
 <?php
-/* Copyright (C) 2021 BERTON Anthony <a.berton@gest-mag.com>
+/* Copyright (C) 2021-2026 Anthony Berton <anthony.berton@bb2a.fr>
+
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -254,7 +255,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result -1;
 						}
 					}
-				// Regarde si il existe un lien sur une proposition
+					// Regarde si il existe un lien sur une proposition
 				} elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
 					$sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = '".$object->id . "'and (c.targettype = 'commande' OR c.targettype = 'order')";
@@ -262,7 +263,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 
 					if ($resql) {
 						$obj = $db->fetch_object($resql);
-						
+
 						is_object($obj) ? $sourceid = $obj->fk_source : $sourceid="";
 					} else {
 						$errors = 'Error '.$this->db->lasterror();
@@ -316,7 +317,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						}
 						if ($result > 0) {
 							setEventMessages($langs->trans("clonfudpropal"), null);
-						}else{
+						} else {
 							$result = -1;
 						}
 					} else {
@@ -377,7 +378,6 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return 0;
 			case 'ORDER_CLOSE':
 				if (!empty($fudid) && $obj->status >= $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
-					
 					if (!empty($delivery_date)) {
 						// Date de signature renseigné si commande livré
 						if (empty($obj->date_signature)) {
@@ -385,9 +385,9 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						}
 						$result = $fundingobject->update($user);
 						if ($result <> -1) {
-							return $fundingobject->setRun($user);
+							return 0;
 						} else {
-							return $result;
+							return -1;
 						}
 					} else {
 						setEventMessages($langs->trans("fundingnotdatedelivry"), null, 'errors');
@@ -396,15 +396,6 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				} elseif (!empty($fudid) && $obj->status < $fundingobject::STATUS_ACCEPT  && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					setEventMessages($langs->trans("fundingnotaccepted"), null, 'errors');
 					return -1;
-				} elseif (!empty($fudid) && $object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT) {
-					$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
-					if ($result > 0) {
-						setEventMessages($langs->trans("fundingcancel"), null);
-						return $result;
-					} else {
-						setEventMessages($langs->trans("statusfundingnok"), null, 'errors');
-						return -1;
-					}
 				}
 				return 0;
 			case 'ORDER_DELETE':
