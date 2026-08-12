@@ -1072,17 +1072,6 @@ class FundingApi extends DolibarrApi
 		unset($object->rowid);
 		unset($object->canvas);
 
-		// If object has lines, remove $db property
-		if (isset($object->lines) && is_array($object->lines) && count($object->lines) > 0) {
-			$nboflines = count($object->lines);
-			for ($i = 0; $i < $nboflines; $i++) {
-				$this->_cleanObjectDatas($object->lines[$i]);
-
-				unset($object->lines[$i]->lines);
-				unset($object->lines[$i]->note);
-			}
-		}
-
 		return $object;
 	}
 }

@@ -12,7 +12,9 @@
 - NEW - 06/08/2026 - Ajout d'un fichier de règles pour le standard de codage Dolibarr dans ruleset.xml
 - NEW - 06/08/2026 - Amélioration de la logique d'affichage pour la création d'un nouvel objet Funding
 - NEW - 03/02/2026 - Ajout des API REST
-- NEW - 26/01/2026 - New view messaging 
+- NEW - 26/01/2026 - New view messaging
+
+- FIX - 12/08/2026 - Nettoyage du code pour les lignes de détail pas de ligne de détail
 
 ## [1.1.3] - 01/2025 Dolibarr 22
 - NEW - 22/12/2025 - Dans les param sélection de l'organisme par default
