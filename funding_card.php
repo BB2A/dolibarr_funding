@@ -719,141 +719,40 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
-	$param = ''; // FIX PHP8
-	$file = ''; // FIX PHP8
+	$param = '';
+	$file = '';
 	print '</table>';
 	print '<div class="div-table-responsive-no-min">';
-	// Documents client
-	// print '<table class="noborder tableforfield centpercent margintable">';
+	// Documents for funding
 	print '<table class="centpercent noborder">';
 	print '<tr class="liste_titre">';
 	print '<td colspan="2">'.$langs->trans("DocumentsForFunding").'</td>';
 	print '<td align="center">'.$langs->trans("Lack").'</td>';
 	print '<td></td>';
 	print '</tr>';
-	// Document 1
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('fundoc1', 'fundoc1', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->fundoc1)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="fundoc1">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat" name="userfile" id="fundoc1input"></td>';
-		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc1check" '.($object->fundoc1check ? 'value="fundoc1checkchecked" checked' : 'value="fundoc1check"').'></td>';
-		// if ($conf->use_javascript_ajax) {
-		// 	print '<td>'.ajax_object_onoff($object, 'fundoc1check', 'fundoc1check',$langs->trans('Help_documentRequired'),$langs->trans('Help_documentNotRequired')).'</td>';
-		// } else {
-		// 	if (empty($object->fundoc1check)) {
-		// 		print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check"></td>';
-		// 	} else {
-		// 		print '<td><input type="checkbox" class="flat" name="filecheck" id="fundoc1check" value="fundoc1check" checked></td>';
-		// 	}
-		// }
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->fundoc1;
-		($object->fundoc1)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc1.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->fundoc1 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc1&file='.$object->fundoc1.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
+
+	$i = 1;
+	while ($i <= 6) {
+		print '<tr class="">';
+		print '<td>'.$form->editfieldkey('fundoc'.$i, 'fundoc'.$i, '', $object, 0).'</td>';
+		if ($permissiontoadd && empty($object->{'fundoc'.$i})) {
+			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
+			print '<input type="hidden" name="token" value="'.newToken().'">';
+			print '<input type="hidden" name="action" value="savedoc">';
+			print '<input type="hidden" name="doc" value="fundoc'.$i.'">';
+			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc'.$i.'input"></td>';
+			print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc'.$i.'check" '.($object->{'fundoc'.$i.'check'} ? 'value="fundoc'.$i.'checkchecked" checked' : 'value="fundoc'.$i.'check"').'></td>';
+			print '<td align="center"><button  type="submit" class="butAction" name="sendit" value="'.$langs->trans("Save").'">'.img_picto($langs->trans("Save"), 'save', 'class=""').'</button></td>';
+			print '</form>';
+		} else {
+			$relativepath = $object->ref.'/'.$object->{'fundoc'.$i};
+			($object->{'fundoc'.$i})? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->{'fundoc'.$i}.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+			print '<td></td>';
+			($object->{'fundoc'.$i} && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc'.$i.'&file='.$object->{'fundoc'.$i}.'">'.img_picto($langs->trans("Delete"), 'delete', 'class=""').'</a></td>' : print '<td></td>';
+		}
+		print '</tr>';
+		$i++;
 	}
-	print '</tr>';
-	// Document 2
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('fundoc2', 'fundoc2', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->fundoc2)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="fundoc2">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="fundoc2input"></td>';
-		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc2check" '.($object->fundoc2check ? 'value="fundoc2checkchecked" checked' : 'value="fundoc2check"').'></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->fundoc2;
-		($object->fundoc2)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc2.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->fundoc2 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc2&file='.$object->fundoc2.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
-	}
-	print '</tr>';
-	// Document 3
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('fundoc3', 'fundoc3', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->fundoc3)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="fundoc3">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc3input"></td>';
-		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc3check" '.($object->fundoc3check ? 'value="fundoc3checkchecked" checked' : 'value="fundoc3check"').'></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->fundoc3;
-		($object->fundoc3)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc3.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->fundoc3 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc3&file='.$object->fundoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
-	}
-	print '</tr>';
-	// Document 4
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('fundoc4', 'fundoc4', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->fundoc4)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="fundoc4">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc4input"></td>';
-		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc4check" '.($object->fundoc4check ? 'value="fundoc4checkchecked" checked' : 'value="fundoc4check"').'></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->fundoc4;
-		($object->fundoc4)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc4.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->fundoc4 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc4&file='.$object->fundoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
-	}
-	print '</tr>';
-	// Document 5
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('fundoc5', 'fundoc5', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->fundoc5)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="fundoc5">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc5input"></td>';
-		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc5check" '.($object->fundoc5check ? 'value="fundoc5checkchecked" checked' : 'value="fundoc5check"').'></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->fundoc5;
-		($object->fundoc5)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc5.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->fundoc5 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc5&file='.$object->fundoc5.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
-	}
-	print '</tr>';
-	// Document 6
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('fundoc6', 'fundoc6', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->fundoc6)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="fundoc6">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="fundoc6input"></td>';
-		print '<td align="center"><input type="checkbox" '.((!$permissionmanage || $object->status > $object::STATUS_ACCEPT) ? 'disabled' : '').' class="flat" name="filecheck" id="fundoc6check" '.($object->fundoc6check ? 'value="fundoc6checkchecked" checked' : 'value="fundoc6check"').'></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->fundoc6;
-		($object->fundoc6)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->fundoc6.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->fundoc6 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=fundoc6&file='.$object->fundoc6.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>' : print '<td></td>';
-	}
-	print '</tr>';
 	print '</table">';
 
 	// Document du financement
@@ -866,123 +765,27 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '<td></td>';
 	print '</tr>';
 
-	// FundingFolderDoc 1
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('funfoldoc1', 'funfoldoc1', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->funfoldoc1)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="funfoldoc1">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc1input"></td>';
-		print '<td></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->funfoldoc1;
-		($object->funfoldoc1)?print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->funfoldoc1.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->funfoldoc1 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc1&file='.$object->funfoldoc1.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
-	}
-	print '</tr>';
-	// FundingFolderDoc 2
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('funfoldoc2', 'funfoldoc2', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->funfoldoc2)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="funfoldoc2">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="funfoldoc2input"></td>';
-		print '<td></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->funfoldoc2;
-		($object->funfoldoc2)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->funfoldoc2.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->funfoldoc2 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc2&file='.$object->funfoldoc2.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
-	}
-	print '</tr>';
-	// FundingFolderDoc 3
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('funfoldoc3', 'funfoldoc3', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->funfoldoc3)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="funfoldoc3">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc3input"></td>';
-		print '<td></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->funfoldoc3;
-		($object->funfoldoc3)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->funfoldoc3.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->funfoldoc3 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc3&file='.$object->funfoldoc3.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
-	}
-	print '</tr>';
-	// FundingFolderDoc 4
-	print '<tr class="">';
-	print '<td>'.$form->editfieldkey('funfoldoc4', 'funfoldoc4', '', $object, 0).'</td>';
-	if ($permissiontoadd && empty($object->funfoldoc4)) {
-		print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="savedoc">';
-		print '<input type="hidden" name="doc" value="funfoldoc4">';
-		print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc4input"></td>';
-		print '<td></td>';
-		print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-		print '</form>';
-	} else {
-		$relativepath = $object->ref.'/'.$object->funfoldoc4;
-		($object->funfoldoc4)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->funfoldoc4.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-		print '<td></td>';
-		($object->funfoldoc4 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc4&file='.$object->funfoldoc4.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
-	}
-		print '</tr>';
-		// FundingFolderDoc 5
-	if ($object->redemption == 1) {
+	$i = 1;
+	while ($i <= 6) {
 		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('funfoldoc5', 'funfoldoc5', '', $object, 0).'</td>';
-		if ($permissiontoadd && empty($object->funfoldoc5)) {
+		print '<td>'.$form->editfieldkey('funfoldoc'.$i, 'funfoldoc'.$i, '', $object, 0).'</td>';
+		if ($permissiontoadd && empty($object->{'funfoldoc'.$i})) {
 			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
 			print '<input type="hidden" name="action" value="savedoc">';
-			print '<input type="hidden" name="doc" value="funfoldoc5">';
-			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc5input"></td>';
+			print '<input type="hidden" name="doc" value="funfoldoc'.$i.'">';
+			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile[]" multiple id="funfoldoc'.$i.'input"></td>';
 			print '<td></td>';
-			print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
+			print '<td align="center"><button  type="submit" class="butAction"  name="sendit" value="'.$langs->trans("Save").'">'.img_picto($langs->trans("Save"), 'save', 'class=""').'</button></td>';
 			print '</form>';
 		} else {
-			$relativepath = $object->ref.'/'.$object->funfoldoc5;
-			($object->funfoldoc5)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->funfoldoc5.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
+			$relativepath = $object->ref.'/'.$object->{'funfoldoc'.$i};
+			($object->{'funfoldoc'.$i})? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->{'funfoldoc'.$i}.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
 			print '<td></td>';
-			($object->funfoldoc5 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc5&file='.$object->funfoldoc5.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
+			($object->{'funfoldoc'.$i} && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc'.$i.'&file='.$object->{'funfoldoc'.$i}.'">'.img_picto($langs->trans("Delete"), 'trash', 'class=""').'</a></td>':print'<td></td>';
 		}
 		print '</tr>';
-	}
-		// FundingFolderDoc 6
-	if ($object->redemption == 1) {
-		print '<tr class="">';
-		print '<td>'.$form->editfieldkey('funfoldoc6', 'funfoldoc6', '', $object, 0).'</td>';
-		if ($permissiontoadd && empty($object->funfoldoc6)) {
-			print '<form enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc.'" method="post" name="formdoc">';
-			print '<input type="hidden" name="token" value="'.newToken().'">';
-			print '<input type="hidden" name="action" value="savedoc">';
-			print '<input type="hidden" name="doc" value="funfoldoc6">';
-			print '<td><input type="file" accept=".pdf,.jpg,.png" class="flat"  name="userfile" id="funfoldoc6input"></td>';
-			print '<td></td>';
-			print '<td align="center"><button style="border:none; background:transparent;" type="submit" class="button" name="sendit" value="'.$langs->trans("Save").'">'.img_picto('', 'save', 'class="pictofixedwidth"').'</button></td>';
-			print '</form>';
-		} else {
-			$relativepath = $object->ref.'/'.$object->funfoldoc6;
-			($object->funfoldoc6)? print '<td><a href="'.$documenturl.'?modulepart='.$modulepart.'&amp;file='.urlencode($relativepath).(!empty($param) ? '&'.$param : '').'">'.$object->funfoldoc6.'</a>'.$formfile->showPreview($file, $modulepart, $relativepath, 0, $param):print'<td></td>';
-			print '<td></td>';
-			($object->funfoldoc6 && $permissiontoadd)? print '<td align="center"><a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&token='.newToken().'&typedoc='.$typedoc.'&iddoc='.$iddoc.'&action=deletefile&doc=funfoldoc6&file='.$object->funfoldoc6.'">'.img_picto($langs->trans("Delete"), 'delete').'</a></td>':print'<td></td>';
-		}
-		print '</tr>';
+		$i++;
 	}
 	print '</table>';
 	print '</div>';
@@ -997,61 +800,6 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '<div class="clearboth"></div>';
 
 	dol_fiche_end();
-
-	//Supprimer??
-	/*
-	 * Lines
-	 */
-	/*
-	if (!empty($object->table_element_line))
-	{
-		// Show object lines
-		$result = $object->getLinesArray();
-
-		print ' <form name="addproduct" id="addproduct" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.(($action != 'editline') ? '#addline' : '#line_'.GETPOST('lineid', 'int')).'" method="POST">
-		<input type="hidden" name="token" value="' . newToken().'">
-		<input type="hidden" name="action" value="' . (($action != 'editline') ? 'addline' : 'updateline').'">
-		<input type="hidden" name="mode" value="">
-		<input type="hidden" name="id" value="' . $object->id.'">
-		';
-
-		if (!empty($conf->use_javascript_ajax) && $object->status == 0) {
-			include DOL_DOCUMENT_ROOT.'/core/tpl/ajaxrow.tpl.php';
-		}
-
-		print '<div class="div-table-responsive-no-min">';
-		if (!empty($object->lines) || ($object->status == $object::STATUS_DRAFT && $permissiontoadd && $action != 'selectlines' && $action != 'editline'))
-		{
-			print '<table id="tablelines" class="noborder noshadow" width="100%">';
-		}
-
-		if (!empty($object->lines))
-		{
-			$object->printObjectLines($action, $mysoc, null, GETPOST('lineid', 'int'), 1);
-		}
-
-		// Form to add new line
-		if ($object->status == 0 && $permissiontoadd && $action != 'selectlines')
-		{
-			if ($action != 'editline')
-			{
-				// Add products/services form
-				$object->formAddObjectLine(1, $mysoc, $soc);
-
-				$parameters = array();
-				$reshook = $hookmanager->executeHooks('formAddObjectLine', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-			}
-		}
-
-		if (!empty($object->lines) || ($object->status == $object::STATUS_DRAFT && $permissiontoadd && $action != 'selectlines' && $action != 'editline'))
-		{
-			print '</table>';
-		}
-		print '</div>';
-
-		print "</form>\n";
-	}
-	*/
 
 	// Buttons for actions
 	if ($action != 'presend' && $action != 'editline') {
@@ -1146,29 +894,6 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	if (GETPOST('modelselected')) {
 		$action = 'presend';
 	}
-
-	// BB2A Fichiers joints
-	//Code isssue de funding_docuement.php
-	/*
-	include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
-
-	// Build file list
-	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
-	$totalsize = 0;
-	foreach ($filearray as $key => $file)
-	{
-		$totalsize += $file['size'];
-	}
-
-	$modulepart = 'funding';
-	$permission = $permissiontoadd;
-	$permtoedit = 0;
-	$param = '&id='.$object->id;
-	$relativepathwithnofile = dol_sanitizeFileName($object->ref).'/';
-	$savingdocmask ='';
-
-	include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
-	*/
 
 	// BB2A Affichage des evenements, Document, Objets liés
 

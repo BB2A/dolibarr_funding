@@ -14,6 +14,7 @@
 - NEW - 03/02/2026 - Ajout des API REST
 - NEW - 26/01/2026 - New view messaging
 
+- FIX - 12/08/206 - Optimisation du code sur la fiche financement pour l'affichage des fichiers
 - FIX - 12/08/2026 - Nettoyage du code pour les lignes de détail pas de ligne de détail
 
 ## [1.1.3] - 01/2025 Dolibarr 22
