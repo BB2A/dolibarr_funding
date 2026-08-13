@@ -335,27 +335,27 @@ class modFunding extends DolibarrModules
 		// Main menu entries to add
 		$this->menu = array();
 		$r = 0;
-		$this->menu[$r++]=array(
-			'fk_menu'=>'',                          // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'top',                          // This is a Top menu entry
-			'titre'=>'ModuleFundingName',
-			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-			'mainmenu'=>'funding',
-			'url'=>'/funding/fundingindex.php',
-			'langs'=>'funding@funding',         // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>50,
-			'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->funding->lists',                            // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,                              // 0=Menu for internal users, 1=external users, 2=both
-		);
+		// $this->menu[$r++]=array(
+		// 	'fk_menu'=>'',                          // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+		// 	'type'=>'top',                          // This is a Top menu entry
+		// 	'titre'=>'ModuleFundingName',
+		// 	'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
+		// 	'mainmenu'=>'funding',
+		// 	'url'=>'/funding/fundingindex.php',
+		// 	'langs'=>'funding@funding',         // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+		// 	'position'=>50,
+		// 	'enabled'=>'$conf->funding->enabled',  // Define condition to show or hide menu entry. Use '$conf->listes->enabled' if entry must be visible if module is enabled.
+		// 	'perms'=>'$user->rights->funding->lists',                            // Use 'perms'=>'$user->rights->listes->level1->level2' if you want your menu with a permission rules
+		// 	'target'=>'',
+		// 	'user'=>2,                              // 0=Menu for internal users, 1=external users, 2=both
+		// );
 		// Add here entries to declare new menus
 		$this->menu[$r++] = array(
-			'fk_menu'=>'fk_mainmenu=funding', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=bank', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Top menu entry
 			'titre'=>'ModuleFundingName',
 			'prefix' =>img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'funding',
 			'url'=>'/funding/fundingindex.php',
 			'langs'=>'funding@funding', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -367,11 +367,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=funding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFunding',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'ListFunding',
 			'url'=>'/funding/funding_list.php?search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -387,11 +387,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Draft',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=0&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -407,11 +407,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'New',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=1&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -427,11 +427,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingUpdate',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=2&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -447,11 +447,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingAccept',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=4&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -467,11 +467,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Denied',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=5&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -487,11 +487,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingRunning',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=6&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -507,11 +507,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingEnd',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=7&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -527,11 +527,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingExtension',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_extension=1&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -547,11 +547,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFunding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFunding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Canceled',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=8&search_origin=order',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -567,11 +567,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=funding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingPropal',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'ListFundingPropal',
 			'url'=>'/funding/funding_list.php?search_origin=propal',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -587,11 +587,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Draft',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=0&search_origin=propal',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -607,11 +607,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'New',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=1&search_origin=propal',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -627,11 +627,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingAccept',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=4&search_origin=propal',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -647,11 +647,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Denied',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=5&search_origin=propal',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -667,11 +667,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=ListFundingPropal',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=ListFundingPropal',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Canceled',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/funding_list.php?search_status=8&search_origin=propal',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -687,11 +687,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=funding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingCoef',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'/funding/coefficient_list.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
@@ -707,11 +707,11 @@ class modFunding extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=funding,fk_leftmenu=funding',
+			'fk_menu'=>'fk_mainmenu=bank,fk_leftmenu=funding',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'ListFundingRetention',
-			'mainmenu'=>'funding',
+			'mainmenu'=>'bank',
 			'leftmenu'=>'',
 			'url'=>'funding/retention_list.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.

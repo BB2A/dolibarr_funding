@@ -4,6 +4,7 @@
 - PHP min 7.4
 - Dolibarr min 18
 
+- NEW - 13/08/2026 - Mise à jour des entrées de menu pour le module de financement, changement de 'funding' à 'bank'.
 - NEW - 10/08/2026 - Ajout de la gestion du presse-papiers pour certain champs. La description et les notes sont toujours editable
 - NEW - 10/08/2026 - Mise à jour des droits d'auteur et simplification de la logique de gestion des statuts dans la classe InterfaceFundingTriggers
 - NEW - 07/08/2026 - Mise à jour des droits d'auteur, amélioration des commentaires et ajout de la gestion de la date de fin calculée dans la classe Funding
