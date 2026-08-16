@@ -107,3 +107,34 @@ jobs:
             --extensions=php \
             .
         continue-on-error: true
+
+  # ---------------------------------------------------------------------
+  # PHPStan static analysis (level 0)
+  # ---------------------------------------------------------------------
+  phpstan:
+    name: "PHPStan (level 0)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout module"
+        uses: actions/checkout@v5
+
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: phpstan:2
+          extensions: mbstring, intl, xml, json, calendar
+
+      - name: "Download Dolibarr core (sparse clone of htdocs)"
+        run: |
+          git clone --filter=blob:none --no-checkout --depth=1 https://github.com/Dolibarr/dolibarr.git dolibarr_core
+          cd dolibarr_core
+          git sparse-checkout init --cone
+          git sparse-checkout set htdocs
+          git checkout
+
+      - name: "Run PHPStan"
+        run: |
+          phpstan analyse --no-progress --memory-limit=2G --error-format=table
+        continue-on-error: true
