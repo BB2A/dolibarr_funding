@@ -145,5 +145,5 @@ jobs:
 
       - name: "Run PHPStan"
         run: |
-          phpstan analyse --no-progress --memory-limit=2G --error-format=table --baseline=phpstan-baseline.neon
+          phpstan analyse --no-progress --memory-limit=2G --error-format=table
         continue-on-error: true
