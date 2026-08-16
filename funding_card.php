@@ -237,6 +237,26 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
+	// Set public note (preserve HTML formatting)
+	if ($action == 'setnote_public' && $permissionnote && !GETPOST('cancel', 'alpha')) {
+		$notePublic = GETPOST('note_public', 'restricthtml');
+		$result = $object->update_note(dol_html_entity_decode($notePublic, ENT_QUOTES | ENT_HTML5, 'UTF-8', 1), '_public');
+		if ($result < 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	// Set private note (preserve HTML formatting)
+	if ($action == 'setnote_private' && $permissionnote && !GETPOST('cancel', 'alpha')) {
+		$notePrivate = GETPOST('note_private', 'restricthtml');
+		$result = $object->update_note(dol_html_entity_decode($notePrivate, ENT_QUOTES | ENT_HTML5, 'UTF-8', 1), '_private');
+		if ($result < 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+	}
+	// Set description (preserve HTML formatting)
+	if ($action == 'setdescription' && $permissiontoadd && !GETPOST('cancel', 'alpha')) {
+		$object->setValueFrom('description', GETPOST('description', 'restricthtml'), '', '', 'html', '', $user, $triggermodname);
+	}
 	if ($action == 'sendorg' && $permissiontoadd) {
 		$result = $object->setStatusFolder($user, $object::STATUS_FOLDER_SENDORG);
 		if ($result <= 0) {

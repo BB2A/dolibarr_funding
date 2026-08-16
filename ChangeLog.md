@@ -4,6 +4,7 @@
 - PHP min 7.4
 - Dolibarr min 18
 
+- FIX - 14/08/2026 - Correction de l'enregistrement des notes et de la description avec mise en page HTML sur la fiche financement (actions inline setnote_private/setnote_public/setdescription + rendu CKEditor)
 - NEW - 13/08/2026 - Mise à jour des entrées de menu pour le module de financement, changement de 'funding' à 'bank'.
 - NEW - 10/08/2026 - Ajout de la gestion du presse-papiers pour certain champs. La description et les notes sont toujours editable
 - NEW - 10/08/2026 - Mise à jour des droits d'auteur et simplification de la logique de gestion des statuts dans la classe InterfaceFundingTriggers

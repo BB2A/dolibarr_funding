@@ -303,6 +303,14 @@ class Funding extends CommonObject
 			$this->fields['amount_rent_edit']['visible'] = 1 & $this->fields['amount_rent']['visible'] = 1;
 		}
 
+		// Use 'ckeditor' type on card view so the inline editor (Form::editfieldval)
+		// renders the CKEditor when editing and keeps the HTML layout when displaying.
+		// The full edit form (action=edit) keeps the native 'html' type handled by showInputField.
+		if (GETPOST('action', 'alpha') != 'edit') {
+			$this->fields['note_public']['type'] = 'ckeditor:dolibarr_notes:100:200:note_public:1:8:90';
+			$this->fields['note_private']['type'] = 'ckeditor:dolibarr_notes:100:200:note_private:1:8:90';
+		}
+
 		// Unset fields that are disabled
 		foreach ($this->fields as $key => $val) {
 			if (isset($val['enabled']) && empty($val['enabled'])) {
