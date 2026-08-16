@@ -1,0 +1,109 @@
+name: "CI Dolibarr"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------
+  # PHP syntax check (php -l) on every PHP file of the module
+  # ---------------------------------------------------------------------
+  php-lint:
+    name: "PHP Lint (PHP ${{ matrix.php }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Module requires PHP 7.4 min (see core/modules/modFunding.class.php: $this->phpmin)
+        php: ['7.4', '8.1', '8.2', '8.3']
+    steps:
+      - name: "Checkout module"
+        uses: actions/checkout@v4
+
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          ini-values: error_reporting=E_ALL, display_errors=On
+
+      - name: "PHP syntax check"
+        run: |
+          set -e
+          status=0
+          while IFS= read -r f; do
+            if ! php -l "$f" >/dev/null 2>&1; then
+              php -l "$f"
+              status=1
+            fi
+          done < <(find . -type f -name "*.php" -not -path "./.git/*" -not -path "./dolibarr_core/*")
+          exit $status
+
+  # ---------------------------------------------------------------------
+  # PHP CodeSniffer with the Dolibarr coding standard (from core)
+  # ---------------------------------------------------------------------
+  phpcs:
+    name: "PHP CodeSniffer (Dolibarr)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout module"
+        uses: actions/checkout@v4
+
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: composer:v2
+
+      - name: "Install PHP CodeSniffer"
+        run: composer global require squizlabs/php_codesniffer --no-interaction --no-progress
+
+      - name: "Download Dolibarr coding standard (sparse clone)"
+        run: |
+          git clone --filter=blob:none --no-checkout --depth=1 https://github.com/Dolibarr/dolibarr.git dolibarr_core
+          cd dolibarr_core
+          git sparse-checkout init --cone
+          git sparse-checkout set dev/setup/codesniffer
+          git checkout
+
+      - name: "Run PHP CodeSniffer"
+        env:
+          PHPCS_STANDARD: dev/setup/codesniffer/ruleset.xml
+        run: |
+          CORE_PATH="$(pwd)/dolibarr_core/dev/setup/codesniffer"
+
+          # Patch the module ruleset: replace the local hardcoded installed_paths
+          # (a Windows dev path) with the path to the cloned Dolibarr sniffs, and
+          # rewrite the codesniffer.Dolibarr.* references (that expect an external
+          # "codesniffer" standard not shipped here) to the Dolibarr.* sniffs from
+          # the core, so the ruleset can be resolved in CI.
+          python3 - <<'PY'
+          import re, pathlib
+          p = pathlib.Path("dev/setup/codesniffer/ruleset.xml")
+          s = p.read_text(encoding="utf-8")
+          core = pathlib.Path("dolibarr_core/dev/setup/codesniffer").resolve()
+          s = re.sub(
+              r'<config name="installed_paths" value="[^"]*"\s*/>',
+              f'<config name="installed_paths" value="{core}"/>',
+              s,
+          )
+          s = s.replace("codesniffer.Dolibarr.", "Dolibarr.")
+          p.write_text(s, encoding="utf-8")
+          PY
+
+          phpcs --config-set installed_paths "${CORE_PATH}"
+          phpcs -i
+
+          phpcs \
+            --standard="${PHPCS_STANDARD}" \
+            --ignore='*/.git/*,*/dolibarr_core/*,*/dev/setup/codesniffer/*' \
+            --report=full \
+            --extensions=php \
+            .
+        continue-on-error: true
