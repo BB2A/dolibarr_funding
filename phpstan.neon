@@ -23,9 +23,7 @@ parameters:
     excludePaths:
         - dolibarr_core/*
 
-    # Baseline that freezes existing errors so only new regressions are
-    # reported. Regenerate with: phpstan analyse --generate-baseline.
-    baseline: phpstan-baseline.neon
-
     # Do not fail on unmatched ignored errors (baseline tolerance).
+    # The baseline file (phpstan-baseline.neon) is loaded via the CLI option
+    # --generate-baseline / --baseline, not as a parameter here.
     reportUnmatchedIgnoredErrors: false
