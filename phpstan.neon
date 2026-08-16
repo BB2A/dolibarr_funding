@@ -25,6 +25,7 @@ parameters:
 
     excludePaths:
         - dolibarr_core/*
+        - dev/build/phpstan/stubs/*
 
     # Stubs for Dolibarr API classes that are not always present in the
     # analysed core checkout (renamed/moved across Dolibarr versions).

@@ -29,11 +29,11 @@ namespace Luracast\Restler {
 namespace {
     if (!class_exists('DolibarrApi')) {
         /**
-         * @property DoliDB $db
+         * @property mixed $db
          */
         class DolibarrApi
         {
-            /** @var DoliDB */
+            /** @var mixed */
             public $db;
 
             /**
@@ -71,7 +71,7 @@ namespace {
     if (!class_exists('DolibarrApiAccess')) {
         class DolibarrApiAccess
         {
-            /** @var User */
+            /** @var mixed */
             public static $user;
         }
     }
