@@ -46,7 +46,7 @@ namespace {
          * @param object $object Object to clean
          * @return array<string,mixed>
          */
-        public function _cleanObjectDatas($object)
+        protected function _cleanObjectDatas($object)
         {
             return array();
         }
