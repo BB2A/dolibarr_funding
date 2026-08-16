@@ -53,3 +53,41 @@ if (!defined('NOHTTPSREDIRECT')) {
 if (!defined('MAIN_VERSION_DISABLE_DB_CHECK')) {
     define('MAIN_VERSION_DISABLE_DB_CHECK', '1');
 }
+
+/**
+ * Minimal SPL autoloader for the Dolibarr core classes used by this module.
+ * This allows PHPStan to resolve "extends CommonObject" and similar
+ * inheritance without a full Dolibarr autoloader/install.
+ */
+spl_autoload_register(function ($className) {
+    static $map = array(
+        'CommonObject' => 'core/class/commonobject.class.php',
+        'CommonDocGenerator' => 'core/class/commondocgenerator.class.php',
+        'DolibarrModules' => 'core/modules/DolibarrModules.class.php',
+        'DolibarrTriggers' => 'core/triggers/dolibarrtriggers.class.php',
+        'DolibarrApi' => 'core/class/dolibarrapi.class.php',
+        'Form' => 'core/class/html.form.class.php',
+        'FormFile' => 'core/class/html.formfile.class.php',
+        'FormCompany' => 'core/class/html.formcompany.class.php',
+        'FormProjet' => 'core/class/html.formprojet.class.php',
+        'FormActions' => 'core/class/html.formactions.class.php',
+        'ExtraFields' => 'core/class/extrafields.class.php',
+        'Notify' => 'core/class/notify.class.php',
+        'Translate' => 'core/class/translate.class.php',
+        'Conf' => 'core/class/conf.class.php',
+        'HookManager' => 'core/class/hookmanager.class.php',
+        'Societe' => 'societe/class/societe.class.php',
+        'Propal' => 'comm/propal/class/propal.class.php',
+        'Commande' => 'commande/class/commande.class.php',
+        'Facture' => 'compta/facture/class/facture.class.php',
+        'User' => 'user/class/user.class.php',
+        'Project' => 'projet/class/project.class.php',
+        'DoliDB' => 'core/db/database.class.php',
+    );
+    if (isset($map[$className])) {
+        $file = DOL_DOCUMENT_ROOT . '/' . $map[$className];
+        if (is_file($file)) {
+            include_once $file;
+        }
+    }
+});
