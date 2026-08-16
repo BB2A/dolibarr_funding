@@ -54,6 +54,18 @@ if (!defined('MAIN_VERSION_DISABLE_DB_CHECK')) {
     define('MAIN_VERSION_DISABLE_DB_CHECK', '1');
 }
 
+
+// Load the Dolibarr global helper functions so PHPStan can resolve calls to
+// isModEnabled(), getDolGlobalString(), GETPOST(), ... at analysis time.
+$_core_funcs = DOL_DOCUMENT_ROOT . '/core/lib/functions.lib.php';
+if (is_file($_core_funcs)) {
+    @include_once $_core_funcs;
+}
+$_core_funcs2 = DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
+if (is_file($_core_funcs2)) {
+    @include_once $_core_funcs2;
+}
+
 /**
  * Minimal SPL autoloader for the Dolibarr core classes used by this module.
  * This allows PHPStan to resolve "extends CommonObject" and similar
