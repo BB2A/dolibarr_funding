@@ -11,69 +11,61 @@
 // @codingStandardsIgnoreStart
 
 namespace Luracast\Restler {
-    if (!class_exists('Luracast\Restler\RestException')) {
-        class RestException extends \Exception
+    class RestException extends \Exception
+    {
+        /**
+         * @param int    $code    HTTP status code
+         * @param string $message Message
+         */
+        public function __construct($code, $message = '')
         {
-            /**
-             * @param int    $code    HTTP status code
-             * @param string $message Message
-             */
-            public function __construct($code, $message = '')
-            {
-                parent::__construct($message, $code);
-            }
+            parent::__construct($message, $code);
         }
     }
 }
 
 namespace {
-    if (!class_exists('DolibarrApi')) {
+    /** @property mixed $db */
+    class DolibarrApi
+    {
+        /** @var mixed */
+        public $db;
+
         /**
-         * @property mixed $db
+         * @param string $resource  Resource name
+         * @param int    $id        Object id
+         * @param string $resource2 Second resource
+         * @return bool
          */
-        class DolibarrApi
+        public static function _checkAccessToResource($resource, $id, $resource2 = '')
         {
-            /** @var mixed */
-            public $db;
+            return true;
+        }
 
-            /**
-             * @param string $resource  Resource name
-             * @param int    $id        Object id
-             * @param string $resource2 Second resource
-             * @return bool
-             */
-            public static function _checkAccessToResource($resource, $id, $resource2 = '')
-            {
-                return true;
-            }
+        /**
+         * @param object $object Object to clean
+         * @return array<string,mixed>
+         */
+        public function _cleanObjectDatas($object)
+        {
+            return array();
+        }
 
-            /**
-             * @param object $object Object to clean
-             * @return array
-             */
-            public function _cleanObjectDatas($object)
-            {
-                return array();
-            }
-
-            /**
-             * @param array  $object     Object data
-             * @param string $properties Properties to keep
-             * @return array
-             */
-            public function _filterObjectProperties($object, $properties)
-            {
-                return $object;
-            }
+        /**
+         * @param array<string,mixed> $object     Object data
+         * @param string              $properties Properties to keep
+         * @return array<string,mixed>
+         */
+        public function _filterObjectProperties($object, $properties)
+        {
+            return $object;
         }
     }
 
-    if (!class_exists('DolibarrApiAccess')) {
-        class DolibarrApiAccess
-        {
-            /** @var mixed */
-            public static $user;
-        }
+    class DolibarrApiAccess
+    {
+        /** @var mixed */
+        public static $user;
     }
 }
 
