@@ -21,7 +21,6 @@ parameters:
     excludePaths:
         - dolibarr_core/*
 
-    memoryLimit: 2G
 
     # Do not fail on unmatched ignored errors (baseline tolerance).
     reportUnmatchedIgnoredErrors: false
