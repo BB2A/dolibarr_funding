@@ -146,4 +146,3 @@ jobs:
       - name: "Run PHPStan"
         run: |
           phpstan analyse --no-progress --memory-limit=2G --error-format=table
-        continue-on-error: true
