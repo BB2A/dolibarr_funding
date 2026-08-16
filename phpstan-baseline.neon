@@ -1,0 +1,7 @@
+# PHPStan baseline. Generated with:
+#   phpstan analyse --generate-baseline
+#
+# This file freezes the existing errors so only new regressions are reported.
+# Re-generate it when you fix errors or change the analysed paths.
+parameters:
+    ignoreErrors: []

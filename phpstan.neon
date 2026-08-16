@@ -12,15 +12,20 @@ parameters:
         - core
         - fundingindex.php
 
-    # The Dolibarr core is provided by the CI (cloned into dolibarr_core/htdocs)
-    # so PHPStan can discover base classes (CommonObject, Form, User, ...) without
-    # executing main.inc.php (which would require a full Dolibarr install).
+    # Scan the Dolibarr core so PHPStan can discover the base classes
+    # (CommonObject, Form, User, ...) and the global helper functions.
+    scanFiles:
+        - dolibarr_core/htdocs/core/lib/functions.lib.php
+        - dolibarr_core/htdocs/core/lib/functions2.lib.php
     scanDirectories:
         - dolibarr_core/htdocs
 
     excludePaths:
         - dolibarr_core/*
 
+    # Baseline that freezes existing errors so only new regressions are
+    # reported. Regenerate with: phpstan analyse --generate-baseline.
+    baseline: phpstan-baseline.neon
 
     # Do not fail on unmatched ignored errors (baseline tolerance).
     reportUnmatchedIgnoredErrors: false

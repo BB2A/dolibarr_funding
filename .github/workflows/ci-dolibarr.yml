@@ -134,6 +134,15 @@ jobs:
           git sparse-checkout set htdocs
           git checkout
 
+      - name: "Generate baseline if missing"
+        run: |
+          # If the baseline has no frozen error yet (ignoreErrors is empty),
+          # generate it on the fly so the analysis only reports new errors.
+          if ! grep -Eq "ignoreErrors:[[:space:]]*\[[^]]" phpstan-baseline.neon; then
+            echo "Generating phpstan-baseline.neon (first run)..."
+            phpstan analyse --no-progress --memory-limit=2G --generate-baseline=phpstan-baseline.neon || true
+          fi
+
       - name: "Run PHPStan"
         run: |
           phpstan analyse --no-progress --memory-limit=2G --error-format=table
