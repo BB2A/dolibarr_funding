@@ -3,7 +3,8 @@ parameters:
 
     # Bootstrap that defines Dolibarr constants without loading main.inc.php
     # (the core is scanned, not executed).
-    bootstrap: dev/build/phpstan/bootstrap.php
+    bootstrapFiles:
+        - dev/build/phpstan/bootstrap.php
 
     # Only analyse the module files (not the cloned Dolibarr core).
     paths:
