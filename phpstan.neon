@@ -26,6 +26,11 @@ parameters:
     excludePaths:
         - dolibarr_core/*
 
+    # Stubs for Dolibarr API classes that are not always present in the
+    # analysed core checkout (renamed/moved across Dolibarr versions).
+    stubFiles:
+        - dev/build/phpstan/stubs/dolibarr_api.php
+
     # Do not fail on unmatched ignored errors (baseline tolerance).
     # The baseline file (phpstan-baseline.neon) is loaded via the CLI option
     # --generate-baseline / --baseline, not as a parameter here.
