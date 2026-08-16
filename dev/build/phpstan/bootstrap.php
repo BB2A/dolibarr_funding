@@ -55,6 +55,14 @@ if (!defined('MAIN_VERSION_DISABLE_DB_CHECK')) {
 }
 
 
+
+// Load the API stubs so FundingApi's parent class (DolibarrApi) and helpers
+// (DolibarrApiAccess, RestException) exist at analysis time.
+$_api_stub = __DIR__ . '/stubs/dolibarr_api.php';
+if (is_file($_api_stub)) {
+    @include_once $_api_stub;
+}
+
 // Load the Dolibarr global helper functions so PHPStan can resolve calls to
 // isModEnabled(), getDolGlobalString(), GETPOST(), ... at analysis time.
 $_core_funcs = DOL_DOCUMENT_ROOT . '/core/lib/functions.lib.php';
