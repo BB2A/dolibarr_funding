@@ -226,7 +226,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 				return 0;
 			case 'ORDER_VALIDATE':
 				$result = 0;
-				//Update si financement existe déja
+				// Update if funding already exists
 				if (!empty($fudid)) {
 					if ($object->mode_reglement_id != $conf->global->FUNDING_ID_REGLEMENT && $fundingobject->status != $fundingobject::STATUS_CANCELED) {
 						$result = $fundingobject->setStatusCommon($user, $fundingobject::STATUS_CANCELED, $notrigger, 'FUNDING_CANCEL');
@@ -255,7 +255,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result -1;
 						}
 					}
-					// Regarde si il existe un lien sur une proposition
+					// Check whether there is a link to a proposal
 				} elseif ($object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'element_element as c';
 					$sql.= " WHERE c.sourcetype = 'propal' and c.fk_target = '".$object->id . "'and (c.targettype = 'commande' OR c.targettype = 'order')";
@@ -271,7 +271,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 						setEventMessages('1'.$errors, null, 'errors');
 						$result = -1;
 					}
-					// Si existe un lien vérifie si un financement sur propo
+					// If a link exists, check whether funding exists for the proposal
 					if (!empty($sourceid)) {
 						$sql = "SELECT * FROM ".MAIN_DB_PREFIX.'funding_funding as f';
 						$sql.= " WHERE f.origin = 'propal' and f.origin_id = ".$sourceid;
@@ -288,7 +288,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 							$result = -1;
 						}
 					}
-					// Création du financement sur commande
+					// Create funding for the order
 					if (!empty($fudid)) {
 						dol_include_once('/funding/class/funding.class.php');
 						$fundingobject = new Funding($this->db);
@@ -336,7 +336,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			case 'ORDER_CLASSIFY_BILLED':
 				if (!empty($fudid) && $obj->status == $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					if (!empty($delivery_date)) {
-						// Date de signature renseigné si commande livré
+						// Set the signature date when the order is delivered
 						if (empty($obj->date_signature)) {
 							$obj->date_signature = $obj->date_delivery;
 						}
@@ -370,7 +370,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 					setEventMessages($langs->trans("orderreopennok"), null, 'errors');
 					return -1;
 				}
-				// Il n'est pas nécessaire de passer le financement en valider de plus si il est en cancel ou refusé il serat repassé en validé l'orsque la commande est validé et le montant différent
+				// No need to validate the funding; if canceled or refused, it will be validated again when the order is validated with a different amount
 				// elseif (!empty($fudid)) {
 				// 	$result =  $fundingobject->setStatusCommon($user, $fundingobject::STATUS_VALIDATED, $notrigger, 'FUNDING_VALIDATE');
 				// 	return $result;
@@ -379,7 +379,7 @@ class InterfaceFundingTriggers extends DolibarrTriggers
 			case 'ORDER_CLOSE':
 				if (!empty($fudid) && $obj->status >= $fundingobject::STATUS_ACCEPT && $object->mode_reglement_id == $conf->global->FUNDING_ID_REGLEMENT) {
 					if (!empty($delivery_date)) {
-						// Date de signature renseigné si commande livré
+						// Set the signature date when the order is delivered
 						if (empty($obj->date_signature)) {
 							$obj->date_signature = $obj->date_delivery;
 						}

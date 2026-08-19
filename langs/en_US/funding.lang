@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# Générique
+# General
 #
 
 # Module label 'ModuleFundingName'
@@ -25,7 +25,7 @@ ModuleFundingDesc=Gestion des financements client
 ModuleFundingDescLong=Création d'un financement pour les commandes. Intégration des financements dans les propositions. Rappel fin de financement.
 
 #
-# Page d'administration
+# Administration page
 #
 FundingSetup=Configuration du module Financement
 FundingSetupPage=Page de configuration du module Financement
@@ -34,7 +34,7 @@ FundingSetupPage=Page de configuration du module Financement
 Setup=Param
 
 #
-# Page À propos
+# About page
 #
 About=À propos
 FundingAbout=À propos de Financement
@@ -42,12 +42,12 @@ FundingAboutPage=Page à propos de Financement
 BB2ADesc = Intégrateur et Dévelopeur Dolibarr<br> <a href=http://www.bb2a.fr target="_blank">http://www.bb2a.fr</a> - <a href=mailto:contact@bb2a.fr>contact@bb2a.fr</a><br>Documentation dans le dossier doc du module ou sur notre site
 
 #
-# Page À changelog
+# Changelog page
 #
 FundingChangelog = Changelog de financement
 
 #
-# Page d'exemple
+# Example page
 #
 MyPageName=Nom de ma page
 
@@ -115,7 +115,7 @@ NoFunding=Pas de financement
 Lack=Pièces demandées
 
 #
-# Box d'exemple
+# Example box
 #
 FundindBoxValidate=Les derniers financements validé
 FundindBoxValidatePropal=Les dernières propositions financières validé
@@ -129,7 +129,7 @@ FundindBoxRunning=Les derniers financements actif
 FundindBoxEnd=Les derniers financements terminé
 
 #
-# Last in comm card
+# Last items in commercial cards
 #
 LastFunding=Les derniers financements
 AllFunding=Tout les financements

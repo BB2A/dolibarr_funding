@@ -77,7 +77,7 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		$substitutionarray['__FUNDING_STATUS__'] = isset($object->status) ? $object->getLibStatut() : '';
 		$substitutionarray['__FUNDING_STATUS_FOLDER__'] = !empty($object->status_folder) ? $object->getLibStatutFolder() : '';
 
-		//Organisme
+		// Funding organization
 		$org = $object->fetchSoc($object->fk_org);
 		$substitutionarray['__FUNDING_ORG_NAME__'] = isset($org->nom) ? $org->nom : '';
 		$substitutionarray['__FUNDING_ORG_ALIAS__'] = isset($org->name_alias) ? $org->name_alias : '';
@@ -89,7 +89,7 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		$substitutionarray['__FUNDING_ORG_IDPROF1__'] = isset($org->siren) ? $org->siren : '';
 		$substitutionarray['__FUNDING_ORG_IDPROF2__'] = isset($org->siret) ? $org->siret : '';
 
-		//Contact CUSTOMER propal
+		// CUSTOMER contact for proposal
 		if ($object->origin == 'propal')$doc = new Propal($db);
 		if ($object->origin == 'order')$doc = new Commande($db);
 		if (isset($doc)) {
@@ -105,7 +105,7 @@ function funding_completesubstitutionarray(&$substitutionarray, $langs, $object)
 		}
 
 
-		//Tiers de facturation
+		// Invoicing third party
 		$soc_invoice = $object->fetchSoc($object->fk_soc_invoice);
 		$substitutionarray['__FUNDING_SOC_INVOICE_NAME__'] = isset($soc_invoice->nom) ? $soc_invoice->nom : '';
 		$substitutionarray['__FUNDING_SOC_INVOICE_ALIAS__'] = isset($soc_invoice->name_alias) ? $soc_invoice->name_alias : '';

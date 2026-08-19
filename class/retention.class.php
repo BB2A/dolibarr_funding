@@ -170,7 +170,7 @@ class Retention extends CommonObject
 
 		$this->db = $db;
 
-		// Rétrocompatile
+		// Backward compatibility
 		if (DOL_VERSION < '17.0.0') {
 			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 		}

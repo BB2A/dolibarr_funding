@@ -98,7 +98,7 @@ class ActionsFunding
 		global $conf, $user, $langs;
 
 		$error = 0; // Error counter
-		// Affichage dans listes Propos, Commandes et Factures
+		// Display in proposals, orders and invoices lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {	    // do something only for the context 'somecontext1' or 'somecontext2'
 			$parameters['arrayfields']['funding.status'] = array('label'=>'Funding', 'checked'=>1, 'enabled'=>1, 'visible'=>-1, 'position'=>1000 );
 		}
@@ -314,15 +314,15 @@ class ActionsFunding
 			return 0;
 		}
 		if ($parameters['mode'] == 'remove') {
-			// utilisé si on veut faire disparaitre des onglets.
+			// Used to hide tabs.
 			return 0;
 		} elseif ($parameters['mode'] == 'add') {
 			$langs->load('funding@funding');
-			// utilisé si on veut ajouter des onglets.
+			// Used to add tabs.
 			$counter = count($parameters['head']);
 			$element = $parameters['object']->element;
 			$id = $parameters['object']->id;
-			// verifier le type d'onglet comme member_stats où ça ne doit pas apparaitre
+			// Check the tab type, such as member_stats where it must not appear.
 			// if (in_array($element, ['societe', 'member', 'contrat', 'fichinter', 'project', 'propal', 'commande', 'facture', 'order_supplier', 'invoice_supplier'])) {
 			if (in_array($element, ['context1', 'context2'])) {
 				$datacount = 0;
@@ -340,7 +340,7 @@ class ActionsFunding
 				// return 1 to replace standard code
 				return 1;
 			} else {
-				// en V14 et + $parameters['head'] est modifiable par référence
+				// In V14 and later, $parameters['head'] can be modified by reference.
 				return 0;
 			}
 		}
@@ -431,7 +431,7 @@ class ActionsFunding
 				$sql = 'SELECT rowid, ref, amount_total, amount_rent, fk_duration, date_end, origin, status';
 				$sql .= " FROM ".MAIN_DB_PREFIX."funding_funding as f";
 				$sql .= " WHERE f.fk_soc = ".((int) $object->id);
-				// Paramettre de ne pas afficher les propositions financiéres
+				// Setting to hide financial proposals
 				if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL_SHORTLIST)) {
 					$sql.= " AND origin <> 'propal'";
 				}
@@ -594,7 +594,7 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db;
 		$sql = '';
-		// Affichage dans listes Propos, Commandes et Factures
+		// Display in proposals, orders and invoices lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {
 			$sql .= ',funding.rowid as fundrowid, funding.ref as fundref, funding.status as fundstatus';
 		}
@@ -615,7 +615,7 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db;
 		$sql = '';
-		// Affichage dans listes Propos et Commandes
+		// Display in proposals and orders lists
 		if (in_array($parameters['currentcontext'], array('propallist'))) {
 			$sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'funding_funding as funding ON (p.rowid = funding.origin_id and funding.origin="propal")';
 		}
@@ -642,7 +642,7 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db;
 		$sql = '';
-		// Affichage dans listes Propos et Commandes
+		// Display in proposals and orders lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist'))) {
 		}
 		$this->resprints = $sql;
@@ -663,7 +663,7 @@ class ActionsFunding
 		global $langs, $conf, $db;
 		$param = '';
 		$search_funding_status = '';
-		// Affichage dans listes Propos et Commandes
+		// Display in proposals and orders lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($search_funding_status)) {
 			$parameters['param'] .= '&search_funding_status='.urlencode($search_funding_status);
 		}
@@ -703,7 +703,7 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db;
 		$moreforfilter = '';
-		// Affichage dans listes Propos et Commandes
+		// Display in proposals and orders lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
 			$moreforfilter .= '<td class="liste_titre">';
 			$moreforfilter .= '</td>';
@@ -726,7 +726,7 @@ class ActionsFunding
 	{
 		global $langs, $conf, $db;
 		$result = '';
-		// Affichage dans listes Propos et Commandes
+		// Display in proposals and orders lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
 			$result = print_liste_field_titre('Funding', $_SERVER['PHP_SELF'], '', '', $parameters['param'], 'class="center"', $parameters['sortfield'], $parameters['sortorder']);
 			$parameters['totalarray']['nbfield']++;
@@ -750,7 +750,7 @@ class ActionsFunding
 		global $langs, $conf, $db, $object;
 		$result = '';
 		$value = img_picto('uncheck', 'uncheck');
-		// Affichage dans listes Propos et Commandes
+		// Display in proposals and orders lists
 		if (in_array($parameters['currentcontext'], array('propallist', 'orderlist', 'invoicelist')) && !empty($parameters['arrayfields']['funding.status']['checked'])) {
 			dol_include_once('/funding/class/funding.class.php');
 			$funding = new funding($db);

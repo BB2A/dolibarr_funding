@@ -100,7 +100,8 @@ print load_fiche_titre($langs->trans("Funding"), '', 'fa-piggy-bank');
 
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
-// print getCustomerFundingPieChart($socid); //Affichage du graph
+// Display the chart
+// print getCustomerFundingPieChart($socid);
 print '<br>';
 
 
@@ -116,7 +117,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 	/*if (empty($user->rights->societe->client->voir)) {
 		$sql .= " AND f.fk_user_comm = ". $user->id;
 	}*/
-	// Filtre l'autorisation de voir certain financement - BB2A
+	// Filter authorization to view specific funding records - BB2A
 	if (empty($user->rights->societe->client->voir) && empty($socid)) {
 		$sql.= " AND (f.fk_user_comm = ".$user->id." OR f.fk_user_creat = ".$user->id." OR f.fk_user_modif = ".$user->id.")";
 	}
@@ -177,7 +178,8 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
 
-// print getCustomerFundingPieChart2($socid);  //Affichage du graph
+// Display the chart
+// print getCustomerFundingPieChart2($socid);
 print '<br>';
 
 	// Tableau bis
@@ -189,7 +191,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql.= " WHERE f.status = 1";
 	$sql.= " AND f.origin = 'propal'";
 	$sql.= " AND f.fk_soc = s.rowid";
-	// Filtre l'autorisation de voir certain financement - BB2A
+	// Filter authorization to view specific funding records - BB2A
 	if (empty($user->rights->societe->client->voir) && empty($socid)) {
 		$sql.= " AND (f.fk_user_comm = ".$user->id." OR f.fk_user_creat = ".$user->id." OR f.fk_user_modif = ".$user->id.")";
 	}
@@ -252,7 +254,7 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 
 print '<br>';
 
-// Financement mise à jour
+// Updated funding
 if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql = "SELECT f.rowid, f.ref, f.status, f.amount_rent, f.amount_total, f.amount_rent_edit, f.fk_duration, f.fk_soc, f.fk_user_comm, f.fk_user_creat, f.fk_user_modif";
 	$sql .= ", s.rowid as socid, s.nom as name, s.name_alias as name_alias, s.client, s.canvas, s.code_client, s.email, s.entity, s.code_compta";
@@ -261,7 +263,7 @@ if (!empty($conf->funding->enabled) && $permissiontoread) {
 	$sql.= " WHERE f.status = 1";
 	$sql.= " AND f.origin = 'order'";
 	$sql.= " AND f.fk_soc = s.rowid";
-	// Filtre l'autorisation de voir certain financement - BB2A
+	// Filter authorization to view specific funding records - BB2A
 	if (empty($user->rights->societe->client->voir) && empty($socid)) {
 		$sql.= " AND (f.fk_user_comm = ".$user->id." OR f.fk_user_creat = ".$user->id." OR f.fk_user_modif = ".$user->id.")";
 	}
@@ -332,7 +334,7 @@ if (! empty($conf->funding->enabled) && $permissiontoread) {
 	$sql.= " WHERE f.status = 1";
 	$sql.= " AND f.origin = 'propal'";
 	$sql.= " AND f.fk_soc = s.rowid";
-	// Filtre l'autorisation de voir certain financement - BB2A
+	// Filter authorization to view specific funding records - BB2A
 	if (empty($user->rights->societe->client->voir) && empty($socid)) {
 		$sql.= " AND (f.fk_user_comm = ".$user->id." OR f.fk_user_creat = ".$user->id." OR f.fk_user_modif = ".$user->id.")";
 	}

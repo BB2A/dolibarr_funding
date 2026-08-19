@@ -181,7 +181,7 @@ class Coefficient extends CommonObject
 		// Force display to 3 decimals
 		$conf->global->MAIN_MAX_DECIMALS_SHOWN = 3;
 
-		// Rétrocompatile
+		// Backward compatibility
 		if (DOL_VERSION < '17.0.0') {
 			$this->fields['fk_org']['type'] = 'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)';
 		}
@@ -246,7 +246,7 @@ class Coefficient extends CommonObject
 		}
 
 
-		//Chagement du dictionnaire scale
+		// Load the scale dictionary
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
 		$sql.= ' WHERE c.active = 1';
@@ -285,7 +285,7 @@ class Coefficient extends CommonObject
 		$now = dol_now();
 		$result = $this->createCommon($user, $notrigger);
 		if ($result >= 0) {
-			// Créate ref
+			// Create reference
 			// $this->ref = "(PROV".$this->id.")";
 			// $sql = 'UPDATE '.MAIN_DB_PREFIX.$this->table_element." SET ref='".$this->db->escape($this->ref)."' WHERE rowid=".((int) $this->id);
 			// $resql = $this->db->query($sql);
