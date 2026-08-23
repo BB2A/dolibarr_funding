@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
- * Copyright (C) 2020-2025	Anthony Berton 			<anthony.berton@bb2a.fr>
+ * Copyright (C) 2020-2026	Anthony Berton 			<anthony.berton@bb2a.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,24 +22,42 @@
  *		\brief      Page to create/edit/view funding
  */
 
-//if (! defined('NOREQUIREDB'))              define('NOREQUIREDB','1');					// Do not create database handler $db
-//if (! defined('NOREQUIREUSER'))            define('NOREQUIREUSER','1');				// Do not load object $user
-//if (! defined('NOREQUIRESOC'))             define('NOREQUIRESOC','1');				// Do not load object $mysoc
-//if (! defined('NOREQUIRETRAN'))            define('NOREQUIRETRAN','1');				// Do not load object $langs
-//if (! defined('NOSCANGETFORINJECTION'))    define('NOSCANGETFORINJECTION','1');		// Do not check injection attack on GET parameters
-//if (! defined('NOSCANPOSTFORINJECTION'))   define('NOSCANPOSTFORINJECTION','1');		// Do not check injection attack on POST parameters
-//if (! defined('NOCSRFCHECK'))              define('NOCSRFCHECK','1');					// Do not check CSRF attack (test on referer + on token if option MAIN_SECURITY_CSRF_WITH_TOKEN is on).
-//if (! defined('NOTOKENRENEWAL'))           define('NOTOKENRENEWAL','1');				// Do not roll the Anti CSRF token (used if MAIN_SECURITY_CSRF_WITH_TOKEN is on)
-//if (! defined('NOSTYLECHECK'))             define('NOSTYLECHECK','1');				// Do not check style html tag into posted data
-//if (! defined('NOREQUIREMENU'))            define('NOREQUIREMENU','1');				// If there is no need to load and show top and left menu
-//if (! defined('NOREQUIREHTML'))            define('NOREQUIREHTML','1');				// If we don't need to load the html.form.class.php
-//if (! defined('NOREQUIREAJAX'))            define('NOREQUIREAJAX','1');       	  	// Do not load ajax.lib.php library
-//if (! defined("NOLOGIN"))                  define("NOLOGIN",'1');						// If this page is public (can be called outside logged session). This include the NOIPCHECK too.
-//if (! defined('NOIPCHECK'))                define('NOIPCHECK','1');					// Do not check IP defined into conf $dolibarr_main_restrict_ip
-//if (! defined("MAIN_LANG_DEFAULT"))        define('MAIN_LANG_DEFAULT','auto');					// Force lang to a particular value
-//if (! defined("MAIN_AUTHENTICATION_MODE")) define('MAIN_AUTHENTICATION_MODE','aloginmodule');		// Force authentication handler
-//if (! defined("NOREDIRECTBYMAINTOLOGIN"))  define('NOREDIRECTBYMAINTOLOGIN',1);		// The main.inc.php does not make a redirect if not logged, instead show simple error message
-//if (! defined("FORCECSP"))                 define('FORCECSP','none');					// Disable all Content Security Policies
+// Do not create database handler $db
+//if (! defined('NOREQUIREDB'))              define('NOREQUIREDB','1');
+// Do not load object $user
+//if (! defined('NOREQUIREUSER'))            define('NOREQUIREUSER','1');
+// Do not load object $mysoc
+//if (! defined('NOREQUIRESOC'))             define('NOREQUIRESOC','1');
+// Do not load object $langs
+//if (! defined('NOREQUIRETRAN'))            define('NOREQUIRETRAN','1');
+// Do not check injection attack on GET parameters
+//if (! defined('NOSCANGETFORINJECTION'))    define('NOSCANGETFORINJECTION','1');
+// Do not check injection attack on POST parameters
+//if (! defined('NOSCANPOSTFORINJECTION'))   define('NOSCANPOSTFORINJECTION','1');
+// Do not check CSRF attack (test on referer + on token if option MAIN_SECURITY_CSRF_WITH_TOKEN is on).
+//if (! defined('NOCSRFCHECK'))              define('NOCSRFCHECK','1');
+// Do not roll the Anti CSRF token (used if MAIN_SECURITY_CSRF_WITH_TOKEN is on)
+//if (! defined('NOTOKENRENEWAL'))           define('NOTOKENRENEWAL','1');
+// Do not check style html tag into posted data
+// if (! defined('NOSTYLECHECK'))             define('NOSTYLECHECK','1');
+// If there is no need to load and show top and left menu
+//if (! defined('NOREQUIREMENU'))            define('NOREQUIREMENU','1');
+// If we don't need to load the html.form.class.php
+//if (! defined('NOREQUIREHTML'))            define('NOREQUIREHTML','1');
+// Do not load ajax.lib.php library
+//if (! defined('NOREQUIREAJAX'))            define('NOREQUIREAJAX','1');
+// If this page is public (can be called outside logged session). This include the NOIPCHECK too.
+//if (! defined("NOLOGIN"))                  define("NOLOGIN",'1');
+// Do not check IP defined into conf $dolibarr_main_restrict_ip
+//if (! defined('NOIPCHECK'))                define('NOIPCHECK','1');
+// Force lang to a particular value
+//if (! defined("MAIN_LANG_DEFAULT"))        define('MAIN_LANG_DEFAULT','auto');
+// Force authentication handler
+//if (! defined("MAIN_AUTHENTICATION_MODE")) define('MAIN_AUTHENTICATION_MODE','aloginmodule');
+// The main.inc.php does not make a redirect if not logged, instead show simple error message
+//if (! defined("NOREDIRECTBYMAINTOLOGIN"))  define('NOREDIRECTBYMAINTOLOGIN',1);
+// Disable all Content Security Policies
+//if (! defined("FORCECSP"))                 define('FORCECSP','none');
 
 
 // Load Dolibarr environment
@@ -61,7 +79,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 
-// BB2A Fichiers joints //Code isssue de funding_docuement.php
+// Code copied from funding_document.php
+// Attached files
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
@@ -84,7 +103,8 @@ $ref                    = GETPOST('ref', 'alpha');
 $action                 = GETPOST('action', 'aZ09');
 $confirm                = GETPOST('confirm', 'alpha');
 $cancel                 = GETPOST('cancel', 'aZ09');
-$contextpage            = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard'; // To manage different context of search
+// To manage different context of search
+$contextpage            = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'fundingcard';
 $backtopage             = GETPOST('backtopage', 'alpha');
 $backtopageforcancel    = GETPOST('backtopageforcancel', 'alpha');
 $backtopagelist         = GETPOST('backtopagelist', 'alpha');
@@ -99,7 +119,8 @@ $crea                   = GETPOST('crea', 'int');
 $object = new Funding($db);
 $extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->funding->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('fundingcard', 'globalcard')); // Note that conf->hooks_modules contains array
+// Note that conf->hooks_modules contains array
+$hookmanager->initHooks(array('fundingcard', 'globalcard'));
 $notrigger = 0;
 
 // Fetch optionals attributes and labels
@@ -115,7 +136,7 @@ foreach ($object->fields as $key => $val) {
 	}
 }
 
- //BB2A Affichage de la fiche dans la proposition ou la commande
+ // Display the card in the proposal or order
 if ($typedoc && $iddoc && empty($crea)) {
 	$sql = 'SELECT t.rowid, t.origin, t.origin_id';
 	$sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
@@ -124,7 +145,7 @@ if ($typedoc && $iddoc && empty($crea)) {
 	} else {
 		$sql .= " WHERE 1 = 1";
 	}
-	//BB2A_Filtre document origin
+	// Filter document origin
 	$sql.= " AND t.origin = '".$typedoc."' AND t.origin_id = ".$iddoc;
 	$resql = $db->query($sql);
 	if ($resql) {
@@ -143,10 +164,11 @@ if ($typedoc && $iddoc && empty($crea)) {
 if (empty($action) && empty($id) && empty($ref)) {
 	$action = 'view';
 }
+
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
-// Fetch organisme Erreur???
+// Fetch organization (error?)
 if (!empty($object->fk_org)) {
 	$org = $object->fetchSoc($object->fk_org);
 }
@@ -154,12 +176,17 @@ if (!empty($object->fk_soc_invoice)) {
 	$soc_invoice =  $object->fetchSoc($object->fk_soc_invoice);
 }
 
-$permissiontoread = $user->rights->funding->read;
-$permissiontoadd = $user->rights->funding->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->funding->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->funding->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->funding->write; // Used by the include of actions_dellink.inc.php
-$permissionmanage = $user->rights->funding->manage; //User by the function send_mail_org
+$permissiontoread = $user->hasRight('funding', 'read');
+// Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontoadd = $user->hasRight('funding', 'write');
+$permissiontodelete = $user->hasRight('funding', 'delete') || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+// Used by the include of actions_dellink.inc.php
+$permissiondellink = $user->hasRight('funding', 'write');
+// Used by the function send_mail_org
+$permissionmanage = $user->hasRight('funding', 'manage');
+// Used by the include of actions_setnotes.inc.php
+$permissionnote = $user->hasRight('funding', 'write');
+
 $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 // Security check - Protection if external user
@@ -181,13 +208,27 @@ if (!$permissiontoread) accessforbidden();
  */
 
 $parameters = array();
-$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
+// Note that $action and $object may have been modified by some hooks
+$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action);
 if ($reshook < 0) {
 	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 }
 
 if (empty($reshook)) {
 	$error = 0;
+
+	// Preserve the HTML generated by CKEditor for private notes.
+	if ($action == 'setnote_private' && !empty($permissionnote) && !GETPOST('cancel', 'alpha') && empty($user->socid)) {
+		$notePrivate = isset($_POST['note_private']) ? (string) $_POST['note_private'] : '';
+		$result = $object->update_note(dol_html_entity_decode($notePrivate, ENT_QUOTES | ENT_HTML5, 'UTF-8', 1), '_private');
+		if ($result < 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+		$action = '';
+	}
+
+	// Must be include, not include_once
+	include DOL_DOCUMENT_ROOT.'/core/actions_setnotes.inc.php';
 
 	if ($action == 'confirm_delete' && !empty($iddoc)) {
 		$backurlforlist = dol_buildpath('/funding/funding_card.php', 1).'?id=&typedoc='.$typedoc.'&iddoc='.$iddoc;
@@ -214,23 +255,24 @@ if (empty($reshook)) {
 		}
 	}
 
-	$triggermodname = 'FUNDING_MODIFY'; // Name of trigger action code to execute when we modify record
+	// Name of trigger action code to execute when we modify record
+	$triggermodname = 'FUNDING_MODIFY';
 
-	// Positionne study number
+	// Set study number
 	if ($action == 'setstudy_number' && $permissiontoadd) {
 		$result = $object->setStudyNumber($user, GETPOST('study_number'));
 		if ($result < 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-	// Positionne folder number
+	// Set folder number
 	if ($action == 'setfolder_number' && $permissiontoadd) {
 		$result = $object->setFolderNumber($user, GETPOST('folder_number'));
 		if ($result < 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-	// Positionne date accepted
+	// Set acceptance date
 	if ($action == 'setdate_accepted' && $permissiontoadd) {
 		$result = $object->setDateAccepted($user, GETPOST('date_accepted'));
 		if ($result < 0) {
@@ -243,14 +285,14 @@ if (empty($reshook)) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-	// Force update maj coef and Retention
+	// Force update coefficient and retention
 	if ($action == 'updateforce' && $permissiontoadd) {
 		$result = $object->update($user);
 		if ($result <= 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-	// Search donc in other funding for thirdpartie
+	// Search documents in other funding records for the third party
 	if ($action == 'searchdoc' && $permissiontoadd) {
 		$result = $object->searchDoc($user, $upload_dir);
 		if ($result <= 0) {
@@ -343,7 +385,8 @@ if (empty($reshook)) {
 	if ($id > 0 || !empty($ref)) {
 		$upload_dir = $conf->funding->multidir_output[$object->entity ? $object->entity : $conf->entity]."/".dol_sanitizeFileName($object->ref);
 	}
-	// $_POST['addfile'] = ''; // Désactiver car à l'envoie des mails lors de l'ajout d'une piéce le mail etait envoyer
+	// Disabled because adding an attachment sent an email
+	// $_POST['addfile'] = '';
 
 	$documenturl = DOL_URL_ROOT.'/document.php';
 	if (isset($conf->global->DOL_URL_ROOT_DOCUMENT_PHP)) {
@@ -352,9 +395,12 @@ if (empty($reshook)) {
 	$modulepart = 'funding';
 
 	if ($action == 'savedoc' && $permissiontoadd || $action == 'deletefile' && $permissiontoadd) {
-		$doc = GETPOST('doc');  // Document envoyé
-		$file = GETPOST('file'); // Fichier à supprimer
-		$filecheck = GETPOST('filecheck'); // Si Fichier nécessaire est à vrais
+		// Sent document
+		$doc = GETPOST('doc');
+		// File to delete
+		$file = GETPOST('file');
+		// Whether the required file is present
+		$filecheck = GETPOST('filecheck');
 		$fileupload = '';
 		$cherchfile = '';
 
@@ -362,11 +408,14 @@ if (empty($reshook)) {
 			$fileupload = $_FILES['userfile']['name'];
 
 			if (is_countable($_FILES['userfile']['name']) && empty($fileupload[0])) {
-				$cherchfile  = 0; // Pas de fichier donc suppression ou check only
+				// No file, so deletion or check only
+				$cherchfile  = 0;
 			} elseif (empty($fileupload)) {
-				$cherchfile = 0; // Pas de fichier donc suppression ou check only
+				// No file, so deletion or check only
+				$cherchfile = 0;
 			} else {
-				$cherchfile = 1; // Fichier donc enregistrement
+				// File present, so save it
+				$cherchfile = 1;
 			}
 		}
 
@@ -380,11 +429,12 @@ if (empty($reshook)) {
 		} else {
 			setEventMessages($object->message, $object->messages);
 		}
-		// Ancien code sauvegardé dans fichier cloud
+		// Old code saved in a cloud file
 	}
 
-	// Load object
-	include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
+	// Load object after actions to have most recent data into $object
+	// Must be include, not include_once.
+	include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php';
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
@@ -401,7 +451,7 @@ if (empty($reshook)) {
 	// Action to build doc
 	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
 
-	// BB2A marque send mail
+	// Send mail marker
 	// Actions to send emails
 	$triggersendname = 'FUNDING_SENTBYMAIL';
 	$autocopy = 'FUNDING_MAIL_AUTOCOPY_TO';
@@ -429,7 +479,7 @@ if ($object->id > 0) {
 $help_url = 'EN:Module_Funding_En|FR:Module_Funding_Fr';
 llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-funding page-card');
 
- // Example : Adding jquery code
+ // Example: adding jQuery code
 print '<script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
 	function init_myfunc()
@@ -444,15 +494,15 @@ jQuery(document).ready(function() {
 });
 </script>';
 
-//Regarde si on est dans un document ou fiche funding
+// Check whether we are in a document or funding card
 if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($object->origin_id)) {
-	// Récupération table propal
+	// Retrieve proposal data
 	if ($typedoc == 'propal' || $object->origin == 'propal') {
 		$prop = new Propal($db);
 		$result = $prop->fetch(empty($iddoc)?$object->origin_id:$iddoc);
 
-		// Vérifier si la propo n'est pas lié à une commande pour afficher un avertissement. #20240510
-		// Todo Vérifier si il y a pas une facture pour cette proposition
+		// Check whether the proposal is linked to an order and display a warning. #20240510
+		// TODO: check whether this proposal has an invoice
 		$prop->fetchObjectLinked(null, '', null, 'order', 'OR', 0, 'sourcetype', 'commande');
 		$orderlinkeds = $prop->linkedObjects;
 		if (!empty($orderlinkeds)) {
@@ -472,28 +522,29 @@ if (!empty($typedoc) && !empty($iddoc) || !empty($object->origin) && !empty($obj
 			}
 		}
 	}
-	// Récupération table order
+	// Retrieve order data
 	if ($typedoc == 'order' || $object->origin == 'order') {
 		$ord = new Commande($db);
 		$result = $ord->fetch(empty($iddoc)?$object->origin_id:$iddoc);
 	}
-	// Activation du loyer personalisé
+	// Enable custom rent
 	if ((!empty($typedoc) && $typedoc != 'propal') || (!empty($object->origin) && $object->origin != 'propal')) {
 		if (!empty($conf->global->FUNDING_ENABLED_RENTEDIT)) {
-			unset($object->fields['amount_rent_edit']);                 // Hide field already shown in banner
+			// Hide field already shown in banner
+			unset($object->fields['amount_rent_edit']);
 		}
 	}
 }
 
-// Vérification si on est dans un document pour afficher la bonne entête
+// Check whether we are in a document to display the correct header
 if ($typedoc == 'propal') {
-	// Affichage encadrer propal
+	// Display the proposal frame
 	$prop->fetch_thirdparty();
 
 	$head = propal_prepare_head($prop);
 	dol_fiche_head($head, 'Funding', $langs->trans("Proposal"), -1, 'propal');
 } elseif ($typedoc == 'order') {
-	// Affichage encadrer order
+	// Display the order frame
 	$head = commande_prepare_head($ord);
 	dol_fiche_head($head, 'Funding', $langs->trans("CustomerOrder"), -1, 'order');
 }
@@ -592,7 +643,8 @@ if ($action == 'create' && $permissiontoadd) {
 	print '<input type="submit" class="button" name="add" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
 	print '&nbsp; ';
 	if (empty($iddoc)) {
-		print '<input type="'.($backtopage ? "submit" : "button").'" class="button" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
+		// Cancel for create does not post form if we don't know the backtopage
+		print '<input type="'.($backtopage ? "submit" : "button").'" class="button" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>';
 	}
 	print '</div>';
 
@@ -647,9 +699,9 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('RefreshFunding'), $langs->trans('ConfirmRefreshFunding'), 'confirm_refresh', '', 0, 1);
 	}
 
-	// Selec a accepted/refused
+	// Select accepted or refused status
 	if ($action == 'AcceptedRefused') {
-		//Form to (signed or not)
+		// Form (signed or unsigned)
 		$formquestion = array(
 			array('type' => 'select', 'name' => 'statut', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_ACCEPT=>$object->LibStatut($object::STATUS_ACCEPT, 1), $object::STATUS_DENIED=>$object->LibStatut($object::STATUS_DENIED, 1))),
 			array('type' => 'text', 'name' => 'study_number', 'label' => $langs->trans("StudyNumber"), 'value' => $object->study_number),
@@ -658,7 +710,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 			array('type' => 'checkbox', 'name' => 'retention', 'label' => $langs->trans("QuestionRetention"), 'value' => $object->retention)
 		);
 
-		// BB2A Notification voir pour changement de statut
+		// Notification for status change
 		if (!empty($conf->notification->enabled)) {
 			require_once DOL_DOCUMENT_ROOT.'/core/class/notify.class.php';
 			$notify = new Notify($db);
@@ -670,9 +722,9 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('SetAcceptedRefused'), $text, 'setAcceptedRefused', $formquestion, '', 1, 350);
 	}
 
-	// Selec close end
+	// Select closing status
 	if ($action == 'closefinich') {
-		//Form to (signed or not)
+		// Form (signed or unsigned)
 		$formquestion = array(
 			array('type' => 'select', 'name' => 'statutfolder', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_FOLDER_DENOUNCED=>$object->LibStatutFolder($object::STATUS_FOLDER_DENOUNCED, 1), $object::STATUS_FOLDER_REDEEMED=>$object->LibStatutFolder($object::STATUS_FOLDER_REDEEMED, 1))),
 			array('type' => 'text', 'name' => 'description', 'label' => $langs->trans("Note"), 'value' => '')
@@ -695,7 +747,8 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 
 	// Call Hook formConfirm
 	$parameters = array('formConfirm' => $formconfirm, 'lineid' => $lineid);
-	$reshook = $hookmanager->executeHooks('formConfirm', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	// Note that $action and $object may have been modified by hook
+	$reshook = $hookmanager->executeHooks('formConfirm', $parameters, $object, $action);
 	if (empty($reshook)) {
 		$formconfirm .= $hookmanager->resPrint;
 	} elseif ($reshook > 0) {
@@ -712,9 +765,12 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '<table class="border centpercent  tableforfield">'."\n";
 
 	// Common attributes
-	//$keyforbreak='fieldkeytoswitchonsecondcolumn';    // We change column just before this field
-	//unset($object->fields['fk_project']);             // Hide field already shown in banner
-	//unset($object->fields['fk_soc']);                 // Hide field already shown in banner
+	// We change column just before this field
+	//$keyforbreak='fieldkeytoswitchonsecondcolumn';
+	// Hide field already shown in banner
+	//unset($object->fields['fk_project']);
+	// Hide field already shown in banner
+	//unset($object->fields['fk_soc']);
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
@@ -755,7 +811,7 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	}
 	print '</table">';
 
-	// Document du financement
+	// Funding documents
 
 	//print '<table class="noborder tableforfield centpercent margintable">';
 	print '<table class="centpercent noborder">';
@@ -795,7 +851,21 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	print '</div>';
 	print '</div>';
 
-	// show_documents
+
+	// Show notes
+	print '<div class="fichecenter">';
+	print '<div class="underbanner clearboth"></div>';
+
+
+	$cssclass = "titlefield";
+	$dirtpls = array_merge($conf->modules_parts['tpl'], array('/core/tpl'));
+	foreach ($dirtpls as $reldir) {
+		$res = @include dol_buildpath($reldir.'/notes.tpl.php');
+		if ($res) {
+			break;
+		}
+	}
+	print '</div>';
 
 	print '<div class="clearboth"></div>';
 
@@ -805,7 +875,8 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	if ($action != 'presend' && $action != 'editline') {
 		print '<div class="tabsAction">'."\n";
 		$parameters = array();
-		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+		// Note that $action and $object may have been modified by hook
+		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action);
 		if ($reshook < 0) {
 			setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 		}
@@ -895,23 +966,27 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 		$action = 'presend';
 	}
 
-	// BB2A Affichage des evenements, Document, Objets liés
+	// Display events, documents and linked objects
 
 	if ($action != 'presend') {
 		print '<div class="fichecenter"><div class="fichehalfleft">';
-		print '<a name="builddoc"></a>'; // ancre
+		// Anchor for document generation
+		print '<a name="builddoc"></a>';
 
-		$includedocgeneration = 0;
+		$includedocgeneration = 1;
 
 		// Documents
 		if ($includedocgeneration) {
+			// $upload_dir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1];
 			$objref = dol_sanitizeFileName($object->ref);
 			$relativepath = $objref . '/' . $objref . '.pdf';
-			$filedir = $conf->funding->dir_output.'/'.$object->element.'/'.$objref;
+			$filedir = $conf->funding->multidir_output[isset($object->entity) ? $object->entity : 1].'/'. $objref.'/other';
 			$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
-			$genallowed = $user->rights->funding->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->funding->write;    // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('funding', $objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
+			// If you can read, you can build the PDF to read content
+			$genallowed = $user->hasRight('funding', 'read');
+			// If you can create/edit, you can remove a file on card
+			$delallowed = 0;
+			print $formfile->showdocuments('funding:funding', $objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
 
 		// Show links to link elements

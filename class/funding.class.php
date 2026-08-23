@@ -41,6 +41,12 @@ class Funding extends CommonObject
 	public $element = 'funding';
 
 	/**
+	 * @var string		Prefix to check for any trigger code of any business class to prevent bad value for trigger code.
+	 * @see CommonTrigger::call_trigger()
+	 */
+	public $TRIGGER_PREFIX = 'FUNDING_FUNDING';	// Will be used to build trgiger keys 'FUNDING_FUNDING_MODIFY', ...
+
+	/**
 	 * @var string Name of table without prefix where object is stored
 	 */
 	public $table_element = 'funding_funding';
@@ -180,8 +186,8 @@ class Funding extends CommonObject
 		'funfoldoc5' => array('type'=>'varchar(255)', 'label'=>'funfoldoc5', 'enabled'=>'1', 'position'=>114, 'notnull'=>0, 'visible'=>0,),
 		'funfoldoc6' => array('type'=>'varchar(255)', 'label'=>'funfoldoc6', 'enabled'=>'1', 'position'=>115, 'notnull'=>0, 'visible'=>0,),
 		'extension' => array('type'=>'smallint', 'label'=>'extension', 'enabled'=>'1', 'position'=>201, 'default'=>0, 'visible'=>0, 'arrayofkeyval'=>array('0'=>'No', '1'=>'Yes'),),
-		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0,),
-		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>1, 'noteditable'=>'0', 'alwayseditable'=>'1', 'copytoclipboard'=>2,),
+		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>400, 'notnull'=>0, 'visible'=>0, "cssview" => "wordbreak", 'alwayseditable'=>'0', 'copytoclipboard'=>2,),
+		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>401, 'notnull'=>0, 'visible'=>0, "cssview" => "wordbreak", 'alwayseditable'=>'0', 'copytoclipboard'=>2,),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid', 'showoncombobox'=>'1',),
@@ -212,6 +218,7 @@ class Funding extends CommonObject
 	public $amount_rent;
 	public $amount_rent_edit;
 	public $date_delivery;
+	public $date_end_calculated;
 	public $date_signature;
 	public $date_end;
 	public $fk_funding_type;
@@ -321,7 +328,7 @@ class Funding extends CommonObject
 			}
 		}
 
-		//Chagement du dictionnaire duration
+		// Load the duration dictionary
 		$arrayofkeyval=array();
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_duration as c';
@@ -348,7 +355,7 @@ class Funding extends CommonObject
 			return -1;
 		}
 
-		//Chagement du dictionnaire scale
+		// Load the scale dictionary
 		$arrayofkeyval=array();
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_scale as c';
@@ -375,7 +382,7 @@ class Funding extends CommonObject
 			return -1;
 		}
 
-		//Chagement du dictionnaire type
+		// Load the type dictionary
 		$arrayofkeyval=array();
 		$sql = 'SELECT c.rowid, c.code, c.label, c.active';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'c_funding_type as c';
@@ -465,7 +472,7 @@ class Funding extends CommonObject
 	 * @param  real     $total          Total to finance
 	 * @param  real     $duration       Duration of financing
 	 * @param  real     $scale          The rate
-	 * @param  int      $org            Organisme de financement
+	 * @param  int      $org            Funding organization
 	 * @return                          $coef = ok or -1 = nok
 	 */
 	public function searchCoef($total, $duration, $scale, $org)
@@ -494,7 +501,7 @@ class Funding extends CommonObject
 	/**
 	 * Fetch the retention guarantee rate
 	 *
-	 * @param   int     $org            Organisme de financement
+	 * @param   int     $org            Funding organization
 	 * @return                          $rate = ok or -1 = nok
 	 */
 	public function searchRetentionRate($org)
@@ -1135,7 +1142,7 @@ class Funding extends CommonObject
 							$this->date_end = date('Y-m-d', strtotime('+'.$duration->code.' month', strtotime(date('Y-m-d', $this->date_signature))));
 						}
 					}
-					// Changement du status si le montant du document change et que le financement est accept
+					// Change the status if the document amount changes and the funding is accepted
 					if ($this->status >= self::STATUS_ACCEPT && $this->amount <> $document->total_ht) {
 							$this->status = self::STATUS_UPDATE;
 					}
@@ -2161,7 +2168,7 @@ class Funding extends CommonObject
 
 		$sql = "SELECT rowid, fk_soc, origin FROM ".MAIN_DB_PREFIX.$obj->table_element;
 		$sql .= " WHERE fk_soc = ".$id;
-		// Paramettre voir uniquement les financement sur commande
+		// Setting to show funding records for orders only
 		if (empty($conf->global->FUNDING_LISTE_THIRDPARTY_PROPAL)) {
 			$sql.= " AND origin <> 'propal'";
 		}
@@ -2463,7 +2470,7 @@ class Funding extends CommonObject
 		$filecheck = GETPOST('filecheck'); // If required file is true
 		$fileoutputname = $fileupload;
 
-		// Si un fichier existe donc enregistrement
+				// Save the record if a file exists
 		if (!empty($cherchfile)) {
 				$fileoutputname = dol_string_nospecial(dol_sanitizeFileName(dol_string_nohtmltag($this->ref.'_'.$langs->trans($doc))));
 				$fileoutputname = str_replace(array('\'' , '&nbsp;', ' '), '_', $fileoutputname.'.pdf');
