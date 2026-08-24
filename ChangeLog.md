@@ -1,7 +1,7 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## [Dev] - 00/2026 Dolibarr 22
-- PHP min 8.2
+- PHP min 8
 - Dolibarr min 18
 
 - NEW - 00/00/2026 - 
@@ -10,7 +10,7 @@
 
 
 ## [1.1.4] - 08/2026 Dolibarr 23
-- PHP min 8.2
+- PHP min 8
 - Dolibarr min 18
 
 - NEW - 23/08/2026 - Ajout de l'edition des notes sur la fiche financement
