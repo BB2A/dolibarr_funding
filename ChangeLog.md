@@ -1,11 +1,20 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [Dev] - /2025 Dolibarr 22
-- PHP min 7.4
+## [Dev] - 00/2026 Dolibarr 22
+- PHP min 8.2
 - Dolibarr min 18
 
-NEW - 23/08/2026 - Ajout de l'edition des note sur la fiche financement
-NEW - 23/08/2026 - Ajout d'un préfixe de déclencheur pour la classe Funding et mise à jour des commentaires pour une meilleure clarté
+- NEW - 00/00/2026 - 
+
+- FIX - 00/00/2026 - 
+
+
+## [1.1.4] - 08/2026 Dolibarr 23
+- PHP min 8.2
+- Dolibarr min 18
+
+- NEW - 23/08/2026 - Ajout de l'edition des notes sur la fiche financement
+- NEW - 23/08/2026 - Ajout d'un préfixe de déclencheur pour la classe Funding et mise à jour des commentaires pour une meilleure clarté
 - NEW - 13/08/2026 - Mise à jour des entrées de menu pour le module de financement, changement de 'funding' à 'bank'.
 - NEW - 10/08/2026 - Ajout de la gestion du presse-papiers pour certain champs. La description et les notes sont toujours editable
 - NEW - 10/08/2026 - Mise à jour des droits d'auteur et simplification de la logique de gestion des statuts dans la classe InterfaceFundingTriggers
