@@ -92,6 +92,7 @@ class Funding extends CommonObject
 	const STATUS_FOLDER_DENOUNCED = 7;
 	const STATUS_FOLDER_REDEEMED = 8;
 	const STATUS_FOLDER_EXTENSION = 9;
+	const STATUS_FOLDER_CLOSED_LESSOR = 10;
 
 	/**
 	 *  'type' field format:
@@ -158,7 +159,7 @@ class Funding extends CommonObject
 		'date_delivery' => array('type'=>'date', 'label'=>'DateDelivery', 'enabled'=>'1', 'position'=>18, 'notnull'=>0, 'visible'=>5, 'noteditable'=>'1', 'searchall'=>1, 'help'=>"Help_dateDelivery",),
 		'date_end_calculated' => array('type'=>'date', 'label'=>'DateEndCalculated', 'enabled'=>'1', 'position'=>20, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEndCalculated",),
 		'date_signature' => array('type'=>'date', 'label'=>'DateSignature', 'enabled'=>'1', 'position'=>19, 'notnull'=>0, 'visible'=>-4, 'noteditable'=>'0', 'searchall'=>1, 'help'=>"Help_dateSignature",),
-		'date_end' => array('type'=>'date', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>20, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
+		'date_end' => array('type'=>'datetime', 'label'=>'DateEnd', 'enabled'=>'1', 'position'=>20, 'notnull'=>17, 'visible'=>5, 'noteditable'=>'1', 'help'=>"Help_dateEnd",),
 		'fk_funding_type' => array('type'=>'smallint', 'label'=>'TypeFunding', 'enabled'=>'1', 'position'=>21, 'notnull'=>1, 'visible'=>-1, 'foreignkey'=>'c_funding_type.rowid', 'arrayofkeyval'=>array('2'=>'Crédit bail', '1'=>'Location'),),
 		'redemption' => array('type'=>'boolean', 'label'=>'Redemption', 'enabled'=>'1', 'position'=>22, 'notnull'=>0, 'visible'=>-1,),
 		'redemption_number' => array('type'=>'varchar(128)', 'label'=>'RedemptionNumber', 'enabled'=>'1', 'position'=>23, 'notnull'=>0, 'visible'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"Help_redemptionNumber", 'showoncombobox'=>'1',),
@@ -1132,14 +1133,17 @@ class Funding extends CommonObject
 					}
 
 					// Signature date filled if order is delivered and billed, and calculate end date from signature date
-					$this->date_end = '';
+					$this->date_end_calculated = '';
 					if ($document->billed == 1) {
 						$this->date_signature = !empty($this->date_signature) ? $this->date_signature : $this->date_delivery;
 
 						// Add the duration to the signature date to calculate the end date
 						$duration = $this->fetchDuration($this->fk_duration);
 						if ($duration->code > 0) {
-							$this->date_end = date('Y-m-d', strtotime('+'.$duration->code.' month', strtotime(date('Y-m-d', $this->date_signature))));
+							$this->date_end_calculated = date('Y-m-d', strtotime('+'.$duration->code.' month', strtotime(date('Y-m-d', $this->date_signature))));
+							if (empty($this->date_end)) {
+								$this->date_end = $this->date_end_calculated;
+							}
 						}
 					}
 					// Change the status if the document amount changes and the funding is accepted
@@ -2053,6 +2057,7 @@ class Funding extends CommonObject
 			$this->labelStatusFolder[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenounced');
 			$this->labelStatusFolder[self::STATUS_FOLDER_REDEEMED] = $langs->trans('FundingStatusFolderRedeemed');
 			$this->labelStatusFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtension');
+			$this->labelStatusFolder[self::STATUS_FOLDER_CLOSED_LESSOR] = $langs->trans('FundingStatusFolderClosedLessor');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrgShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLackShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_LACKOK] = $langs->trans('FundingStatusFolderLackOkShort');
@@ -2060,6 +2065,7 @@ class Funding extends CommonObject
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenouncedShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_REDEEMED] = $langs->trans('FundingStatusFolderRedeemedShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_CLOSED_LESSOR] = $langs->trans('FundingStatusFolderClosedLessorShort');
 		}
 
 		// Status correspondence with display formats

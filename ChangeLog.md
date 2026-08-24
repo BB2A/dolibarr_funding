@@ -1,6 +1,6 @@
 # CHANGELOG FUNDING FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## [Dev] - 00/2026 Dolibarr 22
+## [Dev] - 00/2026 Dolibarr 23
 - PHP min 8
 - Dolibarr min 18
 
@@ -8,6 +8,12 @@
 
 - FIX - 00/00/2026 - 
 
+## [1.1.5] - 08/2026 Dolibarr 23
+- PHP min 8
+- Dolibarr min 18
+
+NEW - 24/08/2026 - Ajout du statut "Financement clôturé par le bailleur" 
+NEW - 24/08/2026 - Mise à jour des champs date_end pour être toujours modifiables si le statut n'est pas en clot
 
 ## [1.1.4] - 08/2026 Dolibarr 23
 - PHP min 8
