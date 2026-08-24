@@ -12,6 +12,7 @@
 - PHP min 8
 - Dolibarr min 18
 
+- NEW - 24/08/2026 - Ajout d'un script de migration pour la mise à jour des statuts de financement
 - NEW - 24/08/2026 - Mise à jour des statuts de financement et ajout de nouveaux statuts dans le formulaire de clôture
 
 - FIX - 00/00/2026 - 
