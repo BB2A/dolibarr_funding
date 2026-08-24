@@ -731,10 +731,9 @@ if ($object->id > 0 && $permissiontoread && (empty($action) || ($action != 'edit
 	if ($action == 'closefinich') {
 		// Form (signed or unsigned)
 		$formquestion = array(
-			array('type' => 'select', 'name' => 'statutfolder', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_FOLDER_DENOUNCED=>$object->LibStatutFolder($object::STATUS_FOLDER_DENOUNCED, 1), $object::STATUS_FOLDER_REDEEMED=>$object->LibStatutFolder($object::STATUS_FOLDER_REDEEMED, 1), $object::STATUS_FOLDER_CLOSED_LESSOR=>$object->LibStatutFolder($object::STATUS_FOLDER_CLOSED_LESSOR, 1))),
+			array('type' => 'select', 'name' => 'statutfolder', 'label' => '<span class="fieldrequired">'.$langs->trans("CloseAs").'</span>', 'values' => array($object::STATUS_FOLDER_REDEEMED=>$object->LibStatutFolder($object::STATUS_FOLDER_REDEEMED, 1), $object::STATUS_FOLDER_DENOUNCED=>$object->LibStatutFolder($object::STATUS_FOLDER_DENOUNCED, 1), $object::STATUS_FOLDER_CLOSED_TRANSFER=>$object->LibStatutFolder($object::STATUS_FOLDER_CLOSED_TRANSFER, 1), $object::STATUS_FOLDER_CLOSED_LESSOR=>$object->LibStatutFolder($object::STATUS_FOLDER_CLOSED_LESSOR, 1))),
 			array('type' => 'text', 'name' => 'description', 'label' => $langs->trans("Note"), 'value' => '')
 		);
-
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&typedoc='.$typedoc.'&iddoc='.$iddoc, $langs->trans('closefinich'), $text, 'setCloseFinich', $formquestion, '', 1, 250);
 	}
 

@@ -334,21 +334,25 @@ FundingStatusDisabledShort=Annulé
 # Status folder
 #
 FundingStatusFolderSendOrg=Etude en cours
-FundingStatusFolderLack=Pièces à fournir pour étude
-FundingStatusFolderLackOk=Pièces ok
-FundingStatusFolderAcceptRetention=Dossier avec RG
-FundingStatusFolderDenounced=Financement dénoncé
-FundingStatusFolderClosedLessor=Financement cloturé par le bailleur
-FundingStatusFolderClosedLessorShort=Financement cloturé bailleur
-FundingStatusFolderExtension=Prolongation du financement
 FundingStatusFolderSendOrgShort=Etude en cours
+FundingStatusFolderLack=Pièces à fournir pour étude
 FundingStatusFolderLackShort=Pièces pour étude
+FundingStatusFolderLackOk=Pièces ok
 FundingStatusFolderLackOkShort=Pièce ok
+FundingStatusFolderAcceptRetention=Dossier avec RG
 FundingStatusFolderAcceptRetentionShort=Dossier avec RG
-FundingStatusFolderDenouncedShort=Dénonciation au terme
-FundingStatusFolderRedeemed=Financement racheté
-FundingStatusFolderRedeemedShort=Contrat racheté
+FundingStatusFolderExtension=Prolongation du financement
 FundingStatusFolderExtensionShort=Prolongation en cours
+
+
+FundingStatusFolderRedeemed=Financement racheté
+FundingStatusFolderRedeemedShort=Racheté
+FundingStatusFolderDenounced=Dénonciation au terme
+FundingStatusFolderDenouncedShort=Dénoncé
+FundingStatusFolderClosedLessor=Financement cloturé par le bailleur
+FundingStatusFolderClosedLessorShort=Cloturé bailleur
+FundingStatusFolderClosedTransfer=Financement transférer sur un autre tiers
+FundingStatusFolderClosedTransferShort=Transférer
 
 #
 # Documents

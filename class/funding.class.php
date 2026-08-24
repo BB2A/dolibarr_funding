@@ -89,10 +89,15 @@ class Funding extends CommonObject
 	const STATUS_FOLDER_LACK = 2;
 	const STATUS_FOLDER_LACKOK = 3;
 	const STATUS_FOLDER_ACCEPT_RETENTION = 5;
-	const STATUS_FOLDER_DENOUNCED = 7;
-	const STATUS_FOLDER_REDEEMED = 8;
 	const STATUS_FOLDER_EXTENSION = 9;
-	const STATUS_FOLDER_CLOSED_LESSOR = 10;
+
+	// STATUS_FOLDER_REDEEMED passage 8 en 20
+	const STATUS_FOLDER_REDEEMED = 20;
+	// STATUS_FOLDER_REDEEMED passage 7 en 21
+	const STATUS_FOLDER_DENOUNCED = 21;
+	const STATUS_FOLDER_CLOSED_TRANSFER = 22;
+	const STATUS_FOLDER_CLOSED_LESSOR = 23;
+
 
 	/**
 	 *  'type' field format:
@@ -636,10 +641,11 @@ class Funding extends CommonObject
 	 * @param   int     $fromid     Id of object to clone
 	 * @param   int     $origin     Id of object to clone
 	 * @param   int     $origin_id  Id of object to clone
+	 * @param   int     $type       Type of clone 0=clone, 1=clone no documents, 2=1 + clean references, 3=2 + clean extrafields, 4=3 + clean linked objects
 	 * @param   int     $notrigger  false=launch triggers after, true=disable triggers
 	 * @return  mixed               New object created, <0 if KO
 	 */
-	public function createFromClone(User $user, $fromid, $origin, $origin_id, $notrigger = 0)
+	public function createFromClone(User $user, $fromid, $origin, $origin_id, $type = 0, $notrigger = 0)
 	{
 		global $conf, $db, $langs, $extrafields;
 		$error = 0;
@@ -1133,7 +1139,7 @@ class Funding extends CommonObject
 					}
 
 					// Signature date filled if order is delivered and billed, and calculate end date from signature date
-					$this->date_end_calculated = '';
+					$this->date_end = '';
 					if ($document->billed == 1) {
 						$this->date_signature = !empty($this->date_signature) ? $this->date_signature : $this->date_delivery;
 
@@ -2054,18 +2060,23 @@ class Funding extends CommonObject
 			$this->labelStatusFolder[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLack');
 			$this->labelStatusFolder[self::STATUS_FOLDER_LACKOK] = $langs->trans('FundingStatusFolderLackOk');
 			$this->labelStatusFolder[self::STATUS_FOLDER_ACCEPT_RETENTION] = $langs->trans('FundingStatusFolderAcceptRetention');
-			$this->labelStatusFolder[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenounced');
 			$this->labelStatusFolder[self::STATUS_FOLDER_REDEEMED] = $langs->trans('FundingStatusFolderRedeemed');
 			$this->labelStatusFolder[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtension');
+
+			$this->labelStatusFolder[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenounced');
 			$this->labelStatusFolder[self::STATUS_FOLDER_CLOSED_LESSOR] = $langs->trans('FundingStatusFolderClosedLessor');
+			$this->labelStatusFolder[self::STATUS_FOLDER_CLOSED_TRANSFER] = $langs->trans('FundingStatusFolderClosedTransfer');
+
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_SENDORG] = $langs->trans('FundingStatusFolderSendOrgShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_LACK] = $langs->trans('FundingStatusFolderLackShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_LACKOK] = $langs->trans('FundingStatusFolderLackOkShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_ACCEPT_RETENTION] = $langs->trans('FundingStatusFolderAcceptRetentionShort');
-			$this->labelStatusFolderShort[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenouncedShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_REDEEMED] = $langs->trans('FundingStatusFolderRedeemedShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_EXTENSION] = $langs->trans('FundingStatusFolderExtensionShort');
+
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_DENOUNCED] = $langs->trans('FundingStatusFolderDenouncedShort');
 			$this->labelStatusFolderShort[self::STATUS_FOLDER_CLOSED_LESSOR] = $langs->trans('FundingStatusFolderClosedLessorShort');
+			$this->labelStatusFolderShort[self::STATUS_FOLDER_CLOSED_TRANSFER] = $langs->trans('FundingStatusFolderClosedTransferShort');
 		}
 
 		// Status correspondence with display formats
