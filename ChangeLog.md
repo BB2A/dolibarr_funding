@@ -6,7 +6,7 @@
 
 - NEW - 00/00/2026 - 
 
-- FIX - 00/00/2026 - 
+- FIX - 07/09/2026 - Mise à jour du type de champ 'date_end' et ajout de paramètres à la méthode 'createFromClone'
 
 ## [1.1.6] - 00/2026 Dolibarr 23
 - PHP min 8
