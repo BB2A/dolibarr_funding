@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2015		Jean-François Ferry		<jfefe@aternatik.fr>
  * Copyright (C) 2024		Frédéric France			<frederic.france@free.fr>
- * Copyright (C) 2025		Anthony Berton			<anthony.berton@bb2a.fr>
+ * Copyright (C) 2025-2026	Anthony Berton			<anthony.berton@bb2a.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ use Luracast\Restler\RestException;
 dol_include_once('/funding/class/coefficient.class.php');
 dol_include_once('/funding/class/funding.class.php');
 dol_include_once('/funding/class/retention.class.php');
+require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 
 
 
@@ -717,6 +718,310 @@ class FundingApi extends DolibarrApi
 			$funding[$field] = $data[$field];
 		}
 		return $funding;
+	}
+
+	/**
+	 * Get funding status list
+	 *
+	 * Return list of possible status for funding
+	 *
+	 * @return  array                               Array with funding status list
+	 * @throws RestException 403 Not allowed
+	 *
+	 * @url	GET fundings/statuslist
+	 */
+	public function getFundingStatusList()
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'read')) {
+			throw new RestException(403);
+		}
+
+		global $langs;
+		$langs->load('funding@funding');
+
+		// Status dictionary
+		$statusList['status'] = array(
+			Funding::STATUS_DRAFT => $langs->trans('FundingStatusDraft'),
+			Funding::STATUS_VALIDATED => $langs->trans('FundingStatusValidated'),
+			Funding::STATUS_UPDATE => $langs->trans('FundingStatusUpdate'),
+			Funding::STATUS_ACCEPT => $langs->trans('FundingStatusAccept'),
+			Funding::STATUS_DENIED => $langs->trans('FundingStatusDenied'),
+			Funding::STATUS_RUNNING => $langs->trans('FundingStatusRunning'),
+			Funding::STATUS_END => $langs->trans('FundingStatusEnd'),
+			Funding::STATUS_CANCELED => $langs->trans('FundingStatusDisabled')
+		);
+
+		// Status short dictionary
+		$statusList['status_short'] = array(
+			Funding::STATUS_DRAFT => $langs->trans('FundingStatusDraftShort'),
+			Funding::STATUS_VALIDATED => $langs->trans('FundingStatusValidatedShort'),
+			Funding::STATUS_UPDATE => $langs->trans('FundingStatusUpdateShort'),
+			Funding::STATUS_ACCEPT => $langs->trans('FundingStatusAcceptShort'),
+			Funding::STATUS_DENIED => $langs->trans('FundingStatusDeniedShort'),
+			Funding::STATUS_RUNNING => $langs->trans('FundingStatusRunningShort'),
+			Funding::STATUS_END => $langs->trans('FundingStatusEndShort'),
+			Funding::STATUS_CANCELED => $langs->trans('FundingStatusDisabledShort')
+		);
+
+		// Status folder dictionary
+		$statusList['status_folder'] = array(
+			Funding::STATUS_FOLDER_SENDORG => $langs->trans('FundingStatusFolderSendOrg'),
+			Funding::STATUS_FOLDER_LACK => $langs->trans('FundingStatusFolderLack'),
+			Funding::STATUS_FOLDER_LACKOK => $langs->trans('FundingStatusFolderLackOk'),
+			Funding::STATUS_FOLDER_ACCEPT_RETENTION => $langs->trans('FundingStatusFolderAcceptRetention'),
+			Funding::STATUS_FOLDER_REDEEMED => $langs->trans('FundingStatusFolderRedeemed'),
+			Funding::STATUS_FOLDER_EXTENSION => $langs->trans('FundingStatusFolderExtension'),
+			Funding::STATUS_FOLDER_DENOUNCED => $langs->trans('FundingStatusFolderDenounced'),
+			Funding::STATUS_FOLDER_CLOSED_TRANSFER => $langs->trans('FundingStatusFolderClosedTransfer'),
+			Funding::STATUS_FOLDER_CLOSED_LESSOR => $langs->trans('FundingStatusFolderClosedLessor')
+		);
+
+		// Status folder short dictionary
+		$statusList['status_folder_short'] = array(
+			Funding::STATUS_FOLDER_SENDORG => $langs->trans('FundingStatusFolderSendOrgShort'),
+			Funding::STATUS_FOLDER_LACK => $langs->trans('FundingStatusFolderLackShort'),
+			Funding::STATUS_FOLDER_LACKOK => $langs->trans('FundingStatusFolderLackOkShort'),
+			Funding::STATUS_FOLDER_ACCEPT_RETENTION => $langs->trans('FundingStatusFolderAcceptRetentionShort'),
+			Funding::STATUS_FOLDER_REDEEMED => $langs->trans('FundingStatusFolderRedeemedShort'),
+			Funding::STATUS_FOLDER_EXTENSION => $langs->trans('FundingStatusFolderExtensionShort'),
+			Funding::STATUS_FOLDER_DENOUNCED => $langs->trans('FundingStatusFolderDenouncedShort'),
+			Funding::STATUS_FOLDER_CLOSED_TRANSFER => $langs->trans('FundingStatusFolderClosedTransferShort'),
+			Funding::STATUS_FOLDER_CLOSED_LESSOR => $langs->trans('FundingStatusFolderClosedLessorShort')
+		);
+
+		return $statusList;
+	}
+
+	/**
+	 * Get funding scales list
+	 *
+	 * Return list of scales from llx_c_funding_scale table
+	 *
+	 * @param string $sortfield Sort field
+	 * @param string $sortorder Sort order
+	 * @param int $limit Limit for list
+	 * @param int $page Page number
+	 * @return array Array of scale objects
+	 * @phan-return array<int,object>
+	 * @phpstan-return array<int,object>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url GET /dictionary/scales/
+	 */
+	public function dictionaryScales($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'read')) {
+			throw new RestException(403);
+		}
+
+		$obj_ret = array();
+
+		$sql = "SELECT t.rowid, t.code, t.label, t.active";
+		$sql .= " FROM ".$this->db->prefix()."c_funding_scale as t";
+		$sql .= " WHERE t.active = 1";
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			$i = 0;
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$obj_ret[] = $obj;
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving scales list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
+	}
+
+	/**
+	 * Get funding durations list
+	 *
+	 * Return list of durations from llx_c_funding_duration table
+	 *
+	 * @param string $sortfield Sort field
+	 * @param string $sortorder Sort order
+	 * @param int $limit Limit for list
+	 * @param int $page Page number
+	 * @return array Array of duration objects
+	 * @phan-return array<int,object>
+	 * @phpstan-return array<int,object>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url GET /dictionary/durations/
+	 */
+	public function dictionaryDurations($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'read')) {
+			throw new RestException(403);
+		}
+
+		$obj_ret = array();
+
+		$sql = "SELECT t.rowid, t.code, t.label, t.active";
+		$sql .= " FROM ".$this->db->prefix()."c_funding_duration as t";
+		$sql .= " WHERE t.active = 1";
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			$i = 0;
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$obj_ret[] = $obj;
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving durations list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
+	}
+
+	/**
+	 * Get funding types list
+	 *
+	 * Return list of types from llx_c_funding_type table
+	 *
+	 * @param string $sortfield Sort field
+	 * @param string $sortorder Sort order
+	 * @param int $limit Limit for list
+	 * @param int $page Page number
+	 * @return array Array of type objects
+	 * @phan-return array<int,object>
+	 * @phpstan-return array<int,object>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url GET /dictionary/types/
+	 */
+	public function dictionaryTypes($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0)
+	{
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'read')) {
+			throw new RestException(403);
+		}
+
+		$obj_ret = array();
+
+		$sql = "SELECT t.rowid, t.code, t.label, t.active";
+		$sql .= " FROM ".$this->db->prefix()."c_funding_type as t";
+		$sql .= " WHERE t.active = 1";
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			$i = 0;
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$obj_ret[] = $obj;
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving types list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
+	}
+
+	/**
+	 * Get filtered third parties list
+	 *
+	 * Return list of third parties (societes) filtered by fk_typent = FUNDING_FILTRE_ORGANIZATION
+	 *
+	 * @param string $sortfield Sort field
+	 * @param string $sortorder Sort order
+	 * @param int $limit Limit for list
+	 * @param int $page Page number
+	 * @return array Array of third party objects
+	 * @phan-return array<int,object>
+	 * @phpstan-return array<int,object>
+	 *
+	 * @throws RestException 403 Not allowed
+	 * @throws RestException 503 System error
+	 *
+	 * @url GET /organizations/
+	 */
+	public function organizations($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0)
+	{
+		global $conf;
+
+		if (!DolibarrApiAccess::$user->hasRight('funding', 'read')) {
+			throw new RestException(403);
+		}
+
+		if (!isModEnabled('societe')) {
+			throw new RestException(403, 'Module societe is not enabled');
+		}
+
+		$obj_ret = array();
+
+		// Check if FUNDING_FILTRE_ORGANIZATION is configured
+		if (empty($conf->global->FUNDING_FILTRE_ORGANIZATION)) {
+			throw new RestException(400, 'FUNDING_FILTRE_ORGANIZATION is not configured');
+		}
+
+		$sql = "SELECT t.rowid, t.nom as name, t.name_alias, t.code_client, t.code_fournisseur, t.address, t.zip, t.town, t.fk_pays, t.phone, t.email";
+		$sql .= " FROM ".$this->db->prefix()."societe as t";
+		$sql .= " WHERE t.fk_typent = ".((int) $conf->global->FUNDING_FILTRE_ORGANIZATION);
+		$sql .= " AND t.entity IN (".getEntity('societe').")";
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
+				$page = 0;
+			}
+			$offset = $limit * $page;
+			$sql .= $this->db->plimit($limit + 1, $offset);
+		}
+
+		$result = $this->db->query($sql);
+		if ($result) {
+			$num = $this->db->num_rows($result);
+			$i = 0;
+			while ($i < $num) {
+				$obj = $this->db->fetch_object($result);
+				$obj_ret[] = $obj;
+				$i++;
+			}
+		} else {
+			throw new RestException(503, 'Error when retrieving third parties list: '.$this->db->lasterror());
+		}
+
+		return $obj_ret;
 	}
 
 	/* END MODULEBUILDER API FUNDING */
